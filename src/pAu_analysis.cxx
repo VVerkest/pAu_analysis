@@ -51,9 +51,9 @@ int main () {
   // TFile* inFile = new TFile( inFileName, "READ" );
 
   TChain* Chain = new TChain( "JetTree" );         Chain->Add( "AddedGeantPythia/picoDst*" );
-  TStarJetPicoReader Reader;                               InitReader( Reader, Chain, -1 );
-  TStarJetPicoEventHeader* header;    TStarJetPicoEvent* event;    TStarJetVector* sv;
-  TStarJetVectorContainer<TStarJetVector> * container;
+  TStarJetPicoReader Reader;      //                          InitReader( Reader, Chain, -1 );
+  // TStarJetPicoEventHeader* header;    TStarJetPicoEvent* event;    TStarJetVector* sv;
+  // TStarJetVectorContainer<TStarJetVector> * container;
 
 
 
