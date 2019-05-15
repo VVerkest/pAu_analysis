@@ -46,7 +46,7 @@
 namespace pAuAnalysis {
   
 //  INITIATE READER
-  void InitReader( TStarJetPicoReader & reader, TChain* chain, int nEvents );
+//  void InitReader( TStarJetPicoReader & reader, TChain* chain, int nEvents );
   
 }
 
