@@ -7,8 +7,6 @@ using namespace std;
 using namespace fastjet;
 using namespace pAuAnalysis;
 
-void InitReader;
-
 
 int main () {
 
