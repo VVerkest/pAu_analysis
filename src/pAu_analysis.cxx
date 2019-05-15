@@ -1,6 +1,7 @@
 //  pAu_analysis.cxx
 //  Veronica Verkest       May 14, 2019
 
+#include "pAuFunctions.hh"
 
 using namespace std;
 using namespace fastjet;
