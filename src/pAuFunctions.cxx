@@ -9,7 +9,7 @@ namespace pAuAnalysis {
 //  INITIATE READER
   void InitReader( TStarJetPicoReader & reader, TChain* chain, int nEvents ) {
 
-    std::string collisionType = "pAu";
+    std::string collisionType = "AuAu";
       
     // First tolower() on the analysisType
     // shouldnt be necessary....
