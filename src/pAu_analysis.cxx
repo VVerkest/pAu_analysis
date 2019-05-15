@@ -2,8 +2,9 @@
 //  Veronica Verkest       May 14, 2019
 
 
-using namespace fastjet;
 using namespace std;
+using namespace fastjet;
+using namespace pAuAnalysis;
 
 void InitReader;
 
