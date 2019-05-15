@@ -45,7 +45,7 @@
 using namespace fastjet;
 using namespace std;
 
-
+void InitReader;
 
 
 int main () {
