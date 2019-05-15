@@ -5,7 +5,7 @@ INCFLAGS      = -I$(shell root-config --incdir) $(shell fastjet-config --cxxflag
 ifeq ($(os),Linux)
 CXXFLAGS      = -std=c++17
 else
-CXXFLAGS      = -O -std=c++17 -fPIC -pipe -Wall -Wno-deprecated-writable-strings -Wno-unused-variable -Wno-unused-private-field -Wno-gnu-static-float-init
+CXXFLAGS      = -O -std=c++11 -fPIC -pipe -Wall -Wno-deprecated-writable-strings -Wno-unused-variable -Wno-unused-private-field -Wno-gnu-static-float-init
 ## for debugging:
 # CXXFLAGS      = -g -O0 -fPIC -pipe -Wall -Wno-deprecated-writable-strings -Wno-unused-variable -Wno-unused-private-field -Wno-gnu-static-float-init
 endif
