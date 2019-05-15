@@ -55,7 +55,7 @@ int main () {
   reader.SetProcessV0s(false);
     
   // Initialize the reader
-  reader.Init( nEvents ); //runs through all events with -1
+  reader.Init( 1000 ); //runs through all events with -1
 
 
   TStarJetPicoEventHeader* header;    TStarJetPicoEvent* event;    TStarJetVector* sv;
