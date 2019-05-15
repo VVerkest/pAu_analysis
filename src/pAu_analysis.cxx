@@ -5,6 +5,9 @@
 #include "fastjet/ClusterSequence.hh"
 #include "fastjet/ClusterSequenceArea.hh"
 #include "fastjet/Selector.hh"
+#include "fastjet/tools/Filter.hh"
+#include "fastjet/tools/Pruner.hh"
+#include "fastjet/contrib/SoftDrop.hh"
 
 #include "TROOT.h"
 #include "TRandom.h"
@@ -35,6 +38,7 @@
 
 #include <string>
 #include <iostream>
+#include <sstream>
 #include <sstream>
 #include <iomanip>
 #include <cmath>
