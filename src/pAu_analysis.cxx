@@ -2,7 +2,7 @@
 //  Veronica Verkest       May 14, 2019
 
 #include "fastjet/PseudoJet.hh"
-//#include "fastjet/ClusterSequence.hh"
+#include "fastjet/ClusterSequence.hh"
 #include "fastjet/ClusterSequenceArea.hh"
 #include "fastjet/Selector.hh"
 #include "fastjet/tools/Filter.hh"
@@ -39,7 +39,6 @@
 #include <string>
 #include <iostream>
 #include <sstream>
-#include <sstream>
 #include <iomanip>
 #include <cmath>
 
@@ -54,7 +53,7 @@ int main () {
   // TString inFileName = "pAu_2015_200_MB_156_160_2.root";
   // TFile* inFile = new TFile( inFileName, "READ" );
 
-  TChain* Chain = new TChain( "JetTree" );         Chain->Add( "AddedGeantPythia/picoDst*" );
+  TChain* Chain = new TChain( "JetTree" );         Chain->Add( "pAu_2015_200_MB_156_160_2.root" );
   TStarJetPicoReader Reader;
   // InitReader( Reader, Chain, -1 );
   // TStarJetPicoEventHeader* header;    TStarJetPicoEvent* event;    TStarJetVector* sv;
