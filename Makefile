@@ -1,6 +1,6 @@
 os = $(shell uname -s)
 
-INCFLAGS      = -I$(shell root-config --incdir) $(shell fastjet-config --cxxflags) -I$(shell pythia8-config --includedir) -I$(STARPICOPATH) -I$(FJCONTRIB)/RecursiveTools
+INCFLAGS      = -I$(shell root-config --incdir) $(shell fastjet-config --cxxflags) -I$(shell pythia8-config --includedir) -I$(STARPICOPATH) -I$(FJCONTRIB)/RecursiveTools -I/opt/local/include
 
 ifeq ($(os),Linux)
 CXXFLAGS      = -std=c++17
