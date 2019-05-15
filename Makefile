@@ -30,7 +30,7 @@ ROOTLIBS      = $(shell root-config --libs)
 FJLIBS        = $(shell fastjet-config --plugins=yes --libs)
 PYTHIALIBS    = $(shell pythia8-config --ldflags)
 LIBPATH       = -L$(FASTJETDIR)/lib -L$(STARPICOPATH) $(shell root-config --libs) -L$(FJCONTRIB)
-LIBS          =  $(ROOTLIBS) $(FJLIBS) -I$(FJCONTRIB) $(PYTHIALIBS) -lfastjet -lfastjettools -lTStarJetPico -lRecursiveTools
+LIBS          =  $(ROOTLIBS) $(FJLIBS) -I$(FJCONTRIB) -lfastjet -lfastjettools -lTStarJetPico -lRecursiveTools
 
 # for cleanup
 SDIR          = src
