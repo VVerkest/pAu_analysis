@@ -1,6 +1,6 @@
 os = $(shell uname -s)
 
-INCFLAGS      = -I$(shell root-config --incdir) $(shell fastjet-config --cxxflags) -I$(shell pythia8-config --includedir) -I$(BOOSTDIR)/include -I$(STARPICODIR) -I$(FJCONTRIB)/RecursiveTools
+INCFLAGS      = -I$(shell root-config --incdir) $(shell fastjet-config --cxxflags) -I$(shell pythia8-config --includedir) -I$(BOOSTDIR)/include -I$(STARPICOPATH) -I$(FJCONTRIB)/RecursiveTools
 
 ifeq ($(os),Linux)
 CXXFLAGS      = -std=c++11
@@ -29,7 +29,7 @@ endif
 ROOTLIBS      = $(shell root-config --libs)
 FJLIBS        = $(shell fastjet-config --plugins=yes --libs)
 PYTHIALIBS    = $(shell pythia8-config --ldflags)
-LIBPATH       = -L$(FASTJETDIR)/lib -L$(STARPICODIR) $(shell root-config --libs) -L$(FJCONTRIB)
+LIBPATH       = -L$(FASTJETDIR)/lib -L$(STARPICOPATH) $(shell root-config --libs) -L$(FJCONTRIB)
 LIBS          =  $(ROOTLIBS) $(FJLIBS) -I$(FJCONTRIB) $(PYTHIALIBS) -lfastjet -lfastjettools -lTStarJetPico -lRecursiveTools
 
 # for cleanup
