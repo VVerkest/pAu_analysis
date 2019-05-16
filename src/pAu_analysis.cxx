@@ -68,10 +68,10 @@ int main () {
   }
   // ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~  END EVENT LOOP!  ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~
 
-
+  TFile *pAuFile = new TFile("pAu.root","NEW");
   hPrimaryTracks->Draw();
   hPrimaryTracks->SaveAs("out/hpt.pdf","PDF");
-  hPrimaryTracks->Save("out/hpt.root");
+  hPrimaryTracks->Write();
   
   return 0;
 }
