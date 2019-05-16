@@ -62,10 +62,11 @@ $(BDIR)/%  : $(ODIR)/%.o
 ###############################################################################
 all : $(BDIR)/pAu_analysis
 
+$(ODIR)/pAuFunctions.o : $(SDIR)/pAuFunctions.cxx $(SDIR)/pAuFunctions.hh
 $(ODIR)/pAu_analysis.o : $(SDIR)/pAu_analysis.cxx
 
 #data analysis
-$(BDIR)/pAu_analysis :	$(ODIR)/pAu_analysis.o
+$(BDIR)/pAu_analysis :	$(ODIR)/pAu_analysis.o	$(ODIR)/pAuFunctions.o
 
 
 ###############################################################################
