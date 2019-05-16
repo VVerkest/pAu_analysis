@@ -71,6 +71,7 @@ int main () {
 
   hPrimaryTracks->Draw();
   hPrimaryTracks->SaveAs("out/hpt.pdf","PDF");
+  hPrimaryTracks->Save("out/hpt.root");
   
   return 0;
 }
