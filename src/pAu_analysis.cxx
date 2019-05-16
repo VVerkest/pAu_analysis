@@ -13,48 +13,9 @@ int ID;
 
 int main () {
 
-
-  
-  TChain* chain = new TChain( "JetTree" );         chain->Add( "pAu_2015_200_MB_156_160_2.root" );
-  TStarJetPicoReader reader;
-
-  // set the chain
-  reader.SetInputChain( chain );
-  // apply hadronic correction - subtract 100% of charged track energy from towers
-  reader.SetApplyFractionHadronicCorrection( false );
-  reader.SetFractionHadronicCorrection( 0.9999 );
-  reader.SetRejectTowerElectrons( kFALSE );
-    
-  // Event and track selection
-  // -------------------------
-    
-  TStarJetPicoEventCuts* evCuts = reader.GetEventCuts();
-  evCuts->SetVertexZCut ( 1000 );
-  evCuts->SetRefMultCut( 0 );
-  evCuts->SetMaxEventPtCut( 1000 );
-  evCuts->SetMaxEventEtCut( 1000 );
-
-  // Tracks cuts
-  TStarJetPicoTrackCuts* trackCuts = reader.GetTrackCuts();
-  trackCuts->SetDCACut( 100 );
-  trackCuts->SetMinNFitPointsCut( -1 );
-  trackCuts->SetFitOverMaxPointsCut( -1 );    
-    
-  std::cout << "Using these track cuts:" << std::endl;
-  std::cout << " dca : " << trackCuts->GetDCACut(  ) << std::endl;
-  std::cout << " nfit : " <<   trackCuts->GetMinNFitPointsCut( ) << std::endl;
-  std::cout << " nfitratio : " <<   trackCuts->GetFitOverMaxPointsCut( ) << std::endl;
-    
-  // Towers
-  TStarJetPicoTowerCuts* towerCuts = reader.GetTowerCuts();
-  towerCuts->SetMaxEtCut( 9999.0 );
-  towerCuts->AddBadTowers( "src/dummy_tower_list.txt" );
-    
-  // V0s: Turn off
-  reader.SetProcessV0s(false);
-    
-  // Initialize the reader
-  reader.Init( 1000 ); //runs through all events with -1
+  TChain* Chain = new TChain( "JetTree" );         Chain->Add( "pAu_2015_200_MB_156_160_2.root" );
+  TStarJetPicoReader Reader;                               int numEvents = 1000;
+  InitReader( Reader, Chain, numEvents );
 
 
   TStarJetPicoEventHeader* header;    TStarJetPicoEvent* event;    TStarJetVector* sv;
@@ -65,22 +26,24 @@ int main () {
 
 
   // ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~  BEGIN EVENT LOOP!  ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~
-  while ( reader.NextEvent() ) {
+  while ( Reader.NextEvent() ) {
 
     rawParticles.clear();  rawJets.clear();  //  clear containers
 
-    ID = reader.GetNOfCurrentEvent();
-    reader.PrintStatus(20); 
+    ID = Reader.GetNOfCurrentEvent();
+    Reader.PrintStatus(20); 
 
-    event = reader.GetEvent();    header = event->GetHeader();
+    event = Reader.GetEvent();    header = event->GetHeader();
 
-    container = reader.GetOutputContainer();
+    container = Reader.GetOutputContainer();
 
     GatherParticles ( container, rawParticles);
 
     cout<<rawParticles.size()<<endl;
     
   }
-    
+  // ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~  END EVENT LOOP!  ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~
+
+  
   return 0;
 }
