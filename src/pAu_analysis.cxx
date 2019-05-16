@@ -20,7 +20,7 @@ using namespace pAuAnalysis;
 vector<PseudoJet> rawParticles, rawJets;
 int ID;
 
-TH3D *hPrimaryTracks = new TH3D( "hPrimaryTracks", "Primary Tracks: p_{T}, #{eta}, and #{phi}", 50,0,20, 20,-2,2, 20,0,6 );
+TH3D *hPrimaryTracks = new TH3D( "hPrimaryTracks", "Primary Tracks: p_{T}, #{eta}, and #{phi};p_{T} (GeV);#{eta};#{phi}", 50,0,20, 20,-2,2, 20,-3.141,3.141 );
 
 
 int main () {
@@ -68,9 +68,7 @@ int main () {
   }
   // ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~  END EVENT LOOP!  ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~
 
-  TFile *pAuFile = new TFile("pAu.root","NEW");
-  hPrimaryTracks->Draw();
-  hPrimaryTracks->SaveAs("out/hpt.pdf","PDF");
+  TFile *pAuFile = new TFile("out/pAu.root","NEW");
   hPrimaryTracks->Write();
   
   return 0;
