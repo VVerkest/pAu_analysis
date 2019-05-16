@@ -22,6 +22,7 @@ int ID;
 
 TH3D *hPrimaryTracks = new TH3D( "hPrimaryTracks", "Primary Tracks: p_{T}, #{eta}, and #{phi}", 50,0,20, 20,-2,2, 20,0,6 );
 
+
 int main () {
 
   TH1::SetDefaultSumw2();
@@ -53,7 +54,11 @@ int main () {
 
     int npt = header->GetNOfPrimaryTracks();
     for ( int i=0; i<npt; ++i ) {
-      double trackPt = (double) event->GetPrimaryTrack(i)->GetPt();
+      double primTrackPt = (double) event->GetPrimaryTrack(i)->GetPt();
+      double primTrackEta = (double) event->GetPrimaryTrack(i)->GetEta();
+      double primTrackPhi = (double) event->GetPrimaryTrack(i)->GetPhi();
+
+      hPrimaryTracks->Fill( primTrackPt, primTrackEta, primTrackPhi );
     }
 
 
@@ -63,6 +68,8 @@ int main () {
   }
   // ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~  END EVENT LOOP!  ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~
 
+
+  hPrimaryTracks->Draw();
   
   return 0;
 }
