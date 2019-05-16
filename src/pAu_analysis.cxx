@@ -8,6 +8,7 @@ using namespace fastjet;
 using namespace pAuAnalysis;
 
 vector<PseudoJet> rawParticles, rawJets;
+int ID;
 
 
 int main () {
@@ -63,7 +64,7 @@ int main () {
 
 
 
-    // ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~  BEGIN EVENT LOOP!  ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~
+  // ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~  BEGIN EVENT LOOP!  ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~
   while ( reader.NextEvent() ) {
 
     rawParticles.clear();  rawJets.clear();  //  clear containers
