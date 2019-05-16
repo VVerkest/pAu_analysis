@@ -5,7 +5,6 @@
 #include "fastjet/Selector.hh"
 #include "fastjet/tools/Filter.hh"
 #include "fastjet/tools/Pruner.hh"
-#include "fastjet/contrib/SoftDrop.hh"
 
 #include "TROOT.h"
 #include "TRandom.h"
