@@ -7,6 +7,8 @@ using namespace std;
 using namespace fastjet;
 using namespace pAuAnalysis;
 
+vector<PseudoJet> rawParticles, rawJets;
+
 
 int main () {
 
@@ -18,7 +20,7 @@ int main () {
   // set the chain
   reader.SetInputChain( chain );
   // apply hadronic correction - subtract 100% of charged track energy from towers
-  reader.SetApplyFractionHadronicCorrection( true );
+  reader.SetApplyFractionHadronicCorrection( false );
   reader.SetFractionHadronicCorrection( 0.9999 );
   reader.SetRejectTowerElectrons( kFALSE );
     
@@ -46,10 +48,6 @@ int main () {
   TStarJetPicoTowerCuts* towerCuts = reader.GetTowerCuts();
   towerCuts->SetMaxEtCut( 9999.0 );
   towerCuts->AddBadTowers( "src/dummy_tower_list.txt" );
-
-  std::cout << "Using these tower cuts:" << std::endl;
-  std::cout << "  GetMaxEtCut = " << towerCuts->GetMaxEtCut() << std::endl;
-  std::cout << "  Gety8PythiaCut = " << towerCuts->Gety8PythiaCut() << std::endl;
     
   // V0s: Turn off
   reader.SetProcessV0s(false);
@@ -63,7 +61,25 @@ int main () {
 
 
 
-  
 
+
+    // ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~  BEGIN EVENT LOOP!  ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~
+  while ( reader.NextEvent() ) {
+
+    rawParticles.clear();  rawJets.clear();  //  clear containers
+
+    ID = reader.GetNOfCurrentEvent();
+    reader.PrintStatus(20); 
+
+    event = reader.GetEvent();    header = event->GetHeader();
+
+    container = reader.GetOutputContainer();
+
+    GatherParticles ( container, rawParticles);
+
+    cout<<rawParticles.size()<<endl;
+    
+  }
+    
   return 0;
 }

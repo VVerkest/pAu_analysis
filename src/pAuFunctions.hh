@@ -44,6 +44,10 @@
 #define pAuFunctions_hh
 
 namespace pAuAnalysis {
+
+
+  std::vector<fastjet::PseudoJet> GatherParticles ( TStarJetVectorContainer<TStarJetVector> * container , std::vector<fastjet::PseudoJet> & rawParticles );
+
   
 //  INITIATE READER
 //  void InitReader( TStarJetPicoReader & reader, TChain* chain, int nEvents );
