@@ -15,12 +15,12 @@ using namespace std;
 using namespace fastjet;
 using namespace pAuAnalysis;
 
-const int pi = 3.14159;
+// const int pi = 3.14159;
 
 vector<PseudoJet> rawParticles, rawJets;
 int ID;
 
-TH3D *PrimaryTracks = new TH3D( hPrimaryTracks, "Primary Tracks: p_{T}, #{eta}, and #{phi}", 50,0,20, 20,-2,2, 20,0,2*pi );
+TH3D *PrimaryTracks = new TH3D( hPrimaryTracks, "Primary Tracks: p_{T}, #{eta}, and #{phi}", 50,0,20, 20,-2,2, 20,-pi,pi );
 
 int main () {
 
@@ -53,7 +53,7 @@ int main () {
 
     int npt = header->GetNOfPrimaryTracks();
     for ( int i=0; i<npt; ++i ) {
-      double trackPt = (double*) event->GetPrimaryTrack(i)->GetPt();
+      double trackPt = (double) event->GetPrimaryTrack(i)->GetPt();
     }
 
 
