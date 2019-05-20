@@ -24,18 +24,18 @@ int main () {
   TH3D *hPrimaryTracks = new TH3D( "hPrimaryTracks", "Primary Tracks: p_{T}, #eta, and #phi;p_{T} (GeV);#eta;#phi", 40,0,20, 40,-2,2, 16,-pi,pi );
 
 
-  TTree *MBtree, *MBtowers, *MBtracks;
+  TTree * MBtree, * MBtowers, * MBtracks;
   int RunID, EventID, nTowers, nPrimary, nTracks, Charge, nHits;
   double Vx, Vy, Vz;
   vector<double> towE, towEta, towPhi, trPx, trPy, trPz, dca;
   
-  // MBtree->Branch("EventID", &EventID);
-  // MBtree->Branch("RunID", &RunID);
-  // MBtree->Branch("Vx", &Vx);
-  // MBtree->Branch("Vy", &Vy);
-  // MBtree->Branch("Vz", &Vz);
-  // MBtree->Branch("nTowers", &nTowers);
-  MBtree->Branch("nPrimary", &nPrimary);
+  // MBtree->Branch("eventID", &EventID);
+  // MBtree->Branch("runID", &RunID);
+  // MBtree->Branch("vx", &Vx);
+  // MBtree->Branch("vy", &Vy);
+  // MBtree->Branch("vz", &Vz);
+  // MBtree->Branch("ntowers", &nTowers);
+  MBtree->Branch("nprimary", &nPrimary);
 
   // MBtowers->Branch("eventID", &EventID);
   // MBtowers->Branch("runID", &RunID);
