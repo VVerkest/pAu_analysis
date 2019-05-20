@@ -65,7 +65,7 @@ int main () {
   // Chain->Add( "pAu_2015_200_MB_156_160_2.root" );
   Chain->Add( "production_pAu200_2015/MB/pAu_2015_200_MB*.root" );
   TStarJetPicoReader Reader;
-  int numEvents = 100;        // total events in MB: 59388132
+  int numEvents = 100000;        // total events in MB: 59388132
   InitReader( Reader, Chain, numEvents );
 
   vector<PseudoJet> rawParticles, rawJets;
