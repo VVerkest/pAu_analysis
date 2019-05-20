@@ -7,7 +7,7 @@
 set ExecPath = `pwd`
 #set execute = './bin/analysis'
 #set base = /nfs/rhi/STAR/Data/ppMB/picoDst_
-set arg = '' 
+set arg = ''
 
 make bin/pAu_analysis || exit
 set execute = './bin/pAu_analysis'
