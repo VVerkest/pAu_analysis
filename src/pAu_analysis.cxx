@@ -83,7 +83,7 @@ int main () {
     Reader.PrintStatus(20); 
 
     eID = Reader.GetNOfCurrentEvent();
-    rID = header->GetRunID();
+    rID = header->GetRunId();
 
     event = Reader.GetEvent();
     header = event->GetHeader();
