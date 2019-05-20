@@ -23,35 +23,37 @@ int main () {
   TH3D *hPrimaryTracks = new TH3D( "hPrimaryTracks", "Primary Tracks: p_{T}, #eta, and #phi;p_{T} (GeV);#eta;#phi", 40,0,20, 40,-2,2, 16,-pi,pi );
 
 
-  TTree * MBtree, * MBtowers, * MBtracks;
+  TTree *MBtree = new TTree( MBTree, "MBTree" );
+  TTree *MBtowers = new TTree( MBTowers, "MBTowers" );
+  TTree *MBtracks = new TTree( MBTracks, "MBTracks" );
 
   int RunID, EventID, nTowers, nPrimary, nTracks, Charge, nHits;
   double Vx, Vy, Vz;
-  vector<double> towE, towEta, towPhi, trPx, trPy, trPz, dca;
+  vector<double> towE, towEta, towPhi, trPx, trPy, trPz, DCA;
 
-  
-  // MBtree->Branch("EventID", &EventID);
-  // MBtree->Branch("RunID", &RunID);
+
+  MBtree->Branch("EventID", &EventID);
+  MBtree->Branch("RunID", &RunID);
   MBtree->Branch("Vx", &Vx);
   MBtree->Branch("Vy", &Vy);
   MBtree->Branch("Vz", &Vz);
-  // MBtree->Branch("ntowers", &nTowers);
-  //  MBtree->Branch("nPrimary", &nPrimary);
+  MBtree->Branch("nTowers", &nTowers);
+  MBtree->Branch("nPrimary", &nPrimary);
 
-  // MBtowers->Branch("eventID", &EventID);
-  // MBtowers->Branch("runID", &RunID);
-  // MBtowers->Branch("ntracks", &nTracks);
-  // MBtowers->Branch("towerE", &towE);
-  // MBtowers->Branch("towerEta", &towEta);
-  // MBtowers->Branch("towerPhi", &towPhi);
+  MBtowers->Branch("EventID", &EventID);
+  MBtowers->Branch("RunID", &RunID);
+  MBtowers->Branch("nTracks", &nTracks);
+  MBtowers->Branch("towE", &towE);
+  MBtowers->Branch("towEta", &towEta);
+  MBtowers->Branch("towPhi", &towPhi);
 
-  // MBtracks->Branch("eventID", &EventID);
-  // MBtracks->Branch("runID", &RunID);
-  // MBtracks->Branch("nhits", &nHits);
-  // MBtracks->Branch("trackPx", &trPx);
-  // MBtracks->Branch("trackPy", &trPy);
-  // MBtracks->Branch("trackPz", &trPz);
-  // MBtracks->Branch("DCA", &dca);
+  MBtracks->Branch("EventID", &EventID);
+  MBtracks->Branch("RunID", &RunID);
+  MBtracks->Branch("nHits", &nHits);
+  MBtracks->Branch("trPx", &trPx);
+  MBtracks->Branch("trPy", &trPy);
+  MBtracks->Branch("trPz", &trPz);
+  MBtracks->Branch("DCA", &dca);
   
   TChain* Chain = new TChain( "JetTree" );
   // Chain->Add( "pAu_2015_200_MB_156_160_2.root" );
