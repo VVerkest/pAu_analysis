@@ -30,28 +30,28 @@ int main () {
   vector<int> nTracks, Charge, nHits;
   vector<double> towE, towEta, towPhi, trPx, trPy, trPz, DCA;
   
-  MBtree->Branch("EventID", &EventID_MB);
-  MBtree->Branch("RunID", &RunID_MB);
-  MBtree->Branch("Vx", &Vx_MB);
-  MBtree->Branch("Vy", &Vy_MB);
-  MBtree->Branch("Vz", &Vz_MB);
-  MBtree->Branch("nTowers", &nTowers_MB);
-  MBtree->Branch("nPrimary", &nPrimary_MB);
+  MBtree->Branch("EventID", &EventID);
+  MBtree->Branch("RunID", &RunID);
+  MBtree->Branch("Vx", &Vx);
+  MBtree->Branch("Vy", &Vy);
+  MBtree->Branch("Vz", &Vz);
+  MBtree->Branch("nTowers", &nTowers);
+  MBtree->Branch("nPrimary", &nPrimary);
 
-  MBtowers->Branch("EventID", &EventID_MB);
-  MBtowers->Branch("RunID", &RunID_MB);
-  MBtowers->Branch("nTracks", &nTracks_MB);
-  MBtowers->Branch("towE", &towE_MB);
-  MBtowers->Branch("towEta", &towEta_MB);
-  MBtowers->Branch("towPhi", &towPhi_MB);
+  MBtowers->Branch("EventID", &EventID);
+  MBtowers->Branch("RunID", &RunID);
+  MBtowers->Branch("nTracks", &nTracks);
+  MBtowers->Branch("towE", &towE);
+  MBtowers->Branch("towEta", &towEta);
+  MBtowers->Branch("towPhi", &towPhi);
 
-  MBtracks->Branch("EventID", &EventID_MB);
-  MBtracks->Branch("RunID", &RunID_MB);
-  MBtracks->Branch("nHits", &nHits_MB);
-  MBtracks->Branch("trPx", &trPx_MB);
-  MBtracks->Branch("trPy", &trPy_MB);
-  MBtracks->Branch("trPz", &trPz_MB);
-  MBtracks->Branch("DCA", &DCA_MB);
+  MBtracks->Branch("EventID", &EventID);
+  MBtracks->Branch("RunID", &RunID);
+  MBtracks->Branch("nHits", &nHits);
+  MBtracks->Branch("trPx", &trPx);
+  MBtracks->Branch("trPy", &trPy);
+  MBtracks->Branch("trPz", &trPz);
+  MBtracks->Branch("DCA", &DCA);
   
   TChain* Chain = new TChain( "JetTree" );
   // Chain->Add( "pAu_2015_200_MB_156_160_2.root" );
