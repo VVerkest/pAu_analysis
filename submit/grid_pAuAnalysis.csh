@@ -40,9 +40,9 @@ endif
 foreach input ( ${base}* )
 
 # Create the output file base name                                                                                                                                             
-#set OutBase = `basename $input | sed 's/.root//g'`
-#set uscore = "_"
-#set OutBase = "$OutBase$uscore$outFile"
+set OutBase = `basename $input | sed 's/.root//g'`
+set uscore = "_"
+set OutBase = "$OutBase$uscore$outFile"
     
 # Make the output names and path                                                                                                                                               
 set outLocation = out/${outFile}/
@@ -61,7 +61,7 @@ echo "Logging errors to " $ErrFile
 set arg = "$outLocation $outName $Files"
 
 echo "now submitting this script: "
-echo qsub -V -l mem=4GB -o $LogFile -e $ErrFile -N $1 -- ${ExecPath}/submit/qwrap.sh ${ExecPath} $execute $arg
+echo qsub -V -l mem=4GB -o $LogFile -e $ErrFile -N $1 -- ${ExecPath}/submit/qwrap.sh ${ExecPath} $execute
 
 qsub -V -l mem=4GB -o $LogFile -e $ErrFile -N $1 -- ${ExecPath}/submit/qwrap.sh ${ExecPath} $execute $arg   
 #make python script later: jet_analysis/submit scripts start with pbs
