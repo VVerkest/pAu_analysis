@@ -15,7 +15,7 @@ using namespace std;
 using namespace fastjet;
 using namespace pAuAnalysis;
 
-const double pi = 3.14159;
+//const double pi = 3.14159;
 
 int main () {
 
