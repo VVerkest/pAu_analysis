@@ -81,8 +81,9 @@ int main () {
     event = Reader.GetEvent();    header = event->GetHeader();
     container = Reader.GetOutputContainer();
 
-    nPrimary = header->GetNOfPrimaryTracks();
-    nTowers = header->GetTowers();
+    int npt = header->GetNOfPrimaryTracks();      nPrimary = npt;
+    int ntow = header->GetNOfTowers();               nTowers = ntow;
+
     
     for ( int i=0; i<npt; ++i ) {
       double primTrackPt = (double) event->GetPrimaryTrack(i)->GetPt();
