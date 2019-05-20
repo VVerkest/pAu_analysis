@@ -27,9 +27,10 @@ int main () {
   TTree *MBtowers = new TTree( "MBTowers", "MBtowers" );
   TTree *MBtracks = new TTree( "MBTracks", "MBtracks" );
 
-  int RunID, EventID, nTowers, nPrimary, nTracks, Charge, nHits;
+  int RunID, EventID, nTowers, nPrimary, nTracks;
+  vector<int> Charge, nHitsPoss, nHitsFit;
   double Vx, Vy, Vz;
-  vector<double> towE, towEta, towPhi, trPx, trPy, trPz, DCA;
+  vector<double> towEt, towEta, towPhi, trPx, trPy, trPz, trPt, DCA;
 
 
   MBtree->Branch("EventID", &EventID);
@@ -38,21 +39,23 @@ int main () {
   MBtree->Branch("Vy", &Vy);
   MBtree->Branch("Vz", &Vz);
   MBtree->Branch("nTowers", &nTowers);
+  MBtree->Branch("nTracks", &nTracks);
   MBtree->Branch("nPrimary", &nPrimary);
 
   MBtowers->Branch("EventID", &EventID);
   MBtowers->Branch("RunID", &RunID);
-  MBtowers->Branch("nTracks", &nTracks);
-  MBtowers->Branch("towE", &towE);
+  MBtowers->Branch("towEt", &towEt);
   MBtowers->Branch("towEta", &towEta);
   MBtowers->Branch("towPhi", &towPhi);
 
   MBtracks->Branch("EventID", &EventID);
   MBtracks->Branch("RunID", &RunID);
-  MBtracks->Branch("nHits", &nHits);
+  MBtracks->Branch("nHitsPoss", &nHitsPoss);
+  MBtracks->Branch("nHitsFit", &nHitsFit);
   MBtracks->Branch("trPx", &trPx);
   MBtracks->Branch("trPy", &trPy);
   MBtracks->Branch("trPz", &trPz);
+  MBtracks->Branch("trPt", &trPt);
   MBtracks->Branch("DCA", &DCA);
   
   TChain* Chain = new TChain( "JetTree" );
@@ -77,7 +80,7 @@ int main () {
     Reader.PrintStatus(20); 
 
     eID = Reader.GetNOfCurrentEvent();
-    rID = header->GetNOfCurrentRun();
+    rID = header->GetRunID();
 
     event = Reader.GetEvent();
     header = event->GetHeader();
@@ -90,14 +93,24 @@ int main () {
 
     
     for ( int i=0; i<npt; ++i ) {
-      double primTrackPt = (double) event->GetPrimaryTrack(i)->GetPt();
-      double primTrackEta = (double) event->GetPrimaryTrack(i)->GetEta();
-      double primTrackPhi = (double) event->GetPrimaryTrack(i)->GetPhi();
+      double primTrackPt = (double) event->GetPrimaryTrack(i)->GetPt();         trPt.push_back(primTrackPt);
+      double primTrackEta = (double) event->GetPrimaryTrack(i)->GetEta();      trEta.push_back(primTrackEta);
+      double primTrackPhi = (double) event->GetPrimaryTrack(i)->GetPhi();      trPhi.push_back(primTrackPhi);
 
+      trPx.push_back(primTrackPx);      trPy.push_back(primTrackPy);      trPz.push_back(primTrackPz);
+
+      nHitsFit.push_back(event->GetPrimaryTrack(i)->GetNOfFittedHits());
+      nHitsPoss.push_back(event->GetPrimaryTrack(i)->GetNOfPossHits());
+      DCA.push_back(event->GetPrimaryTrack(i)->GetDCA());
+      
       hPrimaryTracks->Fill( primTrackPt, primTrackEta, primTrackPhi );
     }
 
 
+
+    for ( int i=0; i<ntow; ++i ) {
+      
+    }
     
     GatherParticles( container, rawParticles);        //cout<<rawParticles.size()<<endl;
 
