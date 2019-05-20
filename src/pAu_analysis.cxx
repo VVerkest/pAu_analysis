@@ -35,7 +35,7 @@ int main () {
   // MBtree->Branch("vy", &Vy);
   // MBtree->Branch("vz", &Vz);
   // MBtree->Branch("ntowers", &nTowers);
-  MBtree->Branch("nPrimary", &nPrimary);
+  //  MBtree->Branch("nPrimary", &nPrimary);
 
   // MBtowers->Branch("eventID", &EventID);
   // MBtowers->Branch("runID", &RunID);
