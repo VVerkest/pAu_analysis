@@ -24,10 +24,34 @@ int main () {
   TH3D *hPrimaryTracks = new TH3D( "hPrimaryTracks", "Primary Tracks: p_{T}, #eta, and #phi;p_{T} (GeV);#eta;#phi", 40,0,20, 40,-2,2, 16,-pi,pi );
 
 
-  TTree *MBtree;
-  double EventID, Vx, Vy, Vz, nTowers;
+  TTree *MBtree, *MBtowers, *MBtracks;
+  int RunID, EventID, nTowers, nPrimary;
+  double Vx, Vy, Vz;
+  vector<int> nTracks, Charge, nHits;
+  vector<double> towE, towEta, towPhi, trPx, trPy, trPz, DCA;
+  
   MBtree->Branch("EventID", &EventID_MB);
+  MBtree->Branch("RunID", &RunID_MB);
+  MBtree->Branch("Vx", &Vx_MB);
+  MBtree->Branch("Vy", &Vy_MB);
+  MBtree->Branch("Vz", &Vz_MB);
+  MBtree->Branch("nTowers", &nTowers_MB);
+  MBtree->Branch("nPrimary", &nPrimary_MB);
 
+  MBtowers->Branch("EventID", &EventID_MB);
+  MBtowers->Branch("RunID", &RunID_MB);
+  MBtowers->Branch("nTracks", &nTracks_MB);
+  MBtowers->Branch("towE", &towE_MB);
+  MBtowers->Branch("towEta", &towEta_MB);
+  MBtowers->Branch("towPhi", &towPhi_MB);
+
+  MBtracks->Branch("EventID", &EventID_MB);
+  MBtracks->Branch("RunID", &RunID_MB);
+  MBtracks->Branch("nHits", &nHits_MB);
+  MBtracks->Branch("trPx", &trPx_MB);
+  MBtracks->Branch("trPy", &trPy_MB);
+  MBtracks->Branch("trPz", &trPz_MB);
+  MBtracks->Branch("DCA", &DCA_MB);
   
   TChain* Chain = new TChain( "JetTree" );
   // Chain->Add( "pAu_2015_200_MB_156_160_2.root" );
@@ -73,6 +97,9 @@ int main () {
 
   TFile *pAuFile = new TFile("out/pAu.root","RECREATE");
   hPrimaryTracks->Write();
+  MBtree->Write();
+  MBtowers->Write();
+  MBtracks->Write();
   
   return 0;
 }
