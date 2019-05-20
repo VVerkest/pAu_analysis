@@ -29,34 +29,34 @@ int main () {
   double Vx, Vy, Vz;
   vector<double> towE, towEta, towPhi, trPx, trPy, trPz, dca;
   
-  MBtree->Branch("eventID", &EventID);
-  MBtree->Branch("runID", &RunID);
-  MBtree->Branch("vx", &Vx);
-  MBtree->Branch("vy", &Vy);
-  MBtree->Branch("vz", &Vz);
-  MBtree->Branch("ntowers", &nTowers);
+  // MBtree->Branch("eventID", &EventID);
+  // MBtree->Branch("runID", &RunID);
+  // MBtree->Branch("vx", &Vx);
+  // MBtree->Branch("vy", &Vy);
+  // MBtree->Branch("vz", &Vz);
+  // MBtree->Branch("ntowers", &nTowers);
   MBtree->Branch("nprimary", &nPrimary);
 
-  MBtowers->Branch("eventID", &EventID);
-  MBtowers->Branch("runID", &RunID);
-  MBtowers->Branch("ntracks", &nTracks);
-  MBtowers->Branch("towerE", &towE);
-  MBtowers->Branch("towerEta", &towEta);
-  MBtowers->Branch("towerPhi", &towPhi);
+  // MBtowers->Branch("eventID", &EventID);
+  // MBtowers->Branch("runID", &RunID);
+  // MBtowers->Branch("ntracks", &nTracks);
+  // MBtowers->Branch("towerE", &towE);
+  // MBtowers->Branch("towerEta", &towEta);
+  // MBtowers->Branch("towerPhi", &towPhi);
 
-  MBtracks->Branch("eventID", &EventID);
-  MBtracks->Branch("runID", &RunID);
-  MBtracks->Branch("nhits", &nHits);
-  MBtracks->Branch("trackPx", &trPx);
-  MBtracks->Branch("trackPy", &trPy);
-  MBtracks->Branch("trackPz", &trPz);
-  MBtracks->Branch("DCA", &dca);
+  // MBtracks->Branch("eventID", &EventID);
+  // MBtracks->Branch("runID", &RunID);
+  // MBtracks->Branch("nhits", &nHits);
+  // MBtracks->Branch("trackPx", &trPx);
+  // MBtracks->Branch("trackPy", &trPy);
+  // MBtracks->Branch("trackPz", &trPz);
+  // MBtracks->Branch("DCA", &dca);
   
   TChain* Chain = new TChain( "JetTree" );
   // Chain->Add( "pAu_2015_200_MB_156_160_2.root" );
   Chain->Add( "production_pAu200_2015/MB/pAu_2015_200_MB*.root" );
   TStarJetPicoReader Reader;
-  int numEvents = 5000000;        // total events in MB: 59388132
+  int numEvents = 5000;        // total events in MB: 59388132
   InitReader( Reader, Chain, numEvents );
 
   vector<PseudoJet> rawParticles, rawJets;
@@ -79,6 +79,9 @@ int main () {
     container = Reader.GetOutputContainer();
 
     int npt = header->GetNOfPrimaryTracks();
+
+    nPrimary = npt;
+    
     for ( int i=0; i<npt; ++i ) {
       double primTrackPt = (double) event->GetPrimaryTrack(i)->GetPt();
       double primTrackEta = (double) event->GetPrimaryTrack(i)->GetEta();
@@ -90,7 +93,11 @@ int main () {
 
     
     GatherParticles ( container, rawParticles);        //cout<<rawParticles.size()<<endl;
-    
+
+
+    MBtree->Fill();
+    MBtowers->Fill();
+    MBtracks->Fill();
   }
   // ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~  END EVENT LOOP!  ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~
 
