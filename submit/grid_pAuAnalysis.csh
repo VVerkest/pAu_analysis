@@ -40,9 +40,9 @@ endif
 foreach input ( ${base}* )
 
 # Create the output file base name                                                                                                                                             
-set OutBase = `basename $input | sed 's/.root//g'`
-set uscore = "_"
-set OutBase = "$OutBase$uscore$outFile"
+#set OutBase = `basename $input | sed 's/.root//g'`
+#set uscore = "_"
+#set OutBase = "$OutBase$uscore$outFile"
     
 # Make the output names and path                                                                                                                                               
 set outLocation = out/${outFile}/
