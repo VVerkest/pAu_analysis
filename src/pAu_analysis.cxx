@@ -20,7 +20,7 @@ using namespace pAuAnalysis;
 vector<PseudoJet> rawParticles, rawJets;
 int ID;
 
-TH3D *hPrimaryTracks = new TH3D( "hPrimaryTracks", "Primary Tracks: p_{T}, #{eta}, and #{phi};p_{T} (GeV);#{eta};#{phi}", 50,0,20, 20,-2,2, 20,-3.141,3.141 );
+TH3D *hPrimaryTracks = new TH3D( "hPrimaryTracks", "Primary Tracks: p_{T}, #{eta}, and #{phi};p_{T} (GeV);#{eta};#{phi}", 40,0,20, 40,-2,2, 16r,-3.141,3.141 );
 
 
 int main () {
@@ -29,7 +29,9 @@ int main () {
   TH2::SetDefaultSumw2();
   TH3::SetDefaultSumw2();
   
-  TChain* Chain = new TChain( "JetTree" );         Chain->Add( "pAu_2015_200_MB_156_160_2.root" );
+  TChain* Chain = new TChain( "JetTree" );
+  // Chain->Add( "pAu_2015_200_MB_156_160_2.root" );
+  Chain->Add( "production_pAu200_2015/MB/pAu_2015_200_MB*.root" );
   TStarJetPicoReader Reader;                               int numEvents = -1;
   InitReader( Reader, Chain, numEvents );
 
@@ -68,7 +70,7 @@ int main () {
   }
   // ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~  END EVENT LOOP!  ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~
 
-  TFile *pAuFile = new TFile("out/pAu.root","NEW");
+  TFile *pAuFile = new TFile("out/pAu.root","RECREATE");
   hPrimaryTracks->Write();
   
   return 0;
