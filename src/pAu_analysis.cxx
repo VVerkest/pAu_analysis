@@ -20,7 +20,7 @@ using namespace pAuAnalysis;
 vector<PseudoJet> rawParticles, rawJets;
 int ID;
 
-TH3D *hPrimaryTracks = new TH3D( "hPrimaryTracks", "Primary Tracks: p_{T}, #{eta}, and #{phi};p_{T} (GeV);#{eta};#{phi}", 40,0,20, 40,-2,2, 16r,-3.141,3.141 );
+TH3D *hPrimaryTracks = new TH3D( "hPrimaryTracks", "Primary Tracks: p_{T}, #{eta}, and #{phi};p_{T} (GeV);#{eta};#{phi}", 40,0,20, 40,-2,2, 16,-3.141,3.141 );
 
 
 int main () {
