@@ -23,8 +23,8 @@ namespace pAuAnalysis {
     // set the chain
     reader.SetInputChain( chain );
     // apply hadronic correction - subtract 100% of charged track energy from towers
-    reader.SetApplyFractionHadronicCorrection( true );
-    reader.SetFractionHadronicCorrection( 0.9999 );
+    reader.SetApplyFractionHadronicCorrection( false );
+    //  reader.SetFractionHadronicCorrection( 0.9999 );
     reader.SetRejectTowerElectrons( kFALSE );
     
     // Event and track selection
