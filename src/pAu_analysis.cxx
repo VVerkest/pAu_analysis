@@ -32,7 +32,8 @@ int main () {
   TChain* Chain = new TChain( "JetTree" );
   // Chain->Add( "pAu_2015_200_MB_156_160_2.root" );
   Chain->Add( "production_pAu200_2015/MB/pAu_2015_200_MB*.root" );
-  TStarJetPicoReader Reader;                               int numEvents = -1;
+  TStarJetPicoReader Reader;
+  int numEvents = 5000000;        // total events in MB: 59388132
   InitReader( Reader, Chain, numEvents );
 
 
