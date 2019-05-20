@@ -61,7 +61,7 @@ echo "Logging errors to " $ErrFile
 set arg = "$outLocation $outName $Files"
 
 echo "now submitting this script: "
-echo qsub -V -l mem=4GB -o $LogFile -e $ErrFile -N $1 -- ${ExecPath}/submit/qwrap.sh ${ExecPath} $execute
+echo qsub -V -l mem=4GB -o $LogFile -e $ErrFile -N $1 -- ${ExecPath}/submit/qwrap.sh ${ExecPath} $execute $arg
 
 qsub -V -l mem=4GB -o $LogFile -e $ErrFile -N $1 -- ${ExecPath}/submit/qwrap.sh ${ExecPath} $execute $arg   
 #make python script later: jet_analysis/submit scripts start with pbs
