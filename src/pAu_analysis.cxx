@@ -106,6 +106,8 @@ int main () {
   MBtree->Write();
   MBtowers->Write();
   MBtracks->Write();
+  pAuFile->Write();
+  pAuFile->Close();
   
   return 0;
 }
