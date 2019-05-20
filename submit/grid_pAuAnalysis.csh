@@ -30,7 +30,7 @@ echo "Logging errors to " $ErrFile
 
 #set arg = "$outName"
 
-qsub -V -q erhiq -l mem=2GB -o $LogFile -e $ErrFile -N jetfinderAnalysis -- ${ExecPath}/submit/qwrap.sh ${ExecPath} $execute
+qsub -V -q erhiq -l mem=2GB -o $LogFile -e $ErrFile -N pAu_analysis -- ${ExecPath}/submit/qwrap.sh ${ExecPath} $execute
 
 @ i++
 
