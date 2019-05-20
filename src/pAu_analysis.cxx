@@ -94,10 +94,11 @@ int main () {
     
     for ( int i=0; i<npt; ++i ) {
       double primTrackPt = (double) event->GetPrimaryTrack(i)->GetPt();         trPt.push_back(primTrackPt);
+      double primTrackPx = (double) event->GetPrimaryTrack(i)->GetPx();         trPx.push_back(primTrackPx);
+      double primTrackPy = (double) event->GetPrimaryTrack(i)->GetPy();         trPy.push_back(primTrackPy);
+      double primTrackPz = (double) event->GetPrimaryTrack(i)->GetPz();         trPz.push_back(primTrackPz);
       double primTrackEta = (double) event->GetPrimaryTrack(i)->GetEta();      trEta.push_back(primTrackEta);
       double primTrackPhi = (double) event->GetPrimaryTrack(i)->GetPhi();      trPhi.push_back(primTrackPhi);
-
-      trPx.push_back(primTrackPx);      trPy.push_back(primTrackPy);      trPz.push_back(primTrackPz);
 
       nHitsFit.push_back(event->GetPrimaryTrack(i)->GetNOfFittedHits());
       nHitsPoss.push_back(event->GetPrimaryTrack(i)->GetNOfPossHits());
