@@ -74,10 +74,10 @@ int main () {
   while ( Reader.NextEvent() ) {
 
     rawParticles.clear();  rawJets.clear();  //  clear containers
+    Reader.PrintStatus(20); 
 
     eID = Reader.GetNOfCurrentEvent();
-    rID = Reader.GetNOfCurrentRun();
-    Reader.PrintStatus(20); 
+    rID = header->GetNOfCurrentRun();
 
     event = Reader.GetEvent();
     header = event->GetHeader();
