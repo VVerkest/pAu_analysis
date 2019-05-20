@@ -63,7 +63,7 @@ int main () {
   InitReader( Reader, Chain, numEvents );
 
   vector<PseudoJet> rawParticles, rawJets;
-  int ID;
+  int eID, rID;
   
   TStarJetPicoEventHeader* header;    TStarJetPicoEvent* event;    TStarJetVector* sv;
   TStarJetVectorContainer<TStarJetVector> * container;
@@ -75,12 +75,16 @@ int main () {
 
     rawParticles.clear();  rawJets.clear();  //  clear containers
 
-    ID = Reader.GetNOfCurrentEvent();
+    eID = Reader.GetNOfCurrentEvent();
+    rID = Reader.GetNOfCurrentRun();
     Reader.PrintStatus(20); 
 
-    event = Reader.GetEvent();    header = event->GetHeader();
+    event = Reader.GetEvent();
+    header = event->GetHeader();
     container = Reader.GetOutputContainer();
 
+    EventID = eID;
+    RunID = rID;
     int npt = header->GetNOfPrimaryTracks();      nPrimary = npt;
     int ntow = header->GetNOfTowers();               nTowers = ntow;
 
