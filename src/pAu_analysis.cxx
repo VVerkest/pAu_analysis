@@ -25,12 +25,12 @@ int main () {
 
 
   TTree * MBtree, * MBtowers, * MBtracks;
-  int RunID, EventID, nTowers, nPrimary, nTracks, Charge, nHits;
-  double Vx, Vy, Vz;
-  vector<double> towE, towEta, towPhi, trPx, trPy, trPz, dca;
+  static int RunID, EventID, nTowers, nPrimary, nTracks, Charge, nHits;
+  static double Vx, Vy, Vz;
+  static vector<double> towE, towEta, towPhi, trPx, trPy, trPz, dca;
   
-  // MBtree->Branch("eventID", &EventID);
-  // MBtree->Branch("runID", &RunID);
+  // MBtree->Branch("EventID", &EventID);
+  // MBtree->Branch("RunID", &RunID);
   MBtree->Branch("Vx", &Vx);
   MBtree->Branch("Vy", &Vy);
   MBtree->Branch("Vz", &Vz);
