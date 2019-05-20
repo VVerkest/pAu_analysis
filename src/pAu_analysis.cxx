@@ -25,9 +25,8 @@ int main () {
 
 
   TTree *MBtree, *MBtowers, *MBtracks;
-  int RunID, EventID, nTowers, nPrimary;
+  int RunID, EventID, nTowers, nPrimary, nTracks, Charge, nHits;
   double Vx, Vy, Vz;
-  vector<int> nTracks, Charge, nHits;
   vector<double> towE, towEta, towPhi, trPx, trPy, trPz, DCA;
   
   MBtree->Branch("EventID", &EventID);
