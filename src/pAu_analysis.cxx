@@ -15,10 +15,6 @@ using namespace std;
 using namespace fastjet;
 using namespace pAuAnalysis;
 
-int RunID, EventID, nTowers, nPrimary, nTracks, Charge, nHits;
-double *Vx, *Vy, *Vz;
-vector<double> towE, towEta, towPhi, trPx, trPy, trPz, dca;
-
 
 int main () {
 
@@ -27,7 +23,11 @@ int main () {
   TH3D *hPrimaryTracks = new TH3D( "hPrimaryTracks", "Primary Tracks: p_{T}, #eta, and #phi;p_{T} (GeV);#eta;#phi", 40,0,20, 40,-2,2, 16,-pi,pi );
 
 
-  TTree * MBtree, * MBtowers, * MBtracks;
+  TTree MBtree, MBtowers, MBtracks;
+
+  int RunID, EventID, nTowers, nPrimary, nTracks, Charge, nHits;
+  double Vx, Vy, Vz;
+  vector<double> towE, towEta, towPhi, trPx, trPy, trPz, dca;
 
   
   // MBtree->Branch("EventID", &EventID);
