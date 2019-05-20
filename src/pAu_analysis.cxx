@@ -15,19 +15,19 @@ using namespace std;
 using namespace fastjet;
 using namespace pAuAnalysis;
 
-// const int pi = 3.14159;
-
-vector<PseudoJet> rawParticles, rawJets;
-int ID;
-
-TH3D *hPrimaryTracks = new TH3D( "hPrimaryTracks", "Primary Tracks: p_{T}, #{eta}, and #{phi};p_{T} (GeV);#{eta};#{phi}", 40,0,20, 40,-2,2, 16,-3.141,3.141 );
-
+const double pi = 3.14159;
 
 int main () {
 
-  TH1::SetDefaultSumw2();
-  TH2::SetDefaultSumw2();
-  TH3::SetDefaultSumw2();
+  TH1::SetDefaultSumw2();  TH2::SetDefaultSumw2();  TH3::SetDefaultSumw2();
+
+  TH3D *hPrimaryTracks = new TH3D( "hPrimaryTracks", "Primary Tracks: p_{T}, #eta, and #phi;p_{T} (GeV);#eta;#phi", 40,0,20, 40,-2,2, 16,-pi,pi );
+
+
+  TTree *MBtree;
+  double EventID, Vx, Vy, Vz, nTowers;
+  MBtree->Branch("EventID", &EventID_MB);
+
   
   TChain* Chain = new TChain( "JetTree" );
   // Chain->Add( "pAu_2015_200_MB_156_160_2.root" );
@@ -36,13 +36,13 @@ int main () {
   int numEvents = 5000000;        // total events in MB: 59388132
   InitReader( Reader, Chain, numEvents );
 
-
+  vector<PseudoJet> rawParticles, rawJets;
+  int ID;
+  
   TStarJetPicoEventHeader* header;    TStarJetPicoEvent* event;    TStarJetVector* sv;
   TStarJetVectorContainer<TStarJetVector> * container;
 
-
-
-
+  
 
   // ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~  BEGIN EVENT LOOP!  ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~
   while ( Reader.NextEvent() ) {
