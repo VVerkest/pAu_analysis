@@ -30,7 +30,7 @@ int main () {
   TH3::SetDefaultSumw2();
   
   TChain* Chain = new TChain( "JetTree" );         Chain->Add( "pAu_2015_200_MB_156_160_2.root" );
-  TStarJetPicoReader Reader;                               int numEvents = 10000;
+  TStarJetPicoReader Reader;                               int numEvents = -1;
   InitReader( Reader, Chain, numEvents );
 
 
