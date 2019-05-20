@@ -23,9 +23,9 @@ int main () {
   TH3D *hPrimaryTracks = new TH3D( "hPrimaryTracks", "Primary Tracks: p_{T}, #eta, and #phi;p_{T} (GeV);#eta;#phi", 40,0,20, 40,-2,2, 16,-pi,pi );
 
 
-  TTree *MBtree = new TTree( MBtree, "MBtree" );
-  TTree *MBtowers = new TTree( MBtowers, "MBtowers" );
-  TTree *MBtracks = new TTree( MBtracks, "MBtracks" );
+  TTree *MBtree = new TTree( "MBtree", "MBtree" );
+  TTree *MBtowers = new TTree( "MBtowers", "MBtowers" );
+  TTree *MBtracks = new TTree( "MBtracks", "MBtracks" );
 
   int RunID, EventID, nTowers, nPrimary, nTracks, Charge, nHits;
   double Vx, Vy, Vz;
