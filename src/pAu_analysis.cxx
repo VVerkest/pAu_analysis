@@ -15,7 +15,10 @@ using namespace std;
 using namespace fastjet;
 using namespace pAuAnalysis;
 
-//const double pi = 3.14159;
+int RunID, EventID, nTowers, nPrimary, nTracks, Charge, nHits;
+double Vx, Vy, Vz;
+vector<double> towE, towEta, towPhi, trPx, trPy, trPz, dca;
+
 
 int main () {
 
@@ -25,9 +28,7 @@ int main () {
 
 
   TTree * MBtree, * MBtowers, * MBtracks;
-  static int RunID, EventID, nTowers, nPrimary, nTracks, Charge, nHits;
-  static double Vx, Vy, Vz;
-  static vector<double> towE, towEta, towPhi, trPx, trPy, trPz, dca;
+
   
   // MBtree->Branch("EventID", &EventID);
   // MBtree->Branch("RunID", &RunID);
