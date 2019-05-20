@@ -35,7 +35,7 @@ int main () {
   // MBtree->Branch("vy", &Vy);
   // MBtree->Branch("vz", &Vz);
   // MBtree->Branch("ntowers", &nTowers);
-  MBtree->Branch("nprimary", &nPrimary);
+  MBtree->Branch("nPrimary", &nPrimary);
 
   // MBtowers->Branch("eventID", &EventID);
   // MBtowers->Branch("runID", &RunID);
@@ -80,7 +80,7 @@ int main () {
 
     int npt = header->GetNOfPrimaryTracks();
 
-    nPrimary = npt;
+    //nPrimary = npt;
     
     for ( int i=0; i<npt; ++i ) {
       double primTrackPt = (double) event->GetPrimaryTrack(i)->GetPt();
