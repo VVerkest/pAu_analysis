@@ -30,7 +30,7 @@ int main () {
   int RunID, EventID, nTowers, nPrimary, nTracks;
   vector<int> Charge, nHitsPoss, nHitsFit;
   double Vx, Vy, Vz;
-  vector<double> towEt, towEta, towPhi, trPx, trPy, trPz, trPt, DCA;
+  vector<double> towEt, towEta, towPhi, trEta, trPhi, trPx, trPy, trPz, trPt, DCA;
 
 
   MBtree->Branch("EventID", &EventID);
@@ -56,7 +56,10 @@ int main () {
   MBtracks->Branch("trPy", &trPy);
   MBtracks->Branch("trPz", &trPz);
   MBtracks->Branch("trPt", &trPt);
+  MBtracks->Branch("trEta", &trEta);
+  MBtracks->Branch("trPhi", &trPhi);
   MBtracks->Branch("DCA", &DCA);
+
   
   TChain* Chain = new TChain( "JetTree" );
   // Chain->Add( "pAu_2015_200_MB_156_160_2.root" );
