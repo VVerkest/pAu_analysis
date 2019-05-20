@@ -27,30 +27,30 @@ int main () {
   TTree *MBtree, *MBtowers, *MBtracks;
   int RunID, EventID, nTowers, nPrimary, nTracks, Charge, nHits;
   double Vx, Vy, Vz;
-  vector<double> towE, towEta, towPhi, trPx, trPy, trPz, DCA;
+  vector<double> towE, towEta, towPhi, trPx, trPy, trPz, dca;
   
-  MBtree->Branch("EventID", &EventID);
-  MBtree->Branch("RunID", &RunID);
-  MBtree->Branch("Vx", &Vx);
-  MBtree->Branch("Vy", &Vy);
-  MBtree->Branch("Vz", &Vz);
-  MBtree->Branch("nTowers", &nTowers);
-  MBtree->Branch("nPrimary", &nPrimary);
+  MBtree->Branch("eventID", &EventID);
+  MBtree->Branch("runID", &RunID);
+  MBtree->Branch("vx", &Vx);
+  MBtree->Branch("vy", &Vy);
+  MBtree->Branch("vz", &Vz);
+  MBtree->Branch("ntowers", &nTowers);
+  MBtree->Branch("nprimary", &nPrimary);
 
-  MBtowers->Branch("EventID", &EventID);
-  MBtowers->Branch("RunID", &RunID);
-  MBtowers->Branch("nTracks", &nTracks);
-  MBtowers->Branch("towE", &towE);
-  MBtowers->Branch("towEta", &towEta);
-  MBtowers->Branch("towPhi", &towPhi);
+  MBtowers->Branch("eventID", &EventID);
+  MBtowers->Branch("runID", &RunID);
+  MBtowers->Branch("ntracks", &nTracks);
+  MBtowers->Branch("towerE", &towE);
+  MBtowers->Branch("towerEta", &towEta);
+  MBtowers->Branch("towerPhi", &towPhi);
 
-  MBtracks->Branch("EventID", &EventID);
-  MBtracks->Branch("RunID", &RunID);
-  MBtracks->Branch("nHits", &nHits);
-  MBtracks->Branch("trPx", &trPx);
-  MBtracks->Branch("trPy", &trPy);
-  MBtracks->Branch("trPz", &trPz);
-  MBtracks->Branch("DCA", &DCA);
+  MBtracks->Branch("eventID", &EventID);
+  MBtracks->Branch("runID", &RunID);
+  MBtracks->Branch("nhits", &nHits);
+  MBtracks->Branch("trackPx", &trPx);
+  MBtracks->Branch("trackPy", &trPy);
+  MBtracks->Branch("trackPz", &trPz);
+  MBtracks->Branch("DCA", &dca);
   
   TChain* Chain = new TChain( "JetTree" );
   // Chain->Add( "pAu_2015_200_MB_156_160_2.root" );
