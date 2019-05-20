@@ -53,7 +53,7 @@ int main () {
   MBtracks->Branch("trPx", &trPx);
   MBtracks->Branch("trPy", &trPy);
   MBtracks->Branch("trPz", &trPz);
-  MBtracks->Branch("DCA", &dca);
+  MBtracks->Branch("DCA", &DCA);
   
   TChain* Chain = new TChain( "JetTree" );
   // Chain->Add( "pAu_2015_200_MB_156_160_2.root" );
