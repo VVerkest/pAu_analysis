@@ -5,13 +5,11 @@
 # first make sure program is updated and exists 
 
 set ExecPath = `pwd`
-#set execute = './bin/analysis'
-#set base = /nfs/rhi/STAR/Data/ppMB/picoDst_
 set arg = ''
 
 make bin/pAu_analysis || exit
 set execute = './bin/pAu_analysis'
-set base = production_pAu200_2015/MB/pAu_2015_200_MB
+set base = /wsu/home/el/el98/el9852/physics/analysis/pAu_analysis/production_pAu200_2015/MB/pAu_2015_200_MB
 set outFile = MB
 
 #set full_or_ch = "full"
