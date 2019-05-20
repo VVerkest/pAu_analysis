@@ -28,9 +28,9 @@ set ErrFile     = log/pAu_analysis_${i}.err
 echo "Logging output to " $LogFile
 echo "Logging errors to " $ErrFile
 
-#set arg = "$outName"
+set arg = "$outName"
 
-qsub -V -q erhiq -l mem=2GB -o $LogFile -e $ErrFile -N pAu_analysis -- ${ExecPath}/submit/qwrap.sh ${ExecPath} $execute
+qsub -V -q erhiq -l mem=2GB -o $LogFile -e $ErrFile -N pAu_analysis -- ${ExecPath}/submit/qwrap.sh ${ExecPath} $execute $arg
 
 @ i++
 
