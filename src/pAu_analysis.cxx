@@ -29,13 +29,13 @@ int main () {
   double Vx, Vy, Vz;
   vector<double> towE, towEta, towPhi, trPx, trPy, trPz, dca;
   
-  // MBtree->Branch("eventID", &EventID);
-  // MBtree->Branch("runID", &RunID);
-  // MBtree->Branch("vx", &Vx);
-  // MBtree->Branch("vy", &Vy);
-  // MBtree->Branch("vz", &Vz);
-  // MBtree->Branch("ntowers", &nTowers);
-  MBtree->Branch("nprimary", &nPrimary);
+  // MBtree->Branch("EventID", &EventID);
+  // MBtree->Branch("RunID", &RunID);
+  // MBtree->Branch("Vx", &Vx);
+  // MBtree->Branch("Vy", &Vy);
+  // MBtree->Branch("Vz", &Vz);
+  // MBtree->Branch("nTowers", &nTowers);
+  MBtree->Branch("nPrimary", &nPrimary);
 
   // MBtowers->Branch("eventID", &EventID);
   // MBtowers->Branch("runID", &RunID);
@@ -106,7 +106,6 @@ int main () {
   MBtree->Write();
   MBtowers->Write();
   MBtracks->Write();
-  pAuFile->Write();
   pAuFile->Close();
   
   return 0;
