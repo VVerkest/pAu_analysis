@@ -16,7 +16,7 @@ using namespace fastjet;
 using namespace pAuAnalysis;
 
 int RunID, EventID, nTowers, nPrimary, nTracks, Charge, nHits;
-double Vx, Vy, Vz;
+double *Vx, *Vy, *Vz;
 vector<double> towE, towEta, towPhi, trPx, trPy, trPz, dca;
 
 
