@@ -1,7 +1,7 @@
 //  pAu_analysis.cxx
 //  Veronica Verkest       May 14, 2019
 
-
+//  (from Isaac's code:)
 //for pAu, need to ask if the event has the trigger. The trigger IDs are:
 //HT2*BBCMB : 500205, 500215
 //JP2 : 500401, 500411
@@ -16,12 +16,26 @@ using namespace fastjet;
 using namespace pAuAnalysis;
 
 
-int main () {
+int main ( int argc, const char** argv ) {
 
+  string inFile;
+  int nEvents;
+  if ( argc ==  2 ) {
+    vector<string> arguments( argv+1, argv+argc );
+    inFile = arguments[0];
+    nEvents = atoi(arguments[1].c_str());
+  }
+  else if ( argc ==  1 ) {
+    vector<string> arguments( argv+1, argv+argc );
+    inFile = "production_pAu200_2015/MB/pAu_2015_200_MB*.root";
+    nEvents = -1;
+  }
+  else { cerr<< "incorrect number of command line arguments"; return -1; }
+
+  
   TH1::SetDefaultSumw2();  TH2::SetDefaultSumw2();  TH3::SetDefaultSumw2();
 
   TH3D *hPrimaryTracks = new TH3D( "hPrimaryTracks", "Primary Tracks: p_{T}, #eta, and #phi;p_{T} (GeV);#eta;#phi", 40,0,20, 40,-2,2, 16,-pi,pi );
-
 
   TTree *MBtree = new TTree( "MBTree", "MBtree" );
   TTree *MBtowers = new TTree( "MBTowers", "MBtowers" );
@@ -32,40 +46,22 @@ int main () {
   double Vx, Vy, Vz;
   vector<double> towEt, towEta, towPhi, trEta, trPhi, trPx, trPy, trPz, trPt, DCA;
 
+  MBtree->Branch("EventID", &EventID);      MBtree->Branch("RunID", &RunID);                MBtree->Branch("Vx", &Vx);
+  MBtree->Branch("Vy", &Vy);                       MBtree->Branch("Vz", &Vz);                           MBtree->Branch("nTowers", &nTowers);
+  MBtree->Branch("nTracks", &nTracks);      MBtree->Branch("nPrimary", &nPrimary);
 
-  MBtree->Branch("EventID", &EventID);
-  MBtree->Branch("RunID", &RunID);
-  MBtree->Branch("Vx", &Vx);
-  MBtree->Branch("Vy", &Vy);
-  MBtree->Branch("Vz", &Vz);
-  MBtree->Branch("nTowers", &nTowers);
-  MBtree->Branch("nTracks", &nTracks);
-  MBtree->Branch("nPrimary", &nPrimary);
+  MBtowers->Branch("EventID", &EventID);	  MBtowers->Branch("RunID", &RunID);  	  MBtowers->Branch("towEt", &towEt);
+  MBtowers->Branch("towEta", &towEta);	          MBtowers->Branch("towPhi", &towPhi);
 
-  MBtowers->Branch("EventID", &EventID);
-  MBtowers->Branch("RunID", &RunID);
-  MBtowers->Branch("towEt", &towEt);
-  MBtowers->Branch("towEta", &towEta);
-  MBtowers->Branch("towPhi", &towPhi);
+  MBtracks->Branch("EventID", &EventID);	  MBtracks->Branch("RunID", &RunID);	  MBtracks->Branch("nHitsPoss", &nHitsPoss);
+  MBtracks->Branch("nHitsFit", &nHitsFit);	  MBtracks->Branch("trPx", &trPx);   	  MBtracks->Branch("trPy", &trPy);
+  MBtracks->Branch("trPz", &trPz);           	  MBtracks->Branch("trPt", &trPt);    	  MBtracks->Branch("trEta", &trEta);
+  MBtracks->Branch("trPhi", &trPhi);        	  MBtracks->Branch("DCA", &DCA);
 
-  MBtracks->Branch("EventID", &EventID);
-  MBtracks->Branch("RunID", &RunID);
-  MBtracks->Branch("nHitsPoss", &nHitsPoss);
-  MBtracks->Branch("nHitsFit", &nHitsFit);
-  MBtracks->Branch("trPx", &trPx);
-  MBtracks->Branch("trPy", &trPy);
-  MBtracks->Branch("trPz", &trPz);
-  MBtracks->Branch("trPt", &trPt);
-  MBtracks->Branch("trEta", &trEta);
-  MBtracks->Branch("trPhi", &trPhi);
-  MBtracks->Branch("DCA", &DCA);
-
-  
   TChain* Chain = new TChain( "JetTree" );
-  // Chain->Add( "pAu_2015_200_MB_156_160_2.root" );
-  Chain->Add( "production_pAu200_2015/MB/pAu_2015_200_MB*.root" );
+  Chain->Add( inFile );
   TStarJetPicoReader Reader;
-  int numEvents = 100000;        // total events in MB: 59388132
+  int numEvents = nEvents;        // total events in MB: 59388132
   InitReader( Reader, Chain, numEvents );
 
   vector<PseudoJet> rawParticles, rawJets;
