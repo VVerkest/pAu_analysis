@@ -74,11 +74,12 @@ int main ( int argc, const char** argv ) {
   TStarJetVectorContainer<TStarJetVector> * container;
 
   
-
   // ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~  BEGIN EVENT LOOP!  ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~
   while ( Reader.NextEvent() ) {
 
-    rawParticles.clear();  rawJets.clear();  //  clear containers
+    Charge.clear(); nHitsPoss.clear(); nHitsFit.clear(); towEt.clear(); towEta.clear(); towPhi.clear(); trEta.clear();
+    trPhi.clear(); trPx.clear(); trPy.clear(); trPz.clear(); trPt.clear(); DCA.clear(); rawParticles.clear();  rawJets.clear();  //  clear containers
+    
     Reader.PrintStatus(5); 
 
     eID = Reader.GetNOfCurrentEvent();
