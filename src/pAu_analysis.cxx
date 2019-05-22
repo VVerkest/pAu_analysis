@@ -78,7 +78,7 @@ int main ( int argc, const char** argv ) {
   while ( Reader.NextEvent() ) {
 
     rawParticles.clear();  rawJets.clear();  //  clear containers
-    Reader.PrintStatus(20); 
+    Reader.PrintStatus(5); 
 
     eID = Reader.GetNOfCurrentEvent();
     rID = header->GetRunId();
