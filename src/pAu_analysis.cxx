@@ -20,7 +20,7 @@ int main ( int argc, const char** argv ) {
 
   string inFile, outFile;
   int nEvents;
-  if ( argc ==  3 ) {
+  if ( argc ==  4 ) {
     vector<string> arguments( argv+1, argv+argc );
     inFile = arguments[0];
     outFile = arguments[1];
