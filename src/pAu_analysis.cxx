@@ -123,7 +123,7 @@ int main ( int argc, const char** argv ) {
   }
   // ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~  END EVENT LOOP!  ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~
 
-  TFile *pAuFile = new TFile( outFile ,"RECREATE");
+  TFile *pAuFile = new TFile( outFile.c_str() ,"RECREATE");
   hPrimaryTracks->Write();
   MBtree->Write();
   MBtowers->Write();
