@@ -57,7 +57,7 @@ void pAuPlot() {
   TCanvas * c4 = new TCanvas( "c4" , "" ,0 ,23 ,1280 ,700 );
   hTowersPerEvent->Draw();
   
-  TCanvas * c4 = new TCanvas( "c4" , "" ,0 ,23 ,1280 ,700 );
+  TCanvas * c5 = new TCanvas( "c5" , "" ,0 ,23 ,1280 ,700 );
   hTowersPerRun->Draw();
 
 }
