@@ -18,6 +18,8 @@ using namespace pAuAnalysis;
 
 int main ( int argc, const char** argv ) {
 
+  cout<<argc<<"\t"<<arguments[0]<<"\t"<<arguments[1]<<"\t"<<atoi(arguments[2].c_str())<<endl;
+  
   string inFile, outFile;
   int nEvents;
   if ( argc ==  4 ) {
