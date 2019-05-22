@@ -11,12 +11,6 @@ set numevents = 1000000
 set base = /wsu/home/el/el98/el9852/physics/analysis/pAu_analysis/production_pAu200_2015/MB/pAu_2015_200_MB
 set outFile = MB
 
-# Arguments                                                                                                                                                                   
-if ( $# != "0" && $# !="3" ) then
-        echo 'Error: illegal number of parameters'
-        exit
-endif
-
 # Create the folder name for output
 #set outFile = stock
 # Make the directories since they may not exist...                                                                                                                             
