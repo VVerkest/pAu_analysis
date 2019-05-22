@@ -19,7 +19,7 @@ using namespace pAuAnalysis;
 int main ( int argc, const char** argv ) {
 
   vector<string> arguments( argv+1, argv+argc );
-  cout<<argc<<"\t"<<arguments[0]<<"\t"<<arguments[1]<<"\t"<<atoi(arguments[2].c_str())<<endl;
+  cout<<argc<<"\t"<<arguments[0]<<"\t"<<arguments[1]<<"\t"<<atoi(arguments[2].c_str())<<"\t"<<arguments[3]<<"\t"<<endl;
   
   string inFile, outFile;
   int nEvents;
