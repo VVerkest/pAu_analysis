@@ -30,7 +30,7 @@ int main ( int argc, const char** argv ) {
     vector<string> arguments( argv+1, argv+argc );
     inFile = "production_pAu200_2015/MB/pAu_2015_200_MB*.root";
     outFile = "out/pAu.root";
-    nEvents = 1000;
+    nEvents = 10000;
   }
   else { cerr<< "incorrect number of command line arguments"; return -1; }
 
@@ -91,6 +91,9 @@ int main ( int argc, const char** argv ) {
     RunID = rID;
     int npt = header->GetNOfPrimaryTracks();      nPrimary = npt;
     int ntow = header->GetNOfTowers();               nTowers = ntow;
+    Vx = header->GetPrimaryVertexX();
+    Vy = header->GetPrimaryVertexY();
+    Vz = header->GetPrimaryVertexZ();
 
     
     for ( int i=0; i<npt; ++i ) {
@@ -100,7 +103,7 @@ int main ( int argc, const char** argv ) {
       double primTrackPz = (double) event->GetPrimaryTrack(i)->GetPz();         trPz.push_back(primTrackPz);
       double primTrackEta = (double) event->GetPrimaryTrack(i)->GetEta();      trEta.push_back(primTrackEta);
       double primTrackPhi = (double) event->GetPrimaryTrack(i)->GetPhi();      trPhi.push_back(primTrackPhi);
-
+      
       nHitsFit.push_back(event->GetPrimaryTrack(i)->GetNOfFittedHits());
       nHitsPoss.push_back(event->GetPrimaryTrack(i)->GetNOfPossHits());
       DCA.push_back(event->GetPrimaryTrack(i)->GetDCA());
@@ -110,11 +113,13 @@ int main ( int argc, const char** argv ) {
 
 
 
-    // for ( int i=0; i<ntow; ++i ) {
-      
-    // }
+    for ( int i=0; i<ntow; ++i ) {
+      towEt.push_back(event->GetTower(i)->GetEt());
+      towEta.push_back(event->GetTower(i)->GetEta());
+      towPhi.push_back(event->GetTower(i)->GetPhi());
+    }
     
-    GatherParticles( container, rawParticles);        //cout<<rawParticles.size()<<endl;
+    //  GatherParticles( container, rawParticles);        //cout<<rawParticles.size()<<endl;
 
 
     MBtree->Fill();
