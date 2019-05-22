@@ -34,6 +34,7 @@ int main ( int argc, const char** argv ) {
   }
   else { cerr<< "incorrect number of command line arguments"; return -1; }
 
+  TFile *pAuFile = new TFile( outFile.c_str() ,"RECREATE");
   
   TH1::SetDefaultSumw2();  TH2::SetDefaultSumw2();  TH3::SetDefaultSumw2();
 
@@ -128,7 +129,6 @@ int main ( int argc, const char** argv ) {
   }
   // ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~  END EVENT LOOP!  ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~
 
-  TFile *pAuFile = new TFile( outFile.c_str() ,"RECREATE");
   hPrimaryTracks->Write();
   MBtree->Write();
   MBtowers->Write();
