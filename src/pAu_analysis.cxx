@@ -30,7 +30,7 @@ int main ( int argc, const char** argv ) {
     vector<string> arguments( argv+1, argv+argc );
     inFile = "production_pAu200_2015/MB/pAu_2015_200_MB*.root";
     outFile = "out/pAu.root";
-    nEvents = 100;
+    nEvents = 1000000;
   }
   else { cerr<< "incorrect number of command line arguments"; return -1; }
 
