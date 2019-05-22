@@ -38,7 +38,7 @@ void pAuPlot() {
     hVertex->Fill( Vx, Vy, Vz );
   }
 
-MB  TCanvas * c0 = new TCanvas( "c0" , "" ,0 ,23 ,1280 ,700 );
+  TCanvas * c0 = new TCanvas( "c0" , "" ,0 ,23 ,1280 ,700 );
   hVertex->Draw();
 
   TCanvas * c1 = new TCanvas( "c1" , "" ,0 ,23 ,1280 ,700 );
