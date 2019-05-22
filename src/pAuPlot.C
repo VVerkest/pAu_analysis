@@ -15,9 +15,9 @@ void pAuPlot() {
   TTree *MBtracks = (TTree*) inFile->Get("MBTracks");
 
   int RunID, EventID, nTowers, nPrimary, nTracks;
-  vector<int> Charge, nHitsPoss, nHitsFit;
+  int Charge, nHitsPoss, nHitsFit;
   double Vx, Vy, Vz;
-  vector<double> towEt, towEta, towPhi, trEta, trPhi, trPx, trPy, trPz, trPt, DCA;
+  double towEt, towEta, towPhi, trEta, trPhi, trPx, trPy, trPz, trPt, DCA;
 
   MBtree->SetBranchAddress("EventID", &EventID);            MBtree->SetBranchAddress("RunID", &RunID);          MBtree->SetBranchAddress("Vx", &Vx);
   MBtree->SetBranchAddress("Vy", &Vy);                             MBtree->SetBranchAddress("Vz", &Vz);                     MBtree->SetBranchAddress("nTowers", &nTowers);
@@ -38,7 +38,7 @@ void pAuPlot() {
     hVertex->Fill( Vx, Vy, Vz );
   }
 
-  TCanvas * c0 = new TCanvas( "c0" , "" ,0 ,23 ,1280 ,700 );
+MB  TCanvas * c0 = new TCanvas( "c0" , "" ,0 ,23 ,1280 ,700 );
   hVertex->Draw();
 
   TCanvas * c1 = new TCanvas( "c1" , "" ,0 ,23 ,1280 ,700 );
