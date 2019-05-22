@@ -12,7 +12,7 @@ set base = /wsu/home/el/el98/el9852/physics/analysis/pAu_analysis/production_pAu
 set outFile = MB
 
 # Arguments                                                                                                                                                                   
-if ( $# != "0" && $# !=3) then
+if ( $# != "0" && $# !="3" ) then
         echo 'Error: illegal number of parameters'
         exit
 endif
