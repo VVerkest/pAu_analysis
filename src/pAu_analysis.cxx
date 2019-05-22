@@ -18,16 +18,18 @@ using namespace pAuAnalysis;
 
 int main ( int argc, const char** argv ) {
 
-  string inFile;
+  string inFile, outFile;
   int nEvents;
-  if ( argc ==  2 ) {
+  if ( argc ==  3 ) {
     vector<string> arguments( argv+1, argv+argc );
     inFile = arguments[0];
-    nEvents = atoi(arguments[1].c_str());
+    outFile = arguments[1];
+    nEvents = atoi(arguments[2].c_str());
   }
   else if ( argc ==  1 ) {
     vector<string> arguments( argv+1, argv+argc );
     inFile = "production_pAu200_2015/MB/pAu_2015_200_MB*.root";
+    outFile = "out/pAu.root";
     nEvents = -1;
   }
   else { cerr<< "incorrect number of command line arguments"; return -1; }
@@ -121,7 +123,7 @@ int main ( int argc, const char** argv ) {
   }
   // ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~  END EVENT LOOP!  ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~
 
-  TFile *pAuFile = new TFile("out/pAu.root","RECREATE");
+  TFile *pAuFile = new TFile( outFile ,"RECREATE");
   hPrimaryTracks->Write();
   MBtree->Write();
   MBtowers->Write();
