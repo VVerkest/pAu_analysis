@@ -76,7 +76,7 @@ int main ( int argc, const char** argv ) {
   
   // ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~  BEGIN EVENT LOOP!  ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~
   while ( Reader.NextEvent() ) {
-
+    std::cout << "new event" << std::endl;
     Charge.clear(); nHitsPoss.clear(); nHitsFit.clear(); towEt.clear(); towEta.clear(); towPhi.clear(); trEta.clear();
     trPhi.clear(); trPx.clear(); trPy.clear(); trPz.clear(); trPt.clear(); DCA.clear(); rawParticles.clear();  rawJets.clear();  //  clear containers
     
@@ -129,7 +129,7 @@ int main ( int argc, const char** argv ) {
     // MBtracks->Fill();
   }
   // ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~  END EVENT LOOP!  ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~
-
+  std::cout << "here?" << std::endl;
   hPrimaryTracks->Write();
   MBtree->Write();
   MBtowers->Write();
