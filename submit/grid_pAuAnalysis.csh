@@ -7,12 +7,12 @@
 
 set ExecPath = `pwd`
 set execute = './bin/pAu_analysis'
-set numevents = -1
+set numevents = 1000000
 set base = /wsu/home/el/el98/el9852/physics/analysis/pAu_analysis/production_pAu200_2015/MB/pAu_2015_200_MB
 set outFile = MB
 
 # Arguments                                                                                                                                                                   
-if ( $# < "1") then
+if ( $# != "0" && $# !=3) then
         echo 'Error: illegal number of parameters'
         exit
 endif
