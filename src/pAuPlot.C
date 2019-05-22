@@ -42,11 +42,11 @@ void pAuPlot() {
   hVertex->Draw();
 
   TCanvas * c1 = new TCanvas( "c1" , "" ,0 ,23 ,1280 ,700 );
-  hVertex->ProjectionXY->Draw("colz");
+  hVertex->Project3D("XY")->Draw("colz");
 
   TCanvas * c2 = new TCanvas( "c2" , "" ,0 ,23 ,1280 ,700 );
-  hVertex->ProjectionYZ->Draw("colz");
+  hVertex->Project3D("YZ")->Draw("colz");
 
   TCanvas * c3 = new TCanvas( "c3" , "" ,0 ,23 ,1280 ,700 );
-  hVertex->ProjectionXZ->Draw("colz");
+  hVertex->Project3D("XZ")->Draw("colz");
 }
