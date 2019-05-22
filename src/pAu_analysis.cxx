@@ -61,7 +61,7 @@ int main ( int argc, const char** argv ) {
   MBtracks->Branch("trPhi", &trPhi);        	  MBtracks->Branch("DCA", &DCA);
 
   TChain* Chain = new TChain( "JetTree" );
-  Chain->Add( inFile );
+  Chain->Add( inFile.c_str() );
   TStarJetPicoReader Reader;
   int numEvents = nEvents;        // total events in MB: 59388132
   InitReader( Reader, Chain, numEvents );
