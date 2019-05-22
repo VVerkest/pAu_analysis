@@ -45,7 +45,7 @@ set ErrFile     = log/${outFile}/${OutBase}.err
 echo "Logging output to " $LogFile
 echo "Logging errors to " $ErrFile
     
-set arg = "$Files $outLocation $outName $numevents"
+set arg = "$Files $outLocation$outName $numevents"
 
 echo "now submitting this script: "
 echo qsub -V -l mem=4GB -o $LogFile -e $ErrFile -N $1 -- ${ExecPath}/submit/qwrap.sh ${ExecPath} $execute $arg
