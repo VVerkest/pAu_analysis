@@ -18,21 +18,22 @@ using namespace pAuAnalysis;
 
 int main ( int argc, const char** argv ) {
 
+  vector<string> arguments( argv+1, argv+argc );
   cout<<argc<<"\t"<<arguments[0]<<"\t"<<arguments[1]<<"\t"<<atoi(arguments[2].c_str())<<endl;
   
   string inFile, outFile;
   int nEvents;
   if ( argc ==  4 ) {
-    vector<string> arguments( argv+1, argv+argc );
+    // vector<string> arguments( argv+1, argv+argc );
     inFile = arguments[0];
     outFile = arguments[1];
     nEvents = atoi(arguments[2].c_str());
   }
   else if ( argc ==  1 ) {
-    vector<string> arguments( argv+1, argv+argc );
+    // vector<string> arguments( argv+1, argv+argc );
     inFile = "production_pAu200_2015/MB/pAu_2015_200_MB*.root";
     outFile = "out/pAu.root";
-    nEvents = -1;
+    nEvents = 100;
   }
   else { cerr<< "incorrect number of command line arguments"; return -1; }
 
