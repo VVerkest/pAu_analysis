@@ -34,6 +34,12 @@ int main ( int argc, const char** argv ) {
   }
   else { cerr<< "incorrect number of command line arguments"; return -1; }
 
+  TChain* Chain = new TChain( "JetTree" );
+  Chain->Add( inFile.c_str() );
+  TStarJetPicoReader Reader;
+  int numEvents = nEvents;        // total events in MB: 59388132
+  InitReader( Reader, Chain, numEvents );
+  
   TFile *pAuFile = new TFile( outFile.c_str() ,"RECREATE");
   
   TH1::SetDefaultSumw2();  TH2::SetDefaultSumw2();  TH3::SetDefaultSumw2();
@@ -61,12 +67,6 @@ int main ( int argc, const char** argv ) {
   MBtracks->Branch("trPz", &trPz);           	  MBtracks->Branch("trPt", &trPt);    	  MBtracks->Branch("trEta", &trEta);
   MBtracks->Branch("trPhi", &trPhi);        	  MBtracks->Branch("DCA", &DCA);
 
-  TChain* Chain = new TChain( "JetTree" );
-  Chain->Add( inFile.c_str() );
-  TStarJetPicoReader Reader;
-  int numEvents = nEvents;        // total events in MB: 59388132
-  InitReader( Reader, Chain, numEvents );
-
   vector<PseudoJet> rawParticles, rawJets;
   int eID, rID;
   
@@ -76,7 +76,7 @@ int main ( int argc, const char** argv ) {
   
   // ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~  BEGIN EVENT LOOP!  ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~
   while ( Reader.NextEvent() ) {
-    std::cout << "new event" << std::endl;
+
     Charge.clear(); nHitsPoss.clear(); nHitsFit.clear(); towEt.clear(); towEta.clear(); towPhi.clear(); trEta.clear();
     trPhi.clear(); trPx.clear(); trPy.clear(); trPz.clear(); trPt.clear(); DCA.clear(); rawParticles.clear();  rawJets.clear();  //  clear containers
     
@@ -129,7 +129,7 @@ int main ( int argc, const char** argv ) {
     // MBtracks->Fill();
   }
   // ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~  END EVENT LOOP!  ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~
-  std::cout << "here?" << std::endl;
+
   hPrimaryTracks->Write();
   MBtree->Write();
   MBtowers->Write();
