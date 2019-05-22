@@ -30,7 +30,7 @@ int main ( int argc, const char** argv ) {
     vector<string> arguments( argv+1, argv+argc );
     inFile = "production_pAu200_2015/MB/pAu_2015_200_MB*.root";
     outFile = "out/pAu.root";
-    nEvents = 1000000;
+    nEvents = 1000;
   }
   else { cerr<< "incorrect number of command line arguments"; return -1; }
 
@@ -93,20 +93,20 @@ int main ( int argc, const char** argv ) {
     int ntow = header->GetNOfTowers();               nTowers = ntow;
 
     
-    // for ( int i=0; i<npt; ++i ) {
-    //   double primTrackPt = (double) event->GetPrimaryTrack(i)->GetPt();         trPt.push_back(primTrackPt);
-    //   double primTrackPx = (double) event->GetPrimaryTrack(i)->GetPx();         trPx.push_back(primTrackPx);
-    //   double primTrackPy = (double) event->GetPrimaryTrack(i)->GetPy();         trPy.push_back(primTrackPy);
-    //   double primTrackPz = (double) event->GetPrimaryTrack(i)->GetPz();         trPz.push_back(primTrackPz);
-    //   double primTrackEta = (double) event->GetPrimaryTrack(i)->GetEta();      trEta.push_back(primTrackEta);
-    //   double primTrackPhi = (double) event->GetPrimaryTrack(i)->GetPhi();      trPhi.push_back(primTrackPhi);
+    for ( int i=0; i<npt; ++i ) {
+      double primTrackPt = (double) event->GetPrimaryTrack(i)->GetPt();         trPt.push_back(primTrackPt);
+      double primTrackPx = (double) event->GetPrimaryTrack(i)->GetPx();         trPx.push_back(primTrackPx);
+      double primTrackPy = (double) event->GetPrimaryTrack(i)->GetPy();         trPy.push_back(primTrackPy);
+      double primTrackPz = (double) event->GetPrimaryTrack(i)->GetPz();         trPz.push_back(primTrackPz);
+      double primTrackEta = (double) event->GetPrimaryTrack(i)->GetEta();      trEta.push_back(primTrackEta);
+      double primTrackPhi = (double) event->GetPrimaryTrack(i)->GetPhi();      trPhi.push_back(primTrackPhi);
 
-    //   nHitsFit.push_back(event->GetPrimaryTrack(i)->GetNOfFittedHits());
-    //   nHitsPoss.push_back(event->GetPrimaryTrack(i)->GetNOfPossHits());
-    //   DCA.push_back(event->GetPrimaryTrack(i)->GetDCA());
+      nHitsFit.push_back(event->GetPrimaryTrack(i)->GetNOfFittedHits());
+      nHitsPoss.push_back(event->GetPrimaryTrack(i)->GetNOfPossHits());
+      DCA.push_back(event->GetPrimaryTrack(i)->GetDCA());
       
-    //   hPrimaryTracks->Fill( primTrackPt, primTrackEta, primTrackPhi );
-    // }
+      hPrimaryTracks->Fill( primTrackPt, primTrackEta, primTrackPhi );
+    }
 
 
 
