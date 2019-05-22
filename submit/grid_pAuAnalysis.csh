@@ -38,6 +38,13 @@ set outName = ${OutBase}.root
 # Input files                                                                                                                                                                  
 set Files = ${input}
 
+# Logfiles. Thanks cshell for this "elegant" syntax to split err and out                                                                                                       
+set LogFile     = log/${outFile}/${OutBase}.log
+set ErrFile     = log/${outFile}/${OutBase}.err
+
+echo "Logging output to " $LogFile
+echo "Logging errors to " $ErrFile
+    
 set arg = "$Files $outLocation $outName $numevents"
 
 echo "now submitting this script: "
