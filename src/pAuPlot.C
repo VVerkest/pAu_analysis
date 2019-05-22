@@ -4,7 +4,7 @@
 void pAuPlot() {
   
   TH1::SetDefaultSumw2();  TH2::SetDefaultSumw2();  TH3::SetDefaultSumw2();
-  TH3D *hVertex = new TH3D( "hVertex", "Event Vertex;v_{x};v_{y};v_{z}", 60,-0.3,0.3, 60,-0.3,0.3, 120,-30,30 );
+  TH3D *hVertex = new TH3D( "hVertex", "Event Vertex;v_{x};v_{y};v_{z}", 60,-0.3,0.3, 60,-0.3,0.3, 160,-40,40 );
   TH2D *hTowersPerEvent = new TH2D("hTowersPerEvent","Tower Multiplicity (per event);Event no.;# of Towers", 15000,0,1500000, 700,0,700 );
   TH2D *hTowersPerRun = new TH2D("hTowersPerRun","Tower Multiplicity (per run);Run no.;# of Towers", 15000,2000000,17000000, 700,0,700 );
   // 2119440-16156005      2000000,17000000
@@ -53,4 +53,11 @@ void pAuPlot() {
 
   TCanvas * c3 = new TCanvas( "c3" , "" ,0 ,23 ,1280 ,700 );
   hVertex->Project3D("XZ")->Draw("colz");
+
+  TCanvas * c4 = new TCanvas( "c4" , "" ,0 ,23 ,1280 ,700 );
+  hTowersPerEvent->Draw();
+  
+  TCanvas * c4 = new TCanvas( "c4" , "" ,0 ,23 ,1280 ,700 );
+  hTowersPerRun->Draw();
+
 }
