@@ -5,9 +5,9 @@ void pAuPlot() {
   
   TH1::SetDefaultSumw2();  TH2::SetDefaultSumw2();  TH3::SetDefaultSumw2();
   TH3D *hVertex = new TH3D( "hVertex", "Event Vertex;v_{x};v_{y};v_{z}", 60,-0.3,0.3, 60,-0.3,0.3, 160,-40,40 );
-  TH2D *hTowersPerEvent = new TH2D("hTowersPerEvent","Tower Multiplicity (per event);Event no.;# of Towers", 15000,0,1500000, 700,0,700 );
+  TH1D *hTowersPerEvent = new TH1D("hTowersPerEvent","Tower Multiplicity (per event);# of Towers", 60000,0,60000000, 700,0,700 );
   TH2D *hTowersPerRun = new TH2D("hTowersPerRun","Tower Multiplicity (per run);Run no.;# of Towers", 60,16120000,16160000, 700,0,700 );
-  TH2D *hPrimaryPerEvent = new TH2D("hPrimaryPerEvent","Primary Track Multiplicity (per event);Event no.;# of Primary", 15000,0,1500000, 200,0,200 );
+  TH1D *hPrimaryPerEvent = new TH1D("hPrimaryPerEvent","Primary Track Multiplicity (per event);# of Primary", 60000,0,60000000, 200,0,200 );
   TH2D *hPrimaryPerRun = new TH2D("hPrimaryPerRun","Primary Track Multiplicity (per run);Run no.;# of Primary", 60,16120000,16160000, 200,0,200 );
   TH2D *hnPrimaryVSnTowers = new TH2D("hnPrimaryVSnTowers","# of Primary Tracks vs. # of Towers;# Towers;#Primary Tracks", 700,0,700, 200,0,200);
   //TH2D *hDCAvsPt = new TH2D("hDCAvsPt","DCA vs. p_{T};DCA;p_{T} GeV");
@@ -41,9 +41,9 @@ void pAuPlot() {
   for ( int i=0; i<mbEntries; ++i ) {
     MBtree->GetEntry(i);
     hVertex->Fill( Vx, Vy, Vz );
-    hTowersPerEvent->Fill( EventID, nTowers );
+    hTowersPerEvent->Fill( nTowers );
     hTowersPerRun->Fill( RunID, nTowers );
-    hPrimaryPerEvent->Fill( EventID, nPrimary );
+    hPrimaryPerEvent->Fill( nPrimary );
     hPrimaryPerRun->Fill( RunID, nPrimary );
     hnPrimaryVSnTowers->Fill( nTowers, nPrimary );
   }

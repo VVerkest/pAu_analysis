@@ -45,7 +45,12 @@ int main ( int argc, const char** argv ) {
   TH1::SetDefaultSumw2();  TH2::SetDefaultSumw2();  TH3::SetDefaultSumw2();
 
   TH3D *hPrimaryTracks = new TH3D( "hPrimaryTracks", "Primary Tracks: p_{T}, #eta, and #phi;p_{T} (GeV);#eta;#phi", 40,0,20, 40,-2,2, 16,-pi,pi );
-
+  TH3D *hVertex = new TH3D( "hVertex", "Event Vertex;v_{x};v_{y};v_{z}", 60,-0.3,0.3, 60,-0.3,0.3, 160,-40,40 );
+  TH1D *hTowersPerEvent = new TH1D("hTowersPerEvent","Tower Multiplicity (per event);# of Towers", 60000,0,60000000, 700,0,700 );
+  TH2D *hTowersPerRun = new TH2D("hTowersPerRun","Tower Multiplicity (per run);Run no.;# of Towers", 60,16120000,16160000, 700,0,700 );
+  TH1D *hPrimaryPerEvent = new TH1D("hPrimaryPerEvent","Primary Track Multiplicity (per event);# of Primary", 60000,0,60000000, 200,0,200 );
+  TH2D *hPrimaryPerRun = new TH2D("hPrimaryPerRun","Primary Track Multiplicity (per run);Run no.;# of Primary", 60,16120000,16160000, 200,0,200 );
+  TH2D *hnPrimaryVSnTowers = new TH2D("hnPrimaryVSnTowers","# of Primary Tracks vs. # of Towers;# Towers;#Primary Tracks", 700,0,700, 200,0,200);
   TTree *MBtree = new TTree( "MBTree", "MBtree" );
   TTree *MBtowers = new TTree( "MBTowers", "MBtowers" );
   TTree *MBtracks = new TTree( "MBTracks", "MBtracks" );
@@ -96,6 +101,12 @@ int main ( int argc, const char** argv ) {
     Vy = header->GetPrimaryVertexY();
     Vz = header->GetPrimaryVertexZ();
 
+    hVertex->Fill( Vx, Vy, Vz );
+    hTowersPerEvent->Fill( nTowers );
+    hTowersPerRun->Fill( RunID, nTowers );
+    hPrimaryPerEvent->Fill( nPrimary );
+    hPrimaryPerRun->Fill( RunID, nPrimary );
+    hnPrimaryVSnTowers->Fill( nTowers, nPrimary );
     
     for ( int i=0; i<npt; ++i ) {
       double primTrackPt = (double) event->GetPrimaryTrack(i)->GetPt();         trPt = primTrackPt;
@@ -130,6 +141,13 @@ int main ( int argc, const char** argv ) {
   // ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~  END EVENT LOOP!  ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~
 
   hPrimaryTracks->Write();
+  hVertex->Write();
+  hTowersPerEvent->Write();
+  hTowersPerRun->Write();
+  hPrimaryPerEvent->Write();
+  hPrimaryPerRun->Write();
+  hnPrimaryVSnTowers->Write();
+  
   MBtree->Write();
   MBtowers->Write();
   MBtracks->Write();
