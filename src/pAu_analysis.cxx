@@ -54,18 +54,19 @@ int main ( int argc, const char** argv ) {
   TTree *MBtree = new TTree( "MBTree", "MBtree" );
   TTree *MBtowers = new TTree( "MBTowers", "MBtowers" );
   TTree *MBtracks = new TTree( "MBTracks", "MBtracks" );
-
-  int RunID, EventID, nTowers, nPrimary;
-  int Charge, nHitsPoss, nHitsFit;
-  double Vx, Vy, Vz;
-  double towEt, towEta, towPhi, trEta, trPhi, trPx, trPy, trPz, trPt, DCA;
+  
+  int RunID, EventID, nTowers, nPrimary, nGlobal, nVertices, refMult, gRefMult, towID, Charge, nHitsPoss, nHitsFit;
+  double Vx, Vy, Vz, towEt, towEta, towPhi, trEta, trPhi, trPx, trPy, trPz, trPt, DCA, BbcCoincidenceRate, BbcEastRate, BbcWestRate, vpdVz;
 
   MBtree->Branch("EventID", &EventID);            MBtree->Branch("RunID", &RunID);          MBtree->Branch("Vx", &Vx);
   MBtree->Branch("Vy", &Vy);                             MBtree->Branch("Vz", &Vz);                     MBtree->Branch("nTowers", &nTowers);
-  MBtree->Branch("nPrimary", &nPrimary);
-
+  MBtree->Branch("nPrimary", &nPrimary);         MBtree->Branch("nGlobal", &nGlobal);     MBtree->Branch("nVertices", &nVertices);
+  MBtree->Branch("refMult", &refMult);              MBtree->Branch("gRefMult", &gRefMult);
+  MBtree->Branch("BbcCoincidenceRate", &BbcCoincidenceRate);                    MBtree->Branch("BbcEastRate", &BbcEastRate);
+  MBtree->Branch("BbcWestRate", &BbcWestRate);                                           MBtree->Branch("vpdVz", &vpdVz);
+  
   MBtowers->Branch("EventID", &EventID);	  MBtowers->Branch("RunID", &RunID);  	  MBtowers->Branch("towEt", &towEt);
-  MBtowers->Branch("towEta", &towEta);	          MBtowers->Branch("towPhi", &towPhi);
+  MBtowers->Branch("towEta", &towEta);	          MBtowers->Branch("towPhi", &towPhi);	  MBtowers->Branch("towID", &towID);
 
   MBtracks->Branch("EventID", &EventID);	  MBtracks->Branch("RunID", &RunID);	  MBtracks->Branch("nHitsPoss", &nHitsPoss);
   MBtracks->Branch("nHitsFit", &nHitsFit);	  MBtracks->Branch("trPx", &trPx);   	  MBtracks->Branch("trPy", &trPy);
@@ -93,13 +94,14 @@ int main ( int argc, const char** argv ) {
     header = event->GetHeader();
     container = Reader.GetOutputContainer();
 
-    EventID = eID;
-    RunID = rID;
+    EventID = eID;        RunID = rID;
     int npt = header->GetNOfPrimaryTracks();      nPrimary = npt;
     int ntow = header->GetNOfTowers();               nTowers = ntow;
-    Vx = header->GetPrimaryVertexX();
-    Vy = header->GetPrimaryVertexY();
-    Vz = header->GetPrimaryVertexZ();
+    Vx = header->GetPrimaryVertexX();    Vy = header->GetPrimaryVertexY();    Vz = header->GetPrimaryVertexZ();
+    nGlobal = header->GetNGlobalTracks();                                 nVertices = header->GetNumberOfVertices();
+    refMult = header->GetReferenceMultiplicity();                        gRefMult = header->GetGReferenceMultiplicity();
+    BbcCoincidenceRate = header->GetBbcCoincidenceRate();     vpdVz = header->GetVpdVz();
+    BbcEastRate = header->GetBbcEastRate();                               BbcWestRate = header->GetBbcEastRate();
 
     hVertex->Fill( Vx, Vy, Vz );
     hTowersPerEvent->Fill( nTowers );
@@ -109,12 +111,12 @@ int main ( int argc, const char** argv ) {
     hnPrimaryVSnTowers->Fill( nTowers, nPrimary );
     
     for ( int i=0; i<npt; ++i ) {
-      double primTrackPt = (double) event->GetPrimaryTrack(i)->GetPt();         trPt = primTrackPt;
+      double primTrackPt = (double) event->GetPrimaryTrack(i)->GetPt();          trPt = primTrackPt;
       double primTrackPx = (double) event->GetPrimaryTrack(i)->GetPx();         trPx = primTrackPx;
       double primTrackPy = (double) event->GetPrimaryTrack(i)->GetPy();         trPy = primTrackPy;
       double primTrackPz = (double) event->GetPrimaryTrack(i)->GetPz();         trPz = primTrackPz;
-      double primTrackEta = (double) event->GetPrimaryTrack(i)->GetEta();      trEta = primTrackEta;
-      double primTrackPhi = (double) event->GetPrimaryTrack(i)->GetPhi();      trPhi = primTrackPhi;
+      double primTrackEta = (double) event->GetPrimaryTrack(i)->GetEta();       trEta = primTrackEta;
+      double primTrackPhi = (double) event->GetPrimaryTrack(i)->GetPhi();       trPhi = primTrackPhi;
       
       nHitsFit = event->GetPrimaryTrack(i)->GetNOfFittedHits();
       nHitsPoss = event->GetPrimaryTrack(i)->GetNOfPossHits();
@@ -130,6 +132,7 @@ int main ( int argc, const char** argv ) {
       towEt = event->GetTower(i)->GetEt();
       towEta = event->GetTower(i)->GetEta();
       towPhi = event->GetTower(i)->GetPhi();
+      towID = event->GetTower(i)->GetID();
       MBtowers->Fill();
     }
     
@@ -151,6 +154,7 @@ int main ( int argc, const char** argv ) {
   MBtree->Write();
   MBtowers->Write();
   MBtracks->Write();
+  
   pAuFile->Close();
   
   return 0;
