@@ -10,7 +10,7 @@ void pAuPlot() {
   // 2119440-16156005      2000000,17000000
   const float pi = 3.141592;
 
-  TFile* inFile = new TFile( "out/MB/pAu_2015_200_MB_125_130_0_MB.root", "READ" );
+  TFile* inFile = new TFile( "out/MB/pAu_analysis.root", "READ" );
   
   TTree *MBtree = (TTree*) inFile->Get("MBTree");
   TTree *MBtowers = (TTree*) inFile->Get("MBTowers");
