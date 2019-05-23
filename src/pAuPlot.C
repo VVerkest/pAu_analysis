@@ -44,8 +44,6 @@ void pAuPlot() {
     hPrimaryPerEvent->Fill( EventID, nPrimary );
     hPrimaryPerRun->Fill( RunID, nPrimary );
   }
-
-  gStyle->SetLogz();
   
   TCanvas * c0 = new TCanvas( "c0" , "" ,0 ,23 ,1280 ,700 );
   hPrimaryPerEvent->Draw("COLZ");
