@@ -51,30 +51,30 @@ void pAuPlot() {
   inFile->Close();
   
   TCanvas * c0 = new TCanvas( "c0" , "" ,0 ,23 ,1280 ,700 );
-  c0->SetLogz;
+  c0->SetLogz();
   hPrimaryPerEvent->Draw("COLZ");
   // hVertex->Draw();
 
   TCanvas * c1 = new TCanvas( "c1" , "" ,0 ,23 ,1280 ,700 );
-  c1->SetLogz;
+  c1->SetLogz();
   hPrimaryPerRun->Draw("COLZ");
   // hVertex->Project3D("XY")->Draw("colz");
 
   TCanvas * c2 = new TCanvas( "c2" , "" ,0 ,23 ,1280 ,700 );
-  c2->SetLogz;
+  c2->SetLogz();
   hnPrimaryVSnTowers->Draw("COLZ");
   // hVertex->Project3D("YZ")->Draw("colz");
 
   // TCanvas * c3 = new TCanvas( "c3" , "" ,0 ,23 ,1280 ,700 );
-  // c3->SetLogz;
+  // c3->SetLogz();
   // hVertex->Project3D("XZ")->Draw("colz");
 
   TCanvas * c4 = new TCanvas( "c4" , "" ,0 ,23 ,1280 ,700 );
-  c4->SetLogz;
+  c4->SetLogz();
   hTowersPerEvent->Draw("COLZ");
   
   TCanvas * c5 = new TCanvas( "c5" , "" ,0 ,23 ,1280 ,700 );
-  c5->SetLogz;
+  c5->SetLogz();
   hTowersPerRun->Draw("COLZ");
 
 }
