@@ -8,7 +8,7 @@ void pAuPlot() {
   TH2D *hTowersPerEvent = new TH2D("hTowersPerEvent","Tower Multiplicity (per event);Event no.;# of Towers", 15000,0,1500000, 700,0,700 );
   TH2D *hTowersPerRun = new TH2D("hTowersPerRun","Tower Multiplicity (per run);Run no.;# of Towers", 60,16120000,16160000, 700,0,700 );
   TH2D *hTracksPerEvent = new TH2D("hTracksPerEvent","Track Multiplicity (per event);Event no.;# of Towers", 15000,0,1500000, 500,0,5000 );
-  TH2D *hTracksPerRun = new TH2D("hTowersPerRun","Track Multiplicity (per run);Run no.;# of Towers", 60,16120000,16160000, 5000,0,50000 );  // 2119440-16156005      2000000,17000000
+  TH2D *hTracksPerRun = new TH2D("hTracksPerRun","Track Multiplicity (per run);Run no.;# of Towers", 60,16120000,16160000, 5000,0,50000 );
   const float pi = 3.141592;
 
   TFile* inFile = new TFile( "out/MB/pAu_analysis.root", "READ" );
