@@ -9,6 +9,8 @@ void pAuPlot() {
   TH2D *hTowersPerRun = new TH2D("hTowersPerRun","Tower Multiplicity (per run);Run no.;# of Towers", 60,16120000,16160000, 700,0,700 );
   TH2D *hPrimaryPerEvent = new TH2D("hPrimaryPerEvent","Primary Track Multiplicity (per event);Event no.;# of Primary", 15000,0,1500000, 200,0,200 );
   TH2D *hPrimaryPerRun = new TH2D("hPrimaryPerRun","Primary Track Multiplicity (per run);Run no.;# of Primary", 60,16120000,16160000, 200,0,200 );
+  TH2D *hnPrimaryVSnTowers = new TH2D("hnPrimaryVSnTowers","# of Primary Tracks vs. # of Towers;# Towers;#Primary Tracks", 700,0,700, 200,0,200);
+  //TH2D *hDCAvsPt = new TH2D("hDCAvsPt","DCA vs. p_{T};DCA;p_{T} GeV");
   const float pi = 3.141592;
 
   TFile* inFile = new TFile( "out/MB/pAu_analysis.root", "READ" );
@@ -43,26 +45,36 @@ void pAuPlot() {
     hTowersPerRun->Fill( RunID, nTowers );
     hPrimaryPerEvent->Fill( EventID, nPrimary );
     hPrimaryPerRun->Fill( RunID, nPrimary );
+    hnPrimaryVSnTowers->Fill( nTowers, nPrimary );
   }
+
+  inFile->Close();
   
   TCanvas * c0 = new TCanvas( "c0" , "" ,0 ,23 ,1280 ,700 );
+  c0->SetLogz;
   hPrimaryPerEvent->Draw("COLZ");
   // hVertex->Draw();
 
   TCanvas * c1 = new TCanvas( "c1" , "" ,0 ,23 ,1280 ,700 );
+  c1->SetLogz;
   hPrimaryPerRun->Draw("COLZ");
   // hVertex->Project3D("XY")->Draw("colz");
 
-  // TCanvas * c2 = new TCanvas( "c2" , "" ,0 ,23 ,1280 ,700 );
+  TCanvas * c2 = new TCanvas( "c2" , "" ,0 ,23 ,1280 ,700 );
+  c2->SetLogz;
+  hnPrimaryVSnTowers->Draw("COLZ");
   // hVertex->Project3D("YZ")->Draw("colz");
 
   // TCanvas * c3 = new TCanvas( "c3" , "" ,0 ,23 ,1280 ,700 );
+  // c3->SetLogz;
   // hVertex->Project3D("XZ")->Draw("colz");
 
   TCanvas * c4 = new TCanvas( "c4" , "" ,0 ,23 ,1280 ,700 );
+  c4->SetLogz;
   hTowersPerEvent->Draw("COLZ");
   
   TCanvas * c5 = new TCanvas( "c5" , "" ,0 ,23 ,1280 ,700 );
+  c5->SetLogz;
   hTowersPerRun->Draw("COLZ");
 
 }
