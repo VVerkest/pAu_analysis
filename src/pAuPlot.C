@@ -7,8 +7,8 @@ void pAuPlot() {
   TH3D *hVertex = new TH3D( "hVertex", "Event Vertex;v_{x};v_{y};v_{z}", 60,-0.3,0.3, 60,-0.3,0.3, 160,-40,40 );
   TH2D *hTowersPerEvent = new TH2D("hTowersPerEvent","Tower Multiplicity (per event);Event no.;# of Towers", 15000,0,1500000, 700,0,700 );
   TH2D *hTowersPerRun = new TH2D("hTowersPerRun","Tower Multiplicity (per run);Run no.;# of Towers", 60,16120000,16160000, 700,0,700 );
-  TH2D *hPrimaryPerEvent = new TH2D("hPrimaryPerEvent","Primary Track Multiplicity (per event);Event no.;# of Primary", 15000,0,1500000, 700,0,700 );
-  TH2D *hPrimaryPerRun = new TH2D("hPrimaryPerRun","Primary Track Multiplicity (per run);Run no.;# of Primary", 60,16120000,16160000, 700,0,700 );
+  TH2D *hPrimaryPerEvent = new TH2D("hPrimaryPerEvent","Primary Track Multiplicity (per event);Event no.;# of Primary", 15000,0,1500000, 200,0,200 );
+  TH2D *hPrimaryPerRun = new TH2D("hPrimaryPerRun","Primary Track Multiplicity (per run);Run no.;# of Primary", 60,16120000,16160000, 200,0,200 );
   const float pi = 3.141592;
 
   TFile* inFile = new TFile( "out/MB/pAu_analysis.root", "READ" );
@@ -45,12 +45,14 @@ void pAuPlot() {
     hPrimaryPerRun->Fill( RunID, nPrimary );
   }
 
+  gStyle->SetLogz();
+  
   TCanvas * c0 = new TCanvas( "c0" , "" ,0 ,23 ,1280 ,700 );
-  hPrimaryPerEvent->Draw();
+  hPrimaryPerEvent->Draw("COLZ");
   // hVertex->Draw();
 
   TCanvas * c1 = new TCanvas( "c1" , "" ,0 ,23 ,1280 ,700 );
-  hPrimaryPerRun->Draw();
+  hPrimaryPerRun->Draw("COLZ");
   // hVertex->Project3D("XY")->Draw("colz");
 
   // TCanvas * c2 = new TCanvas( "c2" , "" ,0 ,23 ,1280 ,700 );
