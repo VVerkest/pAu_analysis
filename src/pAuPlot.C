@@ -15,6 +15,10 @@ void pAuPlot() {
 
   TFile* inFile = new TFile( "out/MB/pAu_analysis.root", "READ" );
 
+  TTree *MBtree = (TTree*) inFile->Get("MBTree");
+  TTree *MBtowers = (TTree*) inFile->Get("MBTowers");
+  TTree *MBtracks = (TTree*) inFile->Get("MBTracks");
+  
   int RunID, EventID, nTowers, nPrimary, nGlobal, nVertices, refMult, gRefMult, towID, Charge, nHitsPoss, nHitsFit;
   double Vx, Vy, Vz, towEt, towEta, towPhi, trEta, trPhi, trPx, trPy, trPz, trPt, DCA, BbcCoincidenceRate, BbcEastRate, BbcWestRate, vpdVz;
 
