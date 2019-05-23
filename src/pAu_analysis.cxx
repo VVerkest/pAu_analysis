@@ -50,14 +50,14 @@ int main ( int argc, const char** argv ) {
   TTree *MBtowers = new TTree( "MBTowers", "MBtowers" );
   TTree *MBtracks = new TTree( "MBTracks", "MBtracks" );
 
-  int RunID, EventID, nTowers, nPrimary, nTracks;
+  int RunID, EventID, nTowers, nPrimary;
   vector<int> Charge, nHitsPoss, nHitsFit;
   double Vx, Vy, Vz;
   vector<double> towEt, towEta, towPhi, trEta, trPhi, trPx, trPy, trPz, trPt, DCA;
 
   MBtree->Branch("EventID", &EventID);            MBtree->Branch("RunID", &RunID);          MBtree->Branch("Vx", &Vx);
   MBtree->Branch("Vy", &Vy);                             MBtree->Branch("Vz", &Vz);                     MBtree->Branch("nTowers", &nTowers);
-  MBtree->Branch("nTracks", &nTracks);           MBtree->Branch("nPrimary", &nPrimary);
+  MBtree->Branch("nPrimary", &nPrimary);
 
   MBtowers->Branch("EventID", &EventID);	  MBtowers->Branch("RunID", &RunID);  	  MBtowers->Branch("towEt", &towEt);
   MBtowers->Branch("towEta", &towEta);	          MBtowers->Branch("towPhi", &towPhi);

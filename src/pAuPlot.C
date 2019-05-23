@@ -7,8 +7,8 @@ void pAuPlot() {
   TH3D *hVertex = new TH3D( "hVertex", "Event Vertex;v_{x};v_{y};v_{z}", 60,-0.3,0.3, 60,-0.3,0.3, 160,-40,40 );
   TH2D *hTowersPerEvent = new TH2D("hTowersPerEvent","Tower Multiplicity (per event);Event no.;# of Towers", 15000,0,1500000, 700,0,700 );
   TH2D *hTowersPerRun = new TH2D("hTowersPerRun","Tower Multiplicity (per run);Run no.;# of Towers", 60,16120000,16160000, 700,0,700 );
-  TH2D *hTracksPerEvent = new TH2D("hTracksPerEvent","Track Multiplicity (per event);Event no.;# of Towers", 15000,0,1500000, 500,0,5000 );
-  TH2D *hTracksPerRun = new TH2D("hTracksPerRun","Track Multiplicity (per run);Run no.;# of Towers", 60,16120000,16160000, 5000,0,50000 );
+  TH2D *hPrimaryPerEvent = new TH2D("hPrimaryPerEvent","Primary Track Multiplicity (per event);Event no.;# of Primary", 15000,0,1500000, 700,0,700 );
+  TH2D *hPrimaryPerRun = new TH2D("hPrimaryPerRun","Primary Track Multiplicity (per run);Run no.;# of Primary", 60,16120000,16160000, 700,0,700 );
   const float pi = 3.141592;
 
   TFile* inFile = new TFile( "out/MB/pAu_analysis.root", "READ" );
@@ -17,14 +17,14 @@ void pAuPlot() {
   TTree *MBtowers = (TTree*) inFile->Get("MBTowers");
   TTree *MBtracks = (TTree*) inFile->Get("MBTracks");
 
-  int RunID, EventID, nTowers, nPrimary, nTracks;
+  int RunID, EventID, nTowers, nPrimary;
   int Charge, nHitsPoss, nHitsFit;
   double Vx, Vy, Vz;
   double towEt, towEta, towPhi, trEta, trPhi, trPx, trPy, trPz, trPt, DCA;
 
   MBtree->SetBranchAddress("EventID", &EventID);            MBtree->SetBranchAddress("RunID", &RunID);          MBtree->SetBranchAddress("Vx", &Vx);
   MBtree->SetBranchAddress("Vy", &Vy);                             MBtree->SetBranchAddress("Vz", &Vz);                     MBtree->SetBranchAddress("nTowers", &nTowers);
-  MBtree->SetBranchAddress("nTracks", &nTracks);           MBtree->SetBranchAddress("nPrimary", &nPrimary);
+  MBtree->SetBranchAddress("nPrimary", &nPrimary);
 
   // MBtowers->SetBranchAddress("EventID", &EventID);	  MBtowers->SetBranchAddress("RunID", &RunID);  	  MBtowers->SetBranchAddress("towEt", &towEt);
   // MBtowers->SetBranchAddress("towEta", &towEta);          MBtowers->SetBranchAddress("towPhi", &towPhi);
@@ -41,16 +41,16 @@ void pAuPlot() {
     hVertex->Fill( Vx, Vy, Vz );
     hTowersPerEvent->Fill( EventID, nTowers );
     hTowersPerRun->Fill( RunID, nTowers );
-    hTracksPerEvent->Fill( EventID, nTracks );
-    hTracksPerRun->Fill( RunID, nTracks );
+    hPrimaryPerEvent->Fill( EventID, nPrimary );
+    hPrimaryPerRun->Fill( RunID, nPrimary );
   }
 
   TCanvas * c0 = new TCanvas( "c0" , "" ,0 ,23 ,1280 ,700 );
-  hTracksPerEvent->Draw();
+  hPrimaryPerEvent->Draw();
   // hVertex->Draw();
 
   TCanvas * c1 = new TCanvas( "c1" , "" ,0 ,23 ,1280 ,700 );
-  hTracksPerRun->Draw();
+  hPrimaryPerRun->Draw();
   // hVertex->Project3D("XY")->Draw("colz");
 
   // TCanvas * c2 = new TCanvas( "c2" , "" ,0 ,23 ,1280 ,700 );
