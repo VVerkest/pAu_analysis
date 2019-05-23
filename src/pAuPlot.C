@@ -6,7 +6,7 @@ void pAuPlot() {
   TH1::SetDefaultSumw2();  TH2::SetDefaultSumw2();  TH3::SetDefaultSumw2();
   TH3D *hVertex = new TH3D( "hVertex", "Event Vertex;v_{x};v_{y};v_{z}", 60,-0.3,0.3, 60,-0.3,0.3, 160,-40,40 );
   TH2D *hTowersPerEvent = new TH2D("hTowersPerEvent","Tower Multiplicity (per event);Event no.;# of Towers", 15000,0,1500000, 700,0,700 );
-  TH2D *hTowersPerRun = new TH2D("hTowersPerRun","Tower Multiplicity (per run);Run no.;# of Towers", 20000,16000000,16200000, 700,0,700 );
+  TH2D *hTowersPerRun = new TH2D("hTowersPerRun","Tower Multiplicity (per run);Run no.;# of Towers", 20000,16051000,16190000, 700,0,700 );
   // 2119440-16156005      2000000,17000000
   const float pi = 3.141592;
 
