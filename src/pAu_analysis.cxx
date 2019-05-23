@@ -98,10 +98,10 @@ int main ( int argc, const char** argv ) {
     int npt = header->GetNOfPrimaryTracks();      nPrimary = npt;
     int ntow = header->GetNOfTowers();               nTowers = ntow;
     Vx = header->GetPrimaryVertexX();    Vy = header->GetPrimaryVertexY();    Vz = header->GetPrimaryVertexZ();
-    nGlobal = header->GetNGlobalTracks();                                 nVertices = header->GetNumberOfVertices();
-    refMult = header->GetReferenceMultiplicity();                        gRefMult = header->GetGReferenceMultiplicity();
-    BbcCoincidenceRate = header->GetBbcCoincidenceRate();     vpdVz = header->GetVpdVz();
-    BbcEastRate = header->GetBbcEastRate();                               BbcWestRate = header->GetBbcEastRate();
+    nGlobal = header->GetNGlobalTracks();                                    nVertices = header->GetNumberOfVertices();
+    refMult = header->GetReferenceMultiplicity();                           gRefMult = header->GetGReferenceMultiplicity();
+    BbcCoincidenceRate = header->GetBbcCoincidenceRate();        vpdVz = header->GetVpdVz();
+    BbcEastRate = header->GetBbcEastRate();                                  BbcWestRate = header->GetBbcEastRate();
 
     hVertex->Fill( Vx, Vy, Vz );
     hTowersPerEvent->Fill( nTowers );
@@ -109,6 +109,7 @@ int main ( int argc, const char** argv ) {
     hPrimaryPerEvent->Fill( nPrimary );
     hPrimaryPerRun->Fill( RunID, nPrimary );
     hnPrimaryVSnTowers->Fill( nTowers, nPrimary );
+
     
     for ( int i=0; i<npt; ++i ) {
       double primTrackPt = (double) event->GetPrimaryTrack(i)->GetPt();          trPt = primTrackPt;
@@ -126,13 +127,12 @@ int main ( int argc, const char** argv ) {
       MBtracks->Fill();
     }
 
-
-
+    
     for ( int i=0; i<ntow; ++i ) {
       towEt = event->GetTower(i)->GetEt();
       towEta = event->GetTower(i)->GetEta();
       towPhi = event->GetTower(i)->GetPhi();
-      towID = event->GetTower(i)->GetID();
+      towID = event->GetTower(i)->GetId();
       MBtowers->Fill();
     }
     
