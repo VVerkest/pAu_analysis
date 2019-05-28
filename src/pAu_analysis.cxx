@@ -153,7 +153,7 @@ int main ( int argc, const char** argv ) {
       nHitsPoss = event->GetPrimaryTrack(i)->GetNOfPossHits();
 
       nPrimary ++1;
-      hPrimaryTracks->Fill( primTrackPt, primTrackEta, primTrackPhi );
+      hPrimaryTracks->Fill( trPt, trEta, trPhi );
       MBtracks->Fill();
     }
 
