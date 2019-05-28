@@ -11,12 +11,14 @@ namespace pAuAnalysis {
       fastjet::PseudoJet current = fastjet::PseudoJet( *sv );
       current.set_user_index( sv->GetCharge() );
 
-      //  std::cout<< sv->GetCharge() << std::endl;
+      if ( std::abs(current.eta()) > etaCut )      { continue; }  // removes particles with |eta|>1
+      if ( current.pt() < partMinPt )      { continue; }  // removes particles with pt<0.2GeV
 
       rawParticles.push_back(current);
     }
     return rawParticles;
   }
+
   
   void InitReader( TStarJetPicoReader & reader, TChain* chain, int nEvents ) {
     
