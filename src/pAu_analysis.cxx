@@ -210,7 +210,7 @@ int main ( int argc, const char** argv ) {
 
     if ( rawJets.size()>=2 ) {                        //  CREATE DIJET PAIR
       double dphi = fabs( fabs( rawJets.at(0).delta_phi_to( rawJets.at(1) ) ) - pi );
-      if ( dPhi< R ) {  
+      if ( dphi< R ) {  
 	leadPt = rawJets[0].pt();
 	leadEta = rawJets[0].eta();
 	leadPhi = rawJets[0].phi();
@@ -221,7 +221,7 @@ int main ( int argc, const char** argv ) {
 	subEta = rawJets[0].eta();
 	subPhi = rawJets[0].phi();
 	subEt = rawJets[0].Et();
-	vector<PseudoJet> SubCons= rawJets[0].constituents();
+	vector<PseudoJet> SubCons= rawJets[1].constituents();
 	subNcons = SubCons.size();
       }
     }
