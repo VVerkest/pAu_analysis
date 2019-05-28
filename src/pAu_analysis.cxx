@@ -15,6 +15,7 @@ using namespace std;
 using namespace fastjet;
 using namespace pAuAnalysis;
 
+// tracks and towers have eta and DCA cuts specified in pAuFunctions.hh
 
 int main ( int argc, const char** argv ) {
   
@@ -51,9 +52,11 @@ int main ( int argc, const char** argv ) {
   TH1D *hPrimaryPerEvent = new TH1D("hPrimaryPerEvent","Primary Track Multiplicity (per event);# of Primary", 200,0,200 );
   TH2D *hPrimaryPerRun = new TH2D("hPrimaryPerRun","Primary Track Multiplicity (per run);Run no.;# of Primary", 60,16120000,16160000, 200,0,200 );
   TH2D *hnPrimaryVSnTowers = new TH2D("hnPrimaryVSnTowers","# of Primary Tracks vs. # of Towers;# Towers;#Primary Tracks", 700,0,700, 200,0,200);
+  
   TTree *MBtree = new TTree( "MBTree", "MBtree" );
   TTree *MBtowers = new TTree( "MBTowers", "MBtowers" );
   TTree *MBtracks = new TTree( "MBTracks", "MBtracks" );
+  TTree *MBjets = new TTree( "MBJets", "MBjets" );
   
   int RunID, EventID, nTowers, nPrimary, nGlobal, nVertices, refMult, gRefMult, towID, Charge, nHitsPoss, nHitsFit;
   double Vx, Vy, Vz, towEt, towEta, towPhi, trEta, trPhi, trPx, trPy, trPz, trPt, DCA, BbcCoincidenceRate, BbcEastRate, BbcWestRate, vpdVz;
@@ -73,6 +76,18 @@ int main ( int argc, const char** argv ) {
   MBtracks->Branch("trPz", &trPz);           	  MBtracks->Branch("trPt", &trPt);    	  MBtracks->Branch("trEta", &trEta);
   MBtracks->Branch("trPhi", &trPhi);        	  MBtracks->Branch("DCA", &DCA);
 
+  int nJets;            vector<int> nCons;
+  vector<double> jetPt, jetEta, jetPhi, jetEt;
+
+  MBjets->Branch("EventID", &EventID);            MBjets->Branch("RunID", &RunID);            MBjets->Branch("nJets", &nJets);
+  MBjets->Branch("jetPt", &jetPt);                      MBjets->Branch("jetEta", &jetEta);              MBjets->Branch("jetPhi", &jetPhi);
+  MBjets->Branch("jetEt", &jetEt);                      MBjets->Branch("nCons", &nCons);            // MBjets->Branch("", &);
+  
+  //  CREATE JET SELECTOR
+  Selector etaSelector = SelectorAbsEtaMax( 1.0-R );    Selector ptMinSelector = SelectorPtMin(jetMinPt);    Selector ptMaxSelector = SelectorPtMax(jetMaxPt);
+  Selector etaPtSelector = etaSelector && ptMinSelector && ptMaxSelector;
+  JetDefinition jet_def(antikt_algorithm, R);     //  JET DEFINITION
+
   vector<PseudoJet> rawParticles, rawJets;
   int eID, rID;
   
@@ -83,46 +98,62 @@ int main ( int argc, const char** argv ) {
   // ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~  BEGIN EVENT LOOP!  ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~
   while ( Reader.NextEvent() ) {
 
-    rawParticles.clear();  rawJets.clear();  //  clear containers
-    
-    Reader.PrintStatus(5); 
+    rawParticles.clear();  rawJets.clear();  nCons.clear();    jetPt.clear();    jetEta.clear();    jetPhi.clear();    jetEt.clear();  //  clear vectors
 
-    eID = Reader.GetNOfCurrentEvent();
-    rID = header->GetRunId();
+    Reader.PrintStatus(5);
+    
+    Vz = header->GetPrimaryVertexZ();
+    if ( Vz_candidate( header, absMaxVz ) == false ) { continue; }
+
+    
+    eID = Reader.GetNOfCurrentEvent();          EventID = eID;
+    rID = header->GetRunId();                        RunID = rID;
 
     event = Reader.GetEvent();
     header = event->GetHeader();
     container = Reader.GetOutputContainer();
 
-    EventID = eID;        RunID = rID;
     int npt = header->GetNOfPrimaryTracks();      nPrimary = npt;
     int ntow = header->GetNOfTowers();               nTowers = ntow;
-    Vx = header->GetPrimaryVertexX();    Vy = header->GetPrimaryVertexY();    Vz = header->GetPrimaryVertexZ();
+    Vx = header->GetPrimaryVertexX();    Vy = header->GetPrimaryVertexY();
     nGlobal = header->GetNGlobalTracks();                                    nVertices = header->GetNumberOfVertices();
     refMult = header->GetReferenceMultiplicity();                           gRefMult = header->GetGReferenceMultiplicity();
     BbcCoincidenceRate = header->GetBbcCoincidenceRate();        vpdVz = header->GetVpdVz();
     BbcEastRate = header->GetBbcEastRate();                                  BbcWestRate = header->GetBbcEastRate();
 
-    hVertex->Fill( Vx, Vy, Vz );
-    hTowersPerEvent->Fill( nTowers );
-    hTowersPerRun->Fill( RunID, nTowers );
-    hPrimaryPerEvent->Fill( nPrimary );
-    hPrimaryPerRun->Fill( RunID, nPrimary );
-    hnPrimaryVSnTowers->Fill( nTowers, nPrimary );
-
+    // From Nick's code:
+    // TStarJetPicoEventCuts* evCuts = reader.GetEventCuts();
+    // evCuts->SetTriggerSelection( triggerString.c_str() );
+    // evCuts->SetVertexZCut ( vertexZCut );
+    // evCuts->SetMaxEventPtCut( eventPtCut );
+    // evCuts->SetMaxEventEtCut( eventEtCut );
+    // evCuts->SetVertexZDiffCut( vertexZDiffCut );
+    // TStarJetPicoTrackCuts* trackCuts = reader.GetTrackCuts();
+    // trackCuts->SetDCACut( DCACut );
+    // trackCuts->SetMinNFitPointsCut( minFitPoints );
+    // trackCuts->SetFitOverMaxPointsCut( minFitFrac );
+    // trackCuts->SetMaxPtCut ( trackPtCut );
+    // TStarJetPicoTowerCuts* towerCuts = reader.GetTowerCuts();
+    // towerCuts->SetMaxEtCut( towerEtCut );
+    
     
     for ( int i=0; i<npt; ++i ) {
-      double primTrackPt = (double) event->GetPrimaryTrack(i)->GetPt();          trPt = primTrackPt;
-      double primTrackPx = (double) event->GetPrimaryTrack(i)->GetPx();         trPx = primTrackPx;
-      double primTrackPy = (double) event->GetPrimaryTrack(i)->GetPy();         trPy = primTrackPy;
-      double primTrackPz = (double) event->GetPrimaryTrack(i)->GetPz();         trPz = primTrackPz;
-      double primTrackEta = (double) event->GetPrimaryTrack(i)->GetEta();       trEta = primTrackEta;
-      double primTrackPhi = (double) event->GetPrimaryTrack(i)->GetPhi();       trPhi = primTrackPhi;
-      
+
+      DCA = event->GetPrimaryTrack(i)->GetDCA();
+      if ( DCA > dcaCut ) { nPrimary -= 1;   continue; }                   // track DCA cut
+      trEta = (double) event->GetPrimaryTrack(i)->GetEta();
+      if ( abs(trEta) > etaCut ) { nPrimary -= 1;   continue; }            // track eta cut
+
+      trPt = (double) event->GetPrimaryTrack(i)->GetPt();
+      trPx = (double) event->GetPrimaryTrack(i)->GetPx();
+      trPy = (double) event->GetPrimaryTrack(i)->GetPy();
+      trPz = (double) event->GetPrimaryTrack(i)->GetPz();
+      trPhi = (double) event->GetPrimaryTrack(i)->GetPhi();
+
       nHitsFit = event->GetPrimaryTrack(i)->GetNOfFittedHits();
       nHitsPoss = event->GetPrimaryTrack(i)->GetNOfPossHits();
-      DCA = event->GetPrimaryTrack(i)->GetDCA();
-      
+
+      nPrimary ++1
       hPrimaryTracks->Fill( primTrackPt, primTrackEta, primTrackPhi );
       MBtracks->Fill();
     }
@@ -131,15 +162,38 @@ int main ( int argc, const char** argv ) {
     for ( int i=0; i<ntow; ++i ) {
       towEt = event->GetTower(i)->GetEt();
       towEta = event->GetTower(i)->GetEta();
+      if ( abs(towEta) > etaCut ) { nTowers -= 1;   continue; }            // tower eta cut
       towPhi = event->GetTower(i)->GetPhi();
       towID = event->GetTower(i)->GetId();
       MBtowers->Fill();
     }
     
-    // GatherParticles( container, rawParticles);        //cout<<rawParticles.size()<<endl;
+    GatherParticles( container, rawParticles);     //  GATHERS ALL PARTICLES WITH    pT>=2.0GeV    and    |eta|<1.0
 
+    ClusterSequence jetCluster( rawParticles, jet_def );           //  CLUSTER ALL JETS
+    vector<PseudoJet> rawJets = sorted_by_pt( etaPtSelector( jetCluster.inclusive_jets() ) );     // EXTRACT SELECTED JETS
 
-    MBtree->Fill();
+    for ( int i=0; i<rawJets.size(); ++i ) {
+      if ( rawJets[i].pt()<jetMinPt ) { continue; }
+      jetPt.push_back( rawJets[i].pt() );
+      jetEta.push_back( rawJets[i].eta() );
+      if ( abs(rawJets[i].eta())>etaCut ) { cerr<<"bad jet selectors?"<<endl;   continue; }
+      jetPhi.push_back( rawJets[i].phi() );
+      jetEt.push_back( rawJets[i].Et() );
+      vector<PseudoJet> Cons= rawJets[i].constituents();
+      nCons.push_back( Cons.size() );
+      nJets+=1;
+    }
+
+    hVertex->Fill( Vx, Vy, Vz );                                        //  FILL HISTOGRAMS
+    hTowersPerEvent->Fill( nTowers );
+    hTowersPerRun->Fill( RunID, nTowers );
+    hPrimaryPerEvent->Fill( nPrimary );
+    hPrimaryPerRun->Fill( RunID, nPrimary );
+    hnPrimaryVSnTowers->Fill( nTowers, nPrimary );
+    
+    MBtree->Fill();                                                           //  FILL TREES
+    MBjets->Fill();
   }
   // ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~  END EVENT LOOP!  ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~
 
@@ -154,6 +208,7 @@ int main ( int argc, const char** argv ) {
   MBtree->Write();
   MBtowers->Write();
   MBtracks->Write();
+  MBjets->Write();
   
   pAuFile->Close();
   
