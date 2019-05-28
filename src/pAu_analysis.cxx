@@ -152,7 +152,7 @@ int main ( int argc, const char** argv ) {
       nHitsFit = event->GetPrimaryTrack(i)->GetNOfFittedHits();
       nHitsPoss = event->GetPrimaryTrack(i)->GetNOfPossHits();
 
-      nPrimary ++1;
+      nPrimary +=1;
       hPrimaryTracks->Fill( trPt, trEta, trPhi );
       MBtracks->Fill();
     }
