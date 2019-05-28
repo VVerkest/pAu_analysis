@@ -129,7 +129,7 @@ int main ( int argc, const char** argv ) {
 
     int npt = header->GetNOfPrimaryTracks();      nPrimary = npt;
     int ntow = header->GetNOfTowers();               nTowers = ntow;
-    Vx = header->GetPrimaryVertexX();    Vy = header->GetPrimaryVertexY();
+    Vx = header->GetPrimaryVertexX();                                           Vy = header->GetPrimaryVertexY();
     nGlobal = header->GetNGlobalTracks();                                    nVertices = header->GetNumberOfVertices();
     refMult = header->GetReferenceMultiplicity();                           gRefMult = header->GetGReferenceMultiplicity();
     BbcCoincidenceRate = header->GetBbcCoincidenceRate();        vpdVz = header->GetVpdVz();
