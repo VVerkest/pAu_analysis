@@ -52,11 +52,12 @@ int main ( int argc, const char** argv ) {
   TH1D *hPrimaryPerEvent = new TH1D("hPrimaryPerEvent","Primary Track Multiplicity (per event);# of Primary", 200,0,200 );
   TH2D *hPrimaryPerRun = new TH2D("hPrimaryPerRun","Primary Track Multiplicity (per run);Run no.;# of Primary", 60,16120000,16160000, 200,0,200 );
   TH2D *hnPrimaryVSnTowers = new TH2D("hnPrimaryVSnTowers","# of Primary Tracks vs. # of Towers;# Towers;#Primary Tracks", 700,0,700, 200,0,200);
-  TH2D *hDCAvsPt = new TH2D("hDCAvsPt","DCA vs. p_{T};p_{T} GeV;DCA (cm)", 70,0,3.5, 100,0.0,50.0);
+  TH2D *hDCAvsPt = new TH2D("hDCAvsPt","DCA vs. p_{T};p_{T} GeV;DCA (cm)", 100,0.0,50.0, 70,0,3.5);
   TH2D *hPrimaryVsBBC = new TH2D("hPrimaryVsBBC","# Primary Tracks vs. BBC Coincidence Rate;BBC Rate;# Primary Tracks", 50000,0,5000000, 150,0,150 );
   TH2D *hGlobalVsBBC = new TH2D("hGlobalVsBBC","# Global Tracks vs. BBC Coincidence Rate;BBC Rate;# Global Tracks", 50000,0,5000000, 300,0,3000 );
   TH2D *hTowEt = new TH2D("hTowEt","Tower E_{T} by ID;Tower ID;E_{T} (GeV)", 4800,0,4800, 40,0,20.0);
   TH3D *hTowEtEtaPhi = new TH3D("hTowEtEtaPhi","Tower E_{T} vs. #eta vs. #phi;Tower E_{T} (GeV);Tower #eta;Tower #phi", 100,0,20, 200,-1.0,1.0, 2*pi,-pi,pi );
+  TH1D *hTowerMult = new TH1D("hTowerMult","Tower Multiplicity by ID;Tower ID", 4800,0,4800);
   
   TTree *MBtree = new TTree( "MBTree", "MBtree" );
   TTree *MBtowers = new TTree( "MBTowers", "MBtowers" );
@@ -185,6 +186,7 @@ int main ( int argc, const char** argv ) {
 
       hTowEt->Fill( towID, towEt );
       hTowEtEtaPhi->Fill( towEt, towEta, towPhi );
+      hTowerMult->Fill( towID );
       MBtowers->Fill();
     }
 
@@ -253,6 +255,7 @@ int main ( int argc, const char** argv ) {
   hTowEt->Write();
   hTowEtEtaPhi->Write();
   hDCAvsPt->Write();
+  hTowerMult->Write();
   
   MBtree->Write();                            //  WRITE TREES
   MBtowers->Write();

@@ -11,6 +11,7 @@ void pAuPlot() {
   TH2D *hGlobalVsBBC = new TH2D("hGlobalVsBBC","# Global Tracks vs. BBC Coincidence Rate;BBC Rate;# Global Tracks", 50000,0,5000000, 300,0,3000 );
   TH2D *hTowEt = new TH2D("hTowEt","Tower E_{T} by ID;Tower ID;E_{T} (GeV)", 4800,0,4800, 40,0,20.0);
   TH3D *hTowEtEtaPhi = new TH3D("hTowEtEtaPhi","Tower E_{T} vs. #eta vs. #phi;Tower E_{T} (GeV);Tower #eta;Tower #phi", 100,0,20, 200,-1.0,1.0, 2*pi,-pi,pi );
+  TH1D *hTowerMult = new TH1D("hTowerMult","Tower Multiplicity by ID;Tower ID", 4800,0,4800);
   //  TH2D * = new TH2D("","",);
 
   TFile* inFile = new TFile( "out/MB/pAu_analysis.root", "READ" );
@@ -50,6 +51,7 @@ void pAuPlot() {
     MBtowers->GetEntry(i);
     hTowEt->Fill( towID, towEt );
     hTowEtEtaPhi->Fill( towEt, towEta, towPhi );
+    hTowerMult->Fill( towID );
   }
 
   for ( int i=0; i<trkEntries; ++i ) {
