@@ -31,7 +31,7 @@ int main ( int argc, const char** argv ) {
     vector<string> arguments( argv+1, argv+argc );
     inFile = "production_pAu200_2015/MB/pAu_2015_200_MB*.root";
     outFile = "out/pAu.root";
-    nEvents = 10000;
+    nEvents = -1;
   }
   else { cerr<< "incorrect number of command line arguments"; return -1; }
 
@@ -118,7 +118,7 @@ int main ( int argc, const char** argv ) {
     nGlobal = header->GetNGlobalTracks();                                    nVertices = header->GetNumberOfVertices();
     refMult = header->GetReferenceMultiplicity();                           gRefMult = header->GetGReferenceMultiplicity();
     BbcCoincidenceRate = header->GetBbcCoincidenceRate();        vpdVz = header->GetVpdVz();
-    BbcEastRate = header->GetBbcEastRate();                                  BbcWestRate = header->GetBbcEastRate();
+    BbcEastRate = header->GetBbcEastRate();                                  BbcWestRate = header->GetBbcWestRate();
 
     // From Nick's code:
     // TStarJetPicoEventCuts* evCuts = reader.GetEventCuts();
