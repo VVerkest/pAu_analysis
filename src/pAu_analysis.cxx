@@ -84,8 +84,8 @@ int main ( int argc, const char** argv ) {
   MBjets->Branch("jetEt", &jetEt);                      MBjets->Branch("nCons", &nCons);            // MBjets->Branch("", &);
   
   //  CREATE JET SELECTOR
-  Selector etaSelector = SelectorAbsEtaMax( 1.0-R );    Selector ptMinSelector = SelectorPtMin(jetMinPt);    Selector ptMaxSelector = SelectorPtMax(jetMaxPt);
-  Selector etaPtSelector = etaSelector && ptMinSelector && ptMaxSelector;
+  Selector etaSelector = SelectorAbsEtaMax( 1.0-R );    Selector ptMinSelector = SelectorPtMin(jetMinPt);
+  Selector etaPtSelector = etaSelector && ptMinSelector;
   JetDefinition jet_def(antikt_algorithm, R);     //  JET DEFINITION
 
   vector<PseudoJet> rawParticles, rawJets;
@@ -103,9 +103,8 @@ int main ( int argc, const char** argv ) {
     Reader.PrintStatus(5);
     
     Vz = header->GetPrimaryVertexZ();
-    if ( Vz_candidate( header, absMaxVz ) == false ) { continue; }
+    if ( abs(Vz) > vzCut ) { continue; }
 
-    
     eID = Reader.GetNOfCurrentEvent();          EventID = eID;
     rID = header->GetRunId();                        RunID = rID;
 
@@ -153,7 +152,7 @@ int main ( int argc, const char** argv ) {
       nHitsFit = event->GetPrimaryTrack(i)->GetNOfFittedHits();
       nHitsPoss = event->GetPrimaryTrack(i)->GetNOfPossHits();
 
-      nPrimary ++1
+      nPrimary ++1;
       hPrimaryTracks->Fill( primTrackPt, primTrackEta, primTrackPhi );
       MBtracks->Fill();
     }
