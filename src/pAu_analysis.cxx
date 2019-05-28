@@ -52,11 +52,17 @@ int main ( int argc, const char** argv ) {
   TH1D *hPrimaryPerEvent = new TH1D("hPrimaryPerEvent","Primary Track Multiplicity (per event);# of Primary", 200,0,200 );
   TH2D *hPrimaryPerRun = new TH2D("hPrimaryPerRun","Primary Track Multiplicity (per run);Run no.;# of Primary", 60,16120000,16160000, 200,0,200 );
   TH2D *hnPrimaryVSnTowers = new TH2D("hnPrimaryVSnTowers","# of Primary Tracks vs. # of Towers;# Towers;#Primary Tracks", 700,0,700, 200,0,200);
+  TH2D *hDCAvsPt = new TH2D("hDCAvsPt","DCA vs. p_{T};p_{T} GeV;DCA (cm)", 70,0,3.5, 100,0.0,50.0);
+  TH2D *hPrimaryVsBBC = new TH2D("hPrimaryVsBBC","# Primary Tracks vs. BBC Coincidence Rate;BBC Rate;# Primary Tracks", 50000,0,5000000, 150,0,150 );
+  TH2D *hGlobalVsBBC = new TH2D("hGlobalVsBBC","# Global Tracks vs. BBC Coincidence Rate;BBC Rate;# Global Tracks", 50000,0,5000000, 300,0,3000 );
+  TH2D *hTowEt = new TH2D("hTowEt","Tower E_{T} by ID;Tower ID;E_{T} (GeV)", 4800,0,4800, 40,0,20.0);
+  TH3D *hTowEtEtaPhi = new TH3D("hTowEtEtaPhi","Tower E_{T} vs. #eta vs. #phi;Tower E_{T} (GeV);Tower #eta;Tower #phi", 100,0,20, 200,-1.0,1.0, 2*pi,-pi,pi );
   
   TTree *MBtree = new TTree( "MBTree", "MBtree" );
   TTree *MBtowers = new TTree( "MBTowers", "MBtowers" );
   TTree *MBtracks = new TTree( "MBTracks", "MBtracks" );
   TTree *MBjets = new TTree( "MBJets", "MBjets" );
+  TTree *MBdijets = new TTree( "MBDijets", "MBdijets" );
   
   int RunID, EventID, nTowers, nPrimary, nGlobal, nVertices, refMult, gRefMult, towID, Charge, nHitsPoss, nHitsFit;
   double Vx, Vy, Vz, towEt, towEta, towPhi, trEta, trPhi, trPx, trPy, trPz, trPt, DCA, BbcCoincidenceRate, BbcEastRate, BbcWestRate, vpdVz;
@@ -82,11 +88,19 @@ int main ( int argc, const char** argv ) {
   MBjets->Branch("EventID", &EventID);            MBjets->Branch("RunID", &RunID);            MBjets->Branch("nJets", &nJets);
   MBjets->Branch("jetPt", &jetPt);                      MBjets->Branch("jetEta", &jetEta);              MBjets->Branch("jetPhi", &jetPhi);
   MBjets->Branch("jetEt", &jetEt);                      MBjets->Branch("nCons", &nCons);            // MBjets->Branch("", &);
+
+  double leadPt, leadEta, leadPhi, leadEt, leadNcons, subPt, subEta, subPhi, subEt, subNcons;
+  
+  MBdijets->Branch("EventID", &EventID);           MBdijets->Branch("RunID", &RunID);            MBdijets->Branch("leadPt", &leadPt);
+  MBdijets->Branch("leadEta", &leadEta);            MBdijets->Branch("leadPhi", &leadPhi);         MBdijets->Branch("leadEt", &leadEt);
+  MBdijets->Branch("leadNcons", &leadNcons);  MBdijets->Branch("subPt", &subPt);             MBdijets->Branch("subEta", &subEta);
+  MBdijets->Branch("subPhi", &subPhi);              MBdijets->Branch("subEt", &subEt);             MBdijets->Branch("subNcons", &subNcons);
   
   //  CREATE JET SELECTOR
   Selector etaSelector = SelectorAbsEtaMax( 1.0-R );    Selector ptMinSelector = SelectorPtMin(jetMinPt);
   Selector etaPtSelector = etaSelector && ptMinSelector;
   JetDefinition jet_def(antikt_algorithm, R);     //  JET DEFINITION
+  JetMedianBackgroundEstimator UE( selector, jet_def, area_def);
 
   vector<PseudoJet> rawParticles, rawJets;
   int eID, rID;
@@ -120,6 +134,9 @@ int main ( int argc, const char** argv ) {
     BbcCoincidenceRate = header->GetBbcCoincidenceRate();        vpdVz = header->GetVpdVz();
     BbcEastRate = header->GetBbcEastRate();                                  BbcWestRate = header->GetBbcWestRate();
 
+    hPrimaryVsBBC->Fill( BbcCoincidenceRate, nPrimary );
+    hGlobalVsBBC->Fill( BbcCoincidenceRate, nGlobal );
+    
     // From Nick's code:
     // TStarJetPicoEventCuts* evCuts = reader.GetEventCuts();
     // evCuts->SetTriggerSelection( triggerString.c_str() );
@@ -134,9 +151,9 @@ int main ( int argc, const char** argv ) {
     // trackCuts->SetMaxPtCut ( trackPtCut );
     // TStarJetPicoTowerCuts* towerCuts = reader.GetTowerCuts();
     // towerCuts->SetMaxEtCut( towerEtCut );
+   
     
-    
-    for ( int i=0; i<npt; ++i ) {
+    for ( int i=0; i<npt; ++i ) {                                         //  FILL EVENT DATA
 
       DCA = event->GetPrimaryTrack(i)->GetDCA();
       if ( DCA > dcaCut ) { nPrimary -= 1;   continue; }                   // track DCA cut
@@ -154,29 +171,36 @@ int main ( int argc, const char** argv ) {
 
       nPrimary +=1;
       hPrimaryTracks->Fill( trPt, trEta, trPhi );
+      hDCAvsPt->Fill( trPt, DCA );
       MBtracks->Fill();
     }
 
     
-    for ( int i=0; i<ntow; ++i ) {
+    for ( int i=0; i<ntow; ++i ) {                                         //  FILL TOWER DATA
       towEt = event->GetTower(i)->GetEt();
       towEta = event->GetTower(i)->GetEta();
       if ( abs(towEta) > etaCut ) { nTowers -= 1;   continue; }            // tower eta cut
       towPhi = event->GetTower(i)->GetPhi();
       towID = event->GetTower(i)->GetId();
+
+      hTowEt->Fill( towID, towEt );
+      hTowEtEtaPhi->Fill( towEt, towEta, towPhi );
       MBtowers->Fill();
     }
-    
+
+
+
+    //   JET-FINDING
     GatherParticles( container, rawParticles);     //  GATHERS ALL PARTICLES WITH    pT>=2.0GeV    and    |eta|<1.0
 
     ClusterSequence jetCluster( rawParticles, jet_def );           //  CLUSTER ALL JETS
     vector<PseudoJet> rawJets = sorted_by_pt( etaPtSelector( jetCluster.inclusive_jets() ) );     // EXTRACT SELECTED JETS
 
-    for ( int i=0; i<rawJets.size(); ++i ) {
-      if ( rawJets[i].pt()<jetMinPt ) { continue; }
+    for ( int i=0; i<rawJets.size(); ++i ) {                              //  FILL JET INFO
+      if ( rawJets[i].pt()<jetMinPt )  { cerr<<"bad jet pt selector?"<<endl;   continue; }
       jetPt.push_back( rawJets[i].pt() );
+      if ( abs(rawJets[i].eta())>etaCut ) { cerr<<"bad jet eta selector?"<<endl;   continue; }
       jetEta.push_back( rawJets[i].eta() );
-      if ( abs(rawJets[i].eta())>etaCut ) { cerr<<"bad jet selectors?"<<endl;   continue; }
       jetPhi.push_back( rawJets[i].phi() );
       jetEt.push_back( rawJets[i].Et() );
       vector<PseudoJet> Cons= rawJets[i].constituents();
@@ -184,6 +208,13 @@ int main ( int argc, const char** argv ) {
       nJets+=1;
     }
 
+    if ( rawJets.size()>=2  &&  fabs( fabs( rawJets.at(0).delta_phi_to( rawJets.at(1) ) ) - pi ) < R ) {                        //  CREATE DIJET PAIR
+
+      
+    }
+
+
+    
     hVertex->Fill( Vx, Vy, Vz );                                        //  FILL HISTOGRAMS
     hTowersPerEvent->Fill( nTowers );
     hTowersPerRun->Fill( RunID, nTowers );
@@ -193,22 +224,29 @@ int main ( int argc, const char** argv ) {
     
     MBtree->Fill();                                                           //  FILL TREES
     MBjets->Fill();
+    MBdijets->Fill();
   }
   // ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~  END EVENT LOOP!  ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~
 
-  hPrimaryTracks->Write();
+  hPrimaryTracks->Write();                //  WRITE HISTOGRAMS
   hVertex->Write();
   hTowersPerEvent->Write();
   hTowersPerRun->Write();
   hPrimaryPerEvent->Write();
   hPrimaryPerRun->Write();
   hnPrimaryVSnTowers->Write();
+  hPrimaryVsBBC->Write();
+  hGlobalVsBBC->Write();
+  hTowEt->Write();
+  hTowEtEtaPhi->Write();
+  hDCAvsPt->Write();
   
-  MBtree->Write();
+  MBtree->Write();                            //  WRITE TREES
   MBtowers->Write();
   MBtracks->Write();
   MBjets->Write();
-  
+  MBdijets->Write();
+
   pAuFile->Close();
   
   return 0;
