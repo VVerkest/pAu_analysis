@@ -100,7 +100,7 @@ int main ( int argc, const char** argv ) {
   Selector etaSelector = SelectorAbsEtaMax( 1.0-R );    Selector ptMinSelector = SelectorPtMin(jetMinPt);
   Selector etaPtSelector = etaSelector && ptMinSelector;
   JetDefinition jet_def(antikt_algorithm, R);     //  JET DEFINITION
-  JetMedianBackgroundEstimator UE( selector, jet_def, area_def);
+  //JetMedianBackgroundEstimator UE( selector, jet_def, area_def);
 
   vector<PseudoJet> rawParticles, rawJets;
   int eID, rID;
@@ -208,9 +208,19 @@ int main ( int argc, const char** argv ) {
       nJets+=1;
     }
 
-    if ( rawJets.size()>=2  &&  fabs( fabs( rawJets.at(0).delta_phi_to( rawJets.at(1) ) ) - pi ) < R ) {                        //  CREATE DIJET PAIR
-
-      
+    if ( rawJets.size()>=2  &&  fabs( fabs( rawJets[0]).delta_phi_to( rawJets[1]) ) ) - pi ) < R ) {                        //  CREATE DIJET PAIR
+      leadPt = rawJets[0].pt();
+      leadEta = rawJets[0].eta();
+      leadPhi = rawJets[0].phi();
+      leadEt = rawJets[0].Et();
+      vector<PseudoJet> LeadCons= rawJets[0].constituents();
+      leadNcons = SubCons.size();
+      subPt = rawJets[0].pt();
+      subEta = rawJets[0].eta();
+      subPhi = rawJets[0].phi();
+      subEt = rawJets[0].Et();
+      vector<PseudoJet> SubCons= rawJets[0].constituents();
+      subNcons = SubCons.size();
     }
 
 
