@@ -44,6 +44,14 @@
 
 namespace pAuAnalysis {
 
+  const double R = 0.4;
+  const double vzCut = 30.0;   // |Vz|<=30 cm
+  const double dcaCut = 3.0;   // DCA<=3.0 cm
+  const double etaCut = 1.0;       // |eta|<=1
+  const double partMinPt = 0.2;      //  particle Pt >= 0.2 GeV
+  const double jetMinPt = 2.0;      //  Jet Pt >= 2.0 GeV
+  // const double jetMaxPt = 60.0;      //  Jet Pt <= 60.0 GeV
+
 
   std::vector<fastjet::PseudoJet> GatherParticles ( TStarJetVectorContainer<TStarJetVector> * container , std::vector<fastjet::PseudoJet> & rawParticles );
 
