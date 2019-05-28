@@ -216,7 +216,7 @@ int main ( int argc, const char** argv ) {
 	leadPhi = rawJets[0].phi();
 	leadEt = rawJets[0].Et();
 	vector<PseudoJet> LeadCons= rawJets[0].constituents();
-	leadNcons = SubCons.size();
+	leadNcons = LeadCons.size();
 	subPt = rawJets[0].pt();
 	subEta = rawJets[0].eta();
 	subPhi = rawJets[0].phi();
