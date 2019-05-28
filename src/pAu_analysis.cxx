@@ -101,7 +101,6 @@ int main ( int argc, const char** argv ) {
   Selector etaSelector = SelectorAbsEtaMax( 1.0-R );    Selector ptMinSelector = SelectorPtMin(jetMinPt);
   Selector etaPtSelector = etaSelector && ptMinSelector;
   JetDefinition jet_def(antikt_algorithm, R);     //  JET DEFINITION
-  //JetMedianBackgroundEstimator UE( selector, jet_def, area_def);
 
   vector<PseudoJet> rawParticles, rawJets;
   int eID, rID;
@@ -116,16 +115,18 @@ int main ( int argc, const char** argv ) {
     rawParticles.clear();  rawJets.clear();  nCons.clear();    jetPt.clear();    jetEta.clear();    jetPhi.clear();    jetEt.clear();  //  clear vectors
 
     Reader.PrintStatus(5);
+
+    event = Reader.GetEvent();
+    header = event->GetHeader();
+    container = Reader.GetOutputContainer();
+    
+    if (!(header->HasTriggerId(500401) || header->HasTriggerId(500411))) {continue;}   //  ONLY SELECT JP2 TRIGGER EVENTS
     
     Vz = header->GetPrimaryVertexZ();
     if ( abs(Vz) > vzCut ) { continue; }
 
     eID = Reader.GetNOfCurrentEvent();          EventID = eID;
     rID = header->GetRunId();                        RunID = rID;
-
-    event = Reader.GetEvent();
-    header = event->GetHeader();
-    container = Reader.GetOutputContainer();
 
     int npt = header->GetNOfPrimaryTracks();      nPrimary = npt;
     int ntow = header->GetNOfTowers();               nTowers = ntow;
@@ -228,7 +229,12 @@ int main ( int argc, const char** argv ) {
       }
     }
 
-
+    // double djAxisPhi = ( rawJets[0].phi() + rawJets[1].phi() )/2;
+    // //  Selector bgSelector;
+    // double ghost_maxrap = 1.0;
+    // AreaDefinition area_def(active_area, GhostedAreaSpec(ghost_maxrap));
+    // JetMedianBackgroundEstimator UE( bgSelector, jet_def, area_def);
+    
     
     hVertex->Fill( Vx, Vy, Vz );                                        //  FILL HISTOGRAMS
     hTowersPerEvent->Fill( nTowers );
