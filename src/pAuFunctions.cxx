@@ -33,16 +33,17 @@ namespace pAuAnalysis {
     // -------------------------
     
     TStarJetPicoEventCuts* evCuts = reader.GetEventCuts();
-    evCuts->SetVertexZCut ( 1000 );
+    evCuts->SetVertexZCut ( 30.0 );
     evCuts->SetRefMultCut( 0 );
-    evCuts->SetMaxEventPtCut( 1000 );
-    evCuts->SetMaxEventEtCut( 1000 );
+    evCuts->SetMaxEventPtCut( 30.0 );
+    evCuts->SetMaxEventEtCut( 30.0 );
+    evCuts->SetVertexZDiffCut( 3.0 );
 
     // Tracks cuts
     TStarJetPicoTrackCuts* trackCuts = reader.GetTrackCuts();
     trackCuts->SetDCACut( 100 );
-    trackCuts->SetMinNFitPointsCut( -1 );
-    trackCuts->SetFitOverMaxPointsCut( -1 );    
+    trackCuts->SetMinNFitPointsCut( 20 );
+    trackCuts->SetFitOverMaxPointsCut( 0.52 );    
     
     std::cout << "Using these track cuts:" << std::endl;
     std::cout << " dca : " << trackCuts->GetDCACut(  ) << std::endl;
@@ -51,7 +52,7 @@ namespace pAuAnalysis {
     
     // Towers
     TStarJetPicoTowerCuts* towerCuts = reader.GetTowerCuts();
-    towerCuts->SetMaxEtCut( 9999.0 );
+    towerCuts->SetMaxEtCut( 30.0 );
     towerCuts->AddBadTowers( "src/dummy_tower_list.txt" );
 
     std::cout << "Using these tower cuts:" << std::endl;
