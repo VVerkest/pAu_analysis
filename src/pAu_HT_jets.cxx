@@ -129,67 +129,66 @@ int main ( int argc, const char** argv ) {
     for ( int i=0; i<ntow; ++i ) {                                         //  FILL TOWER DATA
       towEt.push_back(event->GetTower(i)->GetEt());
       eta = event->GetTower(i)->GetEta();
-    if ( abs(eta) > etaCut ) { nTowers -= 1;   continue; }            // tower eta cut
-    towEta.push_back(eta);
-    towPhi.push_back(event->GetTower(i)->GetPhi());
-    towID.push_back(event->GetTower(i)->GetId());
-  }
+      if ( abs(eta) > etaCut ) { nTowers -= 1;   continue; }            // tower eta cut
+      towEta.push_back(eta);
+      towPhi.push_back(event->GetTower(i)->GetPhi());
+      towID.push_back(event->GetTower(i)->GetId());
+    }
 
 
 
-  //   JET-FINDING
-  GatherParticles( container, rawParticles);     //  GATHERS ALL PARTICLES WITH    pT>=2.0GeV    and    |eta|<1.0
+    //   JET-FINDING
+    GatherParticles( container, rawParticles);     //  GATHERS ALL PARTICLES WITH    pT>=2.0GeV    and    |eta|<1.0
 
-  ClusterSequence jetCluster( rawParticles, jet_def );           //  CLUSTER ALL JETS
-  vector<PseudoJet> rawJets = sorted_by_pt( etaPtSelector( jetCluster.inclusive_jets() ) );     // EXTRACT SELECTED JETS
+    ClusterSequence jetCluster( rawParticles, jet_def );           //  CLUSTER ALL JETS
+    vector<PseudoJet> rawJets = sorted_by_pt( etaPtSelector( jetCluster.inclusive_jets() ) );     // EXTRACT SELECTED JETS
 
-  nJets=0;
+    nJets=0;
     
-  for ( int i=0; i<rawJets.size(); ++i ) {                              //  FILL JET INFO
-    if ( rawJets[i].pt()<jetMinPt )  { cerr<<"bad jet pt selector?"<<endl;   continue; }
-    jetPt.push_back( rawJets[i].pt() );
-    if ( abs(rawJets[i].eta())>etaCut ) { cerr<<"bad jet eta selector?"<<endl;   continue; }
-    jetEta.push_back( rawJets[i].eta() );
-    jetPhi.push_back( rawJets[i].phi() );
-    jetEt.push_back( rawJets[i].Et() );
-    vector<PseudoJet> Cons= rawJets[i].constituents();
-    nCons.push_back( Cons.size() );
-    nJets+=1;
-  }
+    for ( int i=0; i<rawJets.size(); ++i ) {                              //  FILL JET INFO
+      if ( rawJets[i].pt()<jetMinPt )  { cerr<<"bad jet pt selector?"<<endl;   continue; }
+      jetPt.push_back( rawJets[i].pt() );
+      if ( abs(rawJets[i].eta())>etaCut ) { cerr<<"bad jet eta selector?"<<endl;   continue; }
+      jetEta.push_back( rawJets[i].eta() );
+      jetPhi.push_back( rawJets[i].phi() );
+      jetEt.push_back( rawJets[i].Et() );
+      vector<PseudoJet> Cons= rawJets[i].constituents();
+      nCons.push_back( Cons.size() );
+      nJets+=1;
+    }
 
+
+    if ( rawJets.size()<2) { continue; }
+  
     double dphi = fabs( fabs( rawJets.at(0).delta_phi_to( rawJets.at(1) ) ) - pi );
 
-  if ( rawJets.size()>=2 && dphi< R && rawJets[0].pt()>2.0 && rawJets[1].pt()>2.0 ) {                      //  CREATE DIJET PAIR  
+    if ( dphi> R !! rawJets[0].pt()<2.0 !! rawJets[1].pt()<2.0 ) { continue; }
+    else {                        //  CREATE DIJET PAIR  
       leadPt = rawJets[0].pt();      leadEta = rawJets[0].eta();      leadPhi = rawJets[0].phi();      leadEt = rawJets[0].Et();
       vector<PseudoJet> LeadCons= rawJets[0].constituents();      leadNcons = LeadCons.size();
       subPt = rawJets[0].pt();      subEta = rawJets[0].eta();      subPhi = rawJets[0].phi();      subEt = rawJets[0].Et();
       vector<PseudoJet> SubCons= rawJets[1].constituents();      subNcons = SubCons.size();
       dijetPair = 1;
     }
-  else {
-    leadPt = 0;      leadEta = 0;      leadPhi = 0;      leadEt = 0;    leadNcons = 0;
-    subPt = 0;      subEta = 0;      subPhi = 0;      subEt = 0;    subNcons = 0;
-    dijetPair = 0;
+    
+    // double djAxisPhi = ( rawJets[0].phi() + rawJets[1].phi() )/2;
+    // Selector bgCircle = SelectorCircle(R);
+    // Selector bgRapRange = SelectorRapRange( -0.6, 0.6 );
+    // Selector bgSelector = bgCircle && bgRapRange;
+    // double ghost_maxrap = 1.0;
+    // AreaDefinition area_def(active_area, GhostedAreaSpec(ghost_maxrap));
+    // JetMedianBackgroundEstimator UE( bgSelector, jet_def, area_def);
+    
+    HTjetTree->Fill();                                                           //  FILL TREE
   }
-    
-  // double djAxisPhi = ( rawJets[0].phi() + rawJets[1].phi() )/2;
-  // Selector bgCircle = SelectorCircle(R);
-  // Selector bgRapRange = SelectorRapRange( -0.6, 0.6 );
-  // Selector bgSelector = bgCircle && bgRapRange;
-  // double ghost_maxrap = 1.0;
-  // AreaDefinition area_def(active_area, GhostedAreaSpec(ghost_maxrap));
-  // JetMedianBackgroundEstimator UE( bgSelector, jet_def, area_def);
-    
-  HTjetTree->Fill();                                                           //  FILL TREE
-}
-// ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~  END EVENT LOOP!  ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~
+  // ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~  END EVENT LOOP!  ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~
 
     
-HTjetTree->Write();                            //  WRITE TREES
+  HTjetTree->Write();                            //  WRITE TREES
 
 
-pAuFile->Close();
+  pAuFile->Close();
   
   
-return 0;
+  return 0;
 }
