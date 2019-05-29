@@ -41,7 +41,7 @@ namespace pAuAnalysis {
     
     // Tracks cuts
     TStarJetPicoTrackCuts* trackCuts = reader.GetTrackCuts();
-    trackCuts->SetDCACut( 100 );
+    trackCuts->SetDCACut( 3.0 );
     trackCuts->SetMinNFitPointsCut( 20 );
     trackCuts->SetFitOverMaxPointsCut( 0.52 );
     trackCuts->SetMaxPtCut ( 30.0 );
