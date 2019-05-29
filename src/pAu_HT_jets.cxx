@@ -38,7 +38,7 @@ int main ( int argc, const char** argv ) {
   TChain* Chain = new TChain( "JetTree" );
   Chain->Add( inFile.c_str() );
   TStarJetPicoReader Reader;
-  int numEvents = nEvents;        // total events in HT: ????
+  int numEvents = nEvents;        // total events in HT: 152,007,032
   InitReader( Reader, Chain, numEvents );
   
   TFile *pAuFile = new TFile( outFile.c_str() ,"RECREATE");
@@ -82,8 +82,9 @@ int main ( int argc, const char** argv ) {
   // ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~  BEGIN EVENT LOOP!  ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~
   while ( Reader.NextEvent() ) {
 
-    rawParticles.clear();     rawJets.clear();     nCons.clear();     jetPt.clear();     jetEta.clear();     jetPhi.clear();     jetEt.clear();     towID.clear();     Charge.clear();     towEt.clear();
-    towEta.clear();     towPhi.clear();     trEta.clear();     trPhi.clear();     trPz.clear();     trPt.clear();     jetPt.clear();     jetEta.clear();     jetPhi.clear();     jetEt.clear();       //  clear vectors
+    rawParticles.clear();     rawJets.clear();     nCons.clear();     towID.clear();     Charge.clear();     towEt.clear();     towEta.clear();     towPhi.clear();
+    trEta.clear();     trPhi.clear();     trPz.clear();     trPt.clear();     jetPt.clear();     jetEta.clear();     jetPhi.clear();     jetEt.clear();     DCA.clear();
+    nHitsPoss.clear();     nHitsFit.clear();        //  clear vectors
 
     Reader.PrintStatus(5);
 
