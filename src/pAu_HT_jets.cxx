@@ -82,10 +82,8 @@ int main ( int argc, const char** argv ) {
   // ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~  BEGIN EVENT LOOP!  ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~
   while ( Reader.NextEvent() ) {
 
-    rawParticles.clear();     rawJets.clear();     nCons.clear();     jetPt.clear();     jetEta.clear();     jetPhi.clear();     jetEt.clear();     towID.clear();     Charge.clear();
-    nCons.clear();     leadNcons.clear();     subNcons.clear();     towEt.clear();     towEta.clear();     towPhi.clear();     trEta.clear();     trPhi.clear();     trPz.clear();
-    trPt.clear();     jetPt.clear();     jetEta.clear();     jetPhi.clear();     jetEt.clear();     leadPt.clear();     leadEta.clear();     leadPhi.clear();     leadEt.clear();
-    subPt.clear();     subEta.clear();     subPhi.clear();     subEt.clear();       //  clear vectors
+    rawParticles.clear();     rawJets.clear();     nCons.clear();     jetPt.clear();     jetEta.clear();     jetPhi.clear();     jetEt.clear();     towID.clear();     Charge.clear();     towEt.clear();
+    towEta.clear();     towPhi.clear();     trEta.clear();     trPhi.clear();     trPz.clear();     trPt.clear();     jetPt.clear();     jetEta.clear();     jetPhi.clear();     jetEt.clear();       //  clear vectors
 
     Reader.PrintStatus(5);
 
