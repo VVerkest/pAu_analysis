@@ -3,13 +3,13 @@
 # used to submit sequential jobs on the grid
 
 # first make sure program is updated and exists
- make bin/pAu_analysis || exit
+ make bin/pAu_analysis_HT || exit
 
 set ExecPath = `pwd`
-set execute = './bin/pAu_analysis'
+set execute = './bin/pAu_analysis_HT'
 set numevents = -1
-set base = /wsu/home/el/el98/el9852/physics/analysis/pAu_analysis/production_pAu200_2015/MB/pAu_2015_200_MB
-set outFile = MB
+set base = /wsu/home/el/el98/el9852/physics/analysis/pAu_analysis/production_pAu200_2015/HT/pAu_2015_200_HT
+set outFile = HT
 
 # Create the folder name for output
 #set outFile = stock
