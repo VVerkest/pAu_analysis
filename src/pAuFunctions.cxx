@@ -38,12 +38,14 @@ namespace pAuAnalysis {
     evCuts->SetMaxEventPtCut( 30.0 );
     evCuts->SetMaxEventEtCut( 30.0 );
     evCuts->SetVertexZDiffCut( 3.0 );
-
+    
     // Tracks cuts
     TStarJetPicoTrackCuts* trackCuts = reader.GetTrackCuts();
     trackCuts->SetDCACut( 100 );
     trackCuts->SetMinNFitPointsCut( 20 );
-    trackCuts->SetFitOverMaxPointsCut( 0.52 );    
+    trackCuts->SetFitOverMaxPointsCut( 0.52 );
+    trackCuts->SetMaxPtCut ( 30.0 );
+
     
     std::cout << "Using these track cuts:" << std::endl;
     std::cout << " dca : " << trackCuts->GetDCACut(  ) << std::endl;
