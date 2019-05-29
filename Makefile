@@ -60,13 +60,15 @@ $(BDIR)/%  : $(ODIR)/%.o
 ###############################################################################
 ############################# Main Targets ####################################
 ###############################################################################
-all : $(BDIR)/pAu_analysis
+all : $(BDIR)/pAu_analysis_MB $(BDIR)/pAu_analysis_HT
 
 $(ODIR)/pAuFunctions.o : $(SDIR)/pAuFunctions.cxx $(SDIR)/pAuFunctions.hh
-$(ODIR)/pAu_analysis.o : $(SDIR)/pAu_analysis.cxx
+$(ODIR)/pAu_analysis_MB.o : $(SDIR)/pAu_analysis_MB.cxx
+$(ODIR)/pAu_analysis_HT.o : $(SDIR)/pAu_analysis_HT.cxx
 
 #data analysis
-$(BDIR)/pAu_analysis :	$(ODIR)/pAu_analysis.o	$(ODIR)/pAuFunctions.o
+$(BDIR)/pAu_analysis_MB :	$(ODIR)/pAu_analysis_MB.o	$(ODIR)/pAuFunctions.o
+$(BDIR)/pAu_analysis_HT :	$(ODIR)/pAu_analysis_HT.o	$(ODIR)/pAuFunctions.o
 
 
 ###############################################################################
