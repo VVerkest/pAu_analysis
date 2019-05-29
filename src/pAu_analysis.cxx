@@ -199,6 +199,8 @@ int main ( int argc, const char** argv ) {
     ClusterSequence jetCluster( rawParticles, jet_def );           //  CLUSTER ALL JETS
     vector<PseudoJet> rawJets = sorted_by_pt( etaPtSelector( jetCluster.inclusive_jets() ) );     // EXTRACT SELECTED JETS
 
+    nJets=0;
+    
     for ( int i=0; i<rawJets.size(); ++i ) {                              //  FILL JET INFO
       if ( rawJets[i].pt()<jetMinPt )  { cerr<<"bad jet pt selector?"<<endl;   continue; }
       jetPt.push_back( rawJets[i].pt() );
@@ -211,6 +213,8 @@ int main ( int argc, const char** argv ) {
       nJets+=1;
     }
 
+
+    //   HEY!!!! FIX THIS SO THERE ARE NO 0 PT JETS!!
     if ( rawJets.size()>=2 ) {                        //  CREATE DIJET PAIR
       double dphi = fabs( fabs( rawJets.at(0).delta_phi_to( rawJets.at(1) ) ) - pi );
       if ( dphi< R ) {  
@@ -226,11 +230,14 @@ int main ( int argc, const char** argv ) {
 	subEt = rawJets[0].Et();
 	vector<PseudoJet> SubCons= rawJets[1].constituents();
 	subNcons = SubCons.size();
+	MBdijets->Fill();
       }
     }
 
     // double djAxisPhi = ( rawJets[0].phi() + rawJets[1].phi() )/2;
-    // //  Selector bgSelector;
+    // Selector bgCircle = SelectorCircle(R);
+    // Selector bgRapRange = SelectorRapRange( -0.6, 0.6 );
+    // Selector bgSelector = bgCircle && bgRapRange;
     // double ghost_maxrap = 1.0;
     // AreaDefinition area_def(active_area, GhostedAreaSpec(ghost_maxrap));
     // JetMedianBackgroundEstimator UE( bgSelector, jet_def, area_def);
@@ -245,7 +252,6 @@ int main ( int argc, const char** argv ) {
     
     MBtree->Fill();                                                           //  FILL TREES
     MBjets->Fill();
-    MBdijets->Fill();
   }
   // ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~  END EVENT LOOP!  ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~
 
