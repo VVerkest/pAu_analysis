@@ -250,6 +250,10 @@ int main ( int argc, const char** argv ) {
   // hTowEtEtaPhi->Write();
   // hDCAvsPt->Write();
   // hTowerMult->Write();
+
+  pAuFile->Close();
+  
+  TFile *pAuHTPlots = new TFile( "plots/pAu_HTplots.root" ,"RECREATE");
   
   HTtree->Write();                            //  WRITE TREES
   HTtowers->Write();
@@ -257,7 +261,7 @@ int main ( int argc, const char** argv ) {
   HTjets->Write();
   HTdijets->Write();
 
-  pAuFile->Close();
+  
   
   return 0;
 }
