@@ -47,10 +47,10 @@ int main ( int argc, const char** argv ) {
   
   TTree *HTjetTree = new TTree( "HTjetTree", "HT_JetTree" );
   
-  int RunID, EventID, nTowers, nPrimary, nGlobal, nVertices, refMult, gRefMult, nHitsPoss, nHitsFit, nJets, leadNcons, subNcons;
-  double Vx, Vy, Vz, DCA, BbcCoincidenceRate, BbcEastRate, BbcWestRate, vpdVz,  leadPt, leadEta, leadPhi, leadEt, subPt, subEta, subPhi, subEt;
-  vector<int> towID, Charge, nCons;
-  vector<double> towEt, towEta, towPhi, trEta, trPhi, trPz, trPt, jetPt, jetEta, jetPhi, jetEt;
+  int RunID, EventID, nTowers, nPrimary, nGlobal, nVertices, refMult, gRefMult, nJets, leadNcons, subNcons;
+  double Vx, Vy, Vz, BbcCoincidenceRate, BbcEastRate, BbcWestRate, vpdVz,  leadPt, leadEta, leadPhi, leadEt, subPt, subEta, subPhi, subEt;
+  vector<int> towID, nHitsPoss, nHitsFit, Charge, nCons;
+  vector<double> DCA, towEt, towEta, towPhi, trEta, trPhi, trPz, trPt, jetPt, jetEta, jetPhi, jetEt;
 
   HTjetTree->Branch("EventID", &EventID);            HTjetTree->Branch("RunID", &RunID);                  HTjetTree->Branch("Vz", &Vz);
   HTjetTree->Branch("nTowers", &nTowers);          HTjetTree->Branch("nPrimary", &nPrimary);         HTjetTree->Branch("nGlobal", &nGlobal);
@@ -126,7 +126,7 @@ int main ( int argc, const char** argv ) {
     
     for ( int i=0; i<ntow; ++i ) {                                         //  FILL TOWER DATA
       towEt.push_back(event->GetTower(i)->GetEt());
-      eta = event->GetTower(i)->GetEta());
+      eta = event->GetTower(i)->GetEta();
     if ( abs(eta) > etaCut ) { nTowers -= 1;   continue; }            // tower eta cut
     towEta.push_back(eta);
     towPhi.push_back(event->GetTower(i)->GetPhi());
