@@ -30,7 +30,7 @@ int main ( int argc, const char** argv ) {
   else if ( argc ==  1 ) {
     vector<string> arguments( argv+1, argv+argc );
     inFile = "production_pAu200_2015/HT/pAu_2015_200_HT*.root";
-    outFile = "out/pAu_HT.root";
+    outFile = "out/pAuJets_HT.root";
     nEvents = 100000;
   }
   else { cerr<< "incorrect number of command line arguments"; return -1; }
@@ -51,6 +51,7 @@ int main ( int argc, const char** argv ) {
   double Vx, Vy, Vz, BbcCoincidenceRate, BbcEastRate, BbcWestRate, vpdVz,  leadPt, leadEta, leadPhi, leadEt, subPt, subEta, subPhi, subEt;
   vector<int> towID, nHitsPoss, nHitsFit, Charge, nCons;
   vector<double> DCA, towEt, towEta, towPhi, trEta, trPhi, trPz, trPt, jetPt, jetEta, jetPhi, jetEt;
+  bool dijetPair;
 
   HTjetTree->Branch("EventID", &EventID);            HTjetTree->Branch("RunID", &RunID);                  HTjetTree->Branch("Vz", &Vz);
   HTjetTree->Branch("nTowers", &nTowers);          HTjetTree->Branch("nPrimary", &nPrimary);         HTjetTree->Branch("nGlobal", &nGlobal);
@@ -59,7 +60,7 @@ int main ( int argc, const char** argv ) {
   HTjetTree->Branch("BbcWestRate", &BbcWestRate);                                           HTjetTree->Branch("vpdVz", &vpdVz);
   HTjetTree->Branch("towEt", &towEt);                   HTjetTree->Branch("towEta", &towEta);	          HTjetTree->Branch("towPhi", &towPhi);
   HTjetTree->Branch("towID", &towID);                  HTjetTree->Branch("nHitsPoss", &nHitsPoss);     HTjetTree->Branch("nHitsFit", &nHitsFit);
-  HTjetTree->Branch("trPz", &trPz);
+  HTjetTree->Branch("trPz", &trPz);                        HTjetTree->Branch("dijetPair", &dijetPair);
   HTjetTree->Branch("trPt", &trPt);                          HTjetTree->Branch("trEta", &trEta);                     HTjetTree->Branch("trPhi", &trPhi);
   HTjetTree->Branch("DCA", &DCA);                       HTjetTree->Branch("nJets", &nJets);                    HTjetTree->Branch("jetPt", &jetPt);
   HTjetTree->Branch("jetEta", &jetEta);                    HTjetTree->Branch("jetPhi", &jetPhi);                       HTjetTree->Branch("jetEt", &jetEt);
@@ -156,25 +157,21 @@ int main ( int argc, const char** argv ) {
     nJets+=1;
   }
 
-
-  if ( rawJets.size()>=2 ) {                        //  CREATE DIJET PAIR
     double dphi = fabs( fabs( rawJets.at(0).delta_phi_to( rawJets.at(1) ) ) - pi );
-    if ( dphi< R && rawJets[0].pt()>2.0 && rawJets[1].pt()>2.0 ) {  
-      leadPt = rawJets[0].pt();
-      leadEta = rawJets[0].eta();
-      leadPhi = rawJets[0].phi();
-      leadEt = rawJets[0].Et();
-      vector<PseudoJet> LeadCons= rawJets[0].constituents();
-      leadNcons = LeadCons.size();
-      subPt = rawJets[0].pt();
-      subEta = rawJets[0].eta();
-      subPhi = rawJets[0].phi();
-      subEt = rawJets[0].Et();
-      vector<PseudoJet> SubCons= rawJets[1].constituents();
-      subNcons = SubCons.size();
-    }
-  }
 
+  if ( rawJets.size()>=2 && dphi< R && rawJets[0].pt()>2.0 && rawJets[1].pt()>2.0 ) {                      //  CREATE DIJET PAIR  
+      leadPt = rawJets[0].pt();      leadEta = rawJets[0].eta();      leadPhi = rawJets[0].phi();      leadEt = rawJets[0].Et();
+      vector<PseudoJet> LeadCons= rawJets[0].constituents();      leadNcons = LeadCons.size();
+      subPt = rawJets[0].pt();      subEta = rawJets[0].eta();      subPhi = rawJets[0].phi();      subEt = rawJets[0].Et();
+      vector<PseudoJet> SubCons= rawJets[1].constituents();      subNcons = SubCons.size();
+      dijetPair = 1;
+    }
+  else {
+    leadPt = 0;      leadEta = 0;      leadPhi = 0;      leadEt = 0;    leadNcons = 0;
+    subPt = 0;      subEta = 0;      subPhi = 0;      subEt = 0;    subNcons = 0;
+    dijetPair = 0;
+  }
+    
   // double djAxisPhi = ( rawJets[0].phi() + rawJets[1].phi() )/2;
   // Selector bgCircle = SelectorCircle(R);
   // Selector bgRapRange = SelectorRapRange( -0.6, 0.6 );
