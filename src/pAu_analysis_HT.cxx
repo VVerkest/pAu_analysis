@@ -56,7 +56,7 @@ int main ( int argc, const char** argv ) {
   TH2D *hPrimaryVsBBC = new TH2D("hPrimaryVsBBC","# Primary Tracks vs. BBC Coincidence Rate;BBC Rate;# Primary Tracks", 3500,0,3500000, 40,0,200 );
   TH2D *hGlobalVsBBC = new TH2D("hGlobalVsBBC","# Global Tracks vs. BBC Coincidence Rate;BBC Rate;# Global Tracks", 3500,0,3500000, 150,0,3000 );
   TH2D *hTowEt = new TH2D("hTowEt","Tower E_{T} by ID;Tower ID;E_{T} (GeV)", 4800,0,4800, 60,0,30.0);
-  TH3D *hTowEtEtaPhi = new TH3D("hTowEtEtaPhi","Tower E_{T} vs. #eta vs. #phi;Tower E_{T} (GeV);Tower #eta;Tower #phi", 60,0,30.0,-1.0,1.0, 2*pi,-pi,pi );
+  TH3D *hTowEtEtaPhi = new TH3D("hTowEtEtaPhi","Tower E_{T} vs. #eta vs. #phi;Tower E_{T} (GeV);Tower #eta;Tower #phi", 60,0,30.0, 100,-1.0,1.0, 2*pi,-pi,pi );
   TH1D *hTowerMult = new TH1D("hTowerMult","Tower Multiplicity by ID;Tower ID", 2400,0,4800);
   
   // TTree *HTtree = new TTree( "HTTree", "HTtree" );
