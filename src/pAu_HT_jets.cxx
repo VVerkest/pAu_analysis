@@ -162,7 +162,7 @@ int main ( int argc, const char** argv ) {
   
     double dphi = fabs( fabs( rawJets.at(0).delta_phi_to( rawJets.at(1) ) ) - pi );
 
-    if ( dphi> R !! rawJets[0].pt()<2.0 !! rawJets[1].pt()<2.0 ) { continue; }
+    if ( dphi> R || rawJets[0].pt()<2.0 || rawJets[1].pt()<2.0 ) { continue; }
     else {                        //  CREATE DIJET PAIR  
       leadPt = rawJets[0].pt();      leadEta = rawJets[0].eta();      leadPhi = rawJets[0].phi();      leadEt = rawJets[0].Et();
       vector<PseudoJet> LeadCons= rawJets[0].constituents();      leadNcons = LeadCons.size();
