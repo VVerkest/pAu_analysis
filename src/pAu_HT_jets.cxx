@@ -173,6 +173,7 @@ int main ( int argc, const char** argv ) {
     }
     
     double djAxisPhi = ( rawJets[0].phi() + rawJets[1].phi() - pi )/2;
+    djAxisPhi = ConvertPhi( djAxisPhi );
     pmin = djAxisPhi + (pi/4);
     pmax = djAxisPhi + ((3/4)*pi);
     Selector bgPhiRange1 = SelectorPhiRange( pmin, pmax );
