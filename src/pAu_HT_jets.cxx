@@ -31,7 +31,7 @@ int main ( int argc, const char** argv ) {
     vector<string> arguments( argv+1, argv+argc );
     inFile = "production_pAu200_2015/HT/pAu_2015_200_HT*.root";
     outFile = "out/pAuJets_HT.root";
-    nEvents = 100000;
+    nEvents = 100;
   }
   else { cerr<< "incorrect number of command line arguments"; return -1; }
 
@@ -174,10 +174,10 @@ int main ( int argc, const char** argv ) {
 
     double phi1 = rawJets[0].phi();     double phi2 = rawJets[1].phi();
     double tanPhi = tan(phi1) + tan(phi2);
-    double djAxisPhi = atan( tanPhi/2 );
-    cout<<phi1<<"\t"<<phi2<<"\t"<<djAxisPhi<<endl;
-    if ( djAxisPhi < -(pi/4) ) { djAxisPhi += pi; }
-    cout<<"      "<<djAxisPhi<<endl;
+    tanPhi /= 2;
+    cout<<tanPhi<<endl;
+    double djAxisPhi = atan( tanPhi );
+    cout<<phi1<<"\t  "<<phi2<<"\t  "<<djAxisPhi<<endl;
     pmin = djAxisPhi + (pi/4);
     pmax = djAxisPhi + ((3/4)*pi);
     cout<<"pmin =  "<<pmin<<"       pmax =  "<<pmax<<endl<<endl;   
