@@ -173,13 +173,11 @@ int main ( int argc, const char** argv ) {
     }
     
     double djAxisPhi = ( rawJets[0].phi() + rawJets[1].phi() - pi )/2;
-    cout<< djAxisPhi <<endl;
-    djAxisPhi = ConvertPhi( djAxisPhi );
-    pmin = djAxisPhi + (pi/4);
-    pmax = djAxisPhi + ((3/4)*pi);
+    pmin = djAxisPhi - ((3/4)*pi);
+    pmax = djAxisPhi - ((1/4)*pi);
     Selector bgPhiRange1 = SelectorPhiRange( pmin, pmax );
-    pmin = djAxisPhi + ((5/4)*pi);
-    pmax = djAxisPhi + ((7/4)*pi);
+    pmin = djAxisPhi + ((3/4)*pi);
+    pmax = djAxisPhi + ((5/4)*pi);
     Selector bgPhiRange2 = SelectorPhiRange( pmin, pmax );
     Selector bgSelector = bgPhiRange1 && bgPhiRange2;
     double ghost_maxrap = 1.0;
