@@ -179,16 +179,17 @@ int main ( int argc, const char** argv ) {
     cout<<"      "<<djAxisPhi<<endl;
     pmin = djAxisPhi + (pi/4);
     pmax = djAxisPhi + ((3/4)*pi);
-    Selector bgPhiRange1 = SelectorPhiRange( pmin, pmax );
+    cout<<"pmin =  "<<pmin<<"pmax =  "<<pmax<<endl;   
+    // Selector bgPhiRange1 = SelectorPhiRange( pmin, pmax );
     // pmin = djAxisPhi + ((5/4)*pi);
     // pmax = djAxisPhi + ((7/4)*pi);
     // Selector bgPhiRange2 = SelectorPhiRange( pmin, pmax );
-    Selector bgSelector = bgPhiRange1; //&& bgPhiRange2;
-    double ghost_maxrap = 1.0;
-    AreaDefinition area_def(active_area, GhostedAreaSpec(ghost_maxrap));
-    JetMedianBackgroundEstimator UE( bgSelector, jet_def, area_def);
-    rho = UE.rho();
-    sigma = UE.sigma();
+    // Selector bgSelector = bgPhiRange1; //&& bgPhiRange2;
+    // double ghost_maxrap = 1.0;
+    // AreaDefinition area_def(active_area, GhostedAreaSpec(ghost_maxrap));
+    // JetMedianBackgroundEstimator UE( bgSelector, jet_def, area_def);
+    // rho = UE.rho();
+    // sigma = UE.sigma();
     
     HTjetTree->Fill();                                                           //  FILL TREE
   }
