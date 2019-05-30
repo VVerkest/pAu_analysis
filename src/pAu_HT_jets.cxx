@@ -185,10 +185,10 @@ int main ( int argc, const char** argv ) {
     pmax = djAxisPhi - qpi;
     cout<<"pmin =  "<<pmin<<"       pmax =  "<<pmax<<endl;   
     Selector bgPhiRange2 = SelectorPhiRange( pmin, pmax );
-    Selector bgSelector = bgPhiRange1 && bgPhiRange2;
+    Selector bgSelector = bgPhiRange1 && bgPhiRange2 && SelectorAbsEtaMax( 1.0 );
     double ghost_maxrap = 1.0;
 
-    AreaDefinition bg_area_def(active_area, GhostedAreaSpec(ghost_maxrap));
+    AreaDefinition bg_area_def(active_area_explicit_ghosts, GhostedAreaSpec(ghost_maxrap));
     ClusterSequenceArea bgCluster( rawParticles, bg_jet_def, bg_area_def);
     JetMedianBackgroundEstimator UE( bgSelector, bgCluster );
     rho = UE.rho();
