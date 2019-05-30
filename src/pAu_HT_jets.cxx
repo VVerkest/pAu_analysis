@@ -174,8 +174,10 @@ int main ( int argc, const char** argv ) {
 
     double phi1 = rawJets[0].phi() - pi;     double phi2 = rawJets[1].phi() - pi;
     double djAxisPhi = ( phi1 + phi2 - pi )/2;
-    cout<<phi1<<"/t"<<phi2<<"\t"<<djAxisPhi<<endl;
-    // pmin = djAxisPhi + (pi/4);
+    cout<<phi1<<"\t"<<phi2<<"\t"<<djAxisPhi<<endl;
+    if ( djAxisPhi < -(pi/4) ) { djAxisPhi += pi; }
+     cout<<djAxisPhi<<endl;
+   // pmin = djAxisPhi + (pi/4);
     // pmax = djAxisPhi + ((3/4)*pi);
     // Selector bgPhiRange1 = SelectorPhiRange( pmin, pmax );
     // pmin = djAxisPhi + ((5/4)*pi);
