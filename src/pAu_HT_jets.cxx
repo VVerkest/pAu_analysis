@@ -43,12 +43,12 @@ int main ( int argc, const char** argv ) {
   
   TFile *pAuFile = new TFile( outFile.c_str() ,"RECREATE");
   
-  double dca, pt, pz, eta, phi;
+  double dca, pt, pz, eta, phi, pmin, pmax;
   
   TTree *HTjetTree = new TTree( "HTjetTree", "HT_JetTree" );
   
   int RunID, EventID, nTowers, nPrimary, nGlobal, nVertices, refMult, gRefMult, nJets, leadNcons, subNcons;
-  double Vx, Vy, Vz, BbcCoincidenceRate, BbcEastRate, BbcWestRate, vpdVz,  leadPt, leadEta, leadPhi, leadEt, subPt, subEta, subPhi, subEt;
+  double Vx, Vy, Vz, BbcCoincidenceRate, BbcEastRate, BbcWestRate, vpdVz,  leadPt, leadEta, leadPhi, leadEt, subPt, subEta, subPhi, subEt, rho, sigma;
   vector<int> towID, nHitsPoss, nHitsFit, Charge, nCons;
   vector<double> DCA, towEt, towEta, towPhi, trEta, trPhi, trPz, trPt, jetPt, jetEta, jetPhi, jetEt;
   bool dijetPair;
@@ -64,10 +64,11 @@ int main ( int argc, const char** argv ) {
   HTjetTree->Branch("trPt", &trPt);                          HTjetTree->Branch("trEta", &trEta);                     HTjetTree->Branch("trPhi", &trPhi);
   HTjetTree->Branch("DCA", &DCA);                       HTjetTree->Branch("nJets", &nJets);                    HTjetTree->Branch("jetPt", &jetPt);
   HTjetTree->Branch("jetEta", &jetEta);                    HTjetTree->Branch("jetPhi", &jetPhi);                       HTjetTree->Branch("jetEt", &jetEt);
-  HTjetTree->Branch("nCons", &nCons);                  HTjetTree->Branch("leadPt", &leadPt);
-  HTjetTree->Branch("leadEta", &leadEta);                HTjetTree->Branch("leadPhi", &leadPhi);         HTjetTree->Branch("leadEt", &leadEt);
-  HTjetTree->Branch("leadNcons", &leadNcons);     HTjetTree->Branch("subPt", &subPt);             HTjetTree->Branch("subEta", &subEta);
-  HTjetTree->Branch("subPhi", &subPhi);                 HTjetTree->Branch("subEt", &subEt);             HTjetTree->Branch("subNcons", &subNcons);
+  HTjetTree->Branch("nCons", &nCons);                 HTjetTree->Branch("leadPt", &leadPt);
+  HTjetTree->Branch("leadEta", &leadEta);               HTjetTree->Branch("leadPhi", &leadPhi);         HTjetTree->Branch("leadEt", &leadEt);
+  HTjetTree->Branch("leadNcons", &leadNcons);    HTjetTree->Branch("subPt", &subPt);             HTjetTree->Branch("subEta", &subEta);
+  HTjetTree->Branch("subPhi", &subPhi);                HTjetTree->Branch("subEt", &subEt);             HTjetTree->Branch("subNcons", &subNcons);
+  HTjetTree->Branch("rho", &rho);                           HTjetTree->Branch("sigma", &sigma);
   
   //  CREATE JET SELECTOR
   Selector etaSelector = SelectorAbsEtaMax( 1.0-R );    Selector ptMinSelector = SelectorPtMin(jetMinPt);
@@ -171,13 +172,19 @@ int main ( int argc, const char** argv ) {
       dijetPair = 1;
     }
     
-    // double djAxisPhi = ( rawJets[0].phi() + rawJets[1].phi() )/2;
-    // Selector bgCircle = SelectorCircle(R);
-    // Selector bgRapRange = SelectorRapRange( -0.6, 0.6 );
-    // Selector bgSelector = bgCircle && bgRapRange;
-    // double ghost_maxrap = 1.0;
-    // AreaDefinition area_def(active_area, GhostedAreaSpec(ghost_maxrap));
-    // JetMedianBackgroundEstimator UE( bgSelector, jet_def, area_def);
+    double djAxisPhi = ( rawJets[0].phi() + rawJets[1].phi() - pi )/2;
+    pmin = djAxisPhi + (pi/4);
+    pmax = djAxisPhi + ((3/4)*pi);
+    Selector bgPhiRange1 = SelectorPhiRange( pmin, pmax );
+    pmin = djAxisPhi + ((5/4)*pi);
+    pmax = djAxisPhi + ((7/4)*pi);
+    Selector bgPhiRange2 = SelectorPhiRange( pmin, pmax );
+    Selector bgSelector = bgPhiRange1 && bgPhiRange2;
+    double ghost_maxrap = 1.0;
+    AreaDefinition area_def(active_area, GhostedAreaSpec(ghost_maxrap));
+    JetMedianBackgroundEstimator UE( bgSelector, jet_def, area_def);
+    rho = UE.rho();
+    sigma = UE.sigma();
     
     HTjetTree->Fill();                                                           //  FILL TREE
   }
