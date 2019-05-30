@@ -180,7 +180,7 @@ int main ( int argc, const char** argv ) {
     cout<<tanPhi<<endl;
     double djAxisPhi = atan( tanPhi );
     cout<<phi1<<"\t  "<<phi2<<"\t  "<<djAxisPhi<<endl;
-    const qpi = pi/4;
+    const double qpi = pi/4;
     pmin = djAxisPhi + qpi;
     pmax = djAxisPhi + (3*qpi);
     cout<<"pmin =  "<<pmin<<"       pmax =  "<<pmax<<endl<<endl;   
