@@ -73,8 +73,8 @@ int main ( int argc, const char** argv ) {
   //  CREATE JET SELECTOR
   Selector etaSelector = SelectorAbsEtaMax( 1.0-R );    Selector ptMinSelector = SelectorPtMin(jetMinPt);
   Selector etaPtSelector = etaSelector && ptMinSelector;
-  JetDefinition jet_def(kt_algorithm, R);     //  JET DEFINITION
-  BGJetDefinition bg_jet_def(kt_algorithm, R);     //  BACKGROUND ESTIMATION JET DEFINITION
+  JetDefinition jet_def(antikt_algorithm, R);     //  JET DEFINITION
+  JetDefinition bg_jet_def(kt_algorithm, R);     //  BACKGROUND ESTIMATION JET DEFINITION
   //  cambridge_algorithm??
   vector<PseudoJet> rawParticles, rawJets;
   int eID, rID;
