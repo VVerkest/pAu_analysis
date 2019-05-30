@@ -167,7 +167,7 @@ int main ( int argc, const char** argv ) {
     else {                        //  CREATE DIJET PAIR  
       leadPt = rawJets[0].pt();      leadEta = rawJets[0].eta();      leadPhi = rawJets[0].phi();      leadEt = rawJets[0].Et();
       vector<PseudoJet> LeadCons= rawJets[0].constituents();      leadNcons = LeadCons.size();
-      subPt = rawJets[0].pt();      subEta = rawJets[0].eta();      subPhi = rawJets[0].phi();      subEt = rawJets[0].Et();
+      subPt = rawJets[1].pt();      subEta = rawJets[1].eta();      subPhi = rawJets[1].phi();      subEt = rawJets[1].Et();
       vector<PseudoJet> SubCons= rawJets[1].constituents();      subNcons = SubCons.size();
       dijetPair = 1;
     }
