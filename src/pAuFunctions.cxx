@@ -5,6 +5,21 @@
 
 namespace pAuAnalysis {
 
+  double ConvertPhi( double &phi ) {
+    double pi = 3.14159265;
+    if ( phi<0 ) {
+      for ( phi<0 ) { phi += 2*pi }
+      return phi;
+    }
+    else if ( phi>2*pi ) {
+      for ( phi>2*pi ) { phi -= 2*pi }
+      return phi;
+    }
+    else if ( phi>0 && phi<2*pi ) { return phi; }
+    else { std::cerr<<"FUNTION 'ConvertPhi' IS BROKEN"<<std::endl; }
+  }
+  
+
   std::vector<fastjet::PseudoJet> GatherParticles ( TStarJetVectorContainer<TStarJetVector> * container , std::vector<fastjet::PseudoJet> & rawParticles ){
     for ( int i=0; i < container->GetEntries() ; ++i ) {
       TStarJetVector* sv = container->Get(i);

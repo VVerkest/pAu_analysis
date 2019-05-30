@@ -53,7 +53,8 @@ namespace pAuAnalysis {
   const double jetMinPt = 2.0;      //  Jet Pt >= 2.0 GeV
   // const double jetMaxPt = 60.0;      //  Jet Pt <= 60.0 GeV
 
-
+  double ConvertPhi( double &phi );
+  
   std::vector<fastjet::PseudoJet> GatherParticles ( TStarJetVectorContainer<TStarJetVector> * container , std::vector<fastjet::PseudoJet> & rawParticles );
 
   void InitReader( TStarJetPicoReader & reader, TChain* chain, int nEvents );
