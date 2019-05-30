@@ -173,7 +173,7 @@ int main ( int argc, const char** argv ) {
     }
 
     double phi1 = rawJets[0].phi();     double phi2 = rawJets[1].phi();
-    if ( phi1>pi || phi2>pi ){ phi1-=(2*pi()); }
+    if ( phi1>pi || phi2>pi ){ phi1-=(2*pi); }
     double djAxisPhi = ( phi1 + phi2 - pi )/2;
     pmin = djAxisPhi + (pi/4);
     pmax = djAxisPhi + ((3/4)*pi);
