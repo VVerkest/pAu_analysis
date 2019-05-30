@@ -73,8 +73,9 @@ int main ( int argc, const char** argv ) {
   //  CREATE JET SELECTOR
   Selector etaSelector = SelectorAbsEtaMax( 1.0-R );    Selector ptMinSelector = SelectorPtMin(jetMinPt);
   Selector etaPtSelector = etaSelector && ptMinSelector;
-  JetDefinition jet_def(antikt_algorithm, R);     //  JET DEFINITION
-
+  JetDefinition jet_def(kt_algorithm, R);     //  JET DEFINITION
+  BGJetDefinition bg_jet_def(kt_algorithm, R);     //  BACKGROUND ESTIMATION JET DEFINITION
+  //  cambridge_algorithm??
   vector<PseudoJet> rawParticles, rawJets;
   int eID, rID;
   
@@ -175,10 +176,8 @@ int main ( int argc, const char** argv ) {
     }
 
     
-    double tanPhi = tan(phi1) + tan(phi2);
-    tanPhi /= 2;
+    double tanPhi = tan(phi1) + tan(phi2);          tanPhi /= 2;
     double djAxisPhi = atan( tanPhi );
-    const double qpi = pi/4;
     pmin = djAxisPhi + qpi;    // qpi = quarter of pi
     pmax = djAxisPhi + (3*qpi);
     cout<<"pmin =  "<<pmin<<"       pmax =  "<<pmax<<endl<<endl;   
@@ -189,8 +188,8 @@ int main ( int argc, const char** argv ) {
     Selector bgPhiRange2 = SelectorPhiRange( pmin, pmax );
     Selector bgSelector = bgPhiRange1 && bgPhiRange2;
     double ghost_maxrap = 1.0;
-    AreaDefinition area_def(active_area, GhostedAreaSpec(ghost_maxrap));
-    JetMedianBackgroundEstimator UE( bgSelector, jet_def, area_def);
+    AreaDefinition bg_area_def(active_area_explicit_ghosts, GhostedAreaSpec(ghost_maxrap));
+    JetMedianBackgroundEstimator UE( bgSelector, bg_jet_def, bg_area_def);
     rho = UE.rho();
     sigma = UE.sigma();
 
@@ -200,12 +199,9 @@ int main ( int argc, const char** argv ) {
   }
   // ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~  END EVENT LOOP!  ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~
 
-    
   HTjetTree->Write();                            //  WRITE TREES
 
-
   pAuFile->Close();
-  
   
   return 0;
 }
