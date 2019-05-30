@@ -51,7 +51,6 @@ int main ( int argc, const char** argv ) {
   double Vx, Vy, Vz, BbcCoincidenceRate, BbcEastRate, BbcWestRate, vpdVz,  leadPt, leadEta, leadPhi, leadEt, subPt, subEta, subPhi, subEt, rho, sigma;
   vector<int> towID, nHitsPoss, nHitsFit, Charge, nCons;
   vector<double> DCA, towEt, towEta, towPhi, trEta, trPhi, trPz, trPt, jetPt, jetEta, jetPhi, jetEt;
-  bool dijetPair;
 
   HTjetTree->Branch("EventID", &EventID);            HTjetTree->Branch("RunID", &RunID);                  HTjetTree->Branch("Vz", &Vz);
   HTjetTree->Branch("nTowers", &nTowers);          HTjetTree->Branch("nPrimary", &nPrimary);         HTjetTree->Branch("nGlobal", &nGlobal);
@@ -60,7 +59,7 @@ int main ( int argc, const char** argv ) {
   HTjetTree->Branch("BbcWestRate", &BbcWestRate);                                           HTjetTree->Branch("vpdVz", &vpdVz);
   HTjetTree->Branch("towEt", &towEt);                   HTjetTree->Branch("towEta", &towEta);	          HTjetTree->Branch("towPhi", &towPhi);
   HTjetTree->Branch("towID", &towID);                  HTjetTree->Branch("nHitsPoss", &nHitsPoss);     HTjetTree->Branch("nHitsFit", &nHitsFit);
-  HTjetTree->Branch("trPz", &trPz);                        HTjetTree->Branch("dijetPair", &dijetPair);
+  HTjetTree->Branch("trPz", &trPz);
   HTjetTree->Branch("trPt", &trPt);                          HTjetTree->Branch("trEta", &trEta);                     HTjetTree->Branch("trPhi", &trPhi);
   HTjetTree->Branch("DCA", &DCA);                       HTjetTree->Branch("nJets", &nJets);                    HTjetTree->Branch("jetPt", &jetPt);
   HTjetTree->Branch("jetEta", &jetEta);                    HTjetTree->Branch("jetPhi", &jetPhi);                       HTjetTree->Branch("jetEt", &jetEt);
@@ -168,7 +167,6 @@ int main ( int argc, const char** argv ) {
       vector<PseudoJet> LeadCons= rawJets[0].constituents();      leadNcons = LeadCons.size();
       subPt = rawJets[1].pt();      subEta = rawJets[1].eta();      subPhi = rawJets[1].phi();      subEt = rawJets[1].Et();
       vector<PseudoJet> SubCons= rawJets[1].constituents();      subNcons = SubCons.size();
-      dijetPair = 1;
     }
     
     double tanPhi = tan(phi1) + tan(phi2);          tanPhi /= 2;
