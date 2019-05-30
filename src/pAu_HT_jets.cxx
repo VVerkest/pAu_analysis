@@ -141,7 +141,6 @@ int main ( int argc, const char** argv ) {
 
     //   JET-FINDING
     GatherParticles( container, rawParticles);     //  GATHERS ALL PARTICLES WITH    pT>=2.0GeV    and    |eta|<1.0
-
     ClusterSequence jetCluster( rawParticles, jet_def );           //  CLUSTER ALL JETS
     vector<PseudoJet> rawJets = sorted_by_pt( etaPtSelector( jetCluster.inclusive_jets() ) );     // EXTRACT SELECTED JETS
 
@@ -188,8 +187,10 @@ int main ( int argc, const char** argv ) {
     Selector bgPhiRange2 = SelectorPhiRange( pmin, pmax );
     Selector bgSelector = bgPhiRange1 && bgPhiRange2;
     double ghost_maxrap = 1.0;
+
     AreaDefinition bg_area_def(active_area_explicit_ghosts, GhostedAreaSpec(ghost_maxrap));
-    JetMedianBackgroundEstimator UE( bgSelector, bg_jet_def, bg_area_def);
+    ClusterSequenceArea bgCluster( rawParticles, bg_jet_def, bg_area_def);
+    JetMedianBackgroundEstimator UE( bgSelector, bgCluster );
     rho = UE.rho();
     sigma = UE.sigma();
 
