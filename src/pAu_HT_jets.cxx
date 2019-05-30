@@ -173,8 +173,8 @@ int main ( int argc, const char** argv ) {
     }
 
     double phi1 = rawJets[0].phi();     double phi2 = rawJets[1].phi();
-    double tanPhi = (1/2)( tan(phi1) + tan(phi2) );
-    double djAxisPhi = atan( tanPhi );
+    double tanPhi = tan(phi1) + tan(phi2);
+    double djAxisPhi = atan( tanPhi/2 );
     cout<<phi1<<"\t"<<phi2<<"\t"<<djAxisPhi<<endl;
     if ( djAxisPhi < -(pi/4) ) { djAxisPhi += pi; }
     cout<<"      "<<djAxisPhi<<endl;
