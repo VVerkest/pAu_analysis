@@ -51,7 +51,7 @@ namespace pAuAnalysis {
   const double etaCut = 1.0;       // |eta|<=1
   const double partMinPt = 0.2;      //  particle Pt >= 0.2 GeV
   const double jetMinPt = 2.0;      //  Jet Pt >= 2.0 GeV
-  const double qpi = pi/4;
+  const double qpi = 3.141592653589793238462643383279502884197/4;
 
   // const double jetMaxPt = 60.0;      //  Jet Pt <= 60.0 GeV
 
