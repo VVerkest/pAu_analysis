@@ -172,7 +172,7 @@ int main ( int argc, const char** argv ) {
       dijetPair = 1;
     }
 
-    double phi1 = rawJets[0].phi() - pi;     double phi2 = rawJets[1].phi() - pi;
+    double phi1 = rawJets[0].phi() - (pi/2);     double phi2 = rawJets[1].phi() - (pi/2);
     double djAxisPhi = ( phi1 + phi2 - pi )/2;
     // cout<<phi1<<"\t"<<phi2<<"\t"<<djAxisPhi<<endl;
     if ( djAxisPhi < -(pi/4) ) { djAxisPhi += pi; }
