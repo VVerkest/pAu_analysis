@@ -8,15 +8,15 @@ namespace pAuAnalysis {
   double ConvertPhi( double &phi ) {
     double pi = 3.14159265;
     if ( phi<0 ) {
-      for ( phi<0 ) { phi += 2*pi }
+      for ( phi<0 ) { phi += 2*pi; }
       return phi;
     }
     else if ( phi>2*pi ) {
-      for ( phi>2*pi ) { phi -= 2*pi }
+      for ( phi>2*pi ) { phi -= 2*pi; }
       return phi;
     }
     else if ( phi>0 && phi<2*pi ) { return phi; }
-    else { std::cerr<<"FUNTION 'ConvertPhi' IS BROKEN"<<std::endl; }
+    else { std::cerr<<"FUNTION 'ConvertPhi' IS BROKEN"<<std::endl; return -1; }
   }
   
 
