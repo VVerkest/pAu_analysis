@@ -147,9 +147,7 @@ int main ( int argc, const char** argv ) {
     nJets=0;
     
     for ( int i=0; i<rawJets.size(); ++i ) {                              //  FILL JET INFO
-      if ( rawJets[i].pt()<jetMinPt )  { cerr<<"bad jet pt selector?"<<endl;   continue; }
       jetPt.push_back( rawJets[i].pt() );
-      if ( abs(rawJets[i].eta())>etaCut ) { cerr<<"bad jet eta selector?"<<endl;   continue; }
       jetEta.push_back( rawJets[i].eta() );
       jetPhi.push_back( rawJets[i].phi() );
       jetEt.push_back( rawJets[i].Et() );
@@ -162,7 +160,6 @@ int main ( int argc, const char** argv ) {
     if ( rawJets.size()<2) { continue; }
     
     double phi1 = rawJets[0].phi();     double phi2 = rawJets[1].phi();
-
     double dphi = fabs( phi1 - phi2 - pi );
 
     if ( dphi> R || rawJets[0].pt()<2.0 || rawJets[1].pt()<2.0 ) { continue; }
@@ -173,28 +170,27 @@ int main ( int argc, const char** argv ) {
       vector<PseudoJet> SubCons= rawJets[1].constituents();      subNcons = SubCons.size();
       dijetPair = 1;
     }
-
     
     double tanPhi = tan(phi1) + tan(phi2);          tanPhi /= 2;
     double djAxisPhi = atan( tanPhi );
     pmin = djAxisPhi + qpi;    // qpi = quarter of pi
     pmax = djAxisPhi + (3*qpi);
-    cout<<"pmin =  "<<pmin<<"       pmax =  "<<pmax<<endl<<endl;   
+    cout<<"pmin =  "<<pmin<<"       pmax =  "<<pmax<<endl;   
     Selector bgPhiRange1 = SelectorPhiRange( pmin, pmax );
     pmin = djAxisPhi - (3*qpi);
     pmax = djAxisPhi - qpi;
     cout<<"pmin =  "<<pmin<<"       pmax =  "<<pmax<<endl;   
     Selector bgPhiRange2 = SelectorPhiRange( pmin, pmax );
     Selector bgSelector = bgPhiRange1 && bgPhiRange2 && SelectorAbsEtaMax( 1.0 );
-    double ghost_maxrap = 1.0;
 
-    AreaDefinition bg_area_def(active_area_explicit_ghosts, GhostedAreaSpec(ghost_maxrap));
+    GhostedAreaSpec gAreaSpec( 1.0, 1, 0.01 );
+    AreaDefinition bg_area_def(active_area_explicit_ghosts, gAreaSpec);
     ClusterSequenceArea bgCluster( rawParticles, bg_jet_def, bg_area_def);
     JetMedianBackgroundEstimator UE( bgSelector, bgCluster );
     rho = UE.rho();
     sigma = UE.sigma();
 
-    cout << "#rho = "<<rho<<"\t  #sigma = "<<sigma<<endl<<endl;
+    cout << "rho = "<<rho<<"\t  sigma = "<<sigma<<endl<<endl;
     
     HTjetTree->Fill();                                                           //  FILL TREE
   }
