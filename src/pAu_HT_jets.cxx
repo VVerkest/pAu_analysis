@@ -181,10 +181,11 @@ int main ( int argc, const char** argv ) {
     pmax = djAxisPhi - qpi;
     cout<<"pmin =  "<<pmin<<"       pmax =  "<<pmax<<endl;   
     Selector bgPhiRange2 = SelectorPhiRange( pmin, pmax );
-    Selector bgSelector = bgPhiRange1 && bgPhiRange2 && SelectorAbsEtaMax( 1.0 );
+    Selector bgSelector = bgPhiRange1 && SelectorAbsEtaMax( 1.0 ); // bgPhiRange2 &&
 
     GhostedAreaSpec gAreaSpec( 1.0, 1, 0.01 );
     AreaDefinition bg_area_def(active_area_explicit_ghosts, gAreaSpec);
+    
     ClusterSequenceArea bgCluster( rawParticles, bg_jet_def, bg_area_def);
     JetMedianBackgroundEstimator UE( bgSelector, bgCluster );
     rho = UE.rho();
