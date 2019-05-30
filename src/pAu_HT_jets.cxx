@@ -172,14 +172,15 @@ int main ( int argc, const char** argv ) {
       dijetPair = 1;
     }
 
-    double phi1 = rawJets[0].phi() - pi;     double phi2 = rawJets[1].phi() - pi;
-    double djAxisPhi = ( phi1 + phi2 - pi )/2;
+    double phi1 = rawJets[0].phi();     double phi2 = rawJets[1].phi();
+    double tanPhi = (1/2)( tan(phi1) + tan(phi2) );
+    double djAxisPhi = atan( tanPhi );
     cout<<phi1<<"\t"<<phi2<<"\t"<<djAxisPhi<<endl;
     if ( djAxisPhi < -(pi/4) ) { djAxisPhi += pi; }
     cout<<"      "<<djAxisPhi<<endl;
     pmin = djAxisPhi + (pi/4);
     pmax = djAxisPhi + ((3/4)*pi);
-    cout<<"pmin =  "<<pmin<<"pmax =  "<<pmax<<endl;   
+    cout<<"pmin =  "<<pmin<<"       pmax =  "<<pmax<<endl<<endl;   
     // Selector bgPhiRange1 = SelectorPhiRange( pmin, pmax );
     // pmin = djAxisPhi + ((5/4)*pi);
     // pmax = djAxisPhi + ((7/4)*pi);
