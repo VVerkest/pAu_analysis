@@ -43,7 +43,7 @@ int main ( int argc, const char** argv ) {
   
   TFile *pAuFile = new TFile( outFile.c_str() ,"RECREATE");
   
-  double dca, pt, pz, eta, phi, pmin, pmax;
+  double dca, pt, pz, eta, phi, pmin1, pmax1, pmin2, pmax2;
   
   TTree *HTjetTree = new TTree( "HTjetTree", "HT_JetTree" );
   
@@ -172,16 +172,11 @@ int main ( int argc, const char** argv ) {
     }
     
     double tanPhi = tan(phi1) + tan(phi2);          tanPhi /= 2;
-    double djAxisPhi = atan( tanPhi );
-    pmin = djAxisPhi + qpi;    // qpi = quarter of pi
-    pmax = djAxisPhi + (3*qpi);
-    cout<<"pmin =  "<<pmin<<"       pmax =  "<<pmax<<endl;   
-    Selector bgPhiRange1 = SelectorPhiRange( pmin, pmax );
-    pmin = djAxisPhi - (3*qpi);
-    pmax = djAxisPhi - qpi;
-    cout<<"pmin =  "<<pmin<<"       pmax =  "<<pmax<<endl;   
-    Selector bgPhiRange2 = SelectorPhiRange( pmin, pmax );
-    Selector bgSelector = bgPhiRange1 && SelectorAbsEtaMax( 1.0 ); // bgPhiRange2 &&
+    double djAxisPhi = atan( tanPhi );       // qpi = quarter of pi
+    pmin1 = djAxisPhi + qpi;           pmax1 = djAxisPhi + (3*qpi);
+    pmin2 = djAxisPhi - (3*qpi);      pmax2 = djAxisPhi - qpi;
+    Selector bgPhiRange = SelectorPhiRange( pmin1, pmax1 ) || SelectorPhiRange( pmin2, pmax2 );
+    Selector bgSelector = bgPhiRange && SelectorAbsEtaMax( 1.0 );
 
     GhostedAreaSpec gAreaSpec( 1.0, 1, 0.01 );
     AreaDefinition bg_area_def(active_area_explicit_ghosts, gAreaSpec);
