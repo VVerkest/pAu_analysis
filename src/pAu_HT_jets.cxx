@@ -31,7 +31,7 @@ int main ( int argc, const char** argv ) {
     vector<string> arguments( argv+1, argv+argc );
     inFile = "production_pAu200_2015/HT/pAu_2015_200_HT*.root";
     outFile = "out/pAuJets_HT.root";
-    nEvents = 100;
+    nEvents = 1000;
   }
   else { cerr<< "incorrect number of command line arguments"; return -1; }
 
@@ -188,13 +188,13 @@ int main ( int argc, const char** argv ) {
     Selector bgSelector = bgPhiRange1 && bgPhiRange2;
     double ghost_maxrap = 1.0;
 
-    AreaDefinition bg_area_def(active_area_explicit_ghosts, GhostedAreaSpec(ghost_maxrap));
+    AreaDefinition bg_area_def(active_area, GhostedAreaSpec(ghost_maxrap));
     ClusterSequenceArea bgCluster( rawParticles, bg_jet_def, bg_area_def);
     JetMedianBackgroundEstimator UE( bgSelector, bgCluster );
     rho = UE.rho();
     sigma = UE.sigma();
 
-    cout << "#rho = "<<rho<<"\t  #sigma - "<<sigma<<endl<<endl;
+    cout << "#rho = "<<rho<<"\t  #sigma = "<<sigma<<endl<<endl;
     
     HTjetTree->Fill();                                                           //  FILL TREE
   }
