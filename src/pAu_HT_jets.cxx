@@ -185,8 +185,8 @@ int main ( int argc, const char** argv ) {
     // double ghost_maxrap = 1.0;
     // AreaDefinition area_def(active_area, GhostedAreaSpec(ghost_maxrap));
     // JetMedianBackgroundEstimator UE( bgSelector, jet_def, area_def);
-    rho = UE.rho();
-    sigma = UE.sigma();
+    // rho = UE.rho();
+    // sigma = UE.sigma();
     
     HTjetTree->Fill();                                                           //  FILL TREE
   }
