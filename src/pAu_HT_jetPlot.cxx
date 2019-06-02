@@ -50,7 +50,8 @@ int main() {
   jt->SetBranchAddress("subNcons", &subNcons);    jt->SetBranchAddress("rho", &rho);     jt->SetBranchAddress("sigma", &sigma);
   int nEntries=jt->GetEntries();
 
-  for (int i=0; i<nEntries; ++i){
+  // for (int i=0; i<nEntries; ++i){
+  for (int i=0; i<1000; ++i){
     jt->GetEntry(i);
     
     hPrimaryVsBBCE->Fill(nPrimary,BbcEastRate);
@@ -62,8 +63,6 @@ int main() {
     hLeadPtVsRho->Fill(rho,leadPt);
   }
       
-  inFile->Close();
-
   TFile *outFile = new TFile( "plots/pAu_HT_jetPlot.root" ,"RECREATE");
 
   hPrimaryVsBBCE->Write();
@@ -76,6 +75,7 @@ int main() {
   
   outFile->Write();
   outFile->Close();
-  
+  inFile->Close();
+
   return 0;
 }
