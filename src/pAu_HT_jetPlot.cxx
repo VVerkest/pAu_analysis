@@ -95,7 +95,7 @@ int main() {
 
   TLegend *leg = new TLegend(0.75, 0.68, 0.9, 0.9,NULL,"brNDC");    // LEGEND
   leg->SetBorderSize(1);   leg->SetLineColor(1);   leg->SetLineStyle(1);   leg->SetLineWidth(1);   leg->SetFillColor(0);   leg->SetFillStyle(1001);
-  TLegendEntry *entry;
+
   
   for ( int i=0; i<nPtBins; ++i ) {
     name = "LeadPtVsRho" + ptBinName[i];
@@ -106,7 +106,7 @@ int main() {
     hRho[i]->SetLineColor( color[i] );
     hRho[i]->SetMarkerColor( color[i] );
     hRho[i]->Draw("SAME");                                                    // DRAW
-    entry=leg->AddEntry( name, title, lpf );                            // ADD TO LEGEND
+    TLegendEntry *entry = leg->AddEntry( name, title, lpf );                            // ADD TO LEGEND
     entry->SetLineColor( color[i] );   entry->SetMarkerColor( color[i] );
     entry->SetFillStyle(1001);   entry->SetTextFont(42);
     entry->SetLineStyle(1);   entry->SetLineWidth(2);
