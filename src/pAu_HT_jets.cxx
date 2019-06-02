@@ -109,6 +109,51 @@ int main ( int argc, const char** argv ) {
     refMult = header->GetReferenceMultiplicity();                           gRefMult = header->GetGReferenceMultiplicity();
     BbcCoincidenceRate = header->GetBbcCoincidenceRate();        vpdVz = header->GetVpdVz();
     BbcEastRate = header->GetBbcEastRate();                                  BbcWestRate = header->GetBbcWestRate();
+
+        //   JET-FINDING
+    GatherParticles( container, rawParticles);     //  GATHERS ALL PARTICLES WITH    pT>=2.0GeV    and    |eta|<1.0
+    ClusterSequence jetCluster( rawParticles, jet_def );           //  CLUSTER ALL JETS
+    vector<PseudoJet> rawJets = sorted_by_pt( etaPtSelector( jetCluster.inclusive_jets() ) );     // EXTRACT SELECTED JETS
+
+    nJets=0;
+
+    if ( rawJets.size()<2) { continue; }
+    
+    double phi1 = rawJets[0].phi();     double phi2 = rawJets[1].phi();
+    double dphi = fabs( phi1 - phi2 - pi );
+
+    if ( dphi> R || rawJets[0].pt()<2.0 || rawJets[1].pt()<2.0 ) { continue; }
+    else {                        //  CREATE DIJET PAIR  
+      leadPt = rawJets[0].pt();      leadEta = rawJets[0].eta();      leadPhi = rawJets[0].phi();      leadEt = rawJets[0].Et();
+      vector<PseudoJet> LeadCons= rawJets[0].constituents();      leadNcons = LeadCons.size();
+      subPt = rawJets[1].pt();      subEta = rawJets[1].eta();      subPhi = rawJets[1].phi();      subEt = rawJets[1].Et();
+      vector<PseudoJet> SubCons= rawJets[1].constituents();      subNcons = SubCons.size();
+    }
+    
+    double tanPhi = tan(phi1) + tan(phi2);          tanPhi /= 2;
+    double djAxisPhi = atan( tanPhi );       // qpi = quarter of pi
+    pmin1 = djAxisPhi + qpi;           pmax1 = djAxisPhi + (3*qpi);
+    pmin2 = djAxisPhi - (3*qpi);      pmax2 = djAxisPhi - qpi;
+    Selector bgPhiRange = SelectorPhiRange( pmin1, pmax1 ) || SelectorPhiRange( pmin2, pmax2 );
+    Selector bgSelector = bgPhiRange && SelectorAbsEtaMax( 1.0 );
+
+    GhostedAreaSpec gAreaSpec( 1.0, 1, 0.01 );
+    AreaDefinition bg_area_def(active_area_explicit_ghosts, gAreaSpec);
+    
+    ClusterSequenceArea bgCluster( rawParticles, bg_jet_def, bg_area_def);
+    JetMedianBackgroundEstimator UE( bgSelector, bgCluster );
+    rho = UE.rho();
+    sigma = UE.sigma();
+
+    // cout << "rho = "<<rho<<"\t  sigma = "<<sigma<<endl<<endl;
+
+
+    hLeadEtaPhi->Fill(leadPhi,leadEta);
+    hSubEtaPhi->Fill(subPhi,subEta);
+    hPt_UE_BBCE->Fill(leadPt,rho,BbcEastRate);
+    hTowersVsRho->Fill(rho,nTowers);
+    hLeadPtVsRho->Fill(rho,leadPt);
+
     
     for ( int i=0; i<npt; ++i ) {                                         //  FILL PRIMARY TRACK DATA
 
@@ -151,61 +196,6 @@ int main ( int argc, const char** argv ) {
     hGlobalVsBBC->Fill( BbcCoincidenceRate, nGlobal );
     hPrimaryVsBBCE->Fill(nPrimary,BbcEastRate);
     hGlobalVsBBCE->Fill(nGlobal,BbcEastRate);
-
-    //   JET-FINDING
-    GatherParticles( container, rawParticles);     //  GATHERS ALL PARTICLES WITH    pT>=2.0GeV    and    |eta|<1.0
-    ClusterSequence jetCluster( rawParticles, jet_def );           //  CLUSTER ALL JETS
-    vector<PseudoJet> rawJets = sorted_by_pt( etaPtSelector( jetCluster.inclusive_jets() ) );     // EXTRACT SELECTED JETS
-
-    nJets=0;
-    
-    // for ( int i=0; i<rawJets.size(); ++i ) {                              //  FILL JET INFO
-    //   jetPt = rawJets[i].pt();
-    //   jetEta = rawJets[i].eta();
-    //   jetPhi = rawJets[i].phi();
-    //   jetEt = rawJets[i].Et();
-    //   vector<PseudoJet> Cons= rawJets[i].constituents();
-    //   nCons = Cons.size();
-    //   nJets+=1;
-    // }
-
-
-    if ( rawJets.size()<2) { continue; }
-    
-    double phi1 = rawJets[0].phi();     double phi2 = rawJets[1].phi();
-    double dphi = fabs( phi1 - phi2 - pi );
-
-    if ( dphi> R || rawJets[0].pt()<2.0 || rawJets[1].pt()<2.0 ) { continue; }
-    else {                        //  CREATE DIJET PAIR  
-      leadPt = rawJets[0].pt();      leadEta = rawJets[0].eta();      leadPhi = rawJets[0].phi();      leadEt = rawJets[0].Et();
-      vector<PseudoJet> LeadCons= rawJets[0].constituents();      leadNcons = LeadCons.size();
-      subPt = rawJets[1].pt();      subEta = rawJets[1].eta();      subPhi = rawJets[1].phi();      subEt = rawJets[1].Et();
-      vector<PseudoJet> SubCons= rawJets[1].constituents();      subNcons = SubCons.size();
-    }
-    
-    double tanPhi = tan(phi1) + tan(phi2);          tanPhi /= 2;
-    double djAxisPhi = atan( tanPhi );       // qpi = quarter of pi
-    pmin1 = djAxisPhi + qpi;           pmax1 = djAxisPhi + (3*qpi);
-    pmin2 = djAxisPhi - (3*qpi);      pmax2 = djAxisPhi - qpi;
-    Selector bgPhiRange = SelectorPhiRange( pmin1, pmax1 ) || SelectorPhiRange( pmin2, pmax2 );
-    Selector bgSelector = bgPhiRange && SelectorAbsEtaMax( 1.0 );
-
-    GhostedAreaSpec gAreaSpec( 1.0, 1, 0.01 );
-    AreaDefinition bg_area_def(active_area_explicit_ghosts, gAreaSpec);
-    
-    ClusterSequenceArea bgCluster( rawParticles, bg_jet_def, bg_area_def);
-    JetMedianBackgroundEstimator UE( bgSelector, bgCluster );
-    rho = UE.rho();
-    sigma = UE.sigma();
-
-    // cout << "rho = "<<rho<<"\t  sigma = "<<sigma<<endl<<endl;
-
-
-    hLeadEtaPhi->Fill(leadPhi,leadEta);
-    hSubEtaPhi->Fill(subPhi,subEta);
-    hPt_UE_BBCE->Fill(leadPt,rho,BbcEastRate);
-    hTowersVsRho->Fill(rho,nTowers);
-    hLeadPtVsRho->Fill(rho,leadPt);
 
 
   }
