@@ -39,7 +39,7 @@ int main() {
   TH2D *hTowersVsRho = new TH2D("hTowersVsRho","# of Towers vs. UE;#rho (GeV);# of Towers", 80,0,35, 100,0,1000);
   TH2D *hLeadPtVsRho = new TH2D("hLeadPtVsRho","Lead Jet p_{T} vs UE;#rho (GeV);p_{T}^{lead} (GeV)", 70,0.05,35, 70,0,70);
 
-  TH1D *hscale = new TH1D( "hscale", "Underlying Event by Lead Jet p_{T};#rho (GeV)", 70,0,35);
+  TH2D *hscale = new TH2D( "hscale", "Underlying Event by Lead Jet p_{T};#rho (GeV);", 1,0,1 60,0,30);
   
   TTree *jt = (TTree*) inFile->Get("HTjetTree");
   
@@ -88,7 +88,8 @@ int main() {
   int ptBinHi[nPtBins] = { 5, 10, 15, 25, 35, 50, 70 };
   TString ptBinString[nPtBins] = { "<5 GeV", "5-10 GeV", "10-15 GeV", "15-25 GeV",  "25-35 GeV", "35-50 GeV", "<50 GeV" };
   TString ptBinName[nPtBins] = { "_5", "_5_10", "_10_15", "_15_25", "_25_35", "_35_50", "_50" };
-  int color[nPtBins] = { 1, 633, 613, 596, 839, 414, 797 };
+  int color[nPtBins] = { 29, 33, 34, 23, 22, 21, 20 };
+  int marker[nPtBins] = { 1, 633, 613, 596, 839, 414, 797 };
   TString name, title;
 
   TCanvas * c1 = new TCanvas( "c1" , "" ,0 ,23 ,1280 ,700 );       gStyle->SetOptStat(0);   // CANVAS
@@ -104,8 +105,8 @@ int main() {
     title = ptBinString[i];
     hRho[i] = hLeadPtVsRho->ProjectionX( name, ptBinLo[i], ptBinHi[i] );       // PROJECT
     hRho[i]->Scale( 1./hRho[i]->Integral() );                     // NORMALIZE
-    hRho[i]->SetLineWidth(2);
     hRho[i]->SetLineColor( color[i] );
+    hRho[i]->SetMarkerStyle( marker[i] );
     hRho[i]->SetMarkerColor( color[i] );
     hRho[i]->Draw("SAME");                                                    // DRAW
     /*entry=*/
@@ -123,10 +124,31 @@ int main() {
   c1->cd();
   c1->SetSelected(c1);
   c1->SaveAs("plots/RhoByLeadPt.pdf","PDF");
-  
+
+  TCanvas * c2 = new TCanvas( "c2" , "" ,0 ,23 ,1280 ,700 );              // CANVAS
+  hTowersVsRho->Draw("COLZ");
+  c2->SaveAs("plots/TowersVsRho.pdf","PDF");
+  hLeadEtaPhi->Draw("COLZ");
+  c2->SaveAs("plotshLeadEtaPhi.pdf","PDF");  
+  hSubEtaPhi->Draw("COLZ");
+  c2->SaveAs("plots/SubEtaPhi.pdf","PDF");
+
   outFile->Write();
   outFile->Close();
   inFile->Close();
 
   return 0;
 }
+
+
+//  {
+//    auto c3 = new TCanvas("c2","c2",500,300);
+//    TLegend *leg = new TLegend(0.75, 0.68, 0.9, 0.9,NULL,"brNDC");    // LEGEND
+//    auto h = new TH1F("", "", 1, 0, 1);
+//    leg->SetNColumns(3);
+//    leg->AddEntry(h, "Column 1 line 1", "lpf");
+//    leg->AddEntry(h, "Column 2 line 1", "l");
+//    leg->AddEntry(h, "Column 1 line 2", "l");
+//    leg->AddEntry(h, "Column 2 line 2", "l");
+//    leg->Draw();
+// }
