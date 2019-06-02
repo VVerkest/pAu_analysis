@@ -34,7 +34,7 @@ int main() {
   TH2D *hTowersVsRho = new TH2D("hTowersVsRho","# of Towers vs. UE;#rho (GeV);# of Towers", 80,0,35, 100,0,1000);
   TH2D *hLeadPtVsRho = new TH2D("hLeadPtVsRho","Lead Jet p_{T} vs UE;#rho (GeV);p_{T}^{lead} (GeV)", 80,0,35, 140,0,70);
   
-  TTree *jt = inFile->Get("HTjetTree");
+  TTree *jt = (TTree*) inFile->Get("HTjetTree");
   
   int RunID, EventID, nTowers, nPrimary, nGlobal, nVertices, refMult, gRefMult, nJets, leadNcons, subNcons;
   double Vx, Vy, Vz, BbcCoincidenceRate, BbcEastRate, BbcWestRate, vpdVz,  leadPt, leadEta, leadPhi, leadEt, subPt, subEta, subPhi, subEt, rho, sigma;
@@ -64,7 +64,6 @@ int main() {
   
   hPrimaryVsBBCE->Write();
   hGlobalVsBBCE->Write();
-  hTowerMult->Write();
   hLeadEtaPhi->Write();
   hSubEtaPhi->Write();
   hPt_UE_BBCE->Write();
