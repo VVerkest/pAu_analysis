@@ -75,6 +75,7 @@ int main() {
   hLeadPtVsRho->Write();
   
   outFile->Write();
+  outFile->Close();
   
   return 0;
 }
