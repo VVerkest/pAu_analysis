@@ -95,7 +95,7 @@ int main() {
 
   TLegend *leg = new TLegend(0.75, 0.68, 0.9, 0.9,NULL,"brNDC");    // LEGEND
   leg->SetBorderSize(1);   leg->SetLineColor(1);   leg->SetLineStyle(1);   leg->SetLineWidth(1);   leg->SetFillColor(0);   leg->SetFillStyle(1001);
-  TLegendEntry *entry;
+  TLegendEntry **entry;
   
   for ( int i=0; i<nPtBins; ++i ) {
     name = "LeadPtVsRho" + ptBinName[i];
