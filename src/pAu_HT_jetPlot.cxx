@@ -61,7 +61,11 @@ int main() {
     hTowersVsRho->Fill(rho,nTowers);
     hLeadPtVsRho->Fill(rho,leadPt);
   }
-  
+      
+  inFile->Close();
+
+  TFile *outFile = new TFile( "plots/pAu_HT_jetPlot.root" ,"RECREATE");
+
   hPrimaryVsBBCE->Write();
   hGlobalVsBBCE->Write();
   hLeadEtaPhi->Write();
@@ -69,11 +73,7 @@ int main() {
   hPt_UE_BBCE->Write();
   hTowersVsRho->Write();
   hLeadPtVsRho->Write();
-    
-  inFile->Close();
-
-  TFile *outFile = new TFile( "plots/pAu_HT_jetPlot.root" ,"RECREATE");
-
+  
   outFile->Write();
   
   return 0;
