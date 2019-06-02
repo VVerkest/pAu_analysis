@@ -1,6 +1,7 @@
 //  Plotting macro for out/HTjets/pAu_HTjets.root
 //  Veronica Verkest     June 2, 2019
 
+#include "TPad.h"
 #include "TLegend.h"
 #include "TStyle.h"
 #include "TCanvas.h"
@@ -91,6 +92,7 @@ int main() {
   TString name, title;
 
   TCanvas * c1 = new TCanvas( "c1" , "" ,0 ,23 ,1280 ,700 );       gStyle->SetOptStat(0);   // CANVAS
+  c1->SetLogy();
   hscale->Draw();
 
   TLegend *leg = new TLegend(0.75, 0.68, 0.9, 0.9,NULL,"brNDC");    // LEGEND
@@ -108,6 +110,7 @@ int main() {
     hRho[i]->Draw("SAME");                                                    // DRAW
     /*entry=*/
     leg->AddEntry( name, title, lpf );                            // ADD TO LEGEND
+    // hRho[i]->GetMean(1);
     // entry->SetLineColor( color[i] );   entry->SetMarkerColor( color[i] );
     // entry->SetFillStyle(1001);   entry->SetTextFont(42);
     // entry->SetLineStyle(1);   entry->SetLineWidth(2);
@@ -119,7 +122,7 @@ int main() {
   c1->Modified();
   c1->cd();
   c1->SetSelected(c1);
-  c1->SaveAs("pdfs/RhoByLeadPt.pdf","PDF");
+  c1->SaveAs("plots/RhoByLeadPt.pdf","PDF");
   
   outFile->Write();
   outFile->Close();
