@@ -47,7 +47,7 @@ int main() {
   jt->SetBranchAddress("leadPt", &leadPt);    jt->SetBranchAddress("leadEta", &leadEta);    jt->SetBranchAddress("leadPhi", &leadPhi);
   jt->SetBranchAddress("leadEt", &leadEt);    jt->SetBranchAddress("leadNcons", &leadNcons);     jt->SetBranchAddress("subPt", &subPt);
   jt->SetBranchAddress("subEta", &subEta);    jt->SetBranchAddress("subPhi", &subPhi);     jt->SetBranchAddress("subEt", &subEt);
-  jt->SetBranchAddress("subNcons", &subNcons);    HTjetTree->SetBranchAddress("rho", &rho);     HTjetTree->SetBranchAddress("sigma", &sigma);
+  jt->SetBranchAddress("subNcons", &subNcons);    jt->SetBranchAddress("rho", &rho);     jt->SetBranchAddress("sigma", &sigma);
   int nEntries=jt->GetEntries();
 
   for (int i=0; i<nEntries; ++i){
