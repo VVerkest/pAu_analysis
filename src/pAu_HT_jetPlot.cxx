@@ -1,6 +1,9 @@
 //  Plotting macro for out/HTjets/pAu_HTjets.root
 //  Veronica Verkest     June 2, 2019
 
+#include "TLegend.h"
+#include "TStyle.h"
+#include "TCanvas.h"
 #include "TROOT.h"
 #include "TRandom.h"
 #include "TFile.h"
@@ -103,7 +106,7 @@ int main() {
     hRho[i]->SetLineColor( color[i] );
     hRho[i]->SetMarkerColor( color[i] );
     hRho[i]->Draw("SAME");                                                    // DRAW
-    entry=leg->AddEntry( NAME, TITLE, lpf );                            // ADD TO LEGEND
+    entry=leg->AddEntry( name, title, lpf );                            // ADD TO LEGEND
     entry->SetLineColor( color[i] );   entry->SetMarkerColor( color[i] );
     entry->SetFillStyle(1001);   entry->SetTextFont(42);
     entry->SetLineStyle(1);   entry->SetLineWidth(2);
