@@ -50,8 +50,8 @@ int main() {
   jt->SetBranchAddress("subNcons", &subNcons);    jt->SetBranchAddress("rho", &rho);     jt->SetBranchAddress("sigma", &sigma);
   int nEntries=jt->GetEntries();
 
-  // for (int i=0; i<nEntries; ++i){
-  for (int i=0; i<1000; ++i){
+  for (int i=0; i<nEntries; ++i){
+  // for (int i=0; i<1000; ++i){
     jt->GetEntry(i);
     
     hPrimaryVsBBCE->Fill(nPrimary,BbcEastRate);
