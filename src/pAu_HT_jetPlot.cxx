@@ -40,7 +40,7 @@ int main() {
   TH2D *hTowersVsRho = new TH2D("hTowersVsRho","# of Towers vs. UE;#rho (GeV);# of Towers", 80,0,35, 100,0,1000);
   TH2D *hLeadPtVsRho = new TH2D("hLeadPtVsRho","Lead Jet p_{T} vs UE;#rho (GeV);p_{T}^{lead} (GeV)", 70,0.05,35, 70,0,70);
 
-  TH2D *hscale = new TH2D( "hscale", "Underlying Event by Lead Jet p_{T};#rho (GeV);", 60,0,30, 1,0,1 );
+  TH2D *hscale = new TH2D( "hscale", "Underlying Event by Lead Jet p_{T};#rho (GeV);", 60,0,30, 10,0.0,1.0 );
   
   TTree *jt = (TTree*) inFile->Get("HTjetTree");
   
@@ -62,9 +62,9 @@ int main() {
   // for (int i=0; i<1000; ++i){
     jt->GetEntry(i);
 
-    hPrimaryVsGlobal->Fill(nPrimary,nGlobal);
-    hPrimaryVsBBCE->Fill(nPrimary,BbcEastRate);
-    hGlobalVsBBCE->Fill(nGlobal,BbcEastRate);
+    hPrimaryVsGlobal->Fill(nGlobal,nPrimary);
+    hPrimaryVsBBCE->Fill(BbcEastRate,nPrimary);
+    hGlobalVsBBCE->Fill(BbcEastRate,nGlobal);
     hLeadEtaPhi->Fill(leadPhi,leadEta);
     hSubEtaPhi->Fill(subPhi,subEta);
     hPt_UE_BBCE->Fill(leadPt,rho,BbcEastRate);
@@ -96,6 +96,7 @@ int main() {
 
   TCanvas * c1 = new TCanvas( "c1" , "" ,0 ,23 ,1280 ,700 );              // CANVAS
   c1->SetLogy();
+  hscale->SetStats(0);
   hscale->Draw();
 
   TLegend *leg = new TLegend(0.75, 0.68, 0.9, 0.9,NULL,"brNDC");    // LEGEND
