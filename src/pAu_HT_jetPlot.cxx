@@ -136,7 +136,7 @@ int main() {
   c2->SaveAs("plots/SubEtaPhi.pdf","PDF");
   hPrimaryVsGlobal->Draw("COLZ");
   c2->SaveAs("plots/PrimaryVsGlobal.pdf","PDF");  
-  hTowersVsRho->SetLogz();
+  c2->SetLogz();
   hTowersVsRho->Draw("COLZ");
   c2->SaveAs("plots/TowersVsRho.pdf","PDF");
 
