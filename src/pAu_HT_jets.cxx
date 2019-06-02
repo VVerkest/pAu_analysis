@@ -159,15 +159,15 @@ int main ( int argc, const char** argv ) {
 
     nJets=0;
     
-    for ( int i=0; i<rawJets.size(); ++i ) {                              //  FILL JET INFO
-      jetPt = rawJets[i].pt();
-      jetEta = rawJets[i].eta();
-      jetPhi = rawJets[i].phi();
-      jetEt = rawJets[i].Et();
-      vector<PseudoJet> Cons= rawJets[i].constituents();
-      nCons = Cons.size();
-      nJets+=1;
-    }
+    // for ( int i=0; i<rawJets.size(); ++i ) {                              //  FILL JET INFO
+    //   jetPt = rawJets[i].pt();
+    //   jetEta = rawJets[i].eta();
+    //   jetPhi = rawJets[i].phi();
+    //   jetEt = rawJets[i].Et();
+    //   vector<PseudoJet> Cons= rawJets[i].constituents();
+    //   nCons = Cons.size();
+    //   nJets+=1;
+    // }
 
 
     if ( rawJets.size()<2) { continue; }
