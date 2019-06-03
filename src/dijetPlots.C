@@ -22,7 +22,7 @@ void dijetPlots() {
   TH2D *hGlobalVsBBC = (TH2D*) inFile->Get("hGlobalVsBBC");
   TH2D *hPrimaryVsBBCE = (TH2D*) inFile->Get("hPrimaryVsBBCE");
   TH2D *hGlobalVsBBCE = (TH2D*) inFile->Get("hGlobalVsBBCE");
-  TH2D *hPrimaryVsGlobal = new TH2D("hPrimaryVsGlobal","# Primary Tracks vs. # Global Tracks;# Global Tracks;# Primary Tracks", 150,0,3000, 150,0,150 );
+  // TH2D *hPrimaryVsGlobal = new TH2D("hPrimaryVsGlobal","# Primary Tracks vs. # Global Tracks;# Global Tracks;# Primary Tracks", 150,0,3000, 150,0,150 );
   TH2D *hGlobalVsBBCsumE = (TH2D*) inFile->Get("hGlobalVsBBCsumE");
   TH2D *hLeadEtaPhi =(TH2D*) inFile->Get("hLeadEtaPhi");
   TH2D *hSubEtaPhi = (TH2D*) inFile->Get("hSubEtaPhi");
@@ -32,7 +32,7 @@ void dijetPlots() {
   TH1D *hPrimaryPerEvent = (TH1D*) inFile->Get("hPrimaryPerEvent");
 
 
-  TH2D *hscale0 = new TH2D( "hscale0", "Underlying Event by Lead Jet p_{T};#rho (GeV);", 20,0,10, 10,0.0001, 1.0 );
+  TH2D *hscale0 = new TH2D( "hscale0", "Underlying Event by Lead Jet p_{T};#rho (GeV);", 20,0,10, 10,0.000001, 1.0 );
 
   const int nPtBins = 5;
   TH1D * hRho[nPtBins];
@@ -54,7 +54,7 @@ void dijetPlots() {
   TCanvas * c0 = new TCanvas( "c0" , "" ,0 ,23 ,1280 ,700 );              // CANVAS
   c0->SetLogz();
   TCanvas * c1 = new TCanvas( "c1" , "" ,0 ,23 ,1280 ,700 );              // CANVAS
-  c1->SetLogz();
+  //c1->SetLogz();
   
   for ( int i=0; i<nPtBins; ++i ) {
     c0->cd();
