@@ -31,10 +31,6 @@ void dijetPlots() {
   TH1D *hTowersPerEvent = (TH1D*) inFile->Get("hTowersPerEvent");
   TH1D *hPrimaryPerEvent = (TH1D*) inFile->Get("hPrimaryPerEvent");
 
-  inFile->Close();
-
-  TFile *djFile = new TFile( "plots/pAu_plots.root" ,"RECREATE");
-
 
   TH2D *hscale0 = new TH2D( "hscale0", "Underlying Event by Lead Jet p_{T};#rho (GeV);", 20,0,10, 10,0.0001, 1.0 );
 
@@ -146,7 +142,10 @@ void dijetPlots() {
   hPrimaryVsGlobal->Draw("COLZ");
   c4->SaveAs("plots/PrimaryVsGlobal.pdf","PDF");
 
+  inFile->Close();
+
+  // TFile *djFile = new TFile( "plots/pAu_plots.root" ,"RECREATE");
   
-  djFile->Write();
-  djFile->Close();
+  // djFile->Write();
+  // djFile->Close();
 }
