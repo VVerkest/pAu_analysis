@@ -120,7 +120,7 @@ int main ( int argc, const char** argv ) {
     if ( rawJets.size()<2) { continue; }
     
     double phi1 = rawJets[0].phi();     double phi2 = rawJets[1].phi();
-    double dphi = fabs( phi1 - phi2 - pi );
+    double dphi = fabs( fabs( phi1 - phi2 ) - pi );
 
     if ( dphi> R || rawJets[0].pt()<2.0 || rawJets[1].pt()<2.0 ) { continue; }
     else {                        //  CREATE DIJET PAIR  
