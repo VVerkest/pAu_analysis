@@ -23,13 +23,14 @@
 #include <sstream>
 #include <iomanip>
 #include <cmath>
+#include <stdlib.h>
 
 using namespace std;
 
 int main() {
 
   const double twopi = 2*3.14159265358979;
-  TString Ndj, avg;
+  int Ndj; double avg;
   
   TFile* inFile = new TFile( "out/HTjets/pAu_HTjets.root", "READ" );
   TString lpf = "lpf";
@@ -125,11 +126,11 @@ int main() {
     hRho[i]->SetMarkerColor( color[i] );
     hRho[i]->Draw("SAME");                                                    // DRAW
     /*entry=*/
-    Ndj = (TString) hRho[i]->GetEntries();
-    avg = (TString) hRho[i]->GetMean(1);                                           // 1 denotes x-axis
+    Ndj = hRho[i]->GetEntries();
+    avg = hRho[i]->GetMean(1);                                           // 1 denotes x-axis
     leg1->AddEntry( name, title, lpf );                            // ADD TO LEGEND
-    leg1->AddEntry((TObject*)0,Ndj, "");
-    leg1->AddEntry((TObject*)0,avg, "");
+    leg1->AddEntry((TObject*)0,Ndj.c_str(), "");
+    leg1->AddEntry((TObject*)0,avg.c_str(), "");
     lpf += "lpf";
   }
 
@@ -182,15 +183,3 @@ int main() {
 
   return 0;
 }
-
-//  {
-//    auto c3 = new TCanvas("c2","c2",500,300);
-//    TLegend *leg = new TLegend(0.75, 0.68, 0.9, 0.9,NULL,"brNDC");    // LEGEND
-//    auto h = new TH1F("", "", 1, 0, 1);
-//    leg->SetNColumns(3);
-//    leg->AddEntry(h, "Column 1 line 1", "lpf");
-//    leg->AddEntry(h, "Column 2 line 1", "l");
-//    leg->AddEntry(h, "Column 1 line 2", "l");
-//    leg->AddEntry(h, "Column 2 line 2", "l");
-//    leg->Draw();
-// }
