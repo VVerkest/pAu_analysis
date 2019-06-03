@@ -88,59 +88,6 @@ int main() {
   hLeadPtVsRho->Write();
 
   const int nPtBins = 7;
-
-  TH1D * hRho[nPtBins];
-  hPt_UE_BBCE = new TH3D("hPt_UE_BBCE","UE vs. BBC East Rate;Lead Jet p_{T} (GeV);Underlying Event (GeV);BBC East Rate", 300,0,300, 40,0,200, 3500,0,3500000);
-  TH2D *hTowersVsRho = new TH2D("hTowersVsRho","# of Towers vs. UE;#rho (GeV);# of Towers", 80,0,35, 100,0,1000);
-  TH2D *hLeadPtVsRho = new TH2D("hLeadPtVsRho","Lead Jet p_{T} vs UE;#rho (GeV);p_{T}^{lead} (GeV)", 70,0.05,35, 70,0,70);
-
-  TH2D *hscale = new TH2D( "hscale", "Underlying Event by Lead Jet p_{T};#rho (GeV);", 60,0,30, 10,0.0,1.0 );
-  hscale->GetYaxis()->SetRangeUser( 0.000001, 1 );
-  
-  TTree *jt = (TTree*) inFile->Get("HTjetTree");
-  
-  int RunID, EventID, nTowers, nPrimary, nGlobal, nVertices, refMult, gRefMult, nJets, leadNcons, subNcons;
-  double Vx, Vy, Vz, BbcCoincidenceRate, BbcEastRate, BbcWestRate, vpdVz,  leadPt, leadEta, leadPhi, leadEt, subPt, subEta, subPhi, subEt, rho, sigma;
-  
-  jt->SetBranchAddress("EventID", &EventID);   jt->SetBranchAddress("RunID", &RunID);   jt->SetBranchAddress("Vz", &Vz);
-  jt->SetBranchAddress("nTowers", &nTowers);    jt->SetBranchAddress("nPrimary", &nPrimary);   jt->SetBranchAddress("nGlobal", &nGlobal);
-  jt->SetBranchAddress("nVertices", &nVertices);     jt->SetBranchAddress("refMult", &refMult);     jt->SetBranchAddress("gRefMult", &gRefMult);
-  jt->SetBranchAddress("BbcCoincidenceRate", &BbcCoincidenceRate);     jt->SetBranchAddress("BbcEastRate", &BbcEastRate);
-  jt->SetBranchAddress("BbcWestRate", &BbcWestRate);    jt->SetBranchAddress("vpdVz", &vpdVz);    jt->SetBranchAddress("nJets", &nJets);
-  jt->SetBranchAddress("leadPt", &leadPt);    jt->SetBranchAddress("leadEta", &leadEta);    jt->SetBranchAddress("leadPhi", &leadPhi);
-  jt->SetBranchAddress("leadEt", &leadEt);    jt->SetBranchAddress("leadNcons", &leadNcons);     jt->SetBranchAddress("subPt", &subPt);
-  jt->SetBranchAddress("subEta", &subEta);    jt->SetBranchAddress("subPhi", &subPhi);     jt->SetBranchAddress("subEt", &subEt);
-  jt->SetBranchAddress("subNcons", &subNcons);    jt->SetBranchAddress("rho", &rho);     jt->SetBranchAddress("sigma", &sigma);
-  int nEntries=jt->GetEntries();
-
-  for (int i=0; i<nEntries; ++i){
-    jt->GetEntry(i);
-
-    hPrimaryVsGlobal->Fill(nGlobal,nPrimary);
-    hPrimaryVsBBCE->Fill(BbcEastRate,nPrimary);
-    hGlobalVsBBCE->Fill(BbcEastRate,nGlobal);
-
-    if ( (abs(leadPhi) > twopi) || (abs(subPhi) > twopi) ) { cout<<"phi range is funky   "<<leadPhi<<"  "<<subPhi<<endl; }
-    
-    hLeadEtaPhi->Fill(leadPhi,leadEta);
-    hSubEtaPhi->Fill(subPhi,subEta);
-    hPt_UE_BBCE->Fill(leadPt,rho,BbcEastRate);
-    hTowersVsRho->Fill(rho,nTowers);
-    hLeadPtVsRho->Fill(rho,leadPt);
-  }
-      
-  TFile *outFile = new TFile( "plots/pAu_HT_jetPlot.root" ,"RECREATE");
-
-  hPrimaryVsBBCE->Write();
-  hGlobalVsBBCE->Write();
-  hLeadEtaPhi->Write();
-  hSubEtaPhi->Write();
-  hPt_UE_BBCE->Write();
-  hTowersVsRho->Write();
-  hLeadPtVsRho->Write();
-
-  const int nPtBins = 7;
-
   TH1D * hRho[nPtBins];
   TH2D * hUE_BBCE[nPtBins];
   hPt_UE_BBCE->Scale(1./nEntries);
@@ -226,13 +173,6 @@ int main() {
 
   return 0;
 }
-
-
-
-
-  
-
-  
 
 //  {
 //    auto c3 = new TCanvas("c2","c2",500,300);
