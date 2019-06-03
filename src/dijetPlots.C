@@ -9,7 +9,7 @@ void dijetPlots() {
   TString lpf = "lpf";
   TH1::SetDefaultSumw2();  TH2::SetDefaultSumw2();  TH3::SetDefaultSumw2();
 
-  TFile* inFile = new TFile( "out/MB/pAu_HT_dijets.root", "READ" );
+  TFile* inFile = new TFile( "out/HTjets/pAu_HT_dijets.root", "READ" );
 
 
   TH3D *hVertex = (TH3D*) inFile->Get("hVertex");
