@@ -128,8 +128,8 @@ int main() {
     Ndj = hRho[i]->GetEntries();
     avg = hRho[i]->GetMean(1);                                           // 1 denotes x-axis
     leg1->AddEntry( name, title, lpf );                            // ADD TO LEGEND
-    leg1->AddEntry((TObject*)0,Ndj, "");
-    leg1->AddEntry((TObject*)0,avg, "");
+    leg1->AddEntry((TObject*)0,Ndj.c_str(), "");
+    leg1->AddEntry((TObject*)0,avg.c_str(), "");
     lpf += "lpf";
   }
 
