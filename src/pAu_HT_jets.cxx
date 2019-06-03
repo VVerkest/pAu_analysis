@@ -85,6 +85,8 @@ int main ( int argc, const char** argv ) {
   // ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~  BEGIN EVENT LOOP!  ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~
   while ( Reader.NextEvent() ) {
 
+    rawParticles.clear();    rawJets.clear();
+    
     Reader.PrintStatus(5);
 
     event = Reader.GetEvent();
@@ -135,8 +137,8 @@ int main ( int argc, const char** argv ) {
     eID = Reader.GetNOfCurrentEvent();          EventID = eID;
     rID = header->GetRunId();                        RunID = rID;
 
-    int npt = header->GetNOfPrimaryTracks();      nPrimary = npt;
-    int ntow = header->GetNOfTowers();               nTowers = ntow;
+    nPrimary =  header->GetNOfPrimaryTracks();
+    nTowers = header->GetNOfTowers();
     Vx = header->GetPrimaryVertexX();                                           Vy = header->GetPrimaryVertexY();
     nGlobal = header->GetNGlobalTracks();                                    nVertices = header->GetNumberOfVertices();
     refMult = header->GetReferenceMultiplicity();                           gRefMult = header->GetGReferenceMultiplicity();
