@@ -22,7 +22,7 @@ void dijetPlots() {
   TH2D *hGlobalVsBBC = (TH2D*) inFile->Get("hGlobalVsBBC");
   TH2D *hPrimaryVsBBCE = (TH2D*) inFile->Get("hPrimaryVsBBCE");
   TH2D *hGlobalVsBBCE = (TH2D*) inFile->Get("hGlobalVsBBCE");
-  // TH2D *hPrimaryVsGlobal = new TH2D("hPrimaryVsGlobal","# Primary Tracks vs. # Global Tracks;# Global Tracks;# Primary Tracks", 150,0,3000, 150,0,150 );
+  TH2D *hPrimaryVsGlobal = (TH2D*) inFile->Get("hPrimaryVsGlobal");
   TH2D *hGlobalVsBBCsumE = (TH2D*) inFile->Get("hGlobalVsBBCsumE");
   TH2D *hLeadEtaPhi =(TH2D*) inFile->Get("hLeadEtaPhi");
   TH2D *hSubEtaPhi = (TH2D*) inFile->Get("hSubEtaPhi");
@@ -133,14 +133,14 @@ void dijetPlots() {
   hSubEtaPhi->Draw("COLZ");
   c4->SaveAs("plots/SubEtaPhi.pdf","PDF");
 
+  c4->SetLogz();
   hTowersVsRho->Scale( 1./(double)hTowersVsRho->GetEntries() );
   hTowersVsRho->Draw("COLZ");
   c4->SaveAs("plots/TowersVsRho.pdf","PDF");
   
-  // c4->SetLogz();
-  // hPrimaryVsGlobal->Scale( 1./(double)hPrimaryVsGlobal->GetEntries() );
-  // hPrimaryVsGlobal->Draw("COLZ");
-  // c4->SaveAs("plots/PrimaryVsGlobal.pdf","PDF");
+  hPrimaryVsGlobal->Scale( 1./(double)hPrimaryVsGlobal->GetEntries() );
+  hPrimaryVsGlobal->Draw("COLZ");
+  c4->SaveAs("plots/PrimaryVsGlobal.pdf","PDF");
 
   inFile->Close();
 
