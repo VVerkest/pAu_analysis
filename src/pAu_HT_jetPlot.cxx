@@ -35,10 +35,10 @@ int main() {
 
   TH2D *hPrimaryVsBBCE = new TH2D("hPrimaryVsBBCE","# Primary Tracks vs. BBC East Rate;BBC East Rate;# Primary Tracks", 50000,0,5000000, 150,0,150 );
   TH2D *hGlobalVsBBCE = new TH2D("hGlobalVsBBCE","# Global Tracks vs. BBC East Rate;BBC East Rate;# Global Tracks", 50000,0,5000000, 300,0,3000 );
-  TH2D *hPrimaryVsGlobal = new TH2D("hPrimaryVsGlobal","# Primary Tracks vs. # Global Tracks;# Global Tracks;# Primary Tracks", 300,0,3000, 150,0,150 );
-  TH2D *hLeadEtaPhi = new TH2D("hLeadEtaPhi","Lead Jet #eta vs. #phi;#phi;#eta", 25,0.0,6.3, 20,-1.0,1.0);
-  TH2D *hSubEtaPhi = new TH2D("hSubEtaPhi","Sub Jet #eta vs. #phi;#phi;#eta", 25,0.0,6.3, 20,-1.0,1.0);
-  TH3D *hPt_UE_BBCE = new TH3D("hPt_UE_BBCE","UE vs. BBC East Rate;Lead Jet p_{T} (GeV);#rho (GeV);BBC East Rate", 70,0.0,35, 60,0,30, 1000,0,10000000);
+  TH2D *hPrimaryVsGlobal = new TH2D("hPrimaryVsGlobal","# Primary Tracks vs. # Global Tracks;# Global Tracks;# Primary Tracks", 150,0,3000, 175,0,150 );
+  TH2D *hLeadEtaPhi = new TH2D("hLeadEtaPhi","Lead Jet #eta vs. #phi;#phi;#eta", 50,0.0,6.3, 50,-1.0,1.0);
+  TH2D *hSubEtaPhi = new TH2D("hSubEtaPhi","Sub Jet #eta vs. #phi;#phi;#eta", 505,0.0,6.3, 50,-1.0,1.0);
+  TH3D *hPt_UE_BBCE = new TH3D("hPt_UE_BBCE","UE vs. BBC East Rate;Lead Jet p_{T} (GeV);#rho (GeV);BBC East Rate", 50,0.0,25, 60,0,30, 700,0,70000000);
   TH2D *hTowersVsRho = new TH2D("hTowersVsRho","# of Towers vs. UE;#rho (GeV);# of Towers", 80,0,35, 100,0,1000);
   TH2D *hLeadPtVsRho = new TH2D("hLeadPtVsRho","Lead Jet p_{T} vs UE;#rho (GeV);p_{T}^{lead} (GeV)", 70,0.05,35, 70,0,70);
 
@@ -108,6 +108,10 @@ int main() {
   TLegend *leg1 = new TLegend(0.65, 0.68, 0.9, 0.9,NULL,"brNDC");    // LEGEND
   leg1->SetBorderSize(1);   leg1->SetLineColor(1);   leg1->SetLineStyle(1);   leg1->SetLineWidth(1);   leg1->SetFillColor(0);   leg1->SetFillStyle(1001);
   TLegendEntry *entry;
+  leg1->SetNColumns(3);
+  leg1->AddEntry((TObject*)0,"#bf{p_{T}^{Lead} (GeV)}", "");
+  leg1->AddEntry((TObject*)0,"#bf{# of Dijets}", "");
+  leg1->AddEntry((TObject*)0,"#bf{<#rho> (GeV)}", "");
   
   for ( int i=0; i<nPtBins; ++i ) {
     name = "LeadPtVsRho" + ptBinName[i];
@@ -120,8 +124,11 @@ int main() {
     hRho[i]->SetMarkerColor( color[i] );
     hRho[i]->Draw("SAME");                                                    // DRAW
     /*entry=*/
+    Ndj = hRho[i]->GetEntries();
+    avg = hRho[i]->GetMean(1);                                           // 1 denotes x-axis
     leg1->AddEntry( name, title, lpf );                            // ADD TO LEGEND
-    // hRho[i]->GetMean(1);
+    leg1->AddEntry((TObject*)0,Ndj, "");
+    leg1->AddEntry((TObject*)0,avg, "");
     lpf += "lpf";
   }
 
@@ -133,13 +140,14 @@ int main() {
 
 
   TCanvas * c0 = new TCanvas( "c0" , "" ,0 ,23 ,1280 ,700 );              // CANVAS
-
+  c0->SetLogz();
+  
   for ( int i=0; i<nPtBins; ++i ) {
     name = "plots/UEvsBBCE" + ptBinName[i] + ".pdf";
-    title = "Underlying Event vs. BBC East Rate" + ptBinString[i];
+    title = "Underlying Event vs. BBC East Rate - p_{T}^{lead}:" + ptBinString[i];
     hPt_UE_BBCE->GetXaxis()->SetRangeUser(ptBinLo[i], ptBinHi[i]);
     hUE_BBCE[i] = (TH2D*)hPt_UE_BBCE->Project3D( "yz" );       // PROJECT
-    hUE_BBCE[i]->Scale( 1./hUE_BBCE[i]->Integral("width") );                     // NORMALIZE
+    hUE_BBCE[i]->Scale( 1./hUE_BBCE[i]->GetEntries() );                     // NORMALIZE
     hUE_BBCE[i]->SetTitle(title);
     hUE_BBCE[i]->Draw("COLZ");
     c0->SaveAs( name,"PDF");
@@ -150,20 +158,20 @@ int main() {
 
   double norm = 1./nEntries;
   
-  hLeadEtaPhi->Scale( 1./(double)hLeadEtaPhi->Integral("width") );
+  hLeadEtaPhi->Scale( 1./(double)hLeadEtaPhi->GetEntries() );
   hLeadEtaPhi->Draw("COLZ");
   c2->SaveAs("plots/LeadEtaPhi.pdf","PDF");
 
-  hSubEtaPhi->Scale( 1./(double)hSubEtaPhi->Integral("width") );
+  hSubEtaPhi->Scale( 1./(double)hSubEtaPhi->GetEntries() );
   hSubEtaPhi->Draw("COLZ");
   c2->SaveAs("plots/SubEtaPhi.pdf","PDF");
 
-  hPrimaryVsGlobal->Scale( 1./(double)hPrimaryVsGlobal->Integral("width") );
+  hPrimaryVsGlobal->Scale( 1./(double)hPrimaryVsGlobal->GetEntries() );
   hPrimaryVsGlobal->Draw("COLZ");
   c2->SaveAs("plots/PrimaryVsGlobal.pdf","PDF");
 
   c2->SetLogz();
-  hTowersVsRho->Scale( 1./(double)hTowersVsRho->Integral("width") );
+  hTowersVsRho->Scale( 1./(double)hTowersVsRho->GetEntries() );
   hTowersVsRho->Draw("COLZ");
   c2->SaveAs("plots/TowersVsRho.pdf","PDF");
 
