@@ -90,6 +90,60 @@ int main() {
   const int nPtBins = 7;
 
   TH1D * hRho[nPtBins];
+  hPt_UE_BBCE = new TH3D("hPt_UE_BBCE","UE vs. BBC East Rate;Lead Jet p_{T} (GeV);Underlying Event (GeV);BBC East Rate", 300,0,300, 40,0,200, 3500,0,3500000);
+  TH2D *hTowersVsRho = new TH2D("hTowersVsRho","# of Towers vs. UE;#rho (GeV);# of Towers", 80,0,35, 100,0,1000);
+  TH2D *hLeadPtVsRho = new TH2D("hLeadPtVsRho","Lead Jet p_{T} vs UE;#rho (GeV);p_{T}^{lead} (GeV)", 70,0.05,35, 70,0,70);
+
+  TH2D *hscale = new TH2D( "hscale", "Underlying Event by Lead Jet p_{T};#rho (GeV);", 60,0,30, 10,0.0,1.0 );
+  hscale->GetYaxis()->SetRangeUser( 0.000001, 1 );
+  
+  TTree *jt = (TTree*) inFile->Get("HTjetTree");
+  
+  int RunID, EventID, nTowers, nPrimary, nGlobal, nVertices, refMult, gRefMult, nJets, leadNcons, subNcons;
+  double Vx, Vy, Vz, BbcCoincidenceRate, BbcEastRate, BbcWestRate, vpdVz,  leadPt, leadEta, leadPhi, leadEt, subPt, subEta, subPhi, subEt, rho, sigma;
+  
+  jt->SetBranchAddress("EventID", &EventID);   jt->SetBranchAddress("RunID", &RunID);   jt->SetBranchAddress("Vz", &Vz);
+  jt->SetBranchAddress("nTowers", &nTowers);    jt->SetBranchAddress("nPrimary", &nPrimary);   jt->SetBranchAddress("nGlobal", &nGlobal);
+  jt->SetBranchAddress("nVertices", &nVertices);     jt->SetBranchAddress("refMult", &refMult);     jt->SetBranchAddress("gRefMult", &gRefMult);
+  jt->SetBranchAddress("BbcCoincidenceRate", &BbcCoincidenceRate);     jt->SetBranchAddress("BbcEastRate", &BbcEastRate);
+  jt->SetBranchAddress("BbcWestRate", &BbcWestRate);    jt->SetBranchAddress("vpdVz", &vpdVz);    jt->SetBranchAddress("nJets", &nJets);
+  jt->SetBranchAddress("leadPt", &leadPt);    jt->SetBranchAddress("leadEta", &leadEta);    jt->SetBranchAddress("leadPhi", &leadPhi);
+  jt->SetBranchAddress("leadEt", &leadEt);    jt->SetBranchAddress("leadNcons", &leadNcons);     jt->SetBranchAddress("subPt", &subPt);
+  jt->SetBranchAddress("subEta", &subEta);    jt->SetBranchAddress("subPhi", &subPhi);     jt->SetBranchAddress("subEt", &subEt);
+  jt->SetBranchAddress("subNcons", &subNcons);    jt->SetBranchAddress("rho", &rho);     jt->SetBranchAddress("sigma", &sigma);
+  int nEntries=jt->GetEntries();
+
+  for (int i=0; i<nEntries; ++i){
+    jt->GetEntry(i);
+
+    hPrimaryVsGlobal->Fill(nGlobal,nPrimary);
+    hPrimaryVsBBCE->Fill(BbcEastRate,nPrimary);
+    hGlobalVsBBCE->Fill(BbcEastRate,nGlobal);
+
+    if ( (abs(leadPhi) > twopi) || (abs(subPhi) > twopi) ) { cout<<"phi range is funky   "<<leadPhi<<"  "<<subPhi<<endl; }
+    
+    hLeadEtaPhi->Fill(leadPhi,leadEta);
+    hSubEtaPhi->Fill(subPhi,subEta);
+    hPt_UE_BBCE->Fill(leadPt,rho,BbcEastRate);
+    hTowersVsRho->Fill(rho,nTowers);
+    hLeadPtVsRho->Fill(rho,leadPt);
+  }
+      
+  TFile *outFile = new TFile( "plots/pAu_HT_jetPlot.root" ,"RECREATE");
+
+  hPrimaryVsBBCE->Write();
+  hGlobalVsBBCE->Write();
+  hLeadEtaPhi->Write();
+  hSubEtaPhi->Write();
+  hPt_UE_BBCE->Write();
+  hTowersVsRho->Write();
+  hLeadPtVsRho->Write();
+
+  const int nPtBins = 7;
+
+  TH1D * hRho[nPtBins];
+  TH2D * hUE_BBCE[nPtBins];
+  hPt_UE_BBCE->Scale(1./nEntries);
   
   int ptBinLo[nPtBins] = { 0, 5, 10, 15, 25, 35, 50 };
   int ptBinHi[nPtBins] = { 5, 10, 15, 25, 35, 50, 70 };
@@ -104,8 +158,8 @@ int main() {
   hscale->SetStats(0);
   hscale->Draw();
 
-  TLegend *leg = new TLegend(0.65, 0.68, 0.9, 0.9,NULL,"brNDC");    // LEGEND
-  leg->SetBorderSize(1);   leg->SetLineColor(1);   leg->SetLineStyle(1);   leg->SetLineWidth(1);   leg->SetFillColor(0);   leg->SetFillStyle(1001);
+  TLegend *leg1 = new TLegend(0.65, 0.68, 0.9, 0.9,NULL,"brNDC");    // LEGEND
+  leg1->SetBorderSize(1);   leg1->SetLineColor(1);   leg1->SetLineStyle(1);   leg1->SetLineWidth(1);   leg1->SetFillColor(0);   leg1->SetFillStyle(1001);
   TLegendEntry *entry;
   
   for ( int i=0; i<nPtBins; ++i ) {
@@ -119,21 +173,31 @@ int main() {
     hRho[i]->SetMarkerColor( color[i] );
     hRho[i]->Draw("SAME");                                                    // DRAW
     /*entry=*/
-    leg->AddEntry( name, title, lpf );                            // ADD TO LEGEND
+    leg1->AddEntry( name, title, lpf );                            // ADD TO LEGEND
     // hRho[i]->GetMean(1);
-    // entry->SetLineColor( color[i] );   entry->SetMarkerColor( color[i] );
-    // entry->SetFillStyle(1001);   entry->SetTextFont(42);
-    // entry->SetLineStyle(1);   entry->SetLineWidth(2);
-    // entry->SetMarkerStyle(1);   entry->SetMarkerSize(1);
     lpf += "lpf";
   }
 
-  leg->Draw();
+  leg1->Draw();
   c1->Modified();
   c1->cd();
   c1->SetSelected(c1);
   c1->SaveAs("plots/RhoByLeadPt.pdf","PDF");
 
+
+  TCanvas * c0 = new TCanvas( "c0" , "" ,0 ,23 ,1280 ,700 );              // CANVAS
+
+  for ( int i=0; i<nPtBins; ++i ) {
+    name = "plots/UEvsBBCE" + ptBinName[i];
+    title = ptBinString[i];
+    hPt_UE_BBCE->GetXaxis()->SetUserRange(ptBinLo[i], ptBinHi[i]);
+    hUE_BBCE[i] = hPt_UE_BBCE->Project3D( "zy" );       // PROJECT
+    hUE_BBCE[i]->Scale( 1./hUE_BBCE[i]->Integral("width") );                     // NORMALIZE
+    hUE_BBCE[i]->SetTitle(title);
+    hUE_BBCE[i]->Draw("COLZ");
+    c0->SaveAs( name,"PDF");
+  }
+  
   gStyle->SetOptStat(1);
   TCanvas * c2 = new TCanvas( "c2" , "" ,0 ,23 ,1280 ,700 );              // CANVAS
 
@@ -151,7 +215,7 @@ int main() {
   hPrimaryVsGlobal->Draw("COLZ");
   c2->SaveAs("plots/PrimaryVsGlobal.pdf","PDF");
 
-  c2->SetLogz();
+  // c2->SetLogz();
   hTowersVsRho->Scale( norm/(double)hTowersVsRho->Integral("width") );
   hTowersVsRho->Draw("COLZ");
   c2->SaveAs("plots/TowersVsRho.pdf","PDF");
