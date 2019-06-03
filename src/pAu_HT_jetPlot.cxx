@@ -43,6 +43,7 @@ int main() {
   TH2D *hLeadPtVsRho = new TH2D("hLeadPtVsRho","Lead Jet p_{T} vs UE;#rho (GeV);p_{T}^{lead} (GeV)", 70,0.05,35, 70,0,70);
 
   TH2D *hscale = new TH2D( "hscale", "Underlying Event by Lead Jet p_{T};#rho (GeV);", 60,0,30, 10,0.0,1.0 );
+  hscale->GetYaxis()->SetRangeUser( 0.000001, 1 );
   
   TTree *jt = (TTree*) inFile->Get("HTjetTree");
   
@@ -61,7 +62,6 @@ int main() {
   int nEntries=jt->GetEntries();
 
   for (int i=0; i<nEntries; ++i){
-  // for (int i=0; i<1000; ++i){
     jt->GetEntry(i);
 
     hPrimaryVsGlobal->Fill(nGlobal,nPrimary);
@@ -136,21 +136,23 @@ int main() {
 
   gStyle->SetOptStat(1);
   TCanvas * c2 = new TCanvas( "c2" , "" ,0 ,23 ,1280 ,700 );              // CANVAS
+
+  double norm = 1./nEntries;
   
-  hLeadEtaPhi->Scale( 1/(double)hLeadEtaPhi->Integral("width") );
+  hLeadEtaPhi->Scale( norm/(double)hLeadEtaPhi->Integral("width") );
   hLeadEtaPhi->Draw("COLZ");
   c2->SaveAs("plots/LeadEtaPhi.pdf","PDF");
 
-  hSubEtaPhi->Scale( 1/(double)hSubEtaPhi->Integral("width") );
+  hSubEtaPhi->Scale( norm/(double)hSubEtaPhi->Integral("width") );
   hSubEtaPhi->Draw("COLZ");
   c2->SaveAs("plots/SubEtaPhi.pdf","PDF");
 
-  hPrimaryVsGlobal->Scale( 1/(double)hPrimaryVsGlobal->Integral("width") );
+  hPrimaryVsGlobal->Scale( norm/(double)hPrimaryVsGlobal->Integral("width") );
   hPrimaryVsGlobal->Draw("COLZ");
   c2->SaveAs("plots/PrimaryVsGlobal.pdf","PDF");
 
   c2->SetLogz();
-  hTowersVsRho->Scale( 1/(double)hTowersVsRho->Integral("width") );
+  hTowersVsRho->Scale( norm/(double)hTowersVsRho->Integral("width") );
   hTowersVsRho->Draw("COLZ");
   c2->SaveAs("plots/TowersVsRho.pdf","PDF");
 
