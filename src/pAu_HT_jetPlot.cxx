@@ -137,8 +137,8 @@ int main() {
   for ( int i=0; i<nPtBins; ++i ) {
     name = "plots/UEvsBBCE" + ptBinName[i];
     title = ptBinString[i];
-    hPt_UE_BBCE->GetXaxis()->SetUserRange(ptBinLo[i], ptBinHi[i]);
-    hUE_BBCE[i] = hPt_UE_BBCE->Project3D( "zy" );       // PROJECT
+    hPt_UE_BBCE->GetXaxis()->SetRangeUser(ptBinLo[i], ptBinHi[i]);
+    hUE_BBCE[i] = (TH2D*)hPt_UE_BBCE->Project3D( "zy" );       // PROJECT
     hUE_BBCE[i]->Scale( 1./hUE_BBCE[i]->Integral("width") );                     // NORMALIZE
     hUE_BBCE[i]->SetTitle(title);
     hUE_BBCE[i]->Draw("COLZ");
