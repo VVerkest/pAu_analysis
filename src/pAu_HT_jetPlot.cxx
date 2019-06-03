@@ -29,7 +29,7 @@ using namespace std;
 int main() {
 
   const double twopi = 2*3.14159265358979;
-  double Ndj, avg;
+  TString Ndj, avg;
   
   TFile* inFile = new TFile( "out/HTjets/pAu_HTjets.root", "READ" );
   TString lpf = "lpf";
@@ -125,11 +125,11 @@ int main() {
     hRho[i]->SetMarkerColor( color[i] );
     hRho[i]->Draw("SAME");                                                    // DRAW
     /*entry=*/
-    Ndj = hRho[i]->GetEntries();
-    avg = hRho[i]->GetMean(1);                                           // 1 denotes x-axis
+    Ndj = (TString) hRho[i]->GetEntries();
+    avg = (TString) hRho[i]->GetMean(1);                                           // 1 denotes x-axis
     leg1->AddEntry( name, title, lpf );                            // ADD TO LEGEND
-    leg1->AddEntry((TObject*)0,Ndj.c_str(), "");
-    leg1->AddEntry((TObject*)0,avg.c_str(), "");
+    leg1->AddEntry((TObject*)0,Ndj, "");
+    leg1->AddEntry((TObject*)0,avg, "");
     lpf += "lpf";
   }
 
