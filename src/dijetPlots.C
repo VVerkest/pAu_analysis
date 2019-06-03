@@ -57,8 +57,11 @@ void dijetPlots() {
 
   TCanvas * c0 = new TCanvas( "c0" , "" ,0 ,23 ,1280 ,700 );              // CANVAS
   c0->SetLogz();
+  TCanvas * c1 = new TCanvas( "c1" , "" ,0 ,23 ,1280 ,700 );              // CANVAS
+  c1->SetLogz();
   
   for ( int i=0; i<nPtBins; ++i ) {
+    c0->cd();
     name = "plots/UEvsBBCE" + ptBinName[i] + ".pdf";
     title = "Underlying Event vs. BBC East Rate - p_{T}^{lead}: " + ptBinString[i];
     hPt_UE_BBCE->GetXaxis()->SetRangeUser(ptBinLo[i], ptBinHi[i]);
@@ -68,6 +71,7 @@ void dijetPlots() {
     hUE_BBCE[i]->Draw("COLZ");
     c0->SaveAs( name,"PDF");
 
+    c1->cd();
     name = "plots/UEvsBBCsumE" + ptBinName[i] + ".pdf";
     title = "Underlying Event vs. BBC ADC East Sum - p_{T}^{lead}: " + ptBinString[i];
     hPt_UE_BBCsumE->GetXaxis()->SetRangeUser(ptBinLo[i], ptBinHi[i]);
@@ -75,15 +79,15 @@ void dijetPlots() {
     hUE_BBCsumE[i]->Scale( 1./hUE_BBCsumE[i]->GetEntries() );                     // NORMALIZE
     hUE_BBCsumE[i]->SetTitle(title);
     hUE_BBCsumE[i]->Draw("COLZ");
-    c0->SaveAs( name,"PDF");
+    c1->SaveAs( name,"PDF");
   }
   
 
 
 
   
-  TCanvas * c1 = new TCanvas( "c1" , "" ,0 ,23 ,1280 ,700 );              // CANVAS
-  c1->SetLogy();
+  TCanvas * c3 = new TCanvas( "c3" , "" ,0 ,23 ,1280 ,700 );              // CANVAS
+  c3->SetLogy();
   hscale0->SetStats(0);
   hscale0->Draw();
 
@@ -116,31 +120,31 @@ void dijetPlots() {
   }
 
   leg1->Draw();
-  c1->Modified();
-  c1->cd();
-  c1->SetSelected(c1);
-  c1->SaveAs("plots/RhoByLeadPt.pdf","PDF");
+  c3->Modified();
+  c3->cd();
+  c3->SetSelected(c3);
+  c3->SaveAs("plots/RhoByLeadPt.pdf","PDF");
 
   
   gStyle->SetOptStat(1);
-  TCanvas * c2 = new TCanvas( "c2" , "" ,0 ,23 ,1280 ,700 );              // CANVAS
+  TCanvas * c4 = new TCanvas( "c4" , "" ,0 ,23 ,1280 ,700 );              // CANVAS
   
   hLeadEtaPhi->Scale( 1./(double)hLeadEtaPhi->GetEntries() );
   hLeadEtaPhi->Draw("COLZ");
-  c2->SaveAs("plots/LeadEtaPhi.pdf","PDF");
+  c4->SaveAs("plots/LeadEtaPhi.pdf","PDF");
 
   hSubEtaPhi->Scale( 1./(double)hSubEtaPhi->GetEntries() );
   hSubEtaPhi->Draw("COLZ");
-  c2->SaveAs("plots/SubEtaPhi.pdf","PDF");
+  c4->SaveAs("plots/SubEtaPhi.pdf","PDF");
 
   hTowersVsRho->Scale( 1./(double)hTowersVsRho->GetEntries() );
   hTowersVsRho->Draw("COLZ");
-  c2->SaveAs("plots/TowersVsRho.pdf","PDF");
+  c4->SaveAs("plots/TowersVsRho.pdf","PDF");
   
-  c2->SetLogz();
+  c4->SetLogz();
   hPrimaryVsGlobal->Scale( 1./(double)hPrimaryVsGlobal->GetEntries() );
   hPrimaryVsGlobal->Draw("COLZ");
-  c2->SaveAs("plots/PrimaryVsGlobal.pdf","PDF");
+  c4->SaveAs("plots/PrimaryVsGlobal.pdf","PDF");
 
   
   djFile->Write();
