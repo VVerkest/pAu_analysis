@@ -31,7 +31,7 @@ int main ( int argc, const char** argv ) {
     vector<string> arguments( argv+1, argv+argc );
     inFile = "production_pAu200_2015/HT/pAu_2015_200_HT*.root";
     outFile = "out/pAuJets_HT.root";
-    nEvents = 10000;
+    nEvents = 10000000;
   }
   else { cerr<< "incorrect number of command line arguments"; return -1; }
 
