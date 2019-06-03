@@ -46,7 +46,7 @@ void dijetPlots() {
   
   int ptBinLo[nPtBins] = { 10, 15, 20, 30, 40 };
   int ptBinHi[nPtBins] = { 15, 20, 30, 40, 100 };
-  TString ptBinString[nPtBins] =d { "10-15 GeV", "15-20 GeV",  "20-30 GeV", "30-40 GeV", ">40 GeV" };
+  TString ptBinString[nPtBins] = { "10-15 GeV", "15-20 GeV",  "20-30 GeV", "30-40 GeV", ">40 GeV" };
   TString ptBinName[nPtBins] = { "_10_15", "_15_20", "_20_30", "_30_40", "_40" };
   int color[nPtBins] = { 633, 613, 596, 414, 797 };
   int marker[nPtBins] = { 33, 34, 22, 21, 20 };
