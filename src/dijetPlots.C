@@ -96,14 +96,11 @@ void dijetPlots() {
   leg1->AddEntry((TObject*)0,"#bf{<#rho> (GeV)}", "");
   
   for ( int i=0; i<nPtBins; ++i ) {
-    name = "LeadPtVsRho" + ptBinName[i];
-    title = ptBinString[i];
+    name = "LeadPtVsRho" + ptBinName[i];      title = ptBinString[i];
     hRho[i] = hLeadPtVsRho->ProjectionX( name, ptBinLo[i], ptBinHi[i] );       // PROJECT
     hRho[i]->SetStats(0);
-    hRho[i]->Scale( 1./hRho[i]->Integral() );                     // NORMALIZE
-    hRho[i]->SetLineColor( color[i] );
-    hRho[i]->SetMarkerStyle( marker[i] );
-    hRho[i]->SetMarkerColor( color[i] );
+    // hRho[i]->Scale( 1./hRho[i]->Integral() );                     // NORMALIZE
+    hRho[i]->SetLineColor( color[i] );    hRho[i]->SetMarkerStyle( marker[i] );    hRho[i]->SetMarkerColor( color[i] );
     hRho[i]->Draw("SAME");                                                    // DRAW
     /*entry=*/
     Ndj = ""; avg = "";
