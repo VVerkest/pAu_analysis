@@ -4,6 +4,9 @@
 void dijetPlots() {
   
   const float pi = 3.141592;
+  const double twopi = 2*3.14159265358979;
+  TString Ndj, avg;
+  TString lpf = "lpf";
   TH1::SetDefaultSumw2();  TH2::SetDefaultSumw2();  TH3::SetDefaultSumw2();
 
   TFile* inFile = new TFile( "out/MB/pAu_HT_dijets.root", "READ" );
@@ -19,12 +22,13 @@ void dijetPlots() {
   TH2D *hGlobalVsBBC = (TH2D*) inFile->Get("hGlobalVsBBC");
   TH2D *hPrimaryVsBBCE = (TH2D*) inFile->Get("hPrimaryVsBBCE");
   TH2D *hGlobalVsBBCE = (TH2D*) inFile->Get("hGlobalVsBBCE");
+  TH2D *hPrimaryVsGlobal = new TH2D("hPrimaryVsGlobal","# Primary Tracks vs. # Global Tracks;# Global Tracks;# Primary Tracks", 150,0,3000, 150,0,150 );
   TH2D *hGlobalVsBBCsumE = (TH2D*) inFile->Get("hGlobalVsBBCsumE");
   TH2D *hLeadEtaPhi =(TH2D*) inFile->Get("hLeadEtaPhi");
   TH2D *hSubEtaPhi = (TH2D*) inFile->Get("hSubEtaPhi");
   TH2D *hTowersVsRho = (TH2D*) inFile->Get("hTowersVsRho");
   TH2D *hLeadPtVsRho = (TH2D*) inFile->Get("hLeadPtVsRho");
-  TH1D *hTowersPerEvent = (TH12D*) inFile->Get("hTowersPerEvent");
+  TH1D *hTowersPerEvent = (TH1D*) inFile->Get("hTowersPerEvent");
   TH1D *hPrimaryPerEvent = (TH1D*) inFile->Get("hPrimaryPerEvent");
 
   inFile->Close();
@@ -32,16 +36,17 @@ void dijetPlots() {
   TFile *djFile = new TFile( "plots/pAu_plots.root" ,"RECREATE");
 
 
-  TH2D *hscale = new TH2D( "hscale", "Underlying Event by Lead Jet p_{T};#rho (GeV);", 20,0,10, 10,0.0001, 1.0 );
+  TH2D *hscale0 = new TH2D( "hscale0", "Underlying Event by Lead Jet p_{T};#rho (GeV);", 20,0,10, 10,0.0001, 1.0 );
 
   const int nPtBins = 5;
   TH1D * hRho[nPtBins];
   TH2D * hUE_BBCE[nPtBins];
+  TH2D * hUE_BBCsumE[nPtBins];
   //hPt_UE_BBCE->Scale(1./nEntries);
   
   int ptBinLo[nPtBins] = { 10, 15, 20, 30, 40 };
   int ptBinHi[nPtBins] = { 15, 20, 30, 40, 100 };
-  TString ptBinString[nPtBins] = { "10-15 GeV", "15-20 GeV",  "20-30 GeV", "30-40 GeV", ">40 GeV" };
+  TString ptBinString[nPtBins] =d { "10-15 GeV", "15-20 GeV",  "20-30 GeV", "30-40 GeV", ">40 GeV" };
   TString ptBinName[nPtBins] = { "_10_15", "_15_20", "_20_30", "_30_40", "_40" };
   int color[nPtBins] = { 633, 613, 596, 414, 797 };
   int marker[nPtBins] = { 33, 34, 22, 21, 20 };
@@ -62,6 +67,15 @@ void dijetPlots() {
     hUE_BBCE[i]->SetTitle(title);
     hUE_BBCE[i]->Draw("COLZ");
     c0->SaveAs( name,"PDF");
+
+    name = "plots/UEvsBBCsumE" + ptBinName[i] + ".pdf";
+    title = "Underlying Event vs. BBC ADC East Sum - p_{T}^{lead}: " + ptBinString[i];
+    hPt_UE_BBCsumE->GetXaxis()->SetRangeUser(ptBinLo[i], ptBinHi[i]);
+    hUE_BBCsumE[i] = (TH2D*)hPt_UE_BBCsumE->Project3D( "yz" );       // PROJECT
+    hUE_BBCsumE[i]->Scale( 1./hUE_BBCsumE[i]->GetEntries() );                     // NORMALIZE
+    hUE_BBCsumE[i]->SetTitle(title);
+    hUE_BBCsumE[i]->Draw("COLZ");
+    c0->SaveAs( name,"PDF");
   }
   
 
@@ -70,8 +84,8 @@ void dijetPlots() {
   
   TCanvas * c1 = new TCanvas( "c1" , "" ,0 ,23 ,1280 ,700 );              // CANVAS
   c1->SetLogy();
-  hscale->SetStats(0);
-  hscale->Draw();
+  hscale0->SetStats(0);
+  hscale0->Draw();
 
   TLegend *leg1 = new TLegend(0.65, 0.68, 0.9, 0.9,NULL,"brNDC");    // LEGEND
   leg1->SetBorderSize(1);   leg1->SetLineColor(1);   leg1->SetLineStyle(1);   leg1->SetLineWidth(1);   leg1->SetFillColor(0);   leg1->SetFillStyle(1001);
@@ -110,8 +124,6 @@ void dijetPlots() {
   
   gStyle->SetOptStat(1);
   TCanvas * c2 = new TCanvas( "c2" , "" ,0 ,23 ,1280 ,700 );              // CANVAS
-
-  double norm = 1./nEntries;
   
   hLeadEtaPhi->Scale( 1./(double)hLeadEtaPhi->GetEntries() );
   hLeadEtaPhi->Draw("COLZ");
