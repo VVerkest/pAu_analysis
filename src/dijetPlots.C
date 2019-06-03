@@ -9,56 +9,128 @@ void dijetPlots() {
   TFile* inFile = new TFile( "out/MB/pAu_HT_dijets.root", "READ" );
 
 
-  TH3D *hPrimaryTracks = (TH3D*) inFile->Get("hPrimaryTracks");
   TH3D *hVertex = (TH3D*) inFile->Get("hVertex");
   TH3D *hPt_UE_BBCE = (TH3D*) inFile->Get("hPt_UE_BBCE");
-  TH3D *hTowEtEtaPhi = (TH3D*) inFile->Get("hTowEtEtaPhi");
+  TH3D *hPt_UE_BBCsumE = (TH3D*) inFile->Get("hPt_UE_BBCsumE");
   TH2D *hTowersPerRun = (TH2D*) inFile->Get("hTowersPerRun");
   TH2D *hPrimaryPerRun = (TH2D*) inFile->Get("hPrimaryPerRun");
   TH2D *hnPrimaryVSnTowers = (TH2D*) inFile->Get("hnPrimaryVSnTowers");
-  TH2D *hDCAvsPt = (TH2D*) inFile->Get("hDCAvsPt");
   TH2D *hPrimaryVsBBC = (TH2D*) inFile->Get("hPrimaryVsBBC");
   TH2D *hGlobalVsBBC = (TH2D*) inFile->Get("hGlobalVsBBC");
-  TH2D *hTowEt = (TH2D*) inFile->Get("hTowEt");
   TH2D *hPrimaryVsBBCE = (TH2D*) inFile->Get("hPrimaryVsBBCE");
   TH2D *hGlobalVsBBCE = (TH2D*) inFile->Get("hGlobalVsBBCE");
+  TH2D *hGlobalVsBBCsumE = (TH2D*) inFile->Get("hGlobalVsBBCsumE");
   TH2D *hLeadEtaPhi =(TH2D*) inFile->Get("hLeadEtaPhi");
   TH2D *hSubEtaPhi = (TH2D*) inFile->Get("hSubEtaPhi");
   TH2D *hTowersVsRho = (TH2D*) inFile->Get("hTowersVsRho");
   TH2D *hLeadPtVsRho = (TH2D*) inFile->Get("hLeadPtVsRho");
   TH1D *hTowersPerEvent = (TH12D*) inFile->Get("hTowersPerEvent");
   TH1D *hPrimaryPerEvent = (TH1D*) inFile->Get("hPrimaryPerEvent");
-  TH1D *hTowerMult =(TH1D*) inFile->Get("hTowerMult");
-
-  // hPrimaryTracks
-  // hVertex
-  // hTowersPerEvent
-  // hTowersPerRun
-  // hPrimaryPerEvent
-  // hPrimaryPerRun
-  // hnPrimaryVSnTowers
-  // hPrimaryVsBBC
-  // hGlobalVsBBC
-  // hTowEt
-  // hTowEtEtaPhi
-  // hDCAvsPt
-  // hTowerMult
-  // hPrimaryVsBBCE
-  // hGlobalVsBBCE
-  // hLeadEtaPhi
-  // hSubEtaPhi
-  // hPt_UE_BBCE
-  // hTowersVsRho
-  // hLeadPtVsRho
 
   inFile->Close();
 
   TFile *djFile = new TFile( "plots/pAu_plots.root" ,"RECREATE");
 
-  // TCanvas * c0 = new TCanvas( "c0" , "" ,0 ,23 ,1280 ,700 );
-  // c0->SetLogz();
-  // hPrimaryPerEvent->Draw("COLZ");
-  // hVertex->Draw();
+
+  TH2D *hscale = new TH2D( "hscale", "Underlying Event by Lead Jet p_{T};#rho (GeV);", 20,0,10, 10,0.0001, 1.0 );
+
+  const int nPtBins = 5;
+  TH1D * hRho[nPtBins];
+  TH2D * hUE_BBCE[nPtBins];
+  //hPt_UE_BBCE->Scale(1./nEntries);
   
+  int ptBinLo[nPtBins] = { 10, 15, 20, 30, 40 };
+  int ptBinHi[nPtBins] = { 15, 20, 30, 40, 100 };
+  TString ptBinString[nPtBins] = { "10-15 GeV", "15-20 GeV",  "20-30 GeV", "30-40 GeV", ">40 GeV" };
+  TString ptBinName[nPtBins] = { "_10_15", "_15_20", "_20_30", "_30_40", "_40" };
+  int color[nPtBins] = { 633, 613, 596, 414, 797 };
+  int marker[nPtBins] = { 33, 34, 22, 21, 20 };
+  TString name, title;
+
+
+
+
+  TCanvas * c0 = new TCanvas( "c0" , "" ,0 ,23 ,1280 ,700 );              // CANVAS
+  c0->SetLogz();
+  
+  for ( int i=0; i<nPtBins; ++i ) {
+    name = "plots/UEvsBBCE" + ptBinName[i] + ".pdf";
+    title = "Underlying Event vs. BBC East Rate - p_{T}^{lead}: " + ptBinString[i];
+    hPt_UE_BBCE->GetXaxis()->SetRangeUser(ptBinLo[i], ptBinHi[i]);
+    hUE_BBCE[i] = (TH2D*)hPt_UE_BBCE->Project3D( "yz" );       // PROJECT
+    hUE_BBCE[i]->Scale( 1./hUE_BBCE[i]->GetEntries() );                     // NORMALIZE
+    hUE_BBCE[i]->SetTitle(title);
+    hUE_BBCE[i]->Draw("COLZ");
+    c0->SaveAs( name,"PDF");
+  }
+  
+
+
+
+  
+  TCanvas * c1 = new TCanvas( "c1" , "" ,0 ,23 ,1280 ,700 );              // CANVAS
+  c1->SetLogy();
+  hscale->SetStats(0);
+  hscale->Draw();
+
+  TLegend *leg1 = new TLegend(0.65, 0.68, 0.9, 0.9,NULL,"brNDC");    // LEGEND
+  leg1->SetBorderSize(1);   leg1->SetLineColor(1);   leg1->SetLineStyle(1);   leg1->SetLineWidth(1);   leg1->SetFillColor(0);   leg1->SetFillStyle(1001);
+  TLegendEntry *entry;
+  leg1->SetNColumns(3);
+  leg1->AddEntry((TObject*)0,"#bf{p_{T}^{Lead} (GeV)}", "");
+  leg1->AddEntry((TObject*)0,"#bf{# of Dijets}", "");
+  leg1->AddEntry((TObject*)0,"#bf{<#rho> (GeV)}", "");
+  
+  for ( int i=0; i<nPtBins; ++i ) {
+    name = "LeadPtVsRho" + ptBinName[i];
+    title = ptBinString[i];
+    hRho[i] = hLeadPtVsRho->ProjectionX( name, ptBinLo[i], ptBinHi[i] );       // PROJECT
+    hRho[i]->SetStats(0);
+    hRho[i]->Scale( 1./hRho[i]->Integral() );                     // NORMALIZE
+    hRho[i]->SetLineColor( color[i] );
+    hRho[i]->SetMarkerStyle( marker[i] );
+    hRho[i]->SetMarkerColor( color[i] );
+    hRho[i]->Draw("SAME");                                                    // DRAW
+    /*entry=*/
+    Ndj = ""; avg = "";
+    Ndj += hRho[i]->GetEntries();
+    avg += hRho[i]->GetMean(1);                                           // 1 denotes x-axis
+    leg1->AddEntry( name, title, lpf );                            // ADD TO LEGEND
+    leg1->AddEntry((TObject*)0,Ndj, "");
+    leg1->AddEntry((TObject*)0,avg, "");
+    lpf += "lpf";
+  }
+
+  leg1->Draw();
+  c1->Modified();
+  c1->cd();
+  c1->SetSelected(c1);
+  c1->SaveAs("plots/RhoByLeadPt.pdf","PDF");
+
+  
+  gStyle->SetOptStat(1);
+  TCanvas * c2 = new TCanvas( "c2" , "" ,0 ,23 ,1280 ,700 );              // CANVAS
+
+  double norm = 1./nEntries;
+  
+  hLeadEtaPhi->Scale( 1./(double)hLeadEtaPhi->GetEntries() );
+  hLeadEtaPhi->Draw("COLZ");
+  c2->SaveAs("plots/LeadEtaPhi.pdf","PDF");
+
+  hSubEtaPhi->Scale( 1./(double)hSubEtaPhi->GetEntries() );
+  hSubEtaPhi->Draw("COLZ");
+  c2->SaveAs("plots/SubEtaPhi.pdf","PDF");
+
+  hTowersVsRho->Scale( 1./(double)hTowersVsRho->GetEntries() );
+  hTowersVsRho->Draw("COLZ");
+  c2->SaveAs("plots/TowersVsRho.pdf","PDF");
+  
+  c2->SetLogz();
+  hPrimaryVsGlobal->Scale( 1./(double)hPrimaryVsGlobal->GetEntries() );
+  hPrimaryVsGlobal->Draw("COLZ");
+  c2->SaveAs("plots/PrimaryVsGlobal.pdf","PDF");
+
+  
+  djFile->Write();
   djFile->Close();
 }

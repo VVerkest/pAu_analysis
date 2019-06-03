@@ -89,17 +89,17 @@ int main() {
   hTowersVsRho->Write();
   hLeadPtVsRho->Write();
 
-  const int nPtBins = 7;
+  const int nPtBins = 5;
   TH1D * hRho[nPtBins];
   TH2D * hUE_BBCE[nPtBins];
   //hPt_UE_BBCE->Scale(1./nEntries);
   
-  int ptBinLo[nPtBins] = { 0, 5, 10, 15, 25, 35, 50 };
-  int ptBinHi[nPtBins] = { 5, 10, 15, 25, 35, 50, 70 };
-  TString ptBinString[nPtBins] = { "<5 GeV", "5-10 GeV", "10-15 GeV", "15-25 GeV",  "25-35 GeV", "35-50 GeV", ">50 GeV" };
-  TString ptBinName[nPtBins] = { "_5", "_5_10", "_10_15", "_15_25", "_25_35", "_35_50", "_50" };
-  int color[nPtBins] = { 1, 633, 613, 596, 839, 414, 797 };
-  int marker[nPtBins] = { 29, 33, 34, 23, 22, 21, 20 };
+  int ptBinLo[nPtBins] = { 10, 15, 20, 30, 40 };
+  int ptBinHi[nPtBins] = { 15, 20, 30, 40, 100 };
+  TString ptBinString[nPtBins] = { "10-15 GeV", "15-20 GeV",  "20-30 GeV", "30-40 GeV", ">40 GeV" };
+  TString ptBinName[nPtBins] = { "_10_15", "_15_20", "_20_30", "_30_40", "_40" };
+  int color[nPtBins] = { 633, 613, 596, 414, 797 };
+  int marker[nPtBins] = { 33, 34, 22, 21, 20 };
   TString name, title;
 
   TCanvas * c1 = new TCanvas( "c1" , "" ,0 ,23 ,1280 ,700 );              // CANVAS
