@@ -28,6 +28,8 @@ using namespace std;
 
 int main() {
 
+  const double twopi = 2*3.14159265358979;
+  
   TFile* inFile = new TFile( "out/HTjets/pAu_HTjets.root", "READ" );
   TString lpf = "lpf";
 
@@ -66,7 +68,7 @@ int main() {
     hPrimaryVsBBCE->Fill(BbcEastRate,nPrimary);
     hGlobalVsBBCE->Fill(BbcEastRate,nGlobal);
 
-    if ( (abs(leadPhi) > 6.25) || (abs(subPhi) > 6.25) ) { cout<<"phi range is funky   "<<leadPhi<<"  "<<subPhi<<endl; }
+    if ( (abs(leadPhi) > twopi) || (abs(subPhi) > twopi) ) { cout<<"phi range is funky   "<<leadPhi<<"  "<<subPhi<<endl; }
     
     hLeadEtaPhi->Fill(leadPhi,leadEta);
     hSubEtaPhi->Fill(subPhi,subEta);
