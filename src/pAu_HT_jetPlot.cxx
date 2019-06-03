@@ -37,14 +37,14 @@ int main() {
 
   TH2D *hPrimaryVsBBCE = new TH2D("hPrimaryVsBBCE","# Primary Tracks vs. BBC East Rate;BBC East Rate;# Primary Tracks", 50000,0,5000000, 150,0,150 );
   TH2D *hGlobalVsBBCE = new TH2D("hGlobalVsBBCE","# Global Tracks vs. BBC East Rate;BBC East Rate;# Global Tracks", 50000,0,5000000, 300,0,3000 );
-  TH2D *hPrimaryVsGlobal = new TH2D("hPrimaryVsGlobal","# Primary Tracks vs. # Global Tracks;# Global Tracks;# Primary Tracks", 150,0,3000, 175,0,150 );
+  TH2D *hPrimaryVsGlobal = new TH2D("hPrimaryVsGlobal","# Primary Tracks vs. # Global Tracks;# Global Tracks;# Primary Tracks", 150,0,3000, 150,0,150 );
   TH2D *hLeadEtaPhi = new TH2D("hLeadEtaPhi","Lead Jet #eta vs. #phi;#phi;#eta", 50,0.0,6.3, 50,-1.0,1.0);
   TH2D *hSubEtaPhi = new TH2D("hSubEtaPhi","Sub Jet #eta vs. #phi;#phi;#eta", 50,0.0,6.3, 50,-1.0,1.0);
   TH3D *hPt_UE_BBCE = new TH3D("hPt_UE_BBCE","UE vs. BBC East Rate;Lead Jet p_{T} (GeV);#rho (GeV);BBC East Rate", 50,0.0,25, 60,0,30, 700,0,70000000);
   TH2D *hTowersVsRho = new TH2D("hTowersVsRho","# of Towers vs. UE;#rho (GeV);# of Towers", 80,0,35, 100,0,1000);
   TH2D *hLeadPtVsRho = new TH2D("hLeadPtVsRho","Lead Jet p_{T} vs UE;#rho (GeV);p_{T}^{lead} (GeV)", 70,0.05,35, 70,0,70);
 
-  TH2D *hscale = new TH2D( "hscale", "Underlying Event by Lead Jet p_{T};#rho (GeV);", 60,0,30, 10,0.000001, 1.0 );
+  TH2D *hscale = new TH2D( "hscale", "Underlying Event by Lead Jet p_{T};#rho (GeV);", 60,0,30, 10,0.0001, 1.0 );
   // hscale->GetYaxis()->SetRangeUser( 0.000001, 1 );
   
   TTree *jt = (TTree*) inFile->Get("HTjetTree");
@@ -169,11 +169,11 @@ int main() {
   hSubEtaPhi->Draw("COLZ");
   c2->SaveAs("plots/SubEtaPhi.pdf","PDF");
 
+  c2->SetLogz();
   hPrimaryVsGlobal->Scale( 1./(double)hPrimaryVsGlobal->GetEntries() );
   hPrimaryVsGlobal->Draw("COLZ");
   c2->SaveAs("plots/PrimaryVsGlobal.pdf","PDF");
 
-  c2->SetLogz();
   hTowersVsRho->Scale( 1./(double)hTowersVsRho->GetEntries() );
   hTowersVsRho->Draw("COLZ");
   c2->SaveAs("plots/TowersVsRho.pdf","PDF");
