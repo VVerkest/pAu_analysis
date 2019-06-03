@@ -34,8 +34,8 @@ int main() {
   TH2D *hPrimaryVsBBCE = new TH2D("hPrimaryVsBBCE","# Primary Tracks vs. BBC East Rate;BBC East Rate;# Primary Tracks", 50000,0,5000000, 150,0,150 );
   TH2D *hGlobalVsBBCE = new TH2D("hGlobalVsBBCE","# Global Tracks vs. BBC East Rate;BBC East Rate;# Global Tracks", 50000,0,5000000, 300,0,3000 );
   TH2D *hPrimaryVsGlobal = new TH2D("hPrimaryVsGlobal","# Primary Tracks vs. # Global Tracks;# Global Tracks;# Primary Tracks", 300,0,3000, 150,0,150 );
-  TH2D *hLeadEtaPhi = new TH2D("hLeadEtaPhi","Lead Jet #eta vs. #phi;#phi;#eta", 126,0,6.3, 100,-1.0,1.0);
-  TH2D *hSubEtaPhi = new TH2D("hSubEtaPhi","Sub Jet #eta vs. #phi;#phi;#eta", 126,0,6.3, 100,-1.0,1.0);
+  TH2D *hLeadEtaPhi = new TH2D("hLeadEtaPhi","Lead Jet #eta vs. #phi;#phi;#eta", 126,0.0,6.3, 100,-1.0,1.0);
+  TH2D *hSubEtaPhi = new TH2D("hSubEtaPhi","Sub Jet #eta vs. #phi;#phi;#eta", 126,0.0,6.3, 100,-1.0,1.0);
   TH3D *hPt_UE_BBCE = new TH3D("hPt_UE_BBCE","UE vs. BBC East Rate;Lead Jet p_{T} (GeV);Underlying Event (GeV);BBC East Rate", 300,0,300, 40,0,200, 3500,0,3500000);
   TH2D *hTowersVsRho = new TH2D("hTowersVsRho","# of Towers vs. UE;#rho (GeV);# of Towers", 80,0,35, 100,0,1000);
   TH2D *hLeadPtVsRho = new TH2D("hLeadPtVsRho","Lead Jet p_{T} vs UE;#rho (GeV);p_{T}^{lead} (GeV)", 70,0.05,35, 70,0,70);
@@ -65,6 +65,9 @@ int main() {
     hPrimaryVsGlobal->Fill(nGlobal,nPrimary);
     hPrimaryVsBBCE->Fill(BbcEastRate,nPrimary);
     hGlobalVsBBCE->Fill(BbcEastRate,nGlobal);
+
+    if ( (abs(leadPhi) > 6.25) || (abs(subPhi) > 6.25) ) { cout<<"phi range is funky   "<<leadPhi<<"  "<<subPhi<<endl; }
+    
     hLeadEtaPhi->Fill(leadPhi,leadEta);
     hSubEtaPhi->Fill(subPhi,subEta);
     hPt_UE_BBCE->Fill(leadPt,rho,BbcEastRate);
@@ -90,8 +93,8 @@ int main() {
   int ptBinHi[nPtBins] = { 5, 10, 15, 25, 35, 50, 70 };
   TString ptBinString[nPtBins] = { "<5 GeV", "5-10 GeV", "10-15 GeV", "15-25 GeV",  "25-35 GeV", "35-50 GeV", ">50 GeV" };
   TString ptBinName[nPtBins] = { "_5", "_5_10", "_10_15", "_15_25", "_25_35", "_35_50", "_50" };
-  int color[nPtBins] = { 29, 33, 34, 23, 22, 21, 20 };
-  int marker[nPtBins] = { 1, 633, 613, 596, 839, 414, 797 };
+  int color[nPtBins] = { 1, 633, 613, 596, 839, 414, 797 };
+  int marker[nPtBins] = { 29, 33, 34, 23, 22, 21, 20 };
   TString name, title;
 
   TCanvas * c1 = new TCanvas( "c1" , "" ,0 ,23 ,1280 ,700 );              // CANVAS
@@ -99,7 +102,7 @@ int main() {
   hscale->SetStats(0);
   hscale->Draw();
 
-  TLegend *leg = new TLegend(0.75, 0.68, 0.9, 0.9,NULL,"brNDC");    // LEGEND
+  TLegend *leg = new TLegend(0.65, 0.68, 0.9, 0.9,NULL,"brNDC");    // LEGEND
   leg->SetBorderSize(1);   leg->SetLineColor(1);   leg->SetLineStyle(1);   leg->SetLineWidth(1);   leg->SetFillColor(0);   leg->SetFillStyle(1001);
   TLegendEntry *entry;
   
@@ -131,13 +134,21 @@ int main() {
 
   gStyle->SetOptStat(1);
   TCanvas * c2 = new TCanvas( "c2" , "" ,0 ,23 ,1280 ,700 );              // CANVAS
+  
+  hLeadEtaPhi->Scale( 1/(double)hLeadEtaPhi->Integral("width") );
   hLeadEtaPhi->Draw("COLZ");
-  c2->SaveAs("plotshLeadEtaPhi.pdf","PDF");  
+  c2->SaveAs("plots/LeadEtaPhi.pdf","PDF");
+
+  hSubEtaPhi->Scale( 1/(double)hSubEtaPhi->Integral("width") );
   hSubEtaPhi->Draw("COLZ");
   c2->SaveAs("plots/SubEtaPhi.pdf","PDF");
+
+  hPrimaryVsGlobal->Scale( 1/(double)hPrimaryVsGlobal->Integral("width") );
   hPrimaryVsGlobal->Draw("COLZ");
-  c2->SaveAs("plots/PrimaryVsGlobal.pdf","PDF");  
+  c2->SaveAs("plots/PrimaryVsGlobal.pdf","PDF");
+
   c2->SetLogz();
+  hTowersVsRho->Scale( 1/(double)hTowersVsRho->Integral("width") );
   hTowersVsRho->Draw("COLZ");
   c2->SaveAs("plots/TowersVsRho.pdf","PDF");
 
@@ -148,6 +159,12 @@ int main() {
   return 0;
 }
 
+
+
+
+  
+
+  
 
 //  {
 //    auto c3 = new TCanvas("c2","c2",500,300);
