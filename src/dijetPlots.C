@@ -137,10 +137,10 @@ void dijetPlots() {
   hTowersVsRho->Draw("COLZ");
   c4->SaveAs("plots/TowersVsRho.pdf","PDF");
   
-  c4->SetLogz();
-  hPrimaryVsGlobal->Scale( 1./(double)hPrimaryVsGlobal->GetEntries() );
-  hPrimaryVsGlobal->Draw("COLZ");
-  c4->SaveAs("plots/PrimaryVsGlobal.pdf","PDF");
+  // c4->SetLogz();
+  // hPrimaryVsGlobal->Scale( 1./(double)hPrimaryVsGlobal->GetEntries() );
+  // hPrimaryVsGlobal->Draw("COLZ");
+  // c4->SaveAs("plots/PrimaryVsGlobal.pdf","PDF");
 
   inFile->Close();
 
