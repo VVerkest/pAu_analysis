@@ -11,7 +11,6 @@ void dijetPlots() {
 
   TFile* inFile = new TFile( "out/HTjets/pAu_HT_dijets.root", "READ" );
 
-
   TH3D *hVertex = (TH3D*) inFile->Get("hVertex");
   TH3D *hPt_UE_BBCE = (TH3D*) inFile->Get("hPt_UE_BBCE");
   TH3D *hPt_UE_BBCsumE = (TH3D*) inFile->Get("hPt_UE_BBCsumE");
@@ -31,14 +30,12 @@ void dijetPlots() {
   TH1D *hTowersPerEvent = (TH1D*) inFile->Get("hTowersPerEvent");
   TH1D *hPrimaryPerEvent = (TH1D*) inFile->Get("hPrimaryPerEvent");
 
-
   TH2D *hscale0 = new TH2D( "hscale0", "Underlying Event by Lead Jet p_{T};#rho (GeV);", 20,0,10, 10,0.000001, 1.0 );
 
   const int nPtBins = 5;
   TH1D * hRho[nPtBins];
   TH2D * hUE_BBCE[nPtBins];
   TH2D * hUE_BBCsumE[nPtBins];
-  //hPt_UE_BBCE->Scale(1./nEntries);
   
   int ptBinLo[nPtBins] = { 10, 15, 20, 30, 40 };
   int ptBinHi[nPtBins] = { 15, 20, 30, 40, 100 };
@@ -94,12 +91,14 @@ void dijetPlots() {
   leg1->AddEntry((TObject*)0,"#bf{p_{T}^{Lead} (GeV)}", "");
   leg1->AddEntry((TObject*)0,"#bf{# of Dijets}", "");
   leg1->AddEntry((TObject*)0,"#bf{<#rho> (GeV)}", "");
-  
+
+  hLeadPtVsRho->GetXaxis()->SetRange(2,80)
   for ( int i=0; i<nPtBins; ++i ) {
     name = "LeadPtVsRho" + ptBinName[i];      title = ptBinString[i];
-    hRho[i] = hLeadPtVsRho->ProjectionX( name, ptBinLo[i], ptBinHi[i] );       // PROJECT
+    hLeadPtVsRho->GetYaxis()->SetRangeUser(ptBinLo[i], ptBinHi[i]);
+    hRho[i] = hLeadPtVsRho->ProjectionX( name );       // PROJECT
     hRho[i]->SetStats(0);
-    // hRho[i]->Scale( 1./hRho[i]->Integral() );                     // NORMALIZE
+    hRho[i]->Scale( 1./hRho[i]->Integral() );                     // NORMALIZE
     hRho[i]->SetLineColor( color[i] );    hRho[i]->SetMarkerStyle( marker[i] );    hRho[i]->SetMarkerColor( color[i] );
     hRho[i]->Draw("SAME");                                                    // DRAW
     /*entry=*/
