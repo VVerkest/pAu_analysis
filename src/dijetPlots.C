@@ -40,8 +40,8 @@ void dijetPlots() {
   TH2D * hUE_BBCE[nPtBins];
   TH2D * hUE_BBCsumE[nPtBins];
   
-  double ptBinLo[nPtBins] = { 10, 15, 20, 30, 40 };
-  double ptBinHi[nPtBins] = { 15, 20, 30, 40, 100 };
+  double ptBinLo[nPtBins] = { 10.0, 15.0, 20.0, 30.0, 40.0 };
+  double ptBinHi[nPtBins] = { 15.0, 20.0, 30.0, 40.0, 100.0 };
   TString ptBinString[nPtBins] = { "10-15 GeV", "15-20 GeV",  "20-30 GeV", "30-40 GeV", ">40 GeV" };
   TString ptBinName[nPtBins] = { "_10_15", "_15_20", "_20_30", "_30_40", "_40" };
   int color[nPtBins] = { 633, 613, 596, 414, 797 };
