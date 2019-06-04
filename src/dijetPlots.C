@@ -30,7 +30,10 @@ void dijetPlots() {
   TH1D *hTowersPerEvent = (TH1D*) inFile->Get("hTowersPerEvent");
   TH1D *hPrimaryPerEvent = (TH1D*) inFile->Get("hPrimaryPerEvent");
 
-  TH2D *hscale0 = new TH2D( "hscale0", "Underlying Event by Lead Jet p_{T};#rho (GeV);", 20,0,10, 10,0.000001, 1.0 );
+  hPt_UE_BBCsumE->GetYaxis()->SetRange( 2,50 );
+  hPt_UE_BBCE->GetYaxis()->SetRange( 2,50 );
+  
+  TH2D *hscale0 = new TH2D( "hscale0", "Underlying Event by Lead Jet p_{T};#rho (GeV);", 20,0,10, 10,0.001, 1.0 );
 
   const int nPtBins = 5;
   TH1D * hRho[nPtBins];
