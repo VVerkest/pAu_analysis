@@ -92,7 +92,7 @@ void dijetPlots() {
   leg1->AddEntry((TObject*)0,"#bf{# of Dijets}", "");
   leg1->AddEntry((TObject*)0,"#bf{<#rho> (GeV)}", "");
 
-  hLeadPtVsRho->GetXaxis()->SetRange(2,80)
+  hLeadPtVsRho->GetXaxis()->SetRange(2,80);
   for ( int i=0; i<nPtBins; ++i ) {
     name = "LeadPtVsRho" + ptBinName[i];      title = ptBinString[i];
     hLeadPtVsRho->GetYaxis()->SetRangeUser(ptBinLo[i], ptBinHi[i]);
