@@ -40,8 +40,8 @@ void dijetPlots() {
   TH2D * hUE_BBCE[nPtBins];
   TH2D * hUE_BBCsumE[nPtBins];
   
-  int ptBinLo[nPtBins] = { 10, 15, 20, 30, 40 };
-  int ptBinHi[nPtBins] = { 15, 20, 30, 40, 100 };
+  double ptBinLo[nPtBins] = { 10, 15, 20, 30, 40 };
+  double ptBinHi[nPtBins] = { 15, 20, 30, 40, 100 };
   TString ptBinString[nPtBins] = { "10-15 GeV", "15-20 GeV",  "20-30 GeV", "30-40 GeV", ">40 GeV" };
   TString ptBinName[nPtBins] = { "_10_15", "_15_20", "_20_30", "_30_40", "_40" };
   int color[nPtBins] = { 633, 613, 596, 414, 797 };
@@ -98,8 +98,7 @@ void dijetPlots() {
   hLeadPtVsRho->GetXaxis()->SetRange(2,80);
   for ( int i=0; i<nPtBins; ++i ) {
     name = "LeadPtVsRho" + ptBinName[i];      title = ptBinString[i];
-    hLeadPtVsRho->GetYaxis()->SetRangeUser(ptBinLo[i], ptBinHi[i]);
-    hRho[i] = hLeadPtVsRho->ProjectionX( name );       // PROJECT
+    hRho[i] = hLeadPtVsRho->ProjectionX( name, ptBinLo[i], ptBinHi[i] );       // PROJECT
     hRho[i]->SetStats(0);
     hRho[i]->Scale( 1./hRho[i]->Integral() );                     // NORMALIZE
     hRho[i]->SetLineColor( color[i] );    hRho[i]->SetMarkerStyle( marker[i] );    hRho[i]->SetMarkerColor( color[i] );
