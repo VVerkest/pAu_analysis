@@ -98,7 +98,8 @@ void dijetPlots() {
   hLeadPtVsRho->GetXaxis()->SetRange(2,80);
   for ( int i=0; i<nPtBins; ++i ) {
     name = "LeadPtVsRho" + ptBinName[i];      title = ptBinString[i];
-    hRho[i] = hLeadPtVsRho->ProjectionX( name, ptBinLo[i], ptBinHi[i] );       // PROJECT
+    hLeadPtVsRho->GetYaxis()->SetRangeUser(ptBinLo[i], ptBinHi[i]);
+    hRho[i] = hLeadPtVsRho->ProjectionX( name );       // PROJECT
     hRho[i]->SetStats(0);
     hRho[i]->Scale( 1./hRho[i]->Integral() );                     // NORMALIZE
     hRho[i]->SetLineColor( color[i] );    hRho[i]->SetMarkerStyle( marker[i] );    hRho[i]->SetMarkerColor( color[i] );
