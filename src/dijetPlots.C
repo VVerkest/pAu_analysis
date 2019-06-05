@@ -153,7 +153,8 @@ void dijetPlots() {
   hPrimaryVsBBCsumE->Draw("COLZ");
   c4->SaveAs("plots/PrimaryVsBBCsumE.pdf","PDF");
 
-  hTowersVsBBCsumE->SetBins( 160,0,80000, 50,0,200 );  
+  hTowersVsBBCsumE->GetXaxis()->SetRangeUser( 160,0,80000 );  
+  hTowersVsBBCsumE->GetYaxis()->SetRangeUser( 50,0,200 );  
   hTowersVsBBCsumE->Scale( 1./hTowersVsBBCsumE->Integral("width") );
   hTowersVsBBCsumE->Draw("COLZ");
   c4->SaveAs("plots/hTowersVsBBCsumE.pdf","PDF");
