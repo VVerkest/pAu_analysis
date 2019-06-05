@@ -33,7 +33,7 @@ void dijetPlots() {
   hPt_UE_BBCsumE->GetYaxis()->SetRange( 2,50 );
   hPt_UE_BBCE->GetYaxis()->SetRange( 2,50 );
   
-  TH2D *hscale0 = new TH2D( "hscale0", "Underlying Event by Lead Jet p_{T};#rho (GeV);", 20,0,10, 10,0.001, 1.0 );
+  TH2D *hscale0 = new TH2D( "hscale0", "Underlying Event by Lead Jet p_{T};#rho (GeV);", 12,0,6, 10,0.001, 1.0 );
 
   const int nPtBins = 5;
   TH1D * hRho[nPtBins];
@@ -78,10 +78,14 @@ void dijetPlots() {
     c1->SaveAs( name,"PDF");
   }
   
+  TCanvas * c2 = new TCanvas( "c2" , "" ,0 ,23 ,1280 ,700 );              // CANVAS
+  hLeadPtVsRho->GetXaxis()->SetRange(2,80);
+  double LeadVrhoScale = ( hLeadPtVsRho->GetEntries() ) * ( hLeadPtVsRho->Integral("width") );
+  hLeadPtVsRho->Scale(1./LeadVrhoScale);
+  c2->SetLogz();
+  hLeadPtVsRho->Draw("COLZ");
+  c2->SaveAs("plots/LeadPtVsRho.pdf","PDF");
 
-
-
-  
   TCanvas * c3 = new TCanvas( "c3" , "" ,0 ,23 ,1280 ,700 );              // CANVAS
   c3->SetLogy();
   hscale0->SetStats(0);
@@ -95,7 +99,6 @@ void dijetPlots() {
   leg1->AddEntry((TObject*)0,"#bf{# of Dijets}", "");
   leg1->AddEntry((TObject*)0,"#bf{<#rho> (GeV)}", "");
 
-  hLeadPtVsRho->GetXaxis()->SetRange(2,80);
   for ( int i=0; i<nPtBins; ++i ) {
     name = "LeadPtVsRho" + ptBinName[i];      title = ptBinString[i];
     hLeadPtVsRho->GetYaxis()->SetRangeUser(ptBinLo[i], ptBinHi[i]);
@@ -134,6 +137,8 @@ void dijetPlots() {
 
   c4->SetLogz();
   hTowersVsRho->Scale( 1./(double)hTowersVsRho->GetEntries() );
+  hTowersVsRho->GetXaxis()->SetRangeUser( 0,7 );
+  hTowersVsRho->GetYaxis()->SetRangeUser( 0,200 );
   hTowersVsRho->Draw("COLZ");
   c4->SaveAs("plots/TowersVsRho.pdf","PDF");
   
