@@ -80,45 +80,45 @@ void dijetPlots() {
     c1->SaveAs( name,"PDF");
   }
   
-  // TCanvas * c2 = new TCanvas( "c2" , "" ,0 ,23 ,1280 ,700 );              // CANVAS
-  // hLeadPtVsRho->GetXaxis()->SetRange(2,80);
-  // double LeadVrhoScale = hLeadPtVsRho->Integral("width");
-  // hLeadPtVsRho->Scale(1./LeadVrhoScale);
-  // c2->SetLogz();
-  // hLeadPtVsRho->Draw("COLZ");
-  // c2->SaveAs("plots/LeadPtVsRho.pdf","PDF");
-  // hLeadPtVsRho->Scale(LeadVrhoScale);
+  TCanvas * c2 = new TCanvas( "c2" , "" ,0 ,23 ,1280 ,700 );              // CANVAS
+  hLeadPtVsRho->GetXaxis()->SetRange(2,80);
+  double LeadVrhoScale = hLeadPtVsRho->Integral("width");
+  hLeadPtVsRho->Scale(1./LeadVrhoScale);
+  c2->SetLogz();
+  hLeadPtVsRho->Draw("COLZ");
+  c2->SaveAs("plots/LeadPtVsRho.pdf","PDF");
+  hLeadPtVsRho->Scale(LeadVrhoScale);
   
-  // TCanvas * c3 = new TCanvas( "c3" , "" ,0 ,23 ,1280 ,700 );              // CANVAS
-  // c3->SetLogy();
-  // hscale0->SetStats(0);
-  // hscale0->Draw();
+  TCanvas * c3 = new TCanvas( "c3" , "" ,0 ,23 ,1280 ,700 );              // CANVAS
+  c3->SetLogy();
+  hscale0->SetStats(0);
+  hscale0->Draw();
 
-  // TLegend *leg1 = new TLegend(0.65, 0.65, 0.9, 0.9,NULL,"brNDC");    // LEGEND
-  // leg1->SetBorderSize(1);   leg1->SetLineColor(1);   leg1->SetLineStyle(1);   leg1->SetLineWidth(1);   leg1->SetFillColor(0);   leg1->SetFillStyle(1001);
-  // TLegendEntry *entry;
-  // leg1->SetNColumns(3);
-  // leg1->AddEntry((TObject*)0,"#bf{p_{T}^{Lead} (GeV)}", "");
-  // leg1->AddEntry((TObject*)0,"#bf{# of Dijets}", "");
-  // leg1->AddEntry((TObject*)0,"#bf{<#rho> (GeV)}", "");
+  TLegend *leg1 = new TLegend(0.65, 0.65, 0.9, 0.9,NULL,"brNDC");    // LEGEND
+  leg1->SetBorderSize(1);   leg1->SetLineColor(1);   leg1->SetLineStyle(1);   leg1->SetLineWidth(1);   leg1->SetFillColor(0);   leg1->SetFillStyle(1001);
+  TLegendEntry *entry;
+  leg1->SetNColumns(3);
+  leg1->AddEntry((TObject*)0,"#bf{p_{T}^{Lead} (GeV)}", "");
+  leg1->AddEntry((TObject*)0,"#bf{# of Dijets}", "");
+  leg1->AddEntry((TObject*)0,"#bf{<#rho> (GeV)}", "");
 
-  // for ( int i=0; i<nPtBins; ++i ) {
-  //   name = "LeadPtVsRho" + ptBinName[i];      title = ptBinString[i];
-  //   hLeadPtVsRho->GetYaxis()->SetRangeUser(ptBinLo[i], ptBinHi[i]);
-  //   hRho[i] = hLeadPtVsRho->ProjectionX( name );       // PROJECT
-  //   hRho[i]->SetStats(0);
-  //   hRho[i]->Scale( 1./hRho[i]->Integral() );                     // NORMALIZE
-  //   hRho[i]->SetLineColor( color[i] );    hRho[i]->SetMarkerStyle( marker[i] );    hRho[i]->SetMarkerColor( color[i] );
-  //   hRho[i]->Draw("SAME");                                                    // DRAW
-  //   /*entry=*/
-  //   Ndj = ""; avg = "";
-  //   Ndj += hRho[i]->GetEntries();
-  //   avg += hRho[i]->GetMean(1);                                           // 1 denotes x-axis
-  //   leg1->AddEntry( name, title, lpf );                            // ADD TO LEGEND
-  //   leg1->AddEntry((TObject*)0,Ndj, "");
-  //   leg1->AddEntry((TObject*)0,avg, "");
-  //   lpf += "lpf";
-  // }
+  for ( int i=0; i<nPtBins; ++i ) {
+    name = "LeadPtVsRho" + ptBinName[i];      title = ptBinString[i];
+    hLeadPtVsRho->GetYaxis()->SetRangeUser(ptBinLo[i], ptBinHi[i]);
+    hRho[i] = hLeadPtVsRho->ProjectionX( name );       // PROJECT
+    hRho[i]->SetStats(0);
+    hRho[i]->Scale( 1./hRho[i]->Integral() );                     // NORMALIZE
+    hRho[i]->SetLineColor( color[i] );    hRho[i]->SetMarkerStyle( marker[i] );    hRho[i]->SetMarkerColor( color[i] );
+    hRho[i]->Draw("SAME");                                                    // DRAW
+    /*entry=*/
+    Ndj = ""; avg = "";
+    Ndj += hRho[i]->GetEntries();
+    avg += hRho[i]->GetMean(1);                                           // 1 denotes x-axis
+    leg1->AddEntry( name, title, lpf );                            // ADD TO LEGEND
+    leg1->AddEntry((TObject*)0,Ndj, "");
+    leg1->AddEntry((TObject*)0,avg, "");
+    lpf += "lpf";
+  }
 
   leg1->Draw();
   c3->Modified();
@@ -130,28 +130,28 @@ void dijetPlots() {
   gStyle->SetOptStat(1);
   TCanvas * c4 = new TCanvas( "c4" , "" ,0 ,23 ,1280 ,700 );              // CANVAS
   
-  // hLeadEtaPhi->Scale( 1./hLeadEtaPhi->Integral("width") );
-  // hLeadEtaPhi->Draw("COLZ");
-  // c4->SaveAs("plots/LeadEtaPhi.pdf","PDF");
+  hLeadEtaPhi->Scale( 1./hLeadEtaPhi->Integral("width") );
+  hLeadEtaPhi->Draw("COLZ");
+  c4->SaveAs("plots/LeadEtaPhi.pdf","PDF");
 
-  // hSubEtaPhi->Scale( 1./hSubEtaPhi->Integral("width") );
-  // hSubEtaPhi->Draw("COLZ");
-  // c4->SaveAs("plots/SubEtaPhi.pdf","PDF");
+  hSubEtaPhi->Scale( 1./hSubEtaPhi->Integral("width") );
+  hSubEtaPhi->Draw("COLZ");
+  c4->SaveAs("plots/SubEtaPhi.pdf","PDF");
 
-  // c4->SetLogz();
-  // hTowersVsRho->Scale( 1./hTowersVsRho->Integral("width") );
-  // hTowersVsRho->GetXaxis()->SetRangeUser( 0,7 );
-  // hTowersVsRho->GetYaxis()->SetRangeUser( 0,200 );
-  // hTowersVsRho->Draw("COLZ");
-  // c4->SaveAs("plots/TowersVsRho.pdf","PDF");
+  c4->SetLogz();
+  hTowersVsRho->Scale( 1./hTowersVsRho->Integral("width") );
+  hTowersVsRho->GetXaxis()->SetRangeUser( 0,7 );
+  hTowersVsRho->GetYaxis()->SetRangeUser( 0,200 );
+  hTowersVsRho->Draw("COLZ");
+  c4->SaveAs("plots/TowersVsRho.pdf","PDF");
   
-  // hPrimaryVsGlobal->Scale( 1./hPrimaryVsGlobal->Integral("width") );
-  // hPrimaryVsGlobal->Draw("COLZ");
-  // c4->SaveAs("plots/PrimaryVsGlobal.pdf","PDF");
+  hPrimaryVsGlobal->Scale( 1./hPrimaryVsGlobal->Integral("width") );
+  hPrimaryVsGlobal->Draw("COLZ");
+  c4->SaveAs("plots/PrimaryVsGlobal.pdf","PDF");
 
-  // hPrimaryVsBBCsumE->Scale( 1./hPrimaryVsBBCsumE->Integral("width") );
-  // hPrimaryVsBBCsumE->Draw("COLZ");
-  // c4->SaveAs("plots/PrimaryVsBBCsumE.pdf","PDF");
+  hPrimaryVsBBCsumE->Scale( 1./hPrimaryVsBBCsumE->Integral("width") );
+  hPrimaryVsBBCsumE->Draw("COLZ");
+  c4->SaveAs("plots/PrimaryVsBBCsumE.pdf","PDF");
 
   hTowersVsBBCsumE->Scale( 1./hTowersVsBBCsumE->Integral("width") );
   hTowersVsBBCsumE->Draw("COLZ");
