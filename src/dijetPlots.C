@@ -32,7 +32,8 @@ void dijetPlots() {
 
   hPt_UE_BBCsumE->GetYaxis()->SetRange( 2,50 );
   hPt_UE_BBCE->GetYaxis()->SetRange( 2,50 );
-  
+  hPt_UE_BBCsumE->GetZaxis->SetRangeUser( 0.0, 80.0 );
+
   TH2D *hscale0 = new TH2D( "hscale0", "Underlying Event by Lead Jet p_{T};#rho (GeV);", 12,0,6, 10,0.001, 1.0 );
 
   const int nPtBins = 5;
@@ -54,7 +55,7 @@ void dijetPlots() {
   TCanvas * c0 = new TCanvas( "c0" , "" ,0 ,23 ,1280 ,700 );              // CANVAS
   c0->SetLogz();
   TCanvas * c1 = new TCanvas( "c1" , "" ,0 ,23 ,1280 ,700 );              // CANVAS
-  //c1->SetLogz();
+  c1->SetLogz();
   
   for ( int i=0; i<nPtBins; ++i ) {
     c0->cd();
@@ -62,7 +63,7 @@ void dijetPlots() {
     title = "Underlying Event vs. BBC East Rate - p_{T}^{lead}: " + ptBinString[i];
     hPt_UE_BBCE->GetXaxis()->SetRangeUser(ptBinLo[i], ptBinHi[i]);
     hUE_BBCE[i] = (TH2D*)hPt_UE_BBCE->Project3D( "yz" );       // PROJECT
-    hUE_BBCE[i]->Scale( 1./hUE_BBCE[i]->GetEntries() );                     // NORMALIZE
+    hUE_BBCE[i]->Scale( 1./hUE_BBCE[i]->Integral("width") );                     // NORMALIZE
     hUE_BBCE[i]->SetTitle(title);
     hUE_BBCE[i]->Draw("COLZ");
     c0->SaveAs( name,"PDF");
@@ -72,7 +73,7 @@ void dijetPlots() {
     title = "Underlying Event vs. BBC ADC East Sum - p_{T}^{lead}: " + ptBinString[i];
     hPt_UE_BBCsumE->GetXaxis()->SetRangeUser(ptBinLo[i], ptBinHi[i]);
     hUE_BBCsumE[i] = (TH2D*)hPt_UE_BBCsumE->Project3D( "yz" );       // PROJECT
-    hUE_BBCsumE[i]->Scale( 1./hUE_BBCsumE[i]->GetEntries() );                     // NORMALIZE
+    hUE_BBCsumE[i]->Scale( 1./hUE_BBCsumE[i]->Integral("width") );                     // NORMALIZE
     hUE_BBCsumE[i]->SetTitle(title);
     hUE_BBCsumE[i]->Draw("COLZ");
     c1->SaveAs( name,"PDF");
@@ -128,22 +129,22 @@ void dijetPlots() {
   gStyle->SetOptStat(1);
   TCanvas * c4 = new TCanvas( "c4" , "" ,0 ,23 ,1280 ,700 );              // CANVAS
   
-  hLeadEtaPhi->Scale( 1./(double)hLeadEtaPhi->GetEntries() );
+  hLeadEtaPhi->Scale( 1./hLeadEtaPhi->Integral("width") );
   hLeadEtaPhi->Draw("COLZ");
   c4->SaveAs("plots/LeadEtaPhi.pdf","PDF");
 
-  hSubEtaPhi->Scale( 1./(double)hSubEtaPhi->GetEntries() );
+  hSubEtaPhi->Scale( 1./hSubEtaPhi->Integral("width") );
   hSubEtaPhi->Draw("COLZ");
   c4->SaveAs("plots/SubEtaPhi.pdf","PDF");
 
   c4->SetLogz();
-  hTowersVsRho->Scale( 1./(double)hTowersVsRho->GetEntries() );
+  hTowersVsRho->Scale( 1./hTowersVsRho->Integral("width") );
   hTowersVsRho->GetXaxis()->SetRangeUser( 0,7 );
   hTowersVsRho->GetYaxis()->SetRangeUser( 0,200 );
   hTowersVsRho->Draw("COLZ");
   c4->SaveAs("plots/TowersVsRho.pdf","PDF");
   
-  hPrimaryVsGlobal->Scale( 1./(double)hPrimaryVsGlobal->GetEntries() );
+  hPrimaryVsGlobal->Scale( 1./hPrimaryVsGlobal->Integral("width") );
   hPrimaryVsGlobal->Draw("COLZ");
   c4->SaveAs("plots/PrimaryVsGlobal.pdf","PDF");
 
