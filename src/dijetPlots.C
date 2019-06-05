@@ -22,7 +22,7 @@ void dijetPlots() {
   TH2D *hPrimaryVsBBCE = (TH2D*) inFile->Get("hPrimaryVsBBCE");
   TH2D *hGlobalVsBBCE = (TH2D*) inFile->Get("hGlobalVsBBCE");
   TH2D *hPrimaryVsGlobal = (TH2D*) inFile->Get("hPrimaryVsGlobal");
-  TH2D *hGlobalVsBBCsumE = (TH2D*) inFile->Get("hGlobalVsBBCsumE");
+  TH2D *hPrimaryVsBBCsumE = (TH2D*) inFile->Get("hPrimaryVsBBCsumE");
   TH2D *hLeadEtaPhi =(TH2D*) inFile->Get("hLeadEtaPhi");
   TH2D *hSubEtaPhi = (TH2D*) inFile->Get("hSubEtaPhi");
   TH2D *hTowersVsRho = (TH2D*) inFile->Get("hTowersVsRho");
@@ -148,6 +148,9 @@ void dijetPlots() {
   hPrimaryVsGlobal->Draw("COLZ");
   c4->SaveAs("plots/PrimaryVsGlobal.pdf","PDF");
 
+  hPrimaryVsBBCsumE->Scale( 1./hPrimaryVsBBCsumE->Integral("width") );
+  hPrimaryVsBBCsumE->Draw("COLZ");
+  c4->SaveAs("plots/PrimaryVsBBCsumE.pdf","PDF");
   inFile->Close();
 
   // TFile *djFile = new TFile( "plots/pAu_plots.root" ,"RECREATE");
