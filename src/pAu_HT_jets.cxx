@@ -165,10 +165,10 @@ int main ( int argc, const char** argv ) {
     hPrimaryVsBBC->Fill( BbcCoincidenceRate, nPrimary );
     hPrimaryVsGlobal->Fill( nGlobal, nPrimary );
     hGlobalVsBBC->Fill( BbcCoincidenceRate, nGlobal );
-    hPrimaryVsBBCE->Fill(nPrimary,BbcEastRate);
-    hGlobalVsBBCE->Fill(nGlobal,BbcEastRate);
-    hPrimaryVsBBCsumE->Fill(nPrimary,BbcAdcSumEast);
-    hTowersVsBBCsumE->Fill(nTowers,BbcAdcSumEast);
+    hPrimaryVsBBCE->Fill(BbcEastRate,nPrimary);
+    hGlobalVsBBCE->Fill(BbcEastRate,nGlobal);
+    hPrimaryVsBBCsumE->Fill(BbcAdcSumEast,nPrimary);
+    hTowersVsBBCsumE->Fill(BbcAdcSumEast,nTowers);
 
   }
   // ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~  END EVENT LOOP!  ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~
