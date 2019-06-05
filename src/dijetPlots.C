@@ -22,7 +22,7 @@ void dijetPlots() {
   TH2D *hPrimaryVsBBCE = (TH2D*) inFile->Get("hPrimaryVsBBCE");
   TH2D *hGlobalVsBBCE = (TH2D*) inFile->Get("hGlobalVsBBCE");
   TH2D *hPrimaryVsGlobal = (TH2D*) inFile->Get("hPrimaryVsGlobal");
-  TH2D *hGlobalVsBBCsumE = (TH2D*) inFile->Get("hGlobalVsBBCsumE");
+  TH2D *hPrimaryVsBBCsumE = (TH2D*) inFile->Get("hPrimaryVsBBCsumE");
   TH2D *hLeadEtaPhi =(TH2D*) inFile->Get("hLeadEtaPhi");
   TH2D *hSubEtaPhi = (TH2D*) inFile->Get("hSubEtaPhi");
   TH2D *hTowersVsRho = (TH2D*) inFile->Get("hTowersVsRho");
@@ -34,7 +34,7 @@ void dijetPlots() {
   hPt_UE_BBCE->GetYaxis()->SetRange( 2,50 );
   hPt_UE_BBCsumE->GetZaxis()->SetRangeUser( 0.0, 80000.0 );
 
-  TH2D *hscale0 = new TH2D( "hscale0", "Underlying Event by Lead Jet p_{T};#rho (GeV);", 12,0,6, 10,0.001, 1.0 );
+  TH2D *hscale0 = new TH2D( "hscale0", "Underlying Event by Lead Jet p_{T};#rho (GeV);", 60,0,30, 10,0.00000001, 1.0 );
 
   const int nPtBins = 5;
   TH1D * hRho[nPtBins];
@@ -148,6 +148,13 @@ void dijetPlots() {
   hPrimaryVsGlobal->Draw("COLZ");
   c4->SaveAs("plots/PrimaryVsGlobal.pdf","PDF");
 
+  hPrimaryVsBBCsumE->Scale(1./hPrimaryVsBBCsumE->Integral("width"));
+  c4->SaveAs("plots/PrimaryVsBBCsumE.pdf","PDF");
+  c4->SetLogy();
+  c4->SaveAs("plots/PrimaryVsBBCsumE_logy.pdf","PDF");
+
+
+  
   inFile->Close();
 
   // TFile *djFile = new TFile( "plots/pAu_plots.root" ,"RECREATE");
