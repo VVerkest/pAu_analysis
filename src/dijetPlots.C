@@ -33,7 +33,7 @@ void dijetPlots() {
   hPt_UE_BBCsumE->GetYaxis()->SetRange( 2,50 );
   hPt_UE_BBCE->GetYaxis()->SetRange( 2,50 );
   
-  TH2D *hscale0 = new TH2D( "hscale0", "Underlying Event by Lead Jet p_{T};#rho (GeV);", 12,0,6, 10,0.001, 1.0 );
+  TH2D *hscale0 = new TH2D( "hscale0", "Underlying Event by Lead Jet p_{T};#rho (GeV);", 60,0,30, 10,0.000001, 1.0 );
 
   const int nPtBins = 5;
   TH1D * hRho[nPtBins];
@@ -80,18 +80,19 @@ void dijetPlots() {
   
   TCanvas * c2 = new TCanvas( "c2" , "" ,0 ,23 ,1280 ,700 );              // CANVAS
   hLeadPtVsRho->GetXaxis()->SetRange(2,80);
-  double LeadVrhoScale = ( hLeadPtVsRho->GetEntries() ) * ( hLeadPtVsRho->Integral("width") );
+  double LeadVrhoScale = hLeadPtVsRho->Integral("width");
   hLeadPtVsRho->Scale(1./LeadVrhoScale);
   c2->SetLogz();
   hLeadPtVsRho->Draw("COLZ");
   c2->SaveAs("plots/LeadPtVsRho.pdf","PDF");
-
+  hLeadPtVsRho->Scale(LeadVrhoScale);
+  
   TCanvas * c3 = new TCanvas( "c3" , "" ,0 ,23 ,1280 ,700 );              // CANVAS
   c3->SetLogy();
   hscale0->SetStats(0);
   hscale0->Draw();
 
-  TLegend *leg1 = new TLegend(0.65, 0.68, 0.9, 0.9,NULL,"brNDC");    // LEGEND
+  TLegend *leg1 = new TLegend(0.65, 0.65, 0.9, 0.9,NULL,"brNDC");    // LEGEND
   leg1->SetBorderSize(1);   leg1->SetLineColor(1);   leg1->SetLineStyle(1);   leg1->SetLineWidth(1);   leg1->SetFillColor(0);   leg1->SetFillStyle(1001);
   TLegendEntry *entry;
   leg1->SetNColumns(3);
