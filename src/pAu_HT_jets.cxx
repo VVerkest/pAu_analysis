@@ -107,7 +107,7 @@ int main ( int argc, const char** argv ) {
     Vz = header->GetPrimaryVertexZ();
     if ( abs(Vz) > vzCut ) { continue; }
       
-        //   JET-FINDING
+    //   JET-FINDING
     GatherParticles( container, rawParticles);     //  GATHERS ALL PARTICLES WITH    pT>=2.0GeV    and    |eta|<1.0
     ClusterSequence jetCluster( rawParticles, jet_def );           //  CLUSTER ALL JETS
     vector<PseudoJet> rawJets = sorted_by_pt( etaPtSelector( jetCluster.inclusive_jets() ) );     // EXTRACT SELECTED JETS
@@ -138,20 +138,20 @@ int main ( int argc, const char** argv ) {
     ClusterSequenceArea bgCluster( rawParticles, bg_jet_def, bg_area_def);
     JetMedianBackgroundEstimator BGEUE( bgSelector, bgCluster );
     BMErho = BGEUE.rho();
-    BMEsigma = BGEUE.BMEsigma();
+    BMEsigma = BGEUE.sigma();
 
     // cout << "BMErho = "<<rho<<"\t  BMEsigma = "<<BMEsigma<<endl<<endl;
 
-    selectedParticles = bgSelector( bgCluster.inclusive_jets() ) );
+    selectedParticles = bgSelector( bgCluster.inclusive_jets() );
 
-  for (int i=0; i<selectedParticles.size(); ++i) {
-    partPt.push_back( selectedParticles[i].pt() );
-    partEta.push_back( selectedParticles[i].eta() );
-    partPhi.push_back( selectedParticles[i].phi() );
-    partEt.push_back( selectedParticles[i].Et() );
-  }
+    for (int i=0; i<selectedParticles.size(); ++i) {
+      partPt.push_back( selectedParticles[i].pt() );
+      partEta.push_back( selectedParticles[i].eta() );
+      partPhi.push_back( selectedParticles[i].phi() );
+      partEt.push_back( selectedParticles[i].Et() );
+    }
   
-  sp->Fill();
+    sp->Fill();
     
     // hPt_UE_BBCE->Fill(leadPt,rho,BbcEastRate);
     // hPt_UE_BBCsumE->Fill(leadPt,rho,BbcAdcSumEast);
