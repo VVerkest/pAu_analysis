@@ -70,6 +70,12 @@ int main ( int argc, const char** argv ) {
   TTree *sp = new TTree( "sp", "Selected Particles" );
   sp->Branch("partPt",&partPt);        sp->Branch("partEta",&partEta);        sp->Branch("partPhi",&partPhi);        sp->Branch("partEt",&partEt);
 
+    //  CREATE JET SELECTOR
+  Selector etaSelector = SelectorAbsEtaMax( 1.0-R );    Selector ptMinSelector = SelectorPtMin(jetMinPt);
+  Selector etaPtSelector = etaSelector && ptMinSelector;
+  JetDefinition jet_def(antikt_algorithm, R);     //  JET DEFINITION
+  JetDefinition bg_jet_def(kt_algorithm, R);     //  BACKGROUND ESTIMATION JET DEFINITION
+  
   vector<PseudoJet> rawParticles, rawJets, selectedParticles;
   TStarJetPicoEventHeader* header;    TStarJetPicoEvent* event;    TStarJetVector* sv;    TStarJetVectorContainer<TStarJetVector> * container;
   

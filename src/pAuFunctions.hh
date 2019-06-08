@@ -54,15 +54,6 @@ namespace pAuAnalysis {
   const double jetMinPt = 2.0;      //  Jet Pt >= 2.0 GeV
   const double qpi = 3.141592653589793238462643383279502884197/4;
 
-    
-  //  CREATE JET SELECTORS/DEFINITIONS
-  const Selector etaSelector = SelectorAbsEtaMax( 1.0-R );
-  const Selector ptMinSelector = SelectorPtMin(jetMinPt);
-  const Selector etaPtSelector = etaSelector && ptMinSelector;
-  const JetDefinition jet_def(antikt_algorithm, R);     //  JET DEFINITION
-  const JetDefinition bg_jet_def(kt_algorithm, R);     //  BACKGROUND ESTIMATION JET DEFINITION
-
-
   double ConvertPhi( double &phi );
   
   std::vector<fastjet::PseudoJet> GatherParticles ( TStarJetVectorContainer<TStarJetVector> * container , std::vector<fastjet::PseudoJet> & rawParticles );
