@@ -36,8 +36,8 @@ void dijetPlots() {
   hPt_UE_BBCsumE->GetZaxis()->SetRangeUser( 0.0, 80000.0 );
 
   TH2D *hscale0 = new TH2D( "hscale0", "Underlying Event by Lead Jet p_{T};#rho (GeV);", 12,0,6, 10,0.001, 1.0 );
-  TH2D *hscale1 = new TH2D( "hscale1", "Underlying Event vs. BBC ADC East Sum", 20,0,100000, 20,0.001,10 );
-  TH2D *hscale2 = new TH2D( "hscale2", "Underlying Event vs. BBC ADC East Rate", 20,0,100000, 20,0.001,10 );
+  TH2D *hscale1 = new TH2D( "hscale1", "Underlying Event vs. BBC ADC East Sum", 20,0,10, 20,0.001,10 );
+  TH2D *hscale2 = new TH2D( "hscale2", "Underlying Event vs. BBC ADC East Rate", 20,0,10, 20,0.001,10 );
 
   const int nPtBins = 5;
   TH1D * hRho[nPtBins];
@@ -101,21 +101,29 @@ void dijetPlots() {
   // leg0->AddEntry((TObject*)0,"#bf{p_{T}^{Lead} (GeV)}", "");
   // leg0->AddEntry((TObject*)0,"#bf{<#rho> (GeV)}", "");
   
-  hscale1->SetStats(0);  c5->cd();  /*hscale1->Draw();*/  c6->cd();  /*hscale1->Draw();*/
+  // hscale1->SetStats(0);  c5->cd();  /*hscale1->Draw();*/  c6->cd();  /*hscale1->Draw();*/
+  // for ( int i=0; i<nPtBins; ++i ) {
+  // hUE_BBCsumE[i]->SetStats(0);    hUE_BBCsumE[i]->SetLineColor( color[i] );    hUE_BBCsumE[i]->SetMarkerStyle( marker[i] );    hUE_BBCsumE[i]->SetMarkerColor( color[i] );    
+  // hUE_BBCE[i]->SetStats(0);    hUE_BBCE[i]->SetLineColor( color[i] );    hUE_BBCE[i]->SetMarkerStyle( marker[i] );    hUE_BBCE[i]->SetMarkerColor( color[i] );    
+  //   c5->cd();         hUE_BBCE[i]->ProfileX()->Draw("SAME");
+  //   c6->cd();         hUE_BBCsumE[i]->ProfileX()->Draw("SAME");
+  // }
+  // c5->SaveAs( "plots/UE_BBCE_profile.pdf","PDF");
+  // c6->SaveAs( "plots/UE_BBCsumE_profile.pdf","PDF");
+
+  c5->cd();  //hscale2->Draw();
+  c6->cd();  //hscale1->Draw();
   for ( int i=0; i<nPtBins; ++i ) {
+
     hUE_BBCsumE[i]->SetStats(0);    hUE_BBCsumE[i]->SetLineColor( color[i] );    hUE_BBCsumE[i]->SetMarkerStyle( marker[i] );    hUE_BBCsumE[i]->SetMarkerColor( color[i] );    
     hUE_BBCE[i]->SetStats(0);    hUE_BBCE[i]->SetLineColor( color[i] );    hUE_BBCE[i]->SetMarkerStyle( marker[i] );    hUE_BBCE[i]->SetMarkerColor( color[i] );    
-    c5->cd();         hUE_BBCE[i]->ProfileX()->Draw("SAME");
-    c6->cd();         hUE_BBCsumE[i]->ProfileX()->Draw("SAME");
-  }
-  c5->SaveAs( "plots/UE_BBCE_profile.pdf","PDF");
-  c6->SaveAs( "plots/UE_BBCsumE_profile.pdf","PDF");
 
-  c5->cd();  hscale2->Draw();
-  c6->cd();  hscale1->Draw();
-  for ( int i=0; i<nPtBins; ++i ) {
-    c5->cd();         hUE_BBCE[i]->ProjectionY()->Draw("SAME");
-    c6->cd();         hUE_BBCsumE[i]->ProjectionY()->Draw("SAME");
+    c5->cd();
+    scale = hUE_BBCE[i]->ProjectionY()->Integral("width");        hUE_BBCE[i]->Scale(1.0/scale);
+    hUE_BBCE[i]->ProjectionY()->Draw("SAME");        hUE_BBCE[i]->Scale(scale);
+    c6->cd();
+    scale = hUE_BBCsumE[i]->ProjectionY()->Integral("width");        hUE_BBCsumE[i]->Scale(1.0/scale);
+    hUE_BBCsumE[i]->ProjectionY()->Draw("SAME");        hUE_BBCsumE[i]->Scale(scale);
   }
   c5->SaveAs( "plots/UE_BBCE_projection.pdf","PDF");
   c6->SaveAs( "plots/UE_BBCsumE_projection.pdf","PDF");
