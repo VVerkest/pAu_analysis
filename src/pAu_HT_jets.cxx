@@ -42,19 +42,28 @@ int main ( int argc, const char** argv ) {
   TH2D *hTowersVsBBCsumE = new TH2D("hTowersVsBBCsumE","# Towers vs. BBC ADC East Sum;BBC ADC East Sum;# Towers", 160,0,80000, 50,0,200 );
   TH2D *hLeadEtaPhi = new TH2D("hLeadEtaPhi","Lead Jet #eta vs. #phi;#phi;#eta", 180,0,6.3, 100,-1.0,1.0);
   TH2D *hSubEtaPhi = new TH2D("hSubEtaPhi","Sub Jet #eta vs. #phi;#phi;#eta", 180,0,6.3, 100,-1.0,1.0);
-  TH3D *hPt_UE_BBCE = new TH3D("hPt_UE_BBCE","UE vs. BBC East Rate;Lead Jet p_{T} (GeV);#rho (GeV);BBC East Rate", 300,0,300, 50,0,10, 140,0,7000000 );
-  TH3D *hPt_UE_BBCsumE = new TH3D("hPt_UE_BBCsumE","UE vs. BBC ADC East Sum;Lead Jet p_{T} (GeV);#rho (GeV);BBC ADC East Sum", 300,0,300, 50,0,10, 20,0,100000 );
   TH2D *hTowersVsRho = new TH2D("hTowersVsRho","# of Towers vs. UE;#rho (GeV);# of Towers", 80,0,35, 100,0,1000);
   TH2D *hLeadPtVsRho = new TH2D("hLeadPtVsRho","Lead Jet p_{T} vs UE;#rho (GeV);p_{T}^{lead} (GeV)", 80,0,35, 140,0,70);
-  TH3D *hPt_BGEUE_BBCE = new TH3D("hPt_BGEUE_BBCE","Bkg. Med. Est. UE vs. BBC East Rate;Lead Jet p_{T} (GeV);#rho (GeV);BBC East Rate", 300,0,300, 50,0,10, 140,0,7000000 );
-  TH3D *hPt_BGEUE_BBCsumE = new TH3D("hPt_BGEUE_BBCsumE","Bkg. Med. Est. UE vs. BBC ADC East Sum;Lead Jet p_{T} (GeV);#rho (GeV);BBC ADC East Sum", 300,0,300, 50,0,10, 20,0,100000 );
   TH2D *hTowersVsBMErho = new TH2D("hTowersVsBMErho","# of Towers vs. Bkg. Med. Est. UE;#rho (GeV);# of Towers", 80,0,35, 100,0,1000);
   TH2D *hLeadPtVsBMErho = new TH2D("hLeadPtVsBMErho","Lead Jet p_{T} vs Bkg. Med. Est. UE;#rho (GeV);p_{T}^{lead} (GeV)", 80,0,35, 140,0,70);
+
+  TH3D *hPt_BGEUE_BBCE[nEtaBins];
+  TH3D *hPt_BGEUE_BBCsumE[nEtaBins];
+  TH3D *hPt_UE_BBCE[nEtaBins];
+  TH3D *hPt_UE_BBCsumE[nEtaBins];
   TH3D *hSelectedParticles[nEtaBins];
 
   for ( int i=0; i<nEtaBins; ++i ) {
     name = "hSelectedParticles" + etaBinName[i];    title = "Selected Background Particles: " + etaBinString[i] + ";p_{T} (GeV);#eta;#phi";
     hSelectedParticles[i] = new TH3D( name, title, 22,0.0,2.2, 44,-1.1,1.1, 60,0,2*pi );
+    name = "hPt_BGEUE_BBCE" + etaBinName[i];    title = "Bkg. Med. Est. UE vs. BBC East Rate: " + etaBinString[i] + ";Lead Jet p_{T} (GeV);#rho (GeV);BBC East Rate";
+    hPt_BGEUE_BBCE[i] = new TH3D( name, title, 300,0,300, 50,0,10, 140,0,7000000 );
+    name = "hPt_BGEUE_BBCsumE" + etaBinName[i];    title = "Bkg. Med. Est. UE vs. BBC ADC East Sum: " + etaBinString[i] + ";Lead Jet p_{T} (GeV);#rho (GeV);BBC ADC East Sum";
+    hPt_BGEUE_BBCsumE[i] = new TH3D( name, title, 300,0,300, 50,0,10, 20,0,100000 );
+    name = "hPt_UE_BBCE" + etaBinName[i];    title = "UE vs. BBC East Rate: " + etaBinString[i] + ";Lead Jet p_{T} (GeV);#rho (GeV);BBC East Rate";
+    hPt_UE_BBCE[i] = new TH3D( name, title, 300,0,300, 50,0,10, 140,0,7000000 );
+    name = "hPt_UE_BBCsumE" + etaBinName[i];    title = "UE vs. BBC ADC East Sum: " + etaBinString[i] + ";Lead Jet p_{T} (GeV);#rho (GeV);BBC ADC East Sum";
+    hPt_UE_BBCsumE[i] = new TH3D( name, tile, 300,0,300, 50,0,10, 20,0,100000 );
   }
   
   double pmin1, pmax1, pmin2, pmax2;                 int eID, rID, nEvents;                 string inFile, outFile;
@@ -104,7 +113,7 @@ int main ( int argc, const char** argv ) {
       vector<PseudoJet> SubCons= rawJets[1].constituents();      subNcons = SubCons.size();
     }
 
-    BMErho_avg = 0;    BMEsigma_avg = 0;
+    BMErho_avg = 0;    BMEsigma_avg = 0;    rho_avg = 0;    sigma_avg = 0;
     
     for ( int i=0; i<nEtaBins; ++i ) {
       //  UE: JET MEDIAN BACKGROUND METHOD
@@ -112,17 +121,21 @@ int main ( int argc, const char** argv ) {
       Selector bgPhiRange = SelectorPhiRange( pmin1, pmax1 ) || SelectorPhiRange( pmin2, pmax2 );
       Selector bgEtaRange = SelectorEtaRange( etaBinLo[i], etaBinHi[i] );
       Selector bgSelector = bgPhiRange && bgEtaRange;
+
+      selectedParticles = bgSelector( bgCluster.inclusive_jets() );
+      for (int j=0; j<selectedParticles.size(); ++j ) {	hSelectedParticles->Fill( selectedParticles[j].pt(), selectedParticles[j].eta(), selectedParticles[j].phi() );      }
+
       GhostedAreaSpec gAreaSpec( 1.0, 1, 0.01 );
       AreaDefinition bg_area_def(active_area_explicit_ghosts, gAreaSpec);
-      ClusterSequenceArea bgCluster( rawParticles, bg_jet_def, bg_area_def);
+      ClusterSequenceArea bgCluster( selectedParticles, bg_jet_def, bg_area_def);
       JetMedianBackgroundEstimator BGEUE( bgSelector, bgCluster );
       BMErho[i] = BGEUE.rho();            BMEsigma[i] = BGEUE.sigma();
 
-      selectedParticles = bgSelector( bgCluster.inclusive_jets() );
-
-      for (int j=0; j<selectedParticles.size(); ++j ) {	hSelectedParticles->Fill( selectedParticles[j].pt(), selectedParticles[j].eta(), selectedParticles[j].phi() );      }
+      BackgroundEstimatorBase UE();      UE.set_particles( selectedParticles );
+      rho[i] = UE.rho();      sigma[i] = UE.sigma();
 
       BMErho_avg += ( BGEUE.rho() / 4.0 );      BMEsigma_avg += ( BGEUE.sigma() / 4.0 );
+      rho_avg += ( UE.rho() / 4.0 );      sigma_avg += ( UE.sigma() / 4.0 );
     }
 
     eID = Reader.GetNOfCurrentEvent();          EventID = eID;
