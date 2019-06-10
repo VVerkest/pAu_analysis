@@ -36,8 +36,8 @@ void dijetPlots() {
   hPt_UE_BBCsumE->GetZaxis()->SetRangeUser( 0.0, 80000.0 );
 
   TH2D *hscale0 = new TH2D( "hscale0", "Underlying Event by Lead Jet p_{T};#rho (GeV);", 12,0,6, 10,0.001, 1.0 );
-  TH2D *hscale1 = new TH2D( "hscale1", "Underlying Event vs. BBC ADC East Sum", 50,0.0001,25, 20,0.000001,1 );
-  TH2D *hscale2 = new TH2D( "hscale2", "Underlying Event vs. BBC ADC East Rate", 50,0.0001,25, 20,0.000001,1 );
+  TH2D *hscale1 = new TH2D( "hscale1", "Underlying Event vs. BBC ADC East Sum", 20,0.0001,10, 20,0.000001,1 );
+  TH2D *hscale2 = new TH2D( "hscale2", "Underlying Event vs. BBC ADC East Rate", 20,0.0001,10, 20,0.000001,1 );
   hscale1->SetStats(0);  hscale2->SetStats(0);
   
   const int nPtBins = 5;
@@ -94,11 +94,13 @@ void dijetPlots() {
   TCanvas * c5 = new TCanvas( "c5" , "" ,0 ,23 ,1280 ,700 );              // CANVAS
   TCanvas * c6 = new TCanvas( "c6" , "" ,0 ,23 ,1280 ,700 );              // CANVAS
   
-  // TLegend *leg0 = new TLegend(0.65, 0.65, 0.9, 0.9,NULL,"brNDC");    // LEGEND
-  // leg0->SetBorderSize(1);   leg0->SetLineColor(1);   leg0->SetLineStyle(1);   leg0->SetLineWidth(1);   leg0->SetFillColor(0);   leg0->SetFillStyle(1001);
-  // leg0->SetNColumns(2);
-  // leg0->AddEntry((TObject*)0,"#bf{p_{T}^{Lead} (GeV)}", "");
-  // leg0->AddEntry((TObject*)0,"#bf{<#rho> (GeV)}", "");
+  TLegend *leg0 = new TLegend(0.65, 0.65, 0.9, 0.9,NULL,"brNDC");    // LEGEND
+  leg0->SetBorderSize(1);   leg0->SetLineColor(1);   leg0->SetLineStyle(1);   leg0->SetLineWidth(1);   leg0->SetFillColor(0);   leg0->SetFillStyle(1001);
+  leg0->SetNColumns(2);  leg0->AddEntry((TObject*)0,"#bf{p_{T}^{Lead} (GeV)}", "");  leg0->AddEntry((TObject*)0,"#bf{<#rho> (GeV)}", "");
+
+  TLegend *leg1 = new TLegend(0.65, 0.65, 0.9, 0.9,NULL,"brNDC");    // LEGEND
+  leg1->SetBorderSize(1);   leg1->SetLineColor(1);   leg1->SetLineStyle(1);   leg1->SetLineWidth(1);   leg1->SetFillColor(0);   leg1->SetFillStyle(1001);
+  leg1->SetNColumns(2);  leg1->AddEntry((TObject*)0,"#bf{p_{T}^{Lead} (GeV)}", "");  leg1->AddEntry((TObject*)0,"#bf{<#rho> (GeV)}", "");
   
   // hscale1->SetStats(0);  c5->cd();  /*hscale1->Draw();*/  c6->cd();  /*hscale1->Draw();*/
   // for ( int i=0; i<nPtBins; ++i ) {
@@ -123,9 +125,23 @@ void dijetPlots() {
     c6->cd();
     scale = hUE_BBCsumE[i]->ProjectionY()->Integral("width");        hUE_BBCsumE[i]->Scale(1.0/scale);
     hUE_BBCsumE[i]->ProjectionY()->Draw("SAME");        hUE_BBCsumE[i]->Scale(scale);
+
+    avg = "";    avg += hUE_BBCE[i]->ProjectionY()->GetMean(0);
+    name = "UEvsBBCE" + ptBinName[i];    title = ptBinString[i];
+    leg0->AddEntry( name, title, lpf );    leg0->AddEntry((TObject*)0,avg, "");
+    
+    avg = "";    avg += hUE_BBCsumE[i]->ProjectionY()->GetMean(0);
+    name = "UEvsBBCsumE" + ptBinName[i];    title = ptBinString[i];
+    leg1->AddEntry( name, title, lpf );
+    leg1->AddEntry((TObject*)0,avg, "");
+    
+    lpf += "lpf";
   }
+  c5->cd();        leg0->Draw();        c5->Modified();        c5->SetSelected(c5);
   c5->SaveAs( "plots/UE_BBCE_projection.pdf","PDF");
   c5->SetLogy();          c5->SaveAs( "plots/UE_BBCE_projection_log.pdf","PDF");
+  
+  c6->cd();        leg1->Draw();        c6->Modified();        c6->SetSelected(c6);
   c6->SaveAs( "plots/UE_BBCsumE_projection.pdf","PDF");
   c6->SetLogy();          c6->SaveAs( "plots/UE_BBCsumE_projection.pdf_log","PDF");
 
@@ -144,13 +160,13 @@ void dijetPlots() {
   hscale0->SetStats(0);
   hscale0->Draw();
 
-  // TLegend *leg1 = new TLegend(0.65, 0.65, 0.9, 0.9,NULL,"brNDC");    // LEGEND
-  // leg1->SetBorderSize(1);   leg1->SetLineColor(1);   leg1->SetLineStyle(1);   leg1->SetLineWidth(1);   leg1->SetFillColor(0);   leg1->SetFillStyle(1001);
+  // TLegend *leg2 = new TLegend(0.65, 0.65, 0.9, 0.9,NULL,"brNDC");    // LEGEND
+  // leg2->SetBorderSize(1);   leg2->SetLineColor(1);   leg2->SetLineStyle(1);   leg2->SetLineWidth(1);   leg2->SetFillColor(0);   leg2->SetFillStyle(1001);
   // TLegendEntry *entry;
-  // leg1->SetNColumns(3);
-  // leg1->AddEntry((TObject*)0,"#bf{p_{T}^{Lead} (GeV)}", "");
-  // leg1->AddEntry((TObject*)0,"#bf{# of Dijets}", "");
-  // leg1->AddEntry((TObject*)0,"#bf{<#rho> (GeV)}", "");
+  // leg2->SetNColumns(3);
+  // leg2->AddEntry((TObject*)0,"#bf{p_{T}^{Lead} (GeV)}", "");
+  // leg2->AddEntry((TObject*)0,"#bf{# of Dijets}", "");
+  // leg2->AddEntry((TObject*)0,"#bf{<#rho> (GeV)}", "");
 
   // for ( int i=0; i<nPtBins; ++i ) {
   //   name = "LeadPtVsRho" + ptBinName[i];      title = ptBinString[i];
@@ -163,13 +179,13 @@ void dijetPlots() {
   //   Ndj = ""; avg = "";
   //   Ndj += hRho[i]->GetEntries();
   //   avg += hRho[i]->GetMean(1);                                           // 1 denotes x-axis
-  //   leg1->AddEntry( name, title, lpf );                            // ADD TO LEGEND
-  //   leg1->AddEntry((TObject*)0,Ndj, "");
-  //   leg1->AddEntry((TObject*)0,avg, "");
+  //   leg2->AddEntry( name, title, lpf );                            // ADD TO LEGEND
+  //   leg2->AddEntry((TObject*)0,Ndj, "");
+  //   leg2->AddEntry((TObject*)0,avg, "");
   //   lpf += "lpf";
   // }
 
-  // leg1->Draw();
+  // leg2->Draw();
   // c3->Modified();
   // c3->cd();
   // c3->SetSelected(c3);
