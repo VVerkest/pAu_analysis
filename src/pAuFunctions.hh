@@ -53,7 +53,13 @@ namespace pAuAnalysis {
   const double partMinPt = 0.2;      //  particle Pt >= 0.2 GeV
   const double jetMinPt = 2.0;      //  Jet Pt >= 2.0 GeV
   const double qpi = 3.141592653589793238462643383279502884197/4;
-
+  
+  const int nEtaBins = 4;
+  const double etaBinLo[nEtaBins] = { -1.0, -0.5, 0.0, 0.5 };
+  const double etaBinHi[nEtaBins] = { -0.5, 0.0, 0.5, 1.0 };
+  const string etaBinName[nEtaBins] = { "_n10_n05", "_n05_00", "_00_05", "_05_10" };
+  const string etaBinString[nEtaBins] = { "-1.0<#eta<-0.5", "-0.5<#eta<0.0", "0.0<#eta<0.5", "0.5<#eta<1.0" };
+  
   double ConvertPhi( double &phi );
   
   std::vector<fastjet::PseudoJet> GatherParticles ( TStarJetVectorContainer<TStarJetVector> * container , std::vector<fastjet::PseudoJet> & rawParticles );
