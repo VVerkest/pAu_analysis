@@ -100,8 +100,8 @@ void dijetPlots() {
   for ( int i=0; i<nPtBins; ++i ) {
     hUE_BBCsumE[i]->SetStats(0);    hUE_BBCsumE[i]->SetLineColor( color[i] );    hUE_BBCsumE[i]->SetMarkerStyle( marker[i] );    hUE_BBCsumE[i]->SetMarkerColor( color[i] );    
     hUE_BBCE[i]->SetStats(0);    hUE_BBCE[i]->SetLineColor( color[i] );    hUE_BBCE[i]->SetMarkerStyle( marker[i] );    hUE_BBCE[i]->SetMarkerColor( color[i] );    
-    c0->cd();         hUE_BBCE[i]->ProfileY()->Draw("SAME");
-    c1->cd();         hUE_BBCsumE[i]->ProfileY()->Draw("SAME");
+    c0->cd();         hUE_BBCE[i]->ProfileX()->Draw("SAME");
+    c1->cd();         hUE_BBCsumE[i]->ProfileX()->Draw("SAME");
   }
   c0->SaveAs( "plots/UE_BBCE_profile.pdf","PDF");
   c1->SaveAs( "plots/UE_BBCsumE_profile.pdf","PDF");
