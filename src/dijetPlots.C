@@ -36,7 +36,7 @@ void dijetPlots() {
   hPt_UE_BBCsumE->GetZaxis()->SetRangeUser( 0.0, 80000.0 );
 
   TH2D *hscale0 = new TH2D( "hscale0", "Underlying Event by Lead Jet p_{T};#rho (GeV);", 12,0,6, 10,0.001, 1.0 );
-  TH2D *hscale1 = new TH2D( "hscale1", "Underlying Event vs. BBC ADC East Sum", 20,0.001,100000, 12,0,3 );
+  TH2D *hscale1 = new TH2D( "hscale1", "Underlying Event vs. BBC ADC East Sum", 20,0.001,100000, 50,0,25 );
 
   const int nPtBins = 5;
   TH1D * hRho[nPtBins];
