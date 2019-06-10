@@ -90,14 +90,18 @@ void dijetPlots() {
     hUE_BBCsumE[i]->Scale( scale );                     // UN-NORMALIZE
   }
 
-  hscale1->SetStats(0);
-  c0->cd();  hscale1->Draw();
-  c1->cd();  hscale1->Draw();
+  TLegend *leg0 = new TLegend(0.65, 0.65, 0.9, 0.9,NULL,"brNDC");    // LEGEND
+  leg0->SetBorderSize(1);   leg0->SetLineColor(1);   leg0->SetLineStyle(1);   leg0->SetLineWidth(1);   leg0->SetFillColor(0);   leg0->SetFillStyle(1001);
+  leg0->SetNColumns(2);
+  leg0->AddEntry((TObject*)0,"#bf{p_{T}^{Lead} (GeV)}", "");
+  leg0->AddEntry((TObject*)0,"#bf{<#rho> (GeV)}", "");
+  
+  hscale1->SetStats(0);  c0->cd();  hscale1->Draw();  c1->cd();  hscale1->Draw();
   for ( int i=0; i<nPtBins; ++i ) {
     hUE_BBCsumE[i]->SetStats(0);    hUE_BBCsumE[i]->SetLineColor( color[i] );    hUE_BBCsumE[i]->SetMarkerStyle( marker[i] );    hUE_BBCsumE[i]->SetMarkerColor( color[i] );    
     hUE_BBCE[i]->SetStats(0);    hUE_BBCE[i]->SetLineColor( color[i] );    hUE_BBCE[i]->SetMarkerStyle( marker[i] );    hUE_BBCE[i]->SetMarkerColor( color[i] );    
-    c0->cd();         hUE_BBCE[i]->ProfileX()->Draw("SAME");
-    c1->cd();         hUE_BBCsumE[i]->ProfileX()->Draw("SAME");
+    c0->cd();         hUE_BBCE[i]->ProfileY()->Draw("SAME");
+    c1->cd();         hUE_BBCsumE[i]->ProfileY()->Draw("SAME");
   }
   c0->SaveAs( "plots/UE_BBCE_profile.pdf","PDF");
   c1->SaveAs( "plots/UE_BBCsumE_profile.pdf","PDF");
@@ -105,8 +109,8 @@ void dijetPlots() {
   c0->cd();  hscale1->Draw();
   c1->cd();  hscale1->Draw();
   for ( int i=0; i<nPtBins; ++i ) {
-    c0->cd();         hUE_BBCE[i]->ProjectionX()->Draw("SAME");
-    c1->cd();         hUE_BBCsumE[i]->ProjectionX()->Draw("SAME");
+    c0->cd();         hUE_BBCE[i]->ProjectionY()->Draw("SAME");
+    c1->cd();         hUE_BBCsumE[i]->ProjectionY()->Draw("SAME");
   }
   c0->SaveAs( "plots/UE_BBCE_projection.pdf","PDF");
   c1->SaveAs( "plots/UE_BBCsumE_projection.pdf","PDF");
