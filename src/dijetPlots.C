@@ -36,7 +36,8 @@ void dijetPlots() {
   hPt_UE_BBCsumE->GetZaxis()->SetRangeUser( 0.0, 80000.0 );
 
   TH2D *hscale0 = new TH2D( "hscale0", "Underlying Event by Lead Jet p_{T};#rho (GeV);", 12,0,6, 10,0.001, 1.0 );
-  TH2D *hscale1 = new TH2D( "hscale1", "Underlying Event vs. BBC ADC East Sum", 20,0.001,100000, 50,0,25 );
+  TH2D *hscale1 = new TH2D( "hscale1", "Underlying Event vs. BBC ADC East Sum", 20,0,100000, 20,0.001,10 );
+  TH2D *hscale2 = new TH2D( "hscale2", "Underlying Event vs. BBC ADC East Rate", 20,0,100000, 20,0.001,10 );
 
   const int nPtBins = 5;
   TH1D * hRho[nPtBins];
@@ -50,9 +51,6 @@ void dijetPlots() {
   int color[nPtBins] = { 633, 613, 596, 414, 797 };
   int marker[nPtBins] = { 33, 34, 22, 21, 20 };
   TString name, title;
-
-
-
 
   TCanvas * c0 = new TCanvas( "c0" , "" ,0 ,23 ,1280 ,700 );              // CANVAS
   c0->SetLogz();
@@ -90,30 +88,37 @@ void dijetPlots() {
     hUE_BBCsumE[i]->Scale( scale );                     // UN-NORMALIZE
   }
 
-  TLegend *leg0 = new TLegend(0.65, 0.65, 0.9, 0.9,NULL,"brNDC");    // LEGEND
-  leg0->SetBorderSize(1);   leg0->SetLineColor(1);   leg0->SetLineStyle(1);   leg0->SetLineWidth(1);   leg0->SetFillColor(0);   leg0->SetFillStyle(1001);
-  leg0->SetNColumns(2);
-  leg0->AddEntry((TObject*)0,"#bf{p_{T}^{Lead} (GeV)}", "");
-  leg0->AddEntry((TObject*)0,"#bf{<#rho> (GeV)}", "");
+
+
+  TCanvas * c5 = new TCanvas( "c5" , "" ,0 ,23 ,1280 ,700 );              // CANVAS
+  c5->SetLogz();
+  TCanvas * c6 = new TCanvas( "c6" , "" ,0 ,23 ,1280 ,700 );              // CANVAS
+  c6->SetLogz();
   
-  hscale1->SetStats(0);  c0->cd();  c0->Clear();  /*hscale1->Draw();*/  c1->cd();  c0->Clear();  /*hscale1->Draw();*/
+  // TLegend *leg0 = new TLegend(0.65, 0.65, 0.9, 0.9,NULL,"brNDC");    // LEGEND
+  // leg0->SetBorderSize(1);   leg0->SetLineColor(1);   leg0->SetLineStyle(1);   leg0->SetLineWidth(1);   leg0->SetFillColor(0);   leg0->SetFillStyle(1001);
+  // leg0->SetNColumns(2);
+  // leg0->AddEntry((TObject*)0,"#bf{p_{T}^{Lead} (GeV)}", "");
+  // leg0->AddEntry((TObject*)0,"#bf{<#rho> (GeV)}", "");
+  
+  hscale1->SetStats(0);  c5->cd();  /*hscale1->Draw();*/  c6->cd();  /*hscale1->Draw();*/
   for ( int i=0; i<nPtBins; ++i ) {
     hUE_BBCsumE[i]->SetStats(0);    hUE_BBCsumE[i]->SetLineColor( color[i] );    hUE_BBCsumE[i]->SetMarkerStyle( marker[i] );    hUE_BBCsumE[i]->SetMarkerColor( color[i] );    
     hUE_BBCE[i]->SetStats(0);    hUE_BBCE[i]->SetLineColor( color[i] );    hUE_BBCE[i]->SetMarkerStyle( marker[i] );    hUE_BBCE[i]->SetMarkerColor( color[i] );    
-    c0->cd();         hUE_BBCE[i]->ProfileX()->Draw("SAME");
-    c1->cd();         hUE_BBCsumE[i]->ProfileX()->Draw("SAME");
+    c5->cd();         hUE_BBCE[i]->ProfileX()->Draw("SAME");
+    c6->cd();         hUE_BBCsumE[i]->ProfileX()->Draw("SAME");
   }
-  c0->SaveAs( "plots/UE_BBCE_profile.pdf","PDF");
-  c1->SaveAs( "plots/UE_BBCsumE_profile.pdf","PDF");
+  c5->SaveAs( "plots/UE_BBCE_profile.pdf","PDF");
+  c6->SaveAs( "plots/UE_BBCsumE_profile.pdf","PDF");
 
-  c0->cd();  hscale1->Draw();
-  c1->cd();  hscale1->Draw();
+  c5->cd();  hscale2->Draw();
+  c6->cd();  hscale1->Draw();
   for ( int i=0; i<nPtBins; ++i ) {
-    c0->cd();         hUE_BBCE[i]->ProjectionY()->Draw("SAME");
-    c1->cd();         hUE_BBCsumE[i]->ProjectionY()->Draw("SAME");
+    c5->cd();         hUE_BBCE[i]->ProjectionY()->Draw("SAME");
+    c6->cd();         hUE_BBCsumE[i]->ProjectionY()->Draw("SAME");
   }
-  c0->SaveAs( "plots/UE_BBCE_projection.pdf","PDF");
-  c1->SaveAs( "plots/UE_BBCsumE_projection.pdf","PDF");
+  c5->SaveAs( "plots/UE_BBCE_projection.pdf","PDF");
+  c6->SaveAs( "plots/UE_BBCsumE_projection.pdf","PDF");
   
   hLeadPtVsRho->GetXaxis()->SetRange(2,80);
   
