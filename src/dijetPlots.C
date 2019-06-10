@@ -5,8 +5,8 @@ void dijetPlots() {
   
   const float pi = 3.141592;
   const double twopi = 2*3.14159265358979;
-  TString Ndj, avg;
-  TString lpf = "lpf";
+  TString Ndj, avg;      TString lpf = "lpf";
+  double scale;
   TH1::SetDefaultSumw2();  TH2::SetDefaultSumw2();  TH3::SetDefaultSumw2();
 
   TFile* inFile = new TFile( "out/HTjets/pAu_HT_dijets.root", "UPDATE" );
@@ -65,24 +65,29 @@ void dijetPlots() {
     title = "Underlying Event vs. BBC East Rate - p_{T}^{lead}: " + ptBinString[i];
     hPt_UE_BBCE->GetXaxis()->SetRangeUser(ptBinLo[i], ptBinHi[i]);
     hUE_BBCE[i] = (TH2D*)hPt_UE_BBCE->Project3D( "yz" );       // PROJECT
-    hUE_BBCE[i]->Scale( 1./hUE_BBCE[i]->Integral("width") );                     // NORMALIZE
+    scale = hUE_BBCE[i]->Integral("width");
+    hUE_BBCE[i]->Scale( 1./scale );                     // NORMALIZE
     hUE_BBCE[i]->SetNameTitle(name,title);
     hUE_BBCE[i]->Write();
     hUE_BBCE[i]->Draw("COLZ");
     name = "plots/UEvsBBCE" + ptBinName[i] + ".pdf";
     // c0->SaveAs( name,"PDF");
+    hUE_BBCE[i]->Scale( scale );                     // UN-NORMALIZE
+
 
     c1->cd();
     name = "UEvsBBCsumE" + ptBinName[i];
     title = "Underlying Event vs. BBC ADC East Sum - p_{T}^{lead}: " + ptBinString[i];
     hPt_UE_BBCsumE->GetXaxis()->SetRangeUser(ptBinLo[i], ptBinHi[i]);
     hUE_BBCsumE[i] = (TH2D*)hPt_UE_BBCsumE->Project3D( "yz" );       // PROJECT
-    hUE_BBCsumE[i]->Scale( 1./hUE_BBCsumE[i]->Integral("width") );                     // NORMALIZE
+    scale = hUE_BBCsumE[i]->Integral("width");
+    hUE_BBCsumE[i]->Scale( 1./scale );                     // NORMALIZE
     hUE_BBCsumE[i]->SetNameTitle(name,title);
     hUE_BBCsumE[i]->Write();
     hUE_BBCsumE[i]->Draw("COLZ");
     name = "plots/UEvsBBCsumE" + ptBinName[i] + ".pdf";
     // c1->SaveAs( name,"PDF");
+    hUE_BBCsumE[i]->Scale( scale );                     // UN-NORMALIZE
   }
 
   hscale1->SetStats(0);
