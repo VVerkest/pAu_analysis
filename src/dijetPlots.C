@@ -137,11 +137,11 @@ void dijetPlots() {
     
     lpf += "lpf";
   }
-  c5->cd();        leg0->Draw();        c5->Modified();        c5->SetSelected(c5);
+  leg0->Draw();        c5->Modified();        c5->cd();        c5->SetSelected(c5);
   c5->SaveAs( "plots/UE_BBCE_projection.pdf","PDF");
   c5->SetLogy();          c5->SaveAs( "plots/UE_BBCE_projection_log.pdf","PDF");
   
-  c6->cd();        leg1->Draw();        c6->Modified();        c6->SetSelected(c6);
+  leg1->Draw();        c6->Modified();        c6->cd();        c6->SetSelected(c6);
   c6->SaveAs( "plots/UE_BBCsumE_projection.pdf","PDF");
   c6->SetLogy();          c6->SaveAs( "plots/UE_BBCsumE_projection.pdf_log","PDF");
 
