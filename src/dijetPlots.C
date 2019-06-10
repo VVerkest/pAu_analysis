@@ -9,7 +9,7 @@ void dijetPlots() {
   TString lpf = "lpf";
   TH1::SetDefaultSumw2();  TH2::SetDefaultSumw2();  TH3::SetDefaultSumw2();
 
-  TFile* inFile = new TFile( "out/HTjets/pAu_HT_dijets.root", "READ" );
+  TFile* inFile = new TFile( "out/HTjets/pAu_HT_dijets.root", "UPDATE" );
 
   TH3D *hVertex = (TH3D*) inFile->Get("hVertex");
   TH3D *hPt_UE_BBCE = (TH3D*) inFile->Get("hPt_UE_BBCE");
@@ -36,6 +36,7 @@ void dijetPlots() {
   hPt_UE_BBCsumE->GetZaxis()->SetRangeUser( 0.0, 80000.0 );
 
   TH2D *hscale0 = new TH2D( "hscale0", "Underlying Event by Lead Jet p_{T};#rho (GeV);", 12,0,6, 10,0.001, 1.0 );
+  TH2D *hscale1 = new TH2D( "hscale1", "Underlying Event vs. BBC ADC East Sum;BBC ADC East Sum;#rho (GeV);", 20,0.001,100000, 20,0,10 );
 
   const int nPtBins = 5;
   TH1D * hRho[nPtBins];
@@ -53,35 +54,61 @@ void dijetPlots() {
 
 
 
-  // TCanvas * c0 = new TCanvas( "c0" , "" ,0 ,23 ,1280 ,700 );              // CANVAS
-  // c0->SetLogz();
-  // TCanvas * c1 = new TCanvas( "c1" , "" ,0 ,23 ,1280 ,700 );              // CANVAS
-  // c1->SetLogz();
+  TCanvas * c0 = new TCanvas( "c0" , "" ,0 ,23 ,1280 ,700 );              // CANVAS
+  c0->SetLogz();
+  TCanvas * c1 = new TCanvas( "c1" , "" ,0 ,23 ,1280 ,700 );              // CANVAS
+  c1->SetLogz();
   
-  // for ( int i=0; i<nPtBins; ++i ) {
-  //   c0->cd();
-  //   name = "plots/UEvsBBCE" + ptBinName[i] + ".pdf";
-  //   title = "Underlying Event vs. BBC East Rate - p_{T}^{lead}: " + ptBinString[i];
-  //   hPt_UE_BBCE->GetXaxis()->SetRangeUser(ptBinLo[i], ptBinHi[i]);
-  //   hUE_BBCE[i] = (TH2D*)hPt_UE_BBCE->Project3D( "yz" );       // PROJECT
-  //   hUE_BBCE[i]->Scale( 1./hUE_BBCE[i]->Integral("width") );                     // NORMALIZE
-  //   hUE_BBCE[i]->SetTitle(title);
-  //   hUE_BBCE[i]->Draw("COLZ");
-  //   c0->SaveAs( name,"PDF");
+  for ( int i=0; i<nPtBins; ++i ) {
+    c0->cd();
+    name = "UEvsBBCE" + ptBinName[i];
+    title = "Underlying Event vs. BBC East Rate - p_{T}^{lead}: " + ptBinString[i];
+    hPt_UE_BBCE->GetXaxis()->SetRangeUser(ptBinLo[i], ptBinHi[i]);
+    hUE_BBCE[i] = (TH2D*)hPt_UE_BBCE->Project3D( "yz" );       // PROJECT
+    hUE_BBCE[i]->Scale( 1./hUE_BBCE[i]->Integral("width") );                     // NORMALIZE
+    hUE_BBCE[i]->SetNameTitle(name,title);
+    hUE_BBCE[i]->Write();
+    hUE_BBCE[i]->Draw("COLZ");
+    name = "plots/UEvsBBCE" + ptBinName[i] + ".pdf";
+    // c0->SaveAs( name,"PDF");
 
-  //   c1->cd();
-  //   name = "plots/UEvsBBCsumE" + ptBinName[i] + ".pdf";
-  //   title = "Underlying Event vs. BBC ADC East Sum - p_{T}^{lead}: " + ptBinString[i];
-  //   hPt_UE_BBCsumE->GetXaxis()->SetRangeUser(ptBinLo[i], ptBinHi[i]);
-  //   hUE_BBCsumE[i] = (TH2D*)hPt_UE_BBCsumE->Project3D( "yz" );       // PROJECT
-  //   hUE_BBCsumE[i]->Scale( 1./hUE_BBCsumE[i]->Integral("width") );                     // NORMALIZE
-  //   hUE_BBCsumE[i]->SetTitle(title);
-  //   hUE_BBCsumE[i]->Draw("COLZ");
-  //   c1->SaveAs( name,"PDF");
-  // }
+    c1->cd();
+    name = "UEvsBBCsumE" + ptBinName[i];
+    title = "Underlying Event vs. BBC ADC East Sum - p_{T}^{lead}: " + ptBinString[i];
+    hPt_UE_BBCsumE->GetXaxis()->SetRangeUser(ptBinLo[i], ptBinHi[i]);
+    hUE_BBCsumE[i] = (TH2D*)hPt_UE_BBCsumE->Project3D( "yz" );       // PROJECT
+    hUE_BBCsumE[i]->Scale( 1./hUE_BBCsumE[i]->Integral("width") );                     // NORMALIZE
+    hUE_BBCsumE[i]->SetNameTitle(name,title);
+    hUE_BBCsumE[i]->Write();
+    hUE_BBCsumE[i]->Draw("COLZ");
+    name = "plots/UEvsBBCsumE" + ptBinName[i] + ".pdf";
+    // c1->SaveAs( name,"PDF");
+  }
+
+  hscale1->SetStats(0);
+  c0->cd();  hscale1->Draw();
+  c1->cd();  hscale1->Draw();
+  for ( int i=0; i<nPtBins; ++i ) {
+    hUE_BBCsumE[i]->SetStats(0);    hUE_BBCsumE[i]->SetLineColor( color[i] );    hUE_BBCsumE[i]->SetMarkerStyle( marker[i] );    hUE_BBCsumE[i]->SetMarkerColor( color[i] );    
+    hUE_BBCE[i]->SetStats(0);    hUE_BBCE[i]->SetLineColor( color[i] );    hUE_BBCE[i]->SetMarkerStyle( marker[i] );    hUE_BBCE[i]->SetMarkerColor( color[i] );    
+    c0->cd();         hUE_BBCE[i]->ProfileX()->Draw("SAME");
+    c1->cd();         hUE_BBCsumE[i]->ProfileX()->Draw("SAME");
+  }
+  c0->SaveAs( "plots/UE_BBCE_profile.pdf","PDF");
+  c1->SaveAs( "plots/UE_BBCsumE_profile.pdf","PDF");
+
+  c0->cd();  hscale1->Draw();
+  c1->cd();  hscale1->Draw();
+  for ( int i=0; i<nPtBins; ++i ) {
+    c0->cd();         hUE_BBCE[i]->ProjectionX()->Draw("SAME");
+    c1->cd();         hUE_BBCsumE[i]->ProjectionX()->Draw("SAME");
+  }
+  c0->SaveAs( "plots/UE_BBCE_projection.pdf","PDF");
+  c1->SaveAs( "plots/UE_BBCsumE_projection.pdf","PDF");
+  
+  hLeadPtVsRho->GetXaxis()->SetRange(2,80);
   
   // TCanvas * c2 = new TCanvas( "c2" , "" ,0 ,23 ,1280 ,700 );              // CANVAS
-  // hLeadPtVsRho->GetXaxis()->SetRange(2,80);
   // double LeadVrhoScale = hLeadPtVsRho->Integral("width");
   // hLeadPtVsRho->Scale(1./LeadVrhoScale);
   // c2->SetLogz();
@@ -89,10 +116,10 @@ void dijetPlots() {
   // c2->SaveAs("plots/LeadPtVsRho.pdf","PDF");
   // hLeadPtVsRho->Scale(LeadVrhoScale);
   
-  // TCanvas * c3 = new TCanvas( "c3" , "" ,0 ,23 ,1280 ,700 );              // CANVAS
-  // c3->SetLogy();
-  // hscale0->SetStats(0);
-  // hscale0->Draw();
+  TCanvas * c3 = new TCanvas( "c3" , "" ,0 ,23 ,1280 ,700 );              // CANVAS
+  c3->SetLogy();
+  hscale0->SetStats(0);
+  hscale0->Draw();
 
   // TLegend *leg1 = new TLegend(0.65, 0.65, 0.9, 0.9,NULL,"brNDC");    // LEGEND
   // leg1->SetBorderSize(1);   leg1->SetLineColor(1);   leg1->SetLineStyle(1);   leg1->SetLineWidth(1);   leg1->SetFillColor(0);   leg1->SetFillStyle(1001);
@@ -110,7 +137,6 @@ void dijetPlots() {
   //   hRho[i]->Scale( 1./hRho[i]->Integral() );                     // NORMALIZE
   //   hRho[i]->SetLineColor( color[i] );    hRho[i]->SetMarkerStyle( marker[i] );    hRho[i]->SetMarkerColor( color[i] );
   //   hRho[i]->Draw("SAME");                                                    // DRAW
-  //   /*entry=*/
   //   Ndj = ""; avg = "";
   //   Ndj += hRho[i]->GetEntries();
   //   avg += hRho[i]->GetMean(1);                                           // 1 denotes x-axis
@@ -128,36 +154,36 @@ void dijetPlots() {
 
   
   gStyle->SetOptStat(1);
-  TCanvas * c4 = new TCanvas( "c4" , "" ,0 ,23 ,1280 ,700 );              // CANVAS
+  // TCanvas * c4 = new TCanvas( "c4" , "" ,0 ,23 ,1280 ,700 );              // CANVAS
   
-  hLeadEtaPhi->Scale( 1./hLeadEtaPhi->Integral("width") );
-  hLeadEtaPhi->Draw("COLZ");
-  c4->SaveAs("plots/LeadEtaPhi.pdf","PDF");
+  // hLeadEtaPhi->Scale( 1./hLeadEtaPhi->Integral("width") );
+  // hLeadEtaPhi->Draw("COLZ");
+  // c4->SaveAs("plots/LeadEtaPhi.pdf","PDF");
 
-  hSubEtaPhi->Scale( 1./hSubEtaPhi->Integral("width") );
-  hSubEtaPhi->Draw("COLZ");
-  c4->SaveAs("plots/SubEtaPhi.pdf","PDF");
+  // hSubEtaPhi->Scale( 1./hSubEtaPhi->Integral("width") );
+  // hSubEtaPhi->Draw("COLZ");
+  // c4->SaveAs("plots/SubEtaPhi.pdf","PDF");
 
-  c4->SetLogz();
-  hTowersVsRho->Scale( 1./hTowersVsRho->Integral("width") );
-  hTowersVsRho->GetXaxis()->SetRangeUser( 0,7 );
-  hTowersVsRho->GetYaxis()->SetRangeUser( 0,200 );
-  hTowersVsRho->Draw("COLZ");
-  c4->SaveAs("plots/TowersVsRho.pdf","PDF");
+  // c4->SetLogz();
+  // hTowersVsRho->Scale( 1./hTowersVsRho->Integral("width") );
+  // hTowersVsRho->GetXaxis()->SetRangeUser( 0,7 );
+  // hTowersVsRho->GetYaxis()->SetRangeUser( 0,200 );
+  // hTowersVsRho->Draw("COLZ");
+  // c4->SaveAs("plots/TowersVsRho.pdf","PDF");
   
-  hPrimaryVsGlobal->Scale( 1./hPrimaryVsGlobal->Integral("width") );
-  hPrimaryVsGlobal->Draw("COLZ");
-  c4->SaveAs("plots/PrimaryVsGlobal.pdf","PDF");
+  // hPrimaryVsGlobal->Scale( 1./hPrimaryVsGlobal->Integral("width") );
+  // hPrimaryVsGlobal->Draw("COLZ");
+  // c4->SaveAs("plots/PrimaryVsGlobal.pdf","PDF");
 
-  hPrimaryVsBBCsumE->Scale( 1./hPrimaryVsBBCsumE->Integral("width") );
-  hPrimaryVsBBCsumE->Draw("COLZ");
-  c4->SaveAs("plots/PrimaryVsBBCsumE.pdf","PDF");
+  // hPrimaryVsBBCsumE->Scale( 1./hPrimaryVsBBCsumE->Integral("width") );
+  // hPrimaryVsBBCsumE->Draw("COLZ");
+  // c4->SaveAs("plots/PrimaryVsBBCsumE.pdf","PDF");
 
-  hTowersVsBBCsumE->GetXaxis()->SetRangeUser( 0,80000 );  
-  hTowersVsBBCsumE->GetYaxis()->SetRangeUser( 0,200 );  
-  hTowersVsBBCsumE->Scale( 1./hTowersVsBBCsumE->Integral("width") );
-  hTowersVsBBCsumE->Draw("COLZ");
-  c4->SaveAs("plots/hTowersVsBBCsumE.pdf","PDF");
+  // hTowersVsBBCsumE->GetXaxis()->SetRangeUser( 0,80000 );  
+  // hTowersVsBBCsumE->GetYaxis()->SetRangeUser( 0,200 );  
+  // hTowersVsBBCsumE->Scale( 1./hTowersVsBBCsumE->Integral("width") );
+  // hTowersVsBBCsumE->Draw("COLZ");
+  // c4->SaveAs("plots/hTowersVsBBCsumE.pdf","PDF");
 
   
   inFile->Close();
