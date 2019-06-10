@@ -36,8 +36,7 @@ void dijetPlots() {
   hPt_UE_BBCsumE->GetZaxis()->SetRangeUser( 0.0, 80000.0 );
 
   TH2D *hscale0 = new TH2D( "hscale0", "Underlying Event by Lead Jet p_{T};#rho (GeV);", 12,0,6, 10,0.001, 1.0 );
-  TH2D *hscale1 = new TH2D( "hscale1", "Underlying Event vs. BBC ADC East Sum", 20,0.001,100000, 12,0,3 );
-  TH1D *hscale_1 = new TH1D( "hscale_1", "Underlying Event vs. BBC ADC East Sum", 50,0,25 );
+  TH2D *hscale1 = new TH2D( "hscale1", "Underlying Event vs. BBC ADC East Sum", 20,0.001,100000, 50,0,25 );
 
   const int nPtBins = 5;
   TH1D * hRho[nPtBins];
@@ -73,7 +72,7 @@ void dijetPlots() {
     hUE_BBCE[i]->Draw("COLZ");
     name = "plots/UEvsBBCE" + ptBinName[i] + ".pdf";
     // c0->SaveAs( name,"PDF");
-    //hUE_BBCE[i]->Scale( scale );                     // UN-NORMALIZE
+    hUE_BBCE[i]->Scale( scale );                     // UN-NORMALIZE
 
 
     c1->cd();
@@ -88,7 +87,7 @@ void dijetPlots() {
     hUE_BBCsumE[i]->Draw("COLZ");
     name = "plots/UEvsBBCsumE" + ptBinName[i] + ".pdf";
     // c1->SaveAs( name,"PDF");
-    //hUE_BBCsumE[i]->Scale( scale );                     // UN-NORMALIZE
+    hUE_BBCsumE[i]->Scale( scale );                     // UN-NORMALIZE
   }
 
   TLegend *leg0 = new TLegend(0.65, 0.65, 0.9, 0.9,NULL,"brNDC");    // LEGEND
@@ -97,7 +96,7 @@ void dijetPlots() {
   leg0->AddEntry((TObject*)0,"#bf{p_{T}^{Lead} (GeV)}", "");
   leg0->AddEntry((TObject*)0,"#bf{<#rho> (GeV)}", "");
   
-  hscale1->SetStats(0);  c0->cd();  c0->Clear();  hscale_1->Draw();  c1->cd();  c0->Clear();  hscale_1->Draw();
+  hscale1->SetStats(0);  c0->cd();  c0->Clear();  /*hscale1->Draw();*/  c1->cd();  c0->Clear();  /*hscale1->Draw();*/
   for ( int i=0; i<nPtBins; ++i ) {
     hUE_BBCsumE[i]->SetStats(0);    hUE_BBCsumE[i]->SetLineColor( color[i] );    hUE_BBCsumE[i]->SetMarkerStyle( marker[i] );    hUE_BBCsumE[i]->SetMarkerColor( color[i] );    
     hUE_BBCE[i]->SetStats(0);    hUE_BBCE[i]->SetLineColor( color[i] );    hUE_BBCE[i]->SetMarkerStyle( marker[i] );    hUE_BBCE[i]->SetMarkerColor( color[i] );    
