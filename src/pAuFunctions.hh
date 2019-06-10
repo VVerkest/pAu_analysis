@@ -4,7 +4,7 @@
 #include "fastjet/ClusterSequenceArea.hh"
 #include "fastjet/AreaDefinition.hh"
 #include "fastjet/Selector.hh"
-#include "BackgroundEstimatorBase.hh"
+#include "fastjet/tools/BackgroundEstimatorBase.hh"
 #include "fastjet/tools/JetMedianBackgroundEstimator.hh"
 #include "fastjet/tools/Filter.hh"
 #include "fastjet/tools/Pruner.hh"
