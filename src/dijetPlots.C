@@ -96,7 +96,7 @@ void dijetPlots() {
   leg0->AddEntry((TObject*)0,"#bf{p_{T}^{Lead} (GeV)}", "");
   leg0->AddEntry((TObject*)0,"#bf{<#rho> (GeV)}", "");
   
-  hscale1->SetStats(0);  c0->cd();  c0->clear();  /*hscale1->Draw();*/  c1->cd();  c0->clear();  /*hscale1->Draw();*/
+  hscale1->SetStats(0);  c0->cd();  c0->Clear();  /*hscale1->Draw();*/  c1->cd();  c0->Clear();  /*hscale1->Draw();*/
   for ( int i=0; i<nPtBins; ++i ) {
     hUE_BBCsumE[i]->SetStats(0);    hUE_BBCsumE[i]->SetLineColor( color[i] );    hUE_BBCsumE[i]->SetMarkerStyle( marker[i] );    hUE_BBCsumE[i]->SetMarkerColor( color[i] );    
     hUE_BBCE[i]->SetStats(0);    hUE_BBCE[i]->SetLineColor( color[i] );    hUE_BBCE[i]->SetMarkerStyle( marker[i] );    hUE_BBCE[i]->SetMarkerColor( color[i] );    
