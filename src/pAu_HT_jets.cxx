@@ -19,7 +19,13 @@ using namespace pAuAnalysis;
 
 int main ( int argc, const char** argv ) {
 
+  vector<string> arguments( argv+1, argv+argc );
+  if ( argc ==  4 ) {    inFile = arguments[0];    outFile = arguments[1];    nEvents = atoi(arguments[2].c_str());  }
+  else if ( argc ==  1 ) {    inFile = "production_pAu200_2015/HT/pAu_2015_200_HT*.root";    outFile = "out/pAuJets_HT.root";    nEvents = 10000;  }
+  else { cerr<< "incorrect number of command line arguments"; return -1; }
+
   TH1::SetDefaultSumw2();  TH2::SetDefaultSumw2();  TH3::SetDefaultSumw2();
+  
   TH3D *hVertex = new TH3D( "hVertex", "Event Vertex;v_{x};v_{y};v_{z}", 60,-0.3,0.3, 60,-0.3,0.3, 160,-40,40 );
   TH1D *hTowersPerEvent = new TH1D("hTowersPerEvent","Tower Frequency;# of Towers", 700,0,700 );
   TH2D *hTowersPerRun = new TH2D("hTowersPerRun","Tower Frequency (per run);Run no.;# of Towers", 40000,16124000,16164000, 140,0,700 );
@@ -44,35 +50,24 @@ int main ( int argc, const char** argv ) {
   TH2D *hTowersVsBMErho = new TH2D("hTowersVsBMErho","# of Towers vs. Bkg. Med. Est. UE;#rho (GeV);# of Towers", 80,0,35, 100,0,1000);
   TH2D *hLeadPtVsBMErho = new TH2D("hLeadPtVsBMErho","Lead Jet p_{T} vs Bkg. Med. Est. UE;#rho (GeV);p_{T}^{lead} (GeV)", 80,0,35, 140,0,70);
     
-  double pmin1, pmax1, pmin2, pmax2;                 int eID, rID, nEvents;                 string inFile, outFile;
+  double pmin1, pmax1, pmin2, pmax2, ptSum;                 int eID, rID, nEvents;                 string inFile, outFile;
   int RunID, EventID, nTowers, nPrimary, nGlobal, nVertices, refMult, gRefMult, nJets, leadNcons, subNcons, towID, nHitsPoss, nHitsFit, Charge, nCons;;
   double Vx, Vy, Vz, BbcCoincidenceRate, BbcEastRate, BbcWestRate, BbcAdcSumEast, vpdVz,  leadPt, leadEta, leadPhi, leadEt, subPt, subEta, subPhi, subEt, BMErho, BMEsigma, rho, sigma;
   vector<double> partPt, partEta, partPhi, partEt;
-  
-  if ( argc ==  4 ) {
-    vector<string> arguments( argv+1, argv+argc );
-    inFile = arguments[0];
-    outFile = arguments[1];
-    nEvents = atoi(arguments[2].c_str());
-  }
-  else if ( argc ==  1 ) {
-    vector<string> arguments( argv+1, argv+argc );
-    inFile = "production_pAu200_2015/HT/pAu_2015_200_HT*.root";
-    outFile = "out/pAuJets_HT.root";
-    nEvents = 1000;
-  }
-  else { cerr<< "incorrect number of command line arguments"; return -1; }
 
   TChain* Chain = new TChain( "JetTree" );          Chain->Add( inFile.c_str() );
   TStarJetPicoReader Reader;                                int numEvents = nEvents;        // total events in HT: 152,007,032
   InitReader( Reader, Chain, numEvents );
 
-  TTree *sp = new TTree( "sp", "Selected Particles" );
-  sp->Branch("partPt",&partPt);        sp->Branch("partEta",&partEta);        sp->Branch("partPhi",&partPhi);        sp->Branch("partEt",&partEt);
-
+  TTree *sp[nEtaBins];
+  for ( int i=0; i<nEtaBins; ++i ) {
+    name = "sp" + etaBinName;          title = "Selected Particles: " + etaBinString[i];          sp[i] = new TTree( name, title );
+    sp[i]->Branch("partPt",&partPt);        sp[i]->Branch("partEta",&partEta);        sp[i]->Branch("partPhi",&partPhi);
+    sp[i]->Branch("partEt",&partEt);        sp[i]->Branch("rho",&rho);        sp[i]->Branch("sigma",&sigma);
+  }
+  
     //  CREATE JET SELECTOR
-  Selector etaSelector = SelectorAbsEtaMax( 1.0-R );    Selector ptMinSelector = SelectorPtMin(jetMinPt);
-  Selector etaPtSelector = etaSelector && ptMinSelector;
+  Selector etaSelector = SelectorAbsEtaMax( 1.0-R );    Selector ptMinSelector = SelectorPtMin(jetMinPt);  Selector etaPtSelector = etaSelector && ptMinSelector;
   JetDefinition jet_def(antikt_algorithm, R);     //  JET DEFINITION
   JetDefinition bg_jet_def(kt_algorithm, R);     //  BACKGROUND ESTIMATION JET DEFINITION
   
@@ -112,21 +107,22 @@ int main ( int argc, const char** argv ) {
     //  UE: JET MEDIAN BACKGROUND METHOD
     pmin1 = phi1 + qpi;           pmax1 = phi1 + (3*qpi);           pmin2 = phi1 - (3*qpi);           pmax2 = phi1 - qpi;
     Selector bgPhiRange = SelectorPhiRange( pmin1, pmax1 ) || SelectorPhiRange( pmin2, pmax2 );
-    Selector bgSelector = bgPhiRange && SelectorAbsEtaMax( 1.0 );
-    GhostedAreaSpec gAreaSpec( 1.0, 1, 0.01 );
-    AreaDefinition bg_area_def(active_area_explicit_ghosts, gAreaSpec);
-    ClusterSequenceArea bgCluster( rawParticles, bg_jet_def, bg_area_def);
-    JetMedianBackgroundEstimator BGEUE( bgSelector, bgCluster );
+    Selector bgEtaRange = SelectorEtaRange( -1.0, 1.0 );    Selector bgSelector = bgPhiRange && bgEtaRange;
+    GhostedAreaSpec gAreaSpec( 1.0, 1, 0.01 );    AreaDefinition bg_area_def(active_area_explicit_ghosts, gAreaSpec);
+    ClusterSequenceArea bgCluster( rawParticles, bg_jet_def, bg_area_def);    JetMedianBackgroundEstimator BGEUE( bgSelector, bgCluster );
     BMErho = BGEUE.rho();            BMEsigma = BGEUE.sigma();
 
     selectedParticles = bgSelector( bgCluster.inclusive_jets() );
 
+    ptSum = 0;
+    
     for (int i=0; i<selectedParticles.size(); ++i) {
       partPt.push_back( selectedParticles[i].pt() );          partEta.push_back( selectedParticles[i].eta() );
       partPhi.push_back( selectedParticles[i].phi() );      partEt.push_back( selectedParticles[i].Et() );
+      ptSum+=selectedParticles[i].pt();
     }
   
-    sp->Fill();
+    sp[0]->Fill();
     
     eID = Reader.GetNOfCurrentEvent();          EventID = eID;
     rID = header->GetRunId();                        RunID = rID;
