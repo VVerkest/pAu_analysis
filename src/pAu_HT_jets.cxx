@@ -19,6 +19,8 @@ using namespace pAuAnalysis;
 
 int main ( int argc, const char** argv ) {
 
+  int eID, rID, nEvents;                 string inFile, outFile, name, title;
+  
   vector<string> arguments( argv+1, argv+argc );
   if ( argc ==  4 ) {    inFile = arguments[0];    outFile = arguments[1];    nEvents = atoi(arguments[2].c_str());  }
   else if ( argc ==  1 ) {    inFile = "production_pAu200_2015/HT/pAu_2015_200_HT*.root";    outFile = "out/pAuJets_HT.root";    nEvents = 10000;  }
@@ -50,7 +52,7 @@ int main ( int argc, const char** argv ) {
   TH2D *hTowersVsBMErho = new TH2D("hTowersVsBMErho","# of Towers vs. Bkg. Med. Est. UE;#rho (GeV);# of Towers", 80,0,35, 100,0,1000);
   TH2D *hLeadPtVsBMErho = new TH2D("hLeadPtVsBMErho","Lead Jet p_{T} vs Bkg. Med. Est. UE;#rho (GeV);p_{T}^{lead} (GeV)", 80,0,35, 140,0,70);
     
-  double pmin1, pmax1, pmin2, pmax2, ptSum;                 int eID, rID, nEvents;                 string inFile, outFile;
+  double pmin1, pmax1, pmin2, pmax2, ptSum;
   int RunID, EventID, nTowers, nPrimary, nGlobal, nVertices, refMult, gRefMult, nJets, leadNcons, subNcons, towID, nHitsPoss, nHitsFit, Charge, nCons;;
   double Vx, Vy, Vz, BbcCoincidenceRate, BbcEastRate, BbcWestRate, BbcAdcSumEast, vpdVz,  leadPt, leadEta, leadPhi, leadEt, subPt, subEta, subPhi, subEt, BMErho, BMEsigma, rho, sigma;
   vector<double> partPt, partEta, partPhi, partEt;
@@ -152,7 +154,7 @@ int main ( int argc, const char** argv ) {
 
   TFile *pAuFile = new TFile( outFile.c_str() ,"RECREATE");
 
-  sp->Write();                                     //  WRITE PARTICLE TREE
+  sp[0]->Write();                                     //  WRITE PARTICLE TREE
   
   hVertex->Write();                             //  WRITE HISTOGRAMS
   hTowersPerEvent->Write();
