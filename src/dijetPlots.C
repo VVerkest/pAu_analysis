@@ -148,7 +148,7 @@ void dijetPlots() {
   
   leg1->Draw();        c6->Modified();        c6->cd();        c6->SetSelected(c6);
   c6->SaveAs( "plots/UE_BBCsumE_projection.pdf","PDF");
-  c6->SetLogy();          c6->SaveAs( "plots/UE_BBCsumE_projection.pdf_log","PDF");
+  c6->SetLogy();          c6->SaveAs( "plots/UE_BBCsumE_projection_log.pdf","PDF");
 
   hLeadPtVsRho->GetXaxis()->SetRange(2,80);
   
