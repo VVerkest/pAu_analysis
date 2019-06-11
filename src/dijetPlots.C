@@ -117,7 +117,7 @@ void dijetPlots() {
     hUE_BBCE_py[i]->SetStats(0);    hUE_BBCE_py[i]->SetLineColor( color[i] );    hUE_BBCE_py[i]->SetMarkerStyle( marker[i] );    hUE_BBCE_py[i]->SetMarkerColor( color[i] );
     hUE_BBCE_py[i]->Draw("Same");
     
-    avg = "";    avg += hUE_BBCE_py[i]->GetMean(0);    // name = "UEvsBBCE" + ptBinName[i];
+    avg = "";    avg += hUE_BBCE_py[i]->GetMean();    // name = "UEvsBBCE" + ptBinName[i];
     title = ptBinString[i];
     leg0->AddEntry( hUE_BBCE_py[i], title, lpf );    leg0->AddEntry((TObject*)0,avg, "");    lpf += "lpf";
   }
@@ -125,7 +125,7 @@ void dijetPlots() {
   leg0->Draw();        c5->Modified();        c5->cd();        c5->SetSelected(c5);
   c5->SaveAs( "plots/UE_BBCE_projection.pdf","PDF");
   c5->SetLogy();          c5->SaveAs( "plots/UE_BBCE_projection_log.pdf","PDF");
-
+  c5->Close();
   
   TLegend *leg1 = new TLegend(0.65, 0.65, 0.9, 0.9,NULL,"brNDC");    // LEGEND
   leg1->SetBorderSize(1);   leg1->SetLineColor(1);   leg1->SetLineStyle(1);   leg1->SetLineWidth(1);   leg1->SetFillColor(0);   leg1->SetFillStyle(1001);
@@ -137,7 +137,7 @@ void dijetPlots() {
     hUE_BBCsumE_py[i]->SetStats(0);    hUE_BBCsumE_py[i]->SetLineColor( color[i] );    hUE_BBCsumE_py[i]->SetMarkerStyle( marker[i] );    hUE_BBCsumE_py[i]->SetMarkerColor( color[i] );
     hUE_BBCsumE_py[i]->Draw("Same");
     
-    avg = "";    avg += hUE_BBCsumE_py[i]->GetMean(0);    // name = "UEvsBBCE" + ptBinName[i];
+    avg = "";    avg += hUE_BBCsumE_py[i]->GetMean();    // name = "UEvsBBCE" + ptBinName[i];
     title = ptBinString[i];
     leg1->AddEntry( hUE_BBCsumE_py[i], title, lpf );    leg1->AddEntry((TObject*)0,avg, "");    lpf += "lpf";
   }
@@ -153,7 +153,7 @@ void dijetPlots() {
 
 
   
-  hLeadPtVsRho->GetXaxis()->SetRange(2,80);
+  // hLeadPtVsRho->GetXaxis()->SetRange(2,80);
   
   // TCanvas * c2 = new TCanvas( "c2" , "" ,0 ,23 ,1280 ,700 );              // CANVAS
   // double LeadVrhoScale = hLeadPtVsRho->Integral("width");
