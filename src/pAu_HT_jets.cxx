@@ -55,7 +55,7 @@ int main ( int argc, const char** argv ) {
   double pmin1, pmax1, pmin2, pmax2, ptSum;
   int RunID, EventID, nTowers, nPrimary, nGlobal, nVertices, refMult, gRefMult, nJets, leadNcons, subNcons, towID, nHitsPoss, nHitsFit, Charge, nCons;;
   double Vx, Vy, Vz, BbcCoincidenceRate, BbcEastRate, BbcWestRate, BbcAdcSumEast, vpdVz,  leadPt, leadEta, leadPhi, leadEt, subPt, subEta, subPhi, subEt, BMErho, BMEsigma, BMErho_avg, BMEsigma_avg, rho, sigma;
-  vector<double> partPt, partEta, partPhi, partEt;
+  vector<double> partPt, partEta, partPhi, partEt, deltaPhi;
 
   TChain* Chain = new TChain( "JetTree" );          Chain->Add( inFile.c_str() );
   TStarJetPicoReader Reader;                                int numEvents = nEvents;        // total events in HT: 152,007,032
@@ -66,7 +66,8 @@ int main ( int argc, const char** argv ) {
     name = "sp" + etaBinName[i];          title = "Selected Particles: " + etaBinString[i];          sp[i] = new TTree( name, title );
     sp[i]->Branch("partPt",&partPt);        sp[i]->Branch("partEta",&partEta);        sp[i]->Branch("partPhi",&partPhi);
     sp[i]->Branch("partEt",&partEt);        sp[i]->Branch("rho",&rho);        sp[i]->Branch("sigma",&sigma);
-    sp[i]->Branch("BMErho",&BMErho);        sp[i]->Branch("BMEsigma",&BMEsigma);
+    sp[i]->Branch("BMErho",&BMErho);        sp[i]->Branch("BMEsigma",&BMEsigma);        sp[i]->Branch("deltaPhi",&deltaPhi);
+    
   }
   
     //  CREATE JET SELECTOR
@@ -83,7 +84,7 @@ int main ( int argc, const char** argv ) {
 
     Reader.PrintStatus(5);        nJets=0;
 
-    rawParticles.clear();    rawJets.clear();    selectedParticles.clear();    partPt.clear();    partEta.clear();    partPhi.clear();    partEt.clear();   //  CLEAR VECTORS
+    rawParticles.clear();    rawJets.clear();    selectedParticles.clear();    partPt.clear();    partEta.clear();    partPhi.clear();    partEt.clear();    deltaPhi.clear();//  CLEAR VECTORS
     
     event = Reader.GetEvent();            header = event->GetHeader();            container = Reader.GetOutputContainer();
     
@@ -121,9 +122,9 @@ int main ( int argc, const char** argv ) {
       ptSum = 0;
     
       for (int i=0; i<selectedParticles.size(); ++i) {
-	partPt.push_back( selectedParticles[i].pt() );          partEta.push_back( selectedParticles[i].eta() );
-	partPhi.push_back( selectedParticles[i].phi() );      partEt.push_back( selectedParticles[i].Et() );
-	ptSum+=selectedParticles[i].pt();
+	partPt.push_back( selectedParticles[i].pt() );             partEta.push_back( selectedParticles[i].eta() );
+	partPhi.push_back( selectedParticles[i].phi() );         partEt.push_back( selectedParticles[i].Et() );
+	deltaPhi.push_back( abs( selectedParticles[i].phi() - phi1 ) );     ptSum+=selectedParticles[i].pt();
       }
       rho = (2*ptSum)/pi;
       sp[e]->Fill();
