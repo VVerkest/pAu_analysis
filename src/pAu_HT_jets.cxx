@@ -19,7 +19,7 @@ using namespace pAuAnalysis;
 
 int main ( int argc, const char** argv ) {
 
-  int eID, rID, nEvents;                 string inFile, outFile, name, title;
+  int eID, rID, nEvents;                 string inFile, outFile;                 TString name, title;
   
   vector<string> arguments( argv+1, argv+argc );
   if ( argc ==  4 ) {    inFile = arguments[0];    outFile = arguments[1];    nEvents = atoi(arguments[2].c_str());  }
