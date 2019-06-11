@@ -108,17 +108,16 @@ void dijetPlots() {
   // c5->SaveAs( "plots/UE_BBCE_profile.pdf","PDF");
   // c6->SaveAs( "plots/UE_BBCsumE_profile.pdf","PDF");
 
+  TH1D *hUE_BBCE_py[nPtBins];
+  
   c5->cd();  hscale1->Draw();
   for ( int i=0; i<nPtBins; ++i ) {
-    hUE_BBCE[i]->SetStats(0);    hUE_BBCE[i]->SetLineColor( color[i] );    hUE_BBCE[i]->SetMarkerStyle( marker[i] );    hUE_BBCE[i]->SetMarkerColor( color[i] );    
-    scale = hUE_BBCE[i]->ProjectionY()->Integral("width");        hUE_BBCE[i]->Scale(1.0/scale);
-    hUE_BBCE[i]->ProjectionY()->Draw("SAME");        hUE_BBCE[i]->Scale(scale);
+    hUE_BBCE_py[i] = hUE_BBCE[i]->ProjectionY();        scale = hUE_BBCE_py[i]->Integral("width");        hUE_BBCE_py[i]->Scale(1.0/scale);
+    hUE_BBCE_py[i]->SetStats(0);    hUE_BBCE_py[i]->SetLineColor( color[i] );    hUE_BBCE_py[i]->SetMarkerStyle( marker[i] );    hUE_BBCE_py[i]->SetMarkerColor( color[i] );
+    hUE_BBCE_py[i]->Draw("Same");
     
-    avg = "";    avg += hUE_BBCE[i]->ProjectionY()->GetMean(0);
-    name = "UEvsBBCE" + ptBinName[i];    title = ptBinString[i];
-    leg0->AddEntry( name, title, lpf );    leg0->AddEntry((TObject*)0,avg, "");
-    
-    lpf += "lpf";
+    avg = "";    avg += hUE_BBCE_py[i]->GetMean(0);    // name = "UEvsBBCE" + ptBinName[i];    title = ptBinString[i];
+    leg0->AddEntry( hUE_BBCE_py[i], title, lpf );    leg0->AddEntry((TObject*)0,avg, "");    lpf += "lpf";
   }
   
   leg0->Draw();        c5->Modified();        c5->cd();        c5->SetSelected(c5);
