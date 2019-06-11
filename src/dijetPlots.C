@@ -93,10 +93,7 @@ void dijetPlots() {
 
   TCanvas * c5 = new TCanvas( "c5" , "" ,0 ,23 ,1280 ,700 );              // CANVAS
   TCanvas * c6 = new TCanvas( "c6" , "" ,0 ,23 ,1280 ,700 );              // CANVAS
-  
-  TLegend *leg0 = new TLegend(0.65, 0.65, 0.9, 0.9,NULL,"brNDC");    // LEGEND
-  leg0->SetBorderSize(1);   leg0->SetLineColor(1);   leg0->SetLineStyle(1);   leg0->SetLineWidth(1);   leg0->SetFillColor(0);   leg0->SetFillStyle(1001);
-  leg0->SetNColumns(2);  leg0->AddEntry((TObject*)0,"#bf{p_{T}^{Lead} (GeV)}", "");  leg0->AddEntry((TObject*)0,"#bf{<#rho> (GeV)}", "");
+
 
   // hscale1->SetStats(0);  c5->cd();  /*hscale1->Draw();*/  c6->cd();  /*hscale1->Draw();*/
   // for ( int i=0; i<nPtBins; ++i ) {
@@ -108,7 +105,11 @@ void dijetPlots() {
   // c5->SaveAs( "plots/UE_BBCE_profile.pdf","PDF");
   // c6->SaveAs( "plots/UE_BBCsumE_profile.pdf","PDF");
 
-  TH1D *hUE_BBCE_py[nPtBins];
+  TH1D *hUE_BBCE_py[nPtBins];        TH1D *hUE_BBCsumE_py[nPtBins];
+    
+  TLegend *leg0 = new TLegend(0.65, 0.65, 0.9, 0.9,NULL,"brNDC");    // LEGEND
+  leg0->SetBorderSize(1);   leg0->SetLineColor(1);   leg0->SetLineStyle(1);   leg0->SetLineWidth(1);   leg0->SetFillColor(0);   leg0->SetFillStyle(1001);
+  leg0->SetNColumns(2);  leg0->AddEntry((TObject*)0,"#bf{p_{T}^{Lead} (GeV)}", "");  leg0->AddEntry((TObject*)0,"#bf{<#rho> (GeV)}", "");
   
   c5->cd();  hscale1->Draw();
   for ( int i=0; i<nPtBins; ++i ) {
@@ -116,14 +117,15 @@ void dijetPlots() {
     hUE_BBCE_py[i]->SetStats(0);    hUE_BBCE_py[i]->SetLineColor( color[i] );    hUE_BBCE_py[i]->SetMarkerStyle( marker[i] );    hUE_BBCE_py[i]->SetMarkerColor( color[i] );
     hUE_BBCE_py[i]->Draw("Same");
     
-    avg = "";    avg += hUE_BBCE_py[i]->GetMean(0);    // name = "UEvsBBCE" + ptBinName[i];    title = ptBinString[i];
+    avg = "";    avg += hUE_BBCE_py[i]->GetMean(0);    // name = "UEvsBBCE" + ptBinName[i];
+    title = ptBinString[i];
     leg0->AddEntry( hUE_BBCE_py[i], title, lpf );    leg0->AddEntry((TObject*)0,avg, "");    lpf += "lpf";
   }
   
   leg0->Draw();        c5->Modified();        c5->cd();        c5->SetSelected(c5);
   c5->SaveAs( "plots/UE_BBCE_projection.pdf","PDF");
   c5->SetLogy();          c5->SaveAs( "plots/UE_BBCE_projection_log.pdf","PDF");
-  
+
   
   TLegend *leg1 = new TLegend(0.65, 0.65, 0.9, 0.9,NULL,"brNDC");    // LEGEND
   leg1->SetBorderSize(1);   leg1->SetLineColor(1);   leg1->SetLineStyle(1);   leg1->SetLineWidth(1);   leg1->SetFillColor(0);   leg1->SetFillStyle(1001);
@@ -131,25 +133,26 @@ void dijetPlots() {
   
   c6->cd();  hscale2->Draw();
   for ( int i=0; i<nPtBins; ++i ) {
-
-    hUE_BBCsumE[i]->SetStats(0);    hUE_BBCsumE[i]->SetLineColor( color[i] );    hUE_BBCsumE[i]->SetMarkerStyle( marker[i] );    hUE_BBCsumE[i]->SetMarkerColor( color[i] );    
-
-    c6->cd();
-    scale = hUE_BBCsumE[i]->ProjectionY()->Integral("width");        hUE_BBCsumE[i]->Scale(1.0/scale);
-    hUE_BBCsumE[i]->ProjectionY()->Draw("SAME");        hUE_BBCsumE[i]->Scale(scale);
-
-    avg = "";    avg += hUE_BBCsumE[i]->ProjectionY()->GetMean(0);
-    name = "UEvsBBCsumE" + ptBinName[i];    title = ptBinString[i];
-    leg1->AddEntry( name, title, lpf );
-    leg1->AddEntry((TObject*)0,avg, "");
+    hUE_BBCsumE_py[i] = hUE_BBCsumE[i]->ProjectionY();        scale = hUE_BBCsumE_py[i]->Integral("width");        hUE_BBCsumE_py[i]->Scale(1.0/scale);
+    hUE_BBCsumE_py[i]->SetStats(0);    hUE_BBCsumE_py[i]->SetLineColor( color[i] );    hUE_BBCsumE_py[i]->SetMarkerStyle( marker[i] );    hUE_BBCsumE_py[i]->SetMarkerColor( color[i] );
+    hUE_BBCsumE_py[i]->Draw("Same");
     
-    lpf += "lpf";
+    avg = "";    avg += hUE_BBCsumE_py[i]->GetMean(0);    // name = "UEvsBBCE" + ptBinName[i];
+    title = ptBinString[i];
+    leg1->AddEntry( hUE_BBCsumE_py[i], title, lpf );    leg1->AddEntry((TObject*)0,avg, "");    lpf += "lpf";
   }
   
   leg1->Draw();        c6->Modified();        c6->cd();        c6->SetSelected(c6);
   c6->SaveAs( "plots/UE_BBCsumE_projection.pdf","PDF");
   c6->SetLogy();          c6->SaveAs( "plots/UE_BBCsumE_projection_log.pdf","PDF");
 
+
+
+
+
+
+
+  
   hLeadPtVsRho->GetXaxis()->SetRange(2,80);
   
   // TCanvas * c2 = new TCanvas( "c2" , "" ,0 ,23 ,1280 ,700 );              // CANVAS
