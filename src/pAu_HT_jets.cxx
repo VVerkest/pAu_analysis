@@ -63,7 +63,7 @@ int main ( int argc, const char** argv ) {
 
   TTree *sp[nEtaBins];
   for ( int i=0; i<nEtaBins; ++i ) {
-    name = "sp" + etaBinName;          title = "Selected Particles: " + etaBinString[i];          sp[i] = new TTree( name, title );
+    name = "sp" + etaBinName[i];          title = "Selected Particles: " + etaBinString[i];          sp[i] = new TTree( name, title );
     sp[i]->Branch("partPt",&partPt);        sp[i]->Branch("partEta",&partEta);        sp[i]->Branch("partPhi",&partPhi);
     sp[i]->Branch("partEt",&partEt);        sp[i]->Branch("rho",&rho);        sp[i]->Branch("sigma",&sigma);
   }
