@@ -87,8 +87,10 @@ int main ( int argc, const char** argv ) {
     rawParticles.clear();    rawJets.clear();    selectedParticles.clear();    partPt.clear();    partEta.clear();    partPhi.clear();    partEt.clear();    deltaPhi.clear();//  CLEAR VECTORS
     
     event = Reader.GetEvent();            header = event->GetHeader();            container = Reader.GetOutputContainer();
-    
-    if (!(header->HasTriggerId(500401) || header->HasTriggerId(500411))) {continue;}   //  ONLY SELECT JP2 TRIGGER EVENTS
+
+    if (header->GetRunId() >= 16142059 && header->GetRunId() <= 16149001) { continue; }    //TEMPORARILY SKIPPING THESE RUNS
+    if (header->GetRunId() == 16135031 || header->GetRunId() == 16135032) { continue; }
+        if (!(header->HasTriggerId(500401) || header->HasTriggerId(500411))) {continue;}   //  ONLY SELECT JP2 TRIGGER EVENTS
     Vz = header->GetPrimaryVertexZ();           if ( abs(Vz) > vzCut ) { continue; }
       
     //   JET-FINDING
