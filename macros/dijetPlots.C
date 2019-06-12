@@ -52,7 +52,7 @@ void dijetPlots() {
   
   const int nPtBins = 5;
   TH1D * hRho[nPtBins];  TH2D * hUE_BBCE[nPtBins];  TH2D * hUE_BBCsumE[nPtBins];
-  TH1D * hBGERho[nPtBins];  TH2D * hBGEUE_BBCE[nPtBins];  TH2D * hBGEUE_BBCsumE[nPtBins];
+  TH1D * hBGErho[nPtBins];  TH2D * hBGEUE_BBCE[nPtBins];  TH2D * hBGEUE_BBCsumE[nPtBins];
   
   double ptBinLo[nPtBins] = { 10.0, 15.0, 20.0, 30.0, 40.0 };
   double ptBinHi[nPtBins] = { 15.0, 20.0, 30.0, 40.0, 100.0 };
@@ -250,38 +250,7 @@ void dijetPlots() {
   c6->SaveAs( "plots/BGEUE_BBCsumE_projection.pdf","PDF");
   c6->SetLogy();          c6->SaveAs( "plots/BGEUE_BBCsumE_projection_log.pdf","PDF");
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-  
-
-
-  
-  // hLeadPtVsRho->GetXaxis()->SetRange(2,80);
-  
-  // TCanvas * c2 = new TCanvas( "c2" , "" ,0 ,23 ,1280 ,700 );              // CANVAS
-  // double LeadVrhoScale = hLeadPtVsRho->Integral("width");
-  // hLeadPtVsRho->Scale(1./LeadVrhoScale);
-  // c2->SetLogz();
-  // hLeadPtVsRho->Draw("COLZ");
-  // c2->SaveAs("plots/LeadPtVsRho.pdf","PDF");
-  // hLeadPtVsRho->Scale(LeadVrhoScale);
-
-
-
+  hLeadPtVsRho->GetXaxis()->SetRange(2,80);  hLeadPtVsBGErho->GetXaxis()->SetRange(2,80);
 
   
   TCanvas * c3 = new TCanvas( "c3" , "" ,0 ,23 ,1280 ,700 );              // CANVAS
