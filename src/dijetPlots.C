@@ -142,13 +142,13 @@ void dijetPlots() {
   TCanvas * c6 = new TCanvas( "c6" , "" ,0 ,23 ,1280 ,700 );              // CANVAS
 
 
-  hscale1->SetStats(0);  c5->cd();  /*hscale1->Draw();*/  c6->cd();  /*hscale1->Draw();*/
-  for ( int i=0; i<nPtBins; ++i ) {
-    hUE_BBCsumE[i]->SetStats(0);    hUE_BBCsumE[i]->SetLineColor( color[i] );    hUE_BBCsumE[i]->SetMarkerStyle( marker[i] );    hUE_BBCsumE[i]->SetMarkerColor( color[i] );    
-    hUE_BBCE[i]->SetStats(0);    hUE_BBCE[i]->SetLineColor( color[i] );    hUE_BBCE[i]->SetMarkerStyle( marker[i] );    hUE_BBCE[i]->SetMarkerColor( color[i] );    
-    c5->cd();         hUE_BBCE[i]->ProfileX()->Draw("SAME");    c6->cd();         hUE_BBCsumE[i]->ProfileX()->Draw("SAME");
-  }
-  c5->SaveAs( "plots/UE_BBCE_profile.pdf","PDF");  c6->SaveAs( "plots/UE_BBCsumE_profile.pdf","PDF");
+  // hscale1->SetStats(0);  c5->cd();  /*hscale1->Draw();*/  c6->cd();  /*hscale1->Draw();*/
+  // for ( int i=0; i<nPtBins; ++i ) {
+  //   hUE_BBCsumE[i]->SetStats(0);    hUE_BBCsumE[i]->SetLineColor( color[i] );    hUE_BBCsumE[i]->SetMarkerStyle( marker[i] );    hUE_BBCsumE[i]->SetMarkerColor( color[i] );    
+  //   hUE_BBCE[i]->SetStats(0);    hUE_BBCE[i]->SetLineColor( color[i] );    hUE_BBCE[i]->SetMarkerStyle( marker[i] );    hUE_BBCE[i]->SetMarkerColor( color[i] );    
+  //   c5->cd();         hUE_BBCE[i]->ProfileX("S")->Draw("SAME");    c6->cd();         hUE_BBCsumE[i]->ProfileX("S")->Draw("SAME");
+  // }
+  // c5->SaveAs( "plots/UE_BBCE_profile.pdf","PDF");  c6->SaveAs( "plots/UE_BBCsumE_profile.pdf","PDF");
 
 
 
