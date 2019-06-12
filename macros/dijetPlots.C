@@ -343,10 +343,10 @@ void dijetPlots() {
   hTowersVsRho->Draw("COLZ");
   c4->SaveAs("plots/TowersVsRho.pdf","PDF");
   c4->Clear();
-  hTowersVsBGERho->Scale( 1./hTowersVsBGERho->Integral("width") );
-  hTowersVsBGERho->GetXaxis()->SetRangeUser( 0,7 );
-  hTowersVsBGERho->GetYaxis()->SetRangeUser( 0,200 );
-  hTowersVsBGERho->Draw("COLZ");
+  hTowersVsBMERho->Scale( 1./hTowersVsBMERho->Integral("width") );
+  hTowersVsBMERho->GetXaxis()->SetRangeUser( 0,7 );
+  hTowersVsBMERho->GetYaxis()->SetRangeUser( 0,200 );
+  hTowersVsBMERho->Draw("COLZ");
   c4->SaveAs("plots/TowersVsBGERho.pdf","PDF");
   
   hPrimaryVsGlobal->Scale( 1./hPrimaryVsGlobal->Integral("width") );
