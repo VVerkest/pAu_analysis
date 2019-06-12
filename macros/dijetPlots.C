@@ -106,33 +106,33 @@ void dijetPlots() {
   
   for ( int i=0; i<nPtBins; ++i ) {
     c0->cd();
-    name = "BMEUEvsBBCE" + ptBinName[i];
+    name = "BGEUEvsBBCE" + ptBinName[i];
     title = "Bkg. Med. Est. Underlying Event vs. BBC East Rate - p_{T}^{lead}: " + ptBinString[i];
-    hPt_BMEUE_BBCE->GetXaxis()->SetRangeUser(ptBinLo[i], ptBinHi[i]);
-    hBMEUE_BBCE[i] = (TH2D*)hPt_BMEUE_BBCE->Project3D( "yz" );       // PROJECT
-    scale = hBMEUE_BBCE[i]->Integral("width");
-    hBMEUE_BBCE[i]->Scale( 1./scale );                     // NORMALIZE
-    hBMEUE_BBCE[i]->SetNameTitle(name,title);
-    //hBMEUE_BBCE[i]->Write();
-    hBMEUE_BBCE[i]->Draw("COLZ");
-    name = "plots/BMEUEvsBBCE" + ptBinName[i] + ".pdf";
+    hPt_BGEUE_BBCE->GetXaxis()->SetRangeUser(ptBinLo[i], ptBinHi[i]);
+    hBGEUE_BBCE[i] = (TH2D*)hPt_BGEUE_BBCE->Project3D( "yz" );       // PROJECT
+    scale = hBGEUE_BBCE[i]->Integral("width");
+    hBGEUE_BBCE[i]->Scale( 1./scale );                     // NORMALIZE
+    hBGEUE_BBCE[i]->SetNameTitle(name,title);
+    //hBGEUE_BBCE[i]->Write();
+    hBGEUE_BBCE[i]->Draw("COLZ");
+    name = "plots/BGEUEvsBBCE" + ptBinName[i] + ".pdf";
     c0->SaveAs( name,"PDF");
-    hBMEUE_BBCE[i]->Scale( scale );                     // UN-NORMALIZE
+    hBGEUE_BBCE[i]->Scale( scale );                     // UN-NORMALIZE
 
 
     c1->cd();
-    name = "BMEUEvsBBCsumE" + ptBinName[i];
+    name = "BGEUEvsBBCsumE" + ptBinName[i];
     title = "Bkg. Med. Est. Underlying Event vs. BBC ADC East Sum - p_{T}^{lead}: " + ptBinString[i];
-    hPt_BMEUE_BBCsumE->GetXaxis()->SetRangeUser(ptBinLo[i], ptBinHi[i]);
-    hBMEUE_BBCsumE[i] = (TH2D*)hPt_BMEUE_BBCsumE->Project3D( "yz" );       // PROJECT
-    scale = hBMEUE_BBCsumE[i]->Integral("width");
-    hBMEUE_BBCsumE[i]->Scale( 1./scale );                     // NORMALIZE
-    hBMEUE_BBCsumE[i]->SetNameTitle(name,title);
-    //hBMEUE_BBCsumE[i]->Write();
-    hBMEUE_BBCsumE[i]->Draw("COLZ");
-    name = "plots/BMEUEvsBBCsumE" + ptBinName[i] + ".pdf";
+    hPt_BGEUE_BBCsumE->GetXaxis()->SetRangeUser(ptBinLo[i], ptBinHi[i]);
+    hBGEUE_BBCsumE[i] = (TH2D*)hPt_BGEUE_BBCsumE->Project3D( "yz" );       // PROJECT
+    scale = hBGEUE_BBCsumE[i]->Integral("width");
+    hBGEUE_BBCsumE[i]->Scale( 1./scale );                     // NORMALIZE
+    hBGEUE_BBCsumE[i]->SetNameTitle(name,title);
+    //hBGEUE_BBCsumE[i]->Write();
+    hBGEUE_BBCsumE[i]->Draw("COLZ");
+    name = "plots/BGEUEvsBBCsumE" + ptBinName[i] + ".pdf";
     c1->SaveAs( name,"PDF");
-    hBMEUE_BBCsumE[i]->Scale( scale );                     // UN-NORMALIZE
+    hBGEUE_BBCsumE[i]->Scale( scale );                     // UN-NORMALIZE
   }
 
 
@@ -207,48 +207,48 @@ void dijetPlots() {
 
 
 
-  TH1D *hBMEUE_BBCE_py[nPtBins];        TH1D *hBMEUE_BBCsumE_py[nPtBins];
+  TH1D *hBGEUE_BBCE_py[nPtBins];        TH1D *hBGEUE_BBCsumE_py[nPtBins];
     
   TLegend *leg10 = new TLegend(0.65, 0.65, 0.9, 0.9,NULL,"brNDC");    // LEGEND
   leg10->SetBorderSize(1);   leg10->SetLineColor(1);   leg10->SetLineStyle(1);   leg10->SetLineWidth(1);   leg10->SetFillColor(0);   leg10->SetFillStyle(1001);
-  leg10->SetNColumns(2);  leg10->AddEntry((TObject*)0,"#bf{p_{T}^{Lead} (GeV)}", "");  leg10->AddEntry((TObject*)0,"#bf{BME <#rho> (GeV)}", "");
+  leg10->SetNColumns(2);  leg10->AddEntry((TObject*)0,"#bf{p_{T}^{Lead} (GeV)}", "");  leg10->AddEntry((TObject*)0,"#bf{BGE <#rho> (GeV)}", "");
   
   c5->cd();  c5->Clear();  hscale4->Draw();
   for ( int i=0; i<nPtBins; ++i ) {
-    hBMEUE_BBCE_py[i] = hBMEUE_BBCE[i]->ProjectionY();        scale = hBMEUE_BBCE_py[i]->Integral("width");        hBMEUE_BBCE_py[i]->Scale(1.0/scale);
-    hBMEUE_BBCE_py[i]->SetStats(0);    hBMEUE_BBCE_py[i]->SetLineColor( color[i] );    hBMEUE_BBCE_py[i]->SetMarkerStyle( marker[i] );    hBMEUE_BBCE_py[i]->SetMarkerColor( color[i] );
-    hBMEUE_BBCE_py[i]->Draw("Same");
+    hBGEUE_BBCE_py[i] = hBGEUE_BBCE[i]->ProjectionY();        scale = hBGEUE_BBCE_py[i]->Integral("width");        hBGEUE_BBCE_py[i]->Scale(1.0/scale);
+    hBGEUE_BBCE_py[i]->SetStats(0);    hBGEUE_BBCE_py[i]->SetLineColor( color[i] );    hBGEUE_BBCE_py[i]->SetMarkerStyle( marker[i] );    hBGEUE_BBCE_py[i]->SetMarkerColor( color[i] );
+    hBGEUE_BBCE_py[i]->Draw("Same");
     
-    avg = "";    avg += hBMEUE_BBCE_py[i]->GetMean();    // name = "BMEUEvsBBCE" + ptBinName[i];
+    avg = "";    avg += hBGEUE_BBCE_py[i]->GetMean();    // name = "BGEUEvsBBCE" + ptBinName[i];
     title = ptBinString[i];
-    leg10->AddEntry( hBMEUE_BBCE_py[i], title, lpf );    leg10->AddEntry((TObject*)0,avg, "");    lpf += "lpf";
+    leg10->AddEntry( hBGEUE_BBCE_py[i], title, lpf );    leg10->AddEntry((TObject*)0,avg, "");    lpf += "lpf";
   }
   
   leg10->Draw();        c5->Modified();        c5->cd();        c5->SetSelected(c5);
-  c5->SaveAs( "plots/BMEUE_BBCE_projection.pdf","PDF");
-  c5->SetLogy();          c5->SaveAs( "plots/BMEUE_BBCE_projection_log.pdf","PDF");
+  c5->SaveAs( "plots/BGEUE_BBCE_projection.pdf","PDF");
+  c5->SetLogy();          c5->SaveAs( "plots/BGEUE_BBCE_projection_log.pdf","PDF");
   c5->Close();
 
   
   
   TLegend *leg11 = new TLegend(0.65, 0.65, 0.9, 0.9,NULL,"brNDC");    // LEGEND
   leg11->SetBorderSize(1);   leg11->SetLineColor(1);   leg11->SetLineStyle(1);   leg11->SetLineWidth(1);   leg11->SetFillColor(0);   leg11->SetFillStyle(1001);
-  leg11->SetNColumns(2);  leg11->AddEntry((TObject*)0,"#bf{p_{T}^{Lead} (GeV)}", "");  leg11->AddEntry((TObject*)0,"#bf{BME <#rho> (GeV)}", "");
+  leg11->SetNColumns(2);  leg11->AddEntry((TObject*)0,"#bf{p_{T}^{Lead} (GeV)}", "");  leg11->AddEntry((TObject*)0,"#bf{BGE <#rho> (GeV)}", "");
   
   c6->cd();  c6->Clear();  hscale5->Draw();
   for ( int i=0; i<nPtBins; ++i ) {
-    hBMEUE_BBCsumE_py[i] = hBMEUE_BBCsumE[i]->ProjectionY();        scale = hBMEUE_BBCsumE_py[i]->Integral("width");        hBMEUE_BBCsumE_py[i]->Scale(1.0/scale);
-    hBMEUE_BBCsumE_py[i]->SetStats(0);    hBMEUE_BBCsumE_py[i]->SetLineColor( color[i] );    hBMEUE_BBCsumE_py[i]->SetMarkerStyle( marker[i] );    hBMEUE_BBCsumE_py[i]->SetMarkerColor( color[i] );
-    hBMEUE_BBCsumE_py[i]->Draw("Same");
+    hBGEUE_BBCsumE_py[i] = hBGEUE_BBCsumE[i]->ProjectionY();        scale = hBGEUE_BBCsumE_py[i]->Integral("width");        hBGEUE_BBCsumE_py[i]->Scale(1.0/scale);
+    hBGEUE_BBCsumE_py[i]->SetStats(0);    hBGEUE_BBCsumE_py[i]->SetLineColor( color[i] );    hBGEUE_BBCsumE_py[i]->SetMarkerStyle( marker[i] );    hBGEUE_BBCsumE_py[i]->SetMarkerColor( color[i] );
+    hBGEUE_BBCsumE_py[i]->Draw("Same");
     
-    avg = "";    avg += hBMEUE_BBCsumE_py[i]->GetMean();    // name = "BMEUEvsBBCE" + ptBinName[i];
+    avg = "";    avg += hBGEUE_BBCsumE_py[i]->GetMean();    // name = "BGEUEvsBBCE" + ptBinName[i];
     title = ptBinString[i];
-    leg11->AddEntry( hBMEUE_BBCsumE_py[i], title, lpf );    leg11->AddEntry((TObject*)0,avg, "");    lpf += "lpf";
+    leg11->AddEntry( hBGEUE_BBCsumE_py[i], title, lpf );    leg11->AddEntry((TObject*)0,avg, "");    lpf += "lpf";
   }
   
   leg11->Draw();        c6->Modified();        c6->cd();        c6->SetSelected(c6);
-  c6->SaveAs( "plots/BMEUE_BBCsumE_projection.pdf","PDF");
-  c6->SetLogy();          c6->SaveAs( "plots/BMEUE_BBCsumE_projection_log.pdf","PDF");
+  c6->SaveAs( "plots/BGEUE_BBCsumE_projection.pdf","PDF");
+  c6->SetLogy();          c6->SaveAs( "plots/BGEUE_BBCsumE_projection_log.pdf","PDF");
 
 
 
@@ -343,11 +343,11 @@ void dijetPlots() {
   hTowersVsRho->Draw("COLZ");
   c4->SaveAs("plots/TowersVsRho.pdf","PDF");
   c4->Clear();
-  hTowersVsBMERho->Scale( 1./hTowersVsBMERho->Integral("width") );
-  hTowersVsBMERho->GetXaxis()->SetRangeUser( 0,7 );
-  hTowersVsBMERho->GetYaxis()->SetRangeUser( 0,200 );
-  hTowersVsBMERho->Draw("COLZ");
-  c4->SaveAs("plots/TowersVsBMERho.pdf","PDF");
+  hTowersVsBGERho->Scale( 1./hTowersVsBGERho->Integral("width") );
+  hTowersVsBGERho->GetXaxis()->SetRangeUser( 0,7 );
+  hTowersVsBGERho->GetYaxis()->SetRangeUser( 0,200 );
+  hTowersVsBGERho->Draw("COLZ");
+  c4->SaveAs("plots/TowersVsBGERho.pdf","PDF");
   
   hPrimaryVsGlobal->Scale( 1./hPrimaryVsGlobal->Integral("width") );
   hPrimaryVsGlobal->Draw("COLZ");
