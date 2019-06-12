@@ -40,11 +40,14 @@ void dijetPlots() {
   hPt_UE_BBCsumE->GetYaxis()->SetRange( 2,50 );
   hPt_UE_BBCE->GetYaxis()->SetRange( 2,50 );
   hPt_UE_BBCsumE->GetZaxis()->SetRangeUser( 0.0, 80000.0 );
+  hPt_BGEUE_BBCsumE->GetYaxis()->SetRange( 2,50 );
+  hPt_BGEUE_BBCE->GetYaxis()->SetRange( 2,50 );
+  hPt_BGEUE_BBCsumE->GetZaxis()->SetRangeUser( 0.0, 80000.0 );
 
-  TH2D *hscale0 = new TH2D( "hscale0", "Underlying Event by Lead Jet p_{T};#rho (GeV);", 12,0,6, 10,0.001, 1.0 );
+  TH2D *hscale0 = new TH2D( "hscale0", "Underlying Event by Lead Jet p_{T};#rho (GeV);", 50,0.0001,25, 10,0.000001, 1.0 );
   TH2D *hscale1 = new TH2D( "hscale1", "Underlying Event vs. BBC ADC East Rate", 20,0.0001,10, 20,0.000001,1 );
   TH2D *hscale2 = new TH2D( "hscale2", "Underlying Event vs. BBC ADC East Sum", 20,0.0001,10, 20,0.000001,1 );
-  TH2D *hscale3 = new TH2D( "hscale3", "Bkg. Med. Est. Underlying Event by Lead Jet p_{T};#rho (GeV);", 50,0.0001,25, 10,0.001, 1.0 );
+  TH2D *hscale3 = new TH2D( "hscale3", "Bkg. Med. Est. Underlying Event by Lead Jet p_{T};#rho (GeV);", 50,0.0001,25, 10,0.000001, 1.0 );
   TH2D *hscale4 = new TH2D( "hscale4", "Bkg. Med. Est. Underlying Event vs. BBC ADC East Rate", 50,0.0001,10, 20,0.000001,1 );
   TH2D *hscale5 = new TH2D( "hscale5", "Bkg. Med. Est. Underlying Event vs. BBC ADC East Sum", 50,0.0001,10, 20,0.000001,1 );
   
@@ -101,7 +104,11 @@ void dijetPlots() {
 
 
 
-
+  hPt_UE_BBCsumE->GetYaxis()->SetRange( 0,-1 );
+  hPt_UE_BBCE->GetYaxis()->SetRange( 0,-1 );
+  hPt_BGEUE_BBCsumE->GetYaxis()->SetRange( 0,-1 );
+  hPt_BGEUE_BBCE->GetYaxis()->SetRange( 0,-1 );
+  
   c0->Clear();  c1->Clear();
   
   for ( int i=0; i<nPtBins; ++i ) {
