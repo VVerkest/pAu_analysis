@@ -279,6 +279,10 @@ void dijetPlots() {
   // hLeadPtVsRho->Draw("COLZ");
   // c2->SaveAs("plots/LeadPtVsRho.pdf","PDF");
   // hLeadPtVsRho->Scale(LeadVrhoScale);
+
+
+
+
   
   TCanvas * c3 = new TCanvas( "c3" , "" ,0 ,23 ,1280 ,700 );              // CANVAS
   c3->SetLogy();
@@ -301,24 +305,41 @@ void dijetPlots() {
     hRho[i]->Scale( 1./hRho[i]->Integral() );                     // NORMALIZE
     hRho[i]->SetLineColor( color[i] );    hRho[i]->SetMarkerStyle( marker[i] );    hRho[i]->SetMarkerColor( color[i] );
     hRho[i]->Draw("SAME");                                                    // DRAW
-    Ndj = ""; avg = "";
-    Ndj += hRho[i]->GetEntries();
+    Ndj = ""; avg = "";    Ndj += hRho[i]->GetEntries();
     avg += hRho[i]->GetMean(1);                                           // 1 denotes x-axis
     leg2->AddEntry( name, title, lpf );                            // ADD TO LEGEND
-    leg2->AddEntry((TObject*)0,Ndj, "");
-    leg2->AddEntry((TObject*)0,avg, "");
-    lpf += "lpf";
+    leg2->AddEntry((TObject*)0,Ndj, "");    leg2->AddEntry((TObject*)0,avg, "");    lpf += "lpf";
   }
 
-  leg2->Draw();
-  c3->Modified();
-  c3->cd();
-  c3->SetSelected(c3);
-  c3->SaveAs("plots/RhoByLeadPt.pdf","PDF");
+  leg2->Draw();  c3->Modified();  c3->cd();  c3->SetSelected(c3);  c3->SaveAs("plots/RhoByLeadPt.pdf","PDF");
 
 
 
+  c3->Clear();  hscale3->SetStats(0);  hscale3->Draw();
 
+  TLegend *leg21 = new TLegend(0.65, 0.65, 0.9, 0.9,NULL,"brNDC");    // LEGEND
+  leg21->SetBorderSize(1);   leg21->SetLineColor(1);   leg21->SetLineStyle(1);   leg21->SetLineWidth(1);   leg21->SetFillColor(0);   leg21->SetFillStyle(1001);
+  TLegendEntry *entry;
+  leg21->SetNColumns(3);
+  leg21->AddEntry((TObject*)0,"#bf{p_{T}^{Lead} (GeV)}", "");
+  leg21->AddEntry((TObject*)0,"#bf{# of Dijets}", "");
+  leg21->AddEntry((TObject*)0,"#bf{Bkg. Med. Est. <#rho> (GeV)}", "");
+
+  for ( int i=0; i<nPtBins; ++i ) {
+    name = "LeadPtVsBGErho" + ptBinName[i];      title = ptBinString[i];
+    hLeadPtVsBGErho->GetYaxis()->SetRangeUser(ptBinLo[i], ptBinHi[i]);
+    hBGErho[i] = hLeadPtVsBGErho->ProjectionX( name );       // PROJECT
+    hBGErho[i]->SetStats(0);
+    hBGErho[i]->Scale( 1./hBGErho[i]->Integral() );                     // NORMALIZE
+    hBGErho[i]->SetLineColor( color[i] );    hBGErho[i]->SetMarkerStyle( marker[i] );    hBGErho[i]->SetMarkerColor( color[i] );
+    hBGErho[i]->Draw("SAME");                                                    // DRAW
+    Ndj = ""; avg = "";    Ndj += hBGErho[i]->GetEntries();
+    avg += hBGErho[i]->GetMean(1);                                           // 1 denotes x-axis
+    leg21->AddEntry( name, title, lpf );                            // ADD TO LEGEND
+    leg21->AddEntry((TObject*)0,Ndj, "");    leg21->AddEntry((TObject*)0,avg, "");    lpf += "lpf";
+  }
+
+  leg21->Draw();  c3->Modified();  c3->cd();  c3->SetSelected(c3);  c3->SaveAs("plots/BGErhoByLeadPt.pdf","PDF");
 
 
 
