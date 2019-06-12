@@ -34,7 +34,7 @@ void dijetPlots() {
   
   TH3D *hPt_BGEUE_BBCE = (TH3D*) inFile->Get("hPt_BGEUE_BBCE");
   TH3D *hPt_BGEUE_BBCsumE = (TH3D*) inFile->Get("hPt_BGEUE_BBCsumE");
-  TH2D *hTowersVsBGErho = (TH2D*) inFile->Get("hTowersVsBGErho");
+  TH2D *hTowersVsBMErho = (TH2D*) inFile->Get("hTowersVsBMErho");
   TH2D *hLeadPtVsBGErho = (TH2D*) inFile->Get("hLeadPtVsBGErho");
   
   hPt_UE_BBCsumE->GetYaxis()->SetRange( 2,50 );
@@ -343,10 +343,10 @@ void dijetPlots() {
   hTowersVsRho->Draw("COLZ");
   c4->SaveAs("plots/TowersVsRho.pdf","PDF");
   c4->Clear();
-  hTowersVsBGErho->Scale( 1./hTowersVsBGErho->Integral("width") );
-  hTowersVsBGErho->GetXaxis()->SetRangeUser( 0,7 );
-  hTowersVsBGErho->GetYaxis()->SetRangeUser( 0,200 );
-  hTowersVsBGErho->Draw("COLZ");
+  hTowersVsBMErho->Scale( 1./hTowersVsBMErho->Integral("width") );
+  hTowersVsBMErho->GetXaxis()->SetRangeUser( 0,7 );
+  hTowersVsBMErho->GetYaxis()->SetRangeUser( 0,200 );
+  hTowersVsBMErho->Draw("COLZ");
   c4->SaveAs("plots/TowersVsBGERho.pdf","PDF");
   
   hPrimaryVsGlobal->Scale( 1./hPrimaryVsGlobal->Integral("width") );
