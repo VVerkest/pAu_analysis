@@ -35,7 +35,7 @@ void dijetPlots() {
   TH3D *hPt_BGEUE_BBCE = (TH3D*) inFile->Get("hPt_BGEUE_BBCE");
   TH3D *hPt_BGEUE_BBCsumE = (TH3D*) inFile->Get("hPt_BGEUE_BBCsumE");
   TH2D *hTowersVsBMErho = (TH2D*) inFile->Get("hTowersVsBMErho");
-  TH2D *hLeadPtVsBGErho = (TH2D*) inFile->Get("hLeadPtVsBGErho");
+  TH2D *hLeadPtVsBMErho = (TH2D*) inFile->Get("hLeadPtVsBMErho");
   
   hPt_UE_BBCsumE->GetYaxis()->SetRange( 2,50 );
   hPt_UE_BBCE->GetYaxis()->SetRange( 2,50 );
@@ -250,7 +250,7 @@ void dijetPlots() {
   c6->SaveAs( "plots/BGEUE_BBCsumE_projection.pdf","PDF");
   c6->SetLogy();          c6->SaveAs( "plots/BGEUE_BBCsumE_projection_log.pdf","PDF");
 
-  hLeadPtVsRho->GetXaxis()->SetRange(2,80);  hLeadPtVsBGErho->GetXaxis()->SetRange(2,80);
+  hLeadPtVsRho->GetXaxis()->SetRange(2,80);  hLeadPtVsBMErho->GetXaxis()->SetRange(2,80);
 
   
   TCanvas * c3 = new TCanvas( "c3" , "" ,0 ,23 ,1280 ,700 );              // CANVAS
@@ -294,8 +294,8 @@ void dijetPlots() {
 
   for ( int i=0; i<nPtBins; ++i ) {
     name = "LeadPtVsBGErho" + ptBinName[i];      title = ptBinString[i];
-    hLeadPtVsBGErho->GetYaxis()->SetRangeUser(ptBinLo[i], ptBinHi[i]);
-    hBGErho[i] = hLeadPtVsBGErho->ProjectionX( name );       // PROJECT
+    hLeadPtVsBMErho->GetYaxis()->SetRangeUser(ptBinLo[i], ptBinHi[i]);
+    hBGErho[i] = hLeadPtVsBMErho->ProjectionX( name );       // PROJECT
     hBGErho[i]->SetStats(0);
     hBGErho[i]->Scale( 1./hBGErho[i]->Integral() );                     // NORMALIZE
     hBGErho[i]->SetLineColor( color[i] );    hBGErho[i]->SetMarkerStyle( marker[i] );    hBGErho[i]->SetMarkerColor( color[i] );
