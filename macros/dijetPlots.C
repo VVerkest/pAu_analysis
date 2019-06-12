@@ -260,7 +260,6 @@ void dijetPlots() {
 
   TLegend *leg2 = new TLegend(0.65, 0.65, 0.9, 0.9,NULL,"brNDC");    // LEGEND
   leg2->SetBorderSize(1);   leg2->SetLineColor(1);   leg2->SetLineStyle(1);   leg2->SetLineWidth(1);   leg2->SetFillColor(0);   leg2->SetFillStyle(1001);
-  TLegendEntry *entry;
   leg2->SetNColumns(3);
   leg2->AddEntry((TObject*)0,"#bf{p_{T}^{Lead} (GeV)}", "");
   leg2->AddEntry((TObject*)0,"#bf{# of Dijets}", "");
@@ -288,7 +287,6 @@ void dijetPlots() {
 
   TLegend *leg21 = new TLegend(0.65, 0.65, 0.9, 0.9,NULL,"brNDC");    // LEGEND
   leg21->SetBorderSize(1);   leg21->SetLineColor(1);   leg21->SetLineStyle(1);   leg21->SetLineWidth(1);   leg21->SetFillColor(0);   leg21->SetFillStyle(1001);
-  TLegendEntry *entry;
   leg21->SetNColumns(3);
   leg21->AddEntry((TObject*)0,"#bf{p_{T}^{Lead} (GeV)}", "");
   leg21->AddEntry((TObject*)0,"#bf{# of Dijets}", "");
