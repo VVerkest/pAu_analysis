@@ -188,11 +188,6 @@ void dijetPlots() {
 
 
 
-  c3->Clear();  hscale3->SetStats(0);  hscale3->Draw();
-
-
-
-
   
   gStyle->SetOptStat(1);
   TCanvas * c4 = new TCanvas( "c4" , "" ,0 ,23 ,1280 ,700 );              // CANVAS
