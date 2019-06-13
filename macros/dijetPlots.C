@@ -40,7 +40,6 @@ void dijetPlots() {
   hscale0->SetStats(0);  hscale1->SetStats(0);  hscale2->SetStats(0);  
   const int nPtBins = 5;
   TH1D * hRho[nPtBins];  TH2D * hUE_BBCE[nPtBins];  TH2D * hUE_BBCsumE[nPtBins];
-  
   double ptBinLo[nPtBins] = { 10.0, 15.0, 20.0, 30.0, 40.0 };
   double ptBinHi[nPtBins] = { 15.0, 20.0, 30.0, 40.0, 100.0 };
   TString ptBinString[nPtBins] = { "10-15 GeV", "15-20 GeV",  "20-30 GeV", "30-40 GeV", ">40 GeV" };
@@ -60,11 +59,14 @@ void dijetPlots() {
     title = "Underlying Event vs. BBC East Rate - p_{T}^{lead}: " + ptBinString[i];
     hPt_UE_BBCE->GetXaxis()->SetRangeUser(ptBinLo[i], ptBinHi[i]);
     hUE_BBCE[i] = (TH2D*)hPt_UE_BBCE->Project3D( "yz" );       // PROJECT
+    hUE_BBCE[i]->GetYaxis->SetRangeUser(0,10);
     scale = hUE_BBCE[i]->Integral("width");
     hUE_BBCE[i]->Scale( 1./scale );                     // NORMALIZE
     hUE_BBCE[i]->SetNameTitle(name,title);
     //hUE_BBCE[i]->Write();
     hUE_BBCE[i]->Draw("COLZ");
+    hUE_BBCE[i]->SetLineColor(kRed);
+    hUE_BBCE[i]->ProfileX("",1,-1,"S")->Draw("SAME")
     name = "plots/UEvsBBCE" + ptBinName[i] + ".pdf";
     c0->SaveAs( name,"PDF");
     hUE_BBCE[i]->Scale( scale );                     // UN-NORMALIZE
@@ -75,11 +77,14 @@ void dijetPlots() {
     title = "Underlying Event vs. BBC ADC East Sum - p_{T}^{lead}: " + ptBinString[i];
     hPt_UE_BBCsumE->GetXaxis()->SetRangeUser(ptBinLo[i], ptBinHi[i]);
     hUE_BBCsumE[i] = (TH2D*)hPt_UE_BBCsumE->Project3D( "yz" );       // PROJECT
+    hUE_BBCsumE[i]->GetYaxis->SetRangeUser(0,10);
     scale = hUE_BBCsumE[i]->Integral("width");
     hUE_BBCsumE[i]->Scale( 1./scale );                     // NORMALIZE
     hUE_BBCsumE[i]->SetNameTitle(name,title);
     //hUE_BBCsumE[i]->Write();
     hUE_BBCsumE[i]->Draw("COLZ");
+    hUE_BBCsumE[i]->SetLineColor(kRed);
+    hUE_BBCsumE[i]->ProfileX("",1,-1,"S")->Draw("SAME")
     name = "plots/UEvsBBCsumE" + ptBinName[i] + ".pdf";
     c1->SaveAs( name,"PDF");
     hUE_BBCsumE[i]->Scale( scale );                     // UN-NORMALIZE
@@ -122,7 +127,7 @@ void dijetPlots() {
   for ( int i=0; i<nPtBins; ++i ) {
     hUE_BBCE_py[i] = hUE_BBCE[i]->ProjectionY();        scale = hUE_BBCE_py[i]->Integral("width");        hUE_BBCE_py[i]->Scale(1.0/scale);
     hUE_BBCE_py[i]->SetStats(0);    hUE_BBCE_py[i]->SetLineColor( color[i] );    hUE_BBCE_py[i]->SetMarkerStyle( marker[i] );    hUE_BBCE_py[i]->SetMarkerColor( color[i] );
-    hUE_BBCE_py[i]->Draw("Same");
+    hUE_BBCE_py[i]->GetYaxis()->SetRangeUser(0,5);    hUE_BBCE_py[i]->Draw("Same");
     
     avg = "";    avg += hUE_BBCE_py[i]->GetMean();    // name = "UEvsBBCE" + ptBinName[i];
     title = ptBinString[i];
@@ -130,7 +135,7 @@ void dijetPlots() {
   }
   
   leg0->Draw();        c5->Modified();        c5->cd();        c5->SetSelected(c5);
-  c5->SaveAs( "plots/UE_BBCE_projection.pdf","PDF");
+  c5->SaveAs( "plots/UE_BBCE_projectionY.pdf","PDF");
 
   
   
@@ -142,7 +147,7 @@ void dijetPlots() {
   for ( int i=0; i<nPtBins; ++i ) {
     hUE_BBCsumE_py[i] = hUE_BBCsumE[i]->ProjectionY();        scale = hUE_BBCsumE_py[i]->Integral("width");        hUE_BBCsumE_py[i]->Scale(1.0/scale);
     hUE_BBCsumE_py[i]->SetStats(0);    hUE_BBCsumE_py[i]->SetLineColor( color[i] );    hUE_BBCsumE_py[i]->SetMarkerStyle( marker[i] );    hUE_BBCsumE_py[i]->SetMarkerColor( color[i] );
-    hUE_BBCsumE_py[i]->Draw("Same");
+    hUE_BBCsumE_py[i]->GetYaxis()->SetRangeUser(0,5);    hUE_BBCsumE_py[i]->Draw("Same");
 
     avg = "";    avg += hUE_BBCsumE_py[i]->GetMean();    // name = "UEvsBBCE" + ptBinName[i];
     title = ptBinString[i];
@@ -150,12 +155,12 @@ void dijetPlots() {
   }
   
   leg1->Draw();        c6->Modified();        c6->cd();        c6->SetSelected(c6);
-  c6->SaveAs( "plots/UE_BBCsumE_projection.pdf","PDF");
+  c6->SaveAs( "plots/UE_BBCsumE_projectionY.pdf","PDF");
 
 
 
   
-  hLeadPtVsRho->GetXaxis()->SetRange(2,80);
+  hLeadPtVsRho->GetXaxis()->SetRange(1,80);
 
   
   TCanvas * c3 = new TCanvas( "c3" , "" ,0 ,23 ,1280 ,700 );              // CANVAS
