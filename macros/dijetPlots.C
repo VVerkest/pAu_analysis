@@ -59,14 +59,14 @@ void dijetPlots() {
     title = "Underlying Event vs. BBC East Rate - p_{T}^{lead}: " + ptBinString[i];
     hPt_UE_BBCE->GetXaxis()->SetRangeUser(ptBinLo[i], ptBinHi[i]);
     hUE_BBCE[i] = (TH2D*)hPt_UE_BBCE->Project3D( "yz" );       // PROJECT
-    hUE_BBCE[i]->GetYaxis->SetRangeUser(0,10);
+    hUE_BBCE[i]->GetYaxis()->SetRangeUser(0,10);
     scale = hUE_BBCE[i]->Integral("width");
     hUE_BBCE[i]->Scale( 1./scale );                     // NORMALIZE
     hUE_BBCE[i]->SetNameTitle(name,title);
     //hUE_BBCE[i]->Write();
     hUE_BBCE[i]->Draw("COLZ");
     hUE_BBCE[i]->SetLineColor(kRed);
-    hUE_BBCE[i]->ProfileX("",1,-1,"S")->Draw("SAME")
+    hUE_BBCE[i]->ProfileX("",1,-1,"S")->Draw("SAME");
     name = "plots/UEvsBBCE" + ptBinName[i] + ".pdf";
     c0->SaveAs( name,"PDF");
     hUE_BBCE[i]->Scale( scale );                     // UN-NORMALIZE
@@ -77,14 +77,14 @@ void dijetPlots() {
     title = "Underlying Event vs. BBC ADC East Sum - p_{T}^{lead}: " + ptBinString[i];
     hPt_UE_BBCsumE->GetXaxis()->SetRangeUser(ptBinLo[i], ptBinHi[i]);
     hUE_BBCsumE[i] = (TH2D*)hPt_UE_BBCsumE->Project3D( "yz" );       // PROJECT
-    hUE_BBCsumE[i]->GetYaxis->SetRangeUser(0,10);
+    hUE_BBCsumE[i]->GetYaxis()->SetRangeUser(0,10);
     scale = hUE_BBCsumE[i]->Integral("width");
     hUE_BBCsumE[i]->Scale( 1./scale );                     // NORMALIZE
     hUE_BBCsumE[i]->SetNameTitle(name,title);
     //hUE_BBCsumE[i]->Write();
     hUE_BBCsumE[i]->Draw("COLZ");
     hUE_BBCsumE[i]->SetLineColor(kRed);
-    hUE_BBCsumE[i]->ProfileX("",1,-1,"S")->Draw("SAME")
+    hUE_BBCsumE[i]->ProfileX("",1,-1,"S")->Draw("SAME");
     name = "plots/UEvsBBCsumE" + ptBinName[i] + ".pdf";
     c1->SaveAs( name,"PDF");
     hUE_BBCsumE[i]->Scale( scale );                     // UN-NORMALIZE
