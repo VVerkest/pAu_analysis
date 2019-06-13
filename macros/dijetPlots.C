@@ -48,8 +48,8 @@ void dijetPlots() {
   TH2D *hscale1 = new TH2D( "hscale1", "Underlying Event vs. BBC ADC East Rate", 20,0.0001,10, 20,0.000001,1 );
   TH2D *hscale2 = new TH2D( "hscale2", "Underlying Event vs. BBC ADC East Sum", 20,0.0001,10, 20,0.000001,1 );
   TH2D *hscale3 = new TH2D( "hscale3", "Bkg. Med. Est. Underlying Event by Lead Jet p_{T};#rho (GeV);", 50,0.0001,25, 10,0.000001, 1.0 );
-  TH2D *hscale4 = new TH2D( "hscale4", "Bkg. Med. Est. Underlying Event vs. BBC ADC East Rate", 50,0.0001,25, 20,0.000001,1 );
-  TH2D *hscale5 = new TH2D( "hscale5", "Bkg. Med. Est. Underlying Event vs. BBC ADC East Sum", 50,0.0001,25, 20,0.000001,1 );
+  TH2D *hscale4 = new TH2D( "hscale4", "Bkg. Med. Est. Underlying Event vs. BBC ADC East Rate", 20,0.0001,10, 20,0.000001,1 );
+  TH2D *hscale5 = new TH2D( "hscale5", "Bkg. Med. Est. Underlying Event vs. BBC ADC East Sum", 20,0.0001,10, 20,0.000001,1 );
   
   hscale0->SetStats(0);  hscale1->SetStats(0);  hscale2->SetStats(0);  hscale3->SetStats(0);  hscale4->SetStats(0);  hscale5->SetStats(0);
   
@@ -104,10 +104,10 @@ void dijetPlots() {
 
 
 
-  hPt_UE_BBCsumE->GetYaxis()->SetRange( 0,-1 );
-  hPt_UE_BBCE->GetYaxis()->SetRange( 0,-1 );
-  hPt_BGEUE_BBCsumE->GetYaxis()->SetRange( 0,-1 );
-  hPt_BGEUE_BBCE->GetYaxis()->SetRange( 0,-1 );
+  hPt_UE_BBCsumE->GetYaxis()->SetRange( 1, 50 );
+  hPt_UE_BBCE->GetYaxis()->SetRange( 1, 50 );
+  hPt_BGEUE_BBCsumE->GetYaxis()->SetRange( 1, 50 );
+  hPt_BGEUE_BBCE->GetYaxis()->SetRange( 1, 50 );
   
   c0->Clear();  c1->Clear();
   
@@ -146,19 +146,22 @@ void dijetPlots() {
   
 
   TCanvas * c5 = new TCanvas( "c5" , "" ,0 ,23 ,1280 ,700 );              // CANVAS
-  TCanvas * c6 = new TCanvas( "c6" , "" ,0 ,23 ,1280 ,700 );              // CANVAS
-
-
   hscale1->SetStats(0);  c5->cd();  /*hscale1->Draw();*/  c6->cd();  /*hscale1->Draw();*/
   for ( int i=0; i<nPtBins; ++i ) {
-    hUE_BBCsumE[i]->SetStats(0);    hUE_BBCsumE[i]->SetLineColor( color[i] );    hUE_BBCsumE[i]->SetMarkerStyle( marker[i] );    hUE_BBCsumE[i]->SetMarkerColor( color[i] );    
     hUE_BBCE[i]->SetStats(0);    hUE_BBCE[i]->SetLineColor( color[i] );    hUE_BBCE[i]->SetMarkerStyle( marker[i] );    hUE_BBCE[i]->SetMarkerColor( color[i] );    
-    c5->cd();         hUE_BBCE[i]->ProfileX("S")->Draw("SAME");    c6->cd();         hUE_BBCsumE[i]->ProfileX("S")->Draw("SAME");
+    c5->cd();         hUE_BBCE[i]->ProfileX()->Draw("SAME S");
   }
-  c5->SaveAs( "plots/UE_BBCE_profile.pdf","PDF");  c6->SaveAs( "plots/UE_BBCsumE_profile.pdf","PDF");
+  c5->SaveAs( "plots/UE_BBCE_profile.pdf","PDF");
 
 
+  TCanvas * c6 = new TCanvas( "c6" , "" ,0 ,23 ,1280 ,700 );              // CANVAS
+  for ( int i=0; i<nPtBins; ++i ) {
+    hUE_BBCsumE[i]->SetStats(0);    hUE_BBCsumE[i]->SetLineColor( color[i] );    hUE_BBCsumE[i]->SetMarkerStyle( marker[i] );    hUE_BBCsumE[i]->SetMarkerColor( color[i] );    
+    c6->cd();         hUE_BBCsumE[i]->ProfileX()->Draw("SAME S");
+  }
+  c6->SaveAs( "plots/UE_BBCsumE_profile.pdf","PDF");
 
+  c5->Clear();  c6->Clear();
 
 
 
