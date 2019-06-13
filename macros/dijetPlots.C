@@ -65,7 +65,7 @@ void dijetPlots() {
     hUE_BBCE[i]->SetNameTitle(name,title);
     //hUE_BBCE[i]->Write();
     hUE_BBCE[i]->Draw("COLZ");
-    hUE_BBCE[i]->GetXaxis()->Rebin(3);
+    hUE_BBCE[i]->RebinX();
     hUE_BBCE[i]->SetLineColor(kRed);
     hUE_BBCE[i]->ProfileX("",1,-1,"S")->Draw("SAME");
     name = "plots/UEvsBBCE" + ptBinName[i] + ".pdf";
