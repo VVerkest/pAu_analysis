@@ -51,7 +51,7 @@ void dijetPlots() {
   TH2D *hscale4 = new TH2D( "hscale4", "Bkg. Med. Est. Underlying Event vs. BBC ADC East Rate", 140,0,7000000, 50,0.0001,25 );
   TH2D *hscale5 = new TH2D( "hscale5", "Bkg. Med. Est. Underlying Event vs. BBC ADC East Sum", 50,0,100000, 50,0.0001,25 );
 
-  hscale1->SetLogy();  hscale2->SetLogy();  hscale4->SetLogy();  hscale5->SetLogy();
+  hscale1->SetLogY();  hscale2->SetLogY();  hscale4->SetLogY();  hscale5->SetLogY();
   hscale0->SetStats(0);  hscale1->SetStats(0);  hscale2->SetStats(0);  hscale3->SetStats(0);  hscale4->SetStats(0);  hscale5->SetStats(0);
   
   const int nPtBins = 5;
