@@ -83,6 +83,7 @@ void dijetPlots() {
     hUE_BBCsumE[i]->SetNameTitle(name,title);
     //hUE_BBCsumE[i]->Write();
     hUE_BBCsumE[i]->Draw("COLZ");
+    hUE_BBCsumE[i]->Rebin(3);
     hUE_BBCsumE[i]->SetLineColor(kRed);
     hUE_BBCsumE[i]->ProfileX("",1,-1,"S")->Draw("SAME");
     name = "plots/UEvsBBCsumE" + ptBinName[i] + ".pdf";
@@ -123,7 +124,7 @@ void dijetPlots() {
   leg0->SetBorderSize(1);   leg0->SetLineColor(1);   leg0->SetLineStyle(1);   leg0->SetLineWidth(1);   leg0->SetFillColor(0);   leg0->SetFillStyle(1001);
   leg0->SetNColumns(2);  leg0->AddEntry((TObject*)0,"#bf{p_{T}^{Lead} (GeV)}", "");  leg0->AddEntry((TObject*)0,"#bf{<#rho> (GeV)}", "");
   
-  c5->cd();  c5->Clear();  hscale1->Draw();
+  c5->cd();  c5->Clear();  hscale1->GetYaxis()->SetRangeUser(0,1);  hscale1->GetXaxis()->SetRangeUser(0,5);  hscale1->Draw();
   for ( int i=0; i<nPtBins; ++i ) {
     hUE_BBCE_py[i] = hUE_BBCE[i]->ProjectionY();        scale = hUE_BBCE_py[i]->Integral("width");        hUE_BBCE_py[i]->Scale(1.0/scale);
     hUE_BBCE_py[i]->SetStats(0);    hUE_BBCE_py[i]->SetLineColor( color[i] );    hUE_BBCE_py[i]->SetMarkerStyle( marker[i] );    hUE_BBCE_py[i]->SetMarkerColor( color[i] );
@@ -143,7 +144,7 @@ void dijetPlots() {
   leg1->SetBorderSize(1);   leg1->SetLineColor(1);   leg1->SetLineStyle(1);   leg1->SetLineWidth(1);   leg1->SetFillColor(0);   leg1->SetFillStyle(1001);
   leg1->SetNColumns(2);  leg1->AddEntry((TObject*)0,"#bf{p_{T}^{Lead} (GeV)}", "");  leg1->AddEntry((TObject*)0,"#bf{<#rho> (GeV)}", "");
   
-  c6->cd();  c6->Clear();  hscale2->Draw();
+  c6->cd();  c6->Clear();  hscale2->GetYaxis()->SetRangeUser(0,1);  hscale2->GetXaxis()->SetRangeUser(0,5);  hscale2->Draw();
   for ( int i=0; i<nPtBins; ++i ) {
     hUE_BBCsumE_py[i] = hUE_BBCsumE[i]->ProjectionY();        scale = hUE_BBCsumE_py[i]->Integral("width");        hUE_BBCsumE_py[i]->Scale(1.0/scale);
     hUE_BBCsumE_py[i]->SetStats(0);    hUE_BBCsumE_py[i]->SetLineColor( color[i] );    hUE_BBCsumE_py[i]->SetMarkerStyle( marker[i] );    hUE_BBCsumE_py[i]->SetMarkerColor( color[i] );
