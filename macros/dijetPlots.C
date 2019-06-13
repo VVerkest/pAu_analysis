@@ -45,7 +45,7 @@ void dijetPlots() {
   hPt_BGEUE_BBCsumE->GetZaxis()->SetRangeUser( 0.0, 80000.0 );
 
   TH2D *hscale0 = new TH2D( "hscale0", "Underlying Event by Lead Jet p_{T};#rho (GeV);", 50,0.0001,25, 10,0.000001, 1.0 );
-  TH2D *hscale1 = new TH2D( "hscale1", "Underlying Event vs. BBC ADC East Rate", 140,0,7000000, 50,0.0001,25 );
+  TH2D *hscale1 = new TH2D( "hscale1", "Underlying Event vs. BBC East Rate", 140,0,7000000, 50,0.0001,25 );
   TH2D *hscale2 = new TH2D( "hscale2", "Underlying Event vs. BBC ADC East Sum", 50,0,100000, 50,0.0001,25 );
   TH2D *hscale3 = new TH2D( "hscale3", "Bkg. Med. Est. Underlying Event by Lead Jet p_{T};#rho (GeV);", 50,0.0001,25, 10,0.000001, 1.0 );
   TH2D *hscale4 = new TH2D( "hscale4", "Bkg. Med. Est. Underlying Event vs. BBC ADC East Rate", 140,0,7000000, 50,0.0001,25 );
@@ -149,7 +149,7 @@ void dijetPlots() {
   hscale1->SetStats(0);  c5->cd();     hscale1->Draw();
   for ( int i=0; i<nPtBins; ++i ) {
     hUE_BBCE[i]->SetStats(0);    hUE_BBCE[i]->SetLineColor( color[i] );    hUE_BBCE[i]->SetMarkerStyle( marker[i] );    hUE_BBCE[i]->SetMarkerColor( color[i] );    
-    c5->cd();         hUE_BBCE[i]->ProfileX()->Draw("SAME S");
+    c5->cd();         hUE_BBCE[i]->ProfileX( -1,20 )->Draw("SAME S");
   }
   c5->SaveAs( "plots/UE_BBCE_profile.pdf","PDF");
 
@@ -158,7 +158,7 @@ void dijetPlots() {
   hscale2->SetStats(0);  c6->cd();     hscale2->Draw();
   for ( int i=0; i<nPtBins; ++i ) {
     hUE_BBCsumE[i]->SetStats(0);    hUE_BBCsumE[i]->SetLineColor( color[i] );    hUE_BBCsumE[i]->SetMarkerStyle( marker[i] );    hUE_BBCsumE[i]->SetMarkerColor( color[i] );    
-    c6->cd();         hUE_BBCsumE[i]->ProfileX()->Draw("SAME S");
+    c6->cd();         hUE_BBCsumE[i]->ProfileX( -1,20 )->Draw("SAME S");
   }
   c6->SaveAs( "plots/UE_BBCsumE_profile.pdf","PDF");
 
@@ -170,7 +170,7 @@ void dijetPlots() {
   hscale1->SetStats(0);  c5->cd();     c5->Clear();     hscale4->Draw();
   for ( int i=0; i<nPtBins; ++i ) {
     hBGEUE_BBCE[i]->SetStats(0);    hBGEUE_BBCE[i]->SetLineColor( color[i] );    hBGEUE_BBCE[i]->SetMarkerStyle( marker[i] );    hBGEUE_BBCE[i]->SetMarkerColor( color[i] );    
-    c5->cd();         hBGEUE_BBCE[i]->ProfileX()->Draw("SAME S");
+    c5->cd();         hBGEUE_BBCE[i]->ProfileX( -1,20 )->Draw("SAME S");
   }
   c5->SaveAs( "plots/BGEUE_BBCE_profile.pdf","PDF");
 
@@ -178,7 +178,7 @@ void dijetPlots() {
   hscale2->SetStats(0);  c6->cd();     c6->Clear();     hscale5->Draw();
   for ( int i=0; i<nPtBins; ++i ) {
     hBGEUE_BBCsumE[i]->SetStats(0);    hBGEUE_BBCsumE[i]->SetLineColor( color[i] );    hBGEUE_BBCsumE[i]->SetMarkerStyle( marker[i] );    hBGEUE_BBCsumE[i]->SetMarkerColor( color[i] );    
-    c6->cd();         hBGEUE_BBCsumE[i]->ProfileX()->Draw("SAME S");
+    c6->cd();         hBGEUE_BBCsumE[i]->ProfileX( -1,20 )->Draw("SAME S");
   }
   c6->SaveAs( "plots/BGEUE_BBCsumE_profile.pdf","PDF");
 
