@@ -32,7 +32,9 @@ void dijetPlots() {
   TH2D *hLeadPtVsRho = (TH2D*) inFile->Get("hLeadPtVsRho");
 
   hPt_UE_BBCsumE->GetZaxis()->SetRangeUser( 0.0, 80000.0 );
-
+  hPt_UE_BBCsumE->GetYaxis()->SetRangeUser( 1,10 );
+  hPt_UE_BBCE->GetYaxis()->SetRange( 1,10 );
+  
   TH2D *hscale0 = new TH2D( "hscale0", "Underlying Event by Lead Jet p_{T};#rho (GeV);", 50,0,25, 10,0.000001, 1.0 );
   TH2D *hscale1 = new TH2D( "hscale1", "Underlying Event vs. BBC East Rate", 140,0,7000000, 20,0,10 );
   TH2D *hscale2 = new TH2D( "hscale2", "Underlying Event vs. BBC ADC East Sum", 150,0,100000, 20,0,10 );
