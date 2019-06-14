@@ -79,6 +79,7 @@ void dijetPlots() {
     hPt_UE_BBCsumE->GetXaxis()->SetRangeUser(ptBinLo[i], ptBinHi[i]);
     hUE_BBCsumE[i] = (TH2D*)hPt_UE_BBCsumE->Project3D( "yz" );       // PROJECT
     hUE_BBCsumE[i]->GetYaxis()->SetRangeUser(0,10);
+    hUE_BBCsumE[i]->GetYaxis()->SetRangeUser(0,10);
     scale = hUE_BBCsumE[i]->Integral("width");
     hUE_BBCsumE[i]->Scale( 1./scale );                     // NORMALIZE
     hUE_BBCsumE[i]->SetNameTitle(name,title);
@@ -101,7 +102,7 @@ void dijetPlots() {
   hscale1->SetStats(0);  c5->cd();     hscale1->Draw();
   for ( int i=0; i<nPtBins; ++i ) {
     hUE_BBCE[i]->SetStats(0);    hUE_BBCE[i]->SetLineColor( color[i] );    hUE_BBCE[i]->SetMarkerStyle( marker[i] );    hUE_BBCE[i]->SetMarkerColor( color[i] );    
-    c5->cd();         hUE_BBCE[i]->ProfileX()->Draw("SAME S");
+    c5->cd();         hUE_BBCE[i]->GetYaxis()->SetRangeUser(0.0,5.0);         hUE_BBCE[i]->ProfileX("",1,-1,"S")->Draw("SAME S");
   }
   c5->SaveAs( "plots/UE_BBCE_profile.pdf","PDF");
 
@@ -110,7 +111,7 @@ void dijetPlots() {
   hscale2->SetStats(0);  c6->cd();     hscale2->Draw();
   for ( int i=0; i<nPtBins; ++i ) {
     hUE_BBCsumE[i]->SetStats(0);    hUE_BBCsumE[i]->SetLineColor( color[i] );    hUE_BBCsumE[i]->SetMarkerStyle( marker[i] );    hUE_BBCsumE[i]->SetMarkerColor( color[i] );    
-    c6->cd();         hUE_BBCsumE[i]->ProfileX()->Draw("SAME S");
+    hUE_BBCsumE[i]->GetYaxis()->SetRangeUser(0.0,5.0);         c6->cd();         hUE_BBCsumE[i]->ProfileX("S")->Draw("SAME");
   }
   c6->SaveAs( "plots/UE_BBCsumE_profile.pdf","PDF");
 
@@ -144,11 +145,11 @@ void dijetPlots() {
   leg1->SetBorderSize(1);   leg1->SetLineColor(1);   leg1->SetLineStyle(1);   leg1->SetLineWidth(1);   leg1->SetFillColor(0);   leg1->SetFillStyle(1001);
   leg1->SetNColumns(2);  leg1->AddEntry((TObject*)0,"#bf{p_{T}^{Lead} (GeV)}", "");  leg1->AddEntry((TObject*)0,"#bf{<#rho> (GeV)}", "");
   
-  c6->cd();  c6->Clear();  hscale2->GetYaxis()->SetRangeUser(0,1);  hscale2->GetXaxis()->SetRangeUser(0,5);  hscale2->Draw();
+  c6->cd();  c6->Clear();  hscale2->GetYaxis()->SetRangeUser(0,1);  hscale2->GetXaxis()->SetRangeUser(0.0,5.0);  hscale2->Draw();
   for ( int i=0; i<nPtBins; ++i ) {
     hUE_BBCsumE_py[i] = hUE_BBCsumE[i]->ProjectionY();        scale = hUE_BBCsumE_py[i]->Integral("width");        hUE_BBCsumE_py[i]->Scale(1.0/scale);
     hUE_BBCsumE_py[i]->SetStats(0);    hUE_BBCsumE_py[i]->SetLineColor( color[i] );    hUE_BBCsumE_py[i]->SetMarkerStyle( marker[i] );    hUE_BBCsumE_py[i]->SetMarkerColor( color[i] );
-    hUE_BBCsumE_py[i]->GetYaxis()->SetRangeUser(0,5);    hUE_BBCsumE_py[i]->Draw("Same");
+    hUE_BBCsumE_py[i]->GetYaxis()->SetRangeUser(0,5);    hUE_BBCsumE_py[i]->GetXaxis()->SetRangeUser(0.0,5.0);  hUE_BBCsumE_py[i]->Draw("Same");
 
     avg = "";    avg += hUE_BBCsumE_py[i]->GetMean();    // name = "UEvsBBCE" + ptBinName[i];
     title = ptBinString[i];
@@ -220,6 +221,8 @@ void dijetPlots() {
 
   hPrimaryVsBBCsumE->Scale( 1./hPrimaryVsBBCsumE->Integral("width") );
   hPrimaryVsBBCsumE->Draw("COLZ");
+  hPrimaryVsBBCsumE->SetLineColor(kRed);
+  hPrimaryVsBBCsumE->ProfileX("",1,-1,"S");
   c4->SaveAs("plots/PrimaryVsBBCsumE.pdf","PDF");
 
   hTowersVsBBCsumE->GetXaxis()->SetRangeUser( 0,80000 );  
