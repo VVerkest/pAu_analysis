@@ -28,9 +28,9 @@ int main ( int argc, const char** argv ) {
 
   TH1::SetDefaultSumw2();  TH2::SetDefaultSumw2();  TH3::SetDefaultSumw2();
   
-  TH3D *hVertex = new TH3D( "hVertex", "Event Vertex;v_{x};v_{y};v_{z}", 60,-0.3,0.3, 60,-0.3,0.3, 160,-40,40 );
+  //TH3D *hVertex = new TH3D( "hVertex", "Event Vertex;v_{x};v_{y};v_{z}", 60,-0.3,0.3, 60,-0.3,0.3, 160,-40,40 );
   TH1D *hTowersPerEvent = new TH1D("hTowersPerEvent","Tower Frequency;# of Towers", 700,0,700 );
-  TH2D *hTowersPerRun = new TH2D("hTowersPerRun","Tower Frequency (per run);Run no.;# of Towers", 40000,16124000,16164000, 140,0,700 );
+  TH2D *hTowersPerRun = new TH2D("hTowersPerRun","Tower Frequency (per run);Run no.;# of Towers", 4000,16124000,16164000, 140,0,700 );
   TH1D *hPrimaryPerEvent = new TH1D("hPrimaryPerEvent","Primary Track Multiplicity (per event);# of Primary", 200,0,200 );
   TH2D *hPrimaryPerRun = new TH2D("hPrimaryPerRun","Primary Track Multiplicity (per run);Run no.;# of Primary", 4000,16124000,16164000, 40,0,200 );
   TH2D *hnPrimaryVSnTowers = new TH2D("hnPrimaryVSnTowers","# of Primary Tracks vs. # of Towers;# Towers;# Primary Tracks", 140,0,700, 40,0,200);
@@ -147,7 +147,7 @@ int main ( int argc, const char** argv ) {
     hPt_UE_BBCE->Fill(leadPt,rho_avg,BbcEastRate);                            hPt_UE_BBCsumE->Fill(leadPt,rho_avg,BbcAdcSumEast);
     hTowersVsRho->Fill(rho_avg,nTowers);                                         hLeadPtVsRho->Fill(rho_avg,leadPt);
 
-    hVertex->Fill( Vx, Vy, Vz );                                        //  FILL HISTOGRAMS
+    // hVertex->Fill( Vx, Vy, Vz );                                        //  FILL HISTOGRAMS
     hTowersPerEvent->Fill( nTowers );    hTowersPerRun->Fill( RunID, nTowers );    hPrimaryPerEvent->Fill( nPrimary );    hPt_UE_RefMult->Fill( leadPt, rho_avg, refMult);
     hPrimaryPerRun->Fill( RunID, nPrimary );    hnPrimaryVSnTowers->Fill( nTowers, nPrimary );    hPrimaryVsBBC->Fill( BbcCoincidenceRate, nPrimary );
     hPrimaryVsGlobal->Fill( nGlobal, nPrimary );    hGlobalVsBBC->Fill( BbcCoincidenceRate, nGlobal );    hPrimaryVsBBCE->Fill(BbcEastRate,nPrimary);
@@ -160,7 +160,7 @@ int main ( int argc, const char** argv ) {
 
   for ( int e=0; e<nEtaBins; ++e ) { sp[e]->Write(); }                                     //  WRITE PARTICLE TREE
   
-  hVertex->Write();                             //  WRITE HISTOGRAMS
+  // hVertex->Write();                             //  WRITE HISTOGRAMS
   hTowersPerEvent->Write();
   hTowersPerRun->Write();
   hPrimaryPerEvent->Write();
