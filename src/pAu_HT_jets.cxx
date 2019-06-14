@@ -38,23 +38,22 @@ int main ( int argc, const char** argv ) {
   TH2D *hPrimaryVsBBC = new TH2D("hPrimaryVsBBC","# Primary Tracks vs. BBC Coincidence Rate;BBC Rate;# Primary Tracks", 3500,0,3500000, 40,0,200 );
   TH2D *hGlobalVsBBC = new TH2D("hGlobalVsBBC","# Global Tracks vs. BBC Coincidence Rate;BBC Rate;# Global Tracks", 3500,0,3500000, 150,0,3000 );
   TH2D *hPrimaryVsBBCE = new TH2D("hPrimaryVsBBCE","# Primary Tracks vs. BBC East Rate;BBC East Rate;# Primary Tracks", 140,0,7000000, 150,0,3000 );
-  TH2D *hGlobalVsBBCE = new TH2D("hGlobalVsBBCE","# Global Tracks vs. BBC East Rate;BBC East Rate;# Global Tracks", 140,0,7000000, 150,0,3000 );
-  TH2D *hPrimaryVsBBCsumE = new TH2D("hPrimaryVsBBCsumE","# Primary Tracks vs. BBC ADC East Sum;BBC ADC East Sum;# Primary Tracks", 50,0,100000, 40,0,200 );
+  TH2D *hGlobalVsBBCE = new TH2D("hGlobalVsBBCE","# Global Tracks vs. BBC East Rate;BBC East Rate;# Global Tracks", 80,0,80000, 150,0,3000 );
+  TH2D *hPrimaryVsBBCsumE = new TH2D("hPrimaryVsBBCsumE","# Primary Tracks vs. BBC ADC East Sum;BBC ADC East Sum;# Primary Tracks", 80,0,80000, 40,0,200 );
   TH2D *hTowersVsBBCsumE = new TH2D("hTowersVsBBCsumE","# Towers vs. BBC ADC East Sum;BBC ADC East Sum;# Towers", 160,0,80000, 140,0,700 );
   TH2D *hLeadEtaPhi = new TH2D("hLeadEtaPhi","Lead Jet #eta vs. #phi;#phi;#eta", 180,0,6.3, 100,-1.0,1.0);
   TH2D *hSubEtaPhi = new TH2D("hSubEtaPhi","Sub Jet #eta vs. #phi;#phi;#eta", 180,0,6.3, 100,-1.0,1.0);
+  TH2D *hPrimaryVsRho = new TH2D("hPrimaryVsRho","# Primary Tracks vs. Underlying Event;#rho (GeV);# Primary Tracks", 100,0,25, 40,0,200);
+  TH2D *hGlobalVsRho = new TH2D("hGlobalVsRho","# Global Tracks vs. Underlying Event;#rho (GeV);# Global Tracks", 100,0,25, 150,0,3000 );
+  
   TH3D *hPt_UE_BBCE = new TH3D("hPt_UE_BBCE","UE vs. BBC East Rate;Lead Jet p_{T} (GeV);Underlying Event (GeV);BBC East Rate", 300,0,300, 50,0,25, 140,0,7000000 );
-  TH3D *hPt_UE_BBCsumE = new TH3D("hPt_UE_BBCsumE","UE vs. BBC ADC East Sum;Lead Jet p_{T} (GeV);Underlying Event (GeV);BBC ADC East Sum", 300,0,300, 50,0,25, 20,0,100000 );
-  TH2D *hTowersVsRho = new TH2D("hTowersVsRho","# of Towers vs. UE;#rho (GeV);# of Towers", 80,0,35, 100,0,1000);
-  TH2D *hLeadPtVsRho = new TH2D("hLeadPtVsRho","Lead Jet p_{T} vs UE;#rho (GeV);p_{T}^{lead} (GeV)", 80,0,35, 140,0,70);
-  TH3D *hPt_BGEUE_BBCE = new TH3D("hPt_BGEUE_BBCE","Bkg. Med. Est. UE vs. BBC East Rate;Lead Jet p_{T} (GeV);Underlying Event (GeV);BBC East Rate", 300,0,300, 50,0,25, 140,0,7000000 );
-  TH3D *hPt_BGEUE_BBCsumE = new TH3D("hPt_BGEUE_BBCsumE","Bkg. Med. Est. UE vs. BBC ADC East Sum;Lead Jet p_{T} (GeV);Underlying Event (GeV);BBC ADC East Sum", 300,0,300, 50,0,25, 20,0,100000 );
-  TH2D *hTowersVsBMErho = new TH2D("hTowersVsBMErho","# of Towers vs. Bkg. Med. Est. UE;#rho (GeV);# of Towers", 80,0,35, 100,0,1000);
-  TH2D *hLeadPtVsBMErho = new TH2D("hLeadPtVsBMErho","Lead Jet p_{T} vs Bkg. Med. Est. UE;#rho (GeV);p_{T}^{lead} (GeV)", 80,0,35, 140,0,70);
+  TH3D *hPt_UE_BBCsumE = new TH3D("hPt_UE_BBCsumE","UE vs. BBC ADC East Sum;Lead Jet p_{T} (GeV);Underlying Event (GeV);BBC ADC East Sum", 300,0,300, 50,0,25, 80,0,80000 );
+  TH2D *hTowersVsRho = new TH2D("hTowersVsRho","# of Towers vs. UE;#rho (GeV);# of Towers", 140,0,35, 100,0,25);
+  TH2D *hLeadPtVsRho = new TH2D("hLeadPtVsRho","Lead Jet p_{T} vs UE;#rho (GeV);p_{T}^{lead} (GeV)", 140,0,35, 280,0,70);
     
   double pmin1, pmax1, pmin2, pmax2, ptSum;
   int RunID, EventID, nTowers, nPrimary, nGlobal, nVertices, refMult, gRefMult, nJets, leadNcons, subNcons, towID, nHitsPoss, nHitsFit, Charge, nCons;;
-  double Vx, Vy, Vz, BbcCoincidenceRate, BbcEastRate, BbcWestRate, BbcAdcSumEast, vpdVz,  leadPt, leadEta, leadPhi, leadEt, subPt, subEta, subPhi, subEt, BMErho, BMEsigma, BMErho_avg, BMEsigma_avg, rho, sigma, rho_avg;
+  double Vx, Vy, Vz, BbcCoincidenceRate, BbcEastRate, BbcWestRate, BbcAdcSumEast, vpdVz,  leadPt, leadEta, leadPhi, leadEt, subPt, subEta, subPhi, subEt, rho, sigma, rho_avg;
   vector<double> partPt, partEta, partPhi, partEt, deltaPhi;
 
   TChain* Chain = new TChain( "JetTree" );          Chain->Add( inFile.c_str() );
@@ -66,8 +65,7 @@ int main ( int argc, const char** argv ) {
     name = "sp" + etaBinName[i];          title = "Selected Particles: " + etaBinString[i];          sp[i] = new TTree( name, title );
     sp[i]->Branch("partPt",&partPt);        sp[i]->Branch("partEta",&partEta);        sp[i]->Branch("partPhi",&partPhi);
     sp[i]->Branch("partEt",&partEt);        sp[i]->Branch("rho",&rho);        sp[i]->Branch("sigma",&sigma);
-    sp[i]->Branch("BMErho",&BMErho);        sp[i]->Branch("BMEsigma",&BMEsigma);        sp[i]->Branch("deltaPhi",&deltaPhi);
-    sp[i]->Branch("leadPt",&leadPt);        sp[i]->Branch("subPt",&subPt);        sp[i]->Branch("nTowers",&nTowers);
+    sp[i]->Branch("deltaPhi",&deltaPhi);    sp[i]->Branch("leadPt",&leadPt);        sp[i]->Branch("subPt",&subPt);        sp[i]->Branch("nTowers",&nTowers);
   }
   
   //  CREATE JET SELECTOR
@@ -109,16 +107,13 @@ int main ( int argc, const char** argv ) {
       vector<PseudoJet> SubCons= rawJets[1].constituents();      subNcons = SubCons.size();
     }
 
-    BMErho_avg = 0;        BMEsigma_avg = 0;        rho_avg = 0;
+    rho_avg = 0;
     for ( int e=0; e<nEtaBins; ++e ) {
-      //  UE: JET MEDIAN BACKGROUND METHOD
       pmin1 = phi1 + qpi;           pmax1 = phi1 + (3*qpi);           pmin2 = phi1 - (3*qpi);           pmax2 = phi1 - qpi;
       Selector bgPhiRange = SelectorPhiRange( pmin1, pmax1 ) || SelectorPhiRange( pmin2, pmax2 );
-      Selector bgEtaRange = SelectorEtaRange( etaBinLo[e], etaBinHi[e] );    Selector bgSelector = bgPhiRange && bgEtaRange;
-      GhostedAreaSpec gAreaSpec( 1.0, 1, 0.01 );    AreaDefinition bg_area_def(active_area_explicit_ghosts, gAreaSpec);
-      ClusterSequenceArea bgCluster( rawParticles, bg_jet_def, bg_area_def);    JetMedianBackgroundEstimator BGEUE( bgSelector, bgCluster );
-      BMErho = BGEUE.rho();            BMEsigma = BGEUE.sigma();
-      BMErho_avg += BMErho/4;         BMEsigma_avg += BMEsigma/4;
+      Selector bgEtaRange = SelectorEtaRange( etaBinLo[e], etaBinHi[e] );
+      Selector bgSelector = bgPhiRange && bgEtaRange;
+
       selectedParticles = bgSelector( bgCluster.inclusive_jets() );
 
       ptSum = 0;
@@ -144,9 +139,8 @@ int main ( int argc, const char** argv ) {
     BbcAdcSumEast = header->GetBbcAdcSumEast();
 
     hLeadEtaPhi->Fill(leadPhi,leadEta);                                             hSubEtaPhi->Fill(subPhi,subEta);
-    hPt_BGEUE_BBCE->Fill(leadPt,BMErho_avg,BbcEastRate);                    hPt_BGEUE_BBCsumE->Fill(leadPt,BMErho_avg,BbcAdcSumEast);
-    hTowersVsBMErho->Fill(BMErho_avg,nTowers);                                 hLeadPtVsBMErho->Fill(BMErho_avg,leadPt);
-    
+
+    hPrimaryVsRho->Fill( rho_avg, nPrimary );           hGlobalVsRho->Fill(rho_avg, nGlobal );
     hPt_UE_BBCE->Fill(leadPt,rho_avg,BbcEastRate);                            hPt_UE_BBCsumE->Fill(leadPt,rho_avg,BbcAdcSumEast);
     hTowersVsRho->Fill(rho_avg,nTowers);                                         hLeadPtVsRho->Fill(rho_avg,leadPt);
 
@@ -176,16 +170,14 @@ int main ( int argc, const char** argv ) {
   hGlobalVsBBCE->Write();
   hLeadEtaPhi->Write();
   hSubEtaPhi->Write();
-  hPt_BGEUE_BBCE->Write();
-  hPt_BGEUE_BBCsumE->Write();
-  hTowersVsBMErho->Write();
-  hLeadPtVsBMErho->Write();
   hPt_UE_BBCE->Write();
   hPt_UE_BBCsumE->Write();
   hTowersVsRho->Write();
   hLeadPtVsRho->Write();
   hPrimaryVsBBCsumE->Write();
   hTowersVsBBCsumE->Write();
+  hPrimaryVsRho->Write();
+  hGlobalVsRho->Write();
   
   pAuFile->Close();
   
