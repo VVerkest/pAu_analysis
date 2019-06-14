@@ -34,8 +34,8 @@ void dijetPlots() {
   hPt_UE_BBCsumE->GetZaxis()->SetRangeUser( 0.0, 80000.0 );
 
   TH2D *hscale0 = new TH2D( "hscale0", "Underlying Event by Lead Jet p_{T};#rho (GeV);", 50,0,25, 10,0.000001, 1.0 );
-  TH2D *hscale1 = new TH2D( "hscale1", "Underlying Event vs. BBC East Rate", 140,0,7000000, 50,0,25 );
-  TH2D *hscale2 = new TH2D( "hscale2", "Underlying Event vs. BBC ADC East Sum", 150,0,100000, 50,0,25 );
+  TH2D *hscale1 = new TH2D( "hscale1", "Underlying Event vs. BBC East Rate", 140,0,7000000, 20,0,10 );
+  TH2D *hscale2 = new TH2D( "hscale2", "Underlying Event vs. BBC ADC East Sum", 150,0,100000, 20,0,10 );
 
   hscale0->SetStats(0);  hscale1->SetStats(0);  hscale2->SetStats(0);  
   const int nPtBins = 5;
@@ -95,8 +95,6 @@ void dijetPlots() {
 
   c0->Clear();  c1->Clear();
 
-
-  
 
   TCanvas * c5 = new TCanvas( "c5" , "" ,0 ,23 ,1280 ,700 );              // CANVAS
   hscale1->SetStats(0);  c5->cd();     hscale1->Draw();
