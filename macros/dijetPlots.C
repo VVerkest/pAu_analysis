@@ -59,7 +59,7 @@ void dijetPlots() {
     title = "Underlying Event vs. BBC East Rate - p_{T}^{lead}: " + ptBinString[i];
     hPt_UE_BBCE->GetXaxis()->SetRangeUser(ptBinLo[i], ptBinHi[i]);
     hUE_BBCE[i] = (TH2D*)hPt_UE_BBCE->Project3D( "yz" );       // PROJECT
-    hUE_BBCE[i]->GetYaxis()->SetRangeUser(0,10);
+    hUE_BBCE[i]->GetYaxis()->SetRangeUser(0.0,10.0);
     scale = hUE_BBCE[i]->Integral("width");
     hUE_BBCE[i]->Scale( 1./scale );                     // NORMALIZE
     hUE_BBCE[i]->SetNameTitle(name,title);
@@ -114,8 +114,10 @@ void dijetPlots() {
 
   c5->Clear();  c6->Clear();
 
-  TH2D *hscale3 = new TH2D( "hscale3", "Underlying Event vs. BBC East Rate", 10,0,5, 100,0,1 );
-  TH2D *hscale4 = new TH2D( "hscale4", "Underlying Event vs. BBC ADC East Sum", 10,0,5, 100,0,1 );
+  TH2D *hscale3 = new TH2D( "hscale3", "Underlying Event vs. BBC East Rate", 50,0,25, 100,0.000001,1 );
+  TH2D *hscale4 = new TH2D( "hscale4", "Underlying Event vs. BBC ADC East Sum", 50,0,25, 100,0.000001,1 );
+  hscale3->SetStats(0);     hscale4->SetStats(0);
+  hscale3->SetLogY();       hscale4->SetLogY();
   
   TH1D *hUE_BBCE_py[nPtBins];        TH1D *hUE_BBCsumE_py[nPtBins];
     
