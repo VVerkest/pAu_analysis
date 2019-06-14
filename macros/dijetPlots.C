@@ -116,7 +116,7 @@ void dijetPlots() {
 
   TH2D *hscale3 = new TH2D( "hscale3", "Underlying Event vs. BBC East Rate", 50,0,25, 100,0.000001,1 );
   TH2D *hscale4 = new TH2D( "hscale4", "Underlying Event vs. BBC ADC East Sum", 50,0,25, 100,0.000001,1 );
-  hscale3->SetStats(0);     hscale4->SetStats(0);
+  hscale3->SetStats(0);     hscale4->SetStats(0);  hscale3->SetLogY(0);     hscale4->SetLogY(0);
   
   TH1D *hUE_BBCE_py[nPtBins];        TH1D *hUE_BBCsumE_py[nPtBins];
     
@@ -128,7 +128,7 @@ void dijetPlots() {
   for ( int i=0; i<nPtBins; ++i ) {
     hUE_BBCE_py[i] = hUE_BBCE[i]->ProjectionY();        scale = hUE_BBCE_py[i]->Integral("width");        hUE_BBCE_py[i]->Scale(1.0/scale);
     hUE_BBCE_py[i]->SetStats(0);    hUE_BBCE_py[i]->SetLineColor( color[i] );    hUE_BBCE_py[i]->SetMarkerStyle( marker[i] );    hUE_BBCE_py[i]->SetMarkerColor( color[i] );
-    hUE_BBCE_py[i]->SetLogY();    hUE_BBCE_py[i]->GetYaxis()->SetRangeUser(0,5);    // hUE_BBCsumE_py[i]->GetXaxis()->SetRangeUser(0.0,5.0);
+    hUE_BBCE_py[i]->GetYaxis()->SetRangeUser(0,5);    // hUE_BBCsumE_py[i]->GetXaxis()->SetRangeUser(0.0,5.0);
     hUE_BBCE_py[i]->Draw("Same");
     
     avg = "";    avg += hUE_BBCE_py[i]->GetMean();    // name = "UEvsBBCE" + ptBinName[i];
@@ -149,7 +149,7 @@ void dijetPlots() {
   for ( int i=0; i<nPtBins; ++i ) {
     hUE_BBCsumE_py[i] = hUE_BBCsumE[i]->ProjectionY();        scale = hUE_BBCsumE_py[i]->Integral("width");        hUE_BBCsumE_py[i]->Scale(1.0/scale);
     hUE_BBCsumE_py[i]->SetStats(0);    hUE_BBCsumE_py[i]->SetLineColor( color[i] );    hUE_BBCsumE_py[i]->SetMarkerStyle( marker[i] );    hUE_BBCsumE_py[i]->SetMarkerColor( color[i] );
-    hUE_BBCE_py[i]->SetLogY();    hUE_BBCsumE_py[i]->GetYaxis()->SetRangeUser(0,5);    // hUE_BBCsumE_py[i]->GetXaxis()->SetRangeUser(0.0,5.0);
+    hUE_BBCsumE_py[i]->GetYaxis()->SetRangeUser(0,5);    // hUE_BBCsumE_py[i]->GetXaxis()->SetRangeUser(0.0,5.0);
     hUE_BBCsumE_py[i]->Draw("Same");
 
     avg = "";    avg += hUE_BBCsumE_py[i]->GetMean();    // name = "UEvsBBCE" + ptBinName[i];
