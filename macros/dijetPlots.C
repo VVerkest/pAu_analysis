@@ -79,14 +79,13 @@ void dijetPlots() {
     hPt_UE_BBCsumE->GetXaxis()->SetRangeUser(ptBinLo[i], ptBinHi[i]);
     hUE_BBCsumE[i] = (TH2D*)hPt_UE_BBCsumE->Project3D( "yz" );       // PROJECT
     hUE_BBCsumE[i]->GetYaxis()->SetRangeUser(0,10);
-    hUE_BBCsumE[i]->GetYaxis()->SetRangeUser(0,10);
     scale = hUE_BBCsumE[i]->Integral("width");
     hUE_BBCsumE[i]->Scale( 1./scale );                     // NORMALIZE
     hUE_BBCsumE[i]->SetNameTitle(name,title);
     //hUE_BBCsumE[i]->Write();
     hUE_BBCsumE[i]->Draw("COLZ");
     hUE_BBCsumE[i]->SetLineColor(kRed);
-    hUE_BBCsumE[i]->ProfileX("",1,-1,"S")->Draw("SAME");
+    hUE_BBCsumE[i]->ProfileX("S")->Draw("SAME");
     name = "plots/UEvsBBCsumE" + ptBinName[i] + ".pdf";
     c1->SaveAs( name,"PDF");
     hUE_BBCsumE[i]->Scale( scale );                     // UN-NORMALIZE
@@ -100,7 +99,7 @@ void dijetPlots() {
   hscale1->SetStats(0);  c5->cd();     hscale1->Draw();
   for ( int i=0; i<nPtBins; ++i ) {
     hUE_BBCE[i]->SetStats(0);    hUE_BBCE[i]->SetLineColor( color[i] );    hUE_BBCE[i]->SetMarkerStyle( marker[i] );    hUE_BBCE[i]->SetMarkerColor( color[i] );    
-    c5->cd();         hUE_BBCE[i]->GetYaxis()->SetRangeUser(0.0,5.0);         hUE_BBCE[i]->ProfileX("",1,-1,"S")->Draw("SAME S");
+    c5->cd();         hUE_BBCE[i]->GetYaxis()->SetRangeUser(0.0,5.0);         hUE_BBCE[i]->ProfileX("S")->Draw("SAME");
   }
   c5->SaveAs( "plots/UE_BBCE_profile.pdf","PDF");
 
@@ -115,7 +114,8 @@ void dijetPlots() {
 
   c5->Clear();  c6->Clear();
 
-  
+  TH2D *hscale3 = new TH2D( "hscale3", "Underlying Event vs. BBC East Rate", 10,0,5, 100,0,1 );
+  TH2D *hscale4 = new TH2D( "hscale4", "Underlying Event vs. BBC ADC East Sum", 10,0,5, 100,0,1 );
   
   TH1D *hUE_BBCE_py[nPtBins];        TH1D *hUE_BBCsumE_py[nPtBins];
     
@@ -123,7 +123,7 @@ void dijetPlots() {
   leg0->SetBorderSize(1);   leg0->SetLineColor(1);   leg0->SetLineStyle(1);   leg0->SetLineWidth(1);   leg0->SetFillColor(0);   leg0->SetFillStyle(1001);
   leg0->SetNColumns(2);  leg0->AddEntry((TObject*)0,"#bf{p_{T}^{Lead} (GeV)}", "");  leg0->AddEntry((TObject*)0,"#bf{<#rho> (GeV)}", "");
   
-  c5->cd();  c5->Clear();  hscale1->GetYaxis()->SetRangeUser(0,1);  hscale1->GetXaxis()->SetRangeUser(0,5);  hscale1->Draw();
+  c5->cd();  c5->Clear();  hscale3->GetYaxis()->SetRangeUser(0,1);  hscale3->GetXaxis()->SetRangeUser(0,5);  hscale3->Draw();
   for ( int i=0; i<nPtBins; ++i ) {
     hUE_BBCE_py[i] = hUE_BBCE[i]->ProjectionY();        scale = hUE_BBCE_py[i]->Integral("width");        hUE_BBCE_py[i]->Scale(1.0/scale);
     hUE_BBCE_py[i]->SetStats(0);    hUE_BBCE_py[i]->SetLineColor( color[i] );    hUE_BBCE_py[i]->SetMarkerStyle( marker[i] );    hUE_BBCE_py[i]->SetMarkerColor( color[i] );
@@ -143,7 +143,7 @@ void dijetPlots() {
   leg1->SetBorderSize(1);   leg1->SetLineColor(1);   leg1->SetLineStyle(1);   leg1->SetLineWidth(1);   leg1->SetFillColor(0);   leg1->SetFillStyle(1001);
   leg1->SetNColumns(2);  leg1->AddEntry((TObject*)0,"#bf{p_{T}^{Lead} (GeV)}", "");  leg1->AddEntry((TObject*)0,"#bf{<#rho> (GeV)}", "");
   
-  c6->cd();  c6->Clear();  hscale2->GetYaxis()->SetRangeUser(0,1);  hscale2->GetXaxis()->SetRangeUser(0.0,5.0);  hscale2->Draw();
+  c6->cd();  c6->Clear();  hscale4->GetYaxis()->SetRangeUser(0,1);  hscale4->GetXaxis()->SetRangeUser(0.0,5.0);  hscale4->Draw();
   for ( int i=0; i<nPtBins; ++i ) {
     hUE_BBCsumE_py[i] = hUE_BBCsumE[i]->ProjectionY();        scale = hUE_BBCsumE_py[i]->Integral("width");        hUE_BBCsumE_py[i]->Scale(1.0/scale);
     hUE_BBCsumE_py[i]->SetStats(0);    hUE_BBCsumE_py[i]->SetLineColor( color[i] );    hUE_BBCsumE_py[i]->SetMarkerStyle( marker[i] );    hUE_BBCsumE_py[i]->SetMarkerColor( color[i] );
