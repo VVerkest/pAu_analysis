@@ -73,7 +73,7 @@ void dijetPlots() {
     //hUE_BBCE[i]->RebinX();
     hUE_BBCE[i]->SetLineColor(kRed);
     name = "pUE_BBCE" + ptBinName[i];
-    pUE_BBCE[i] = hUE_BBCE[i]->ProfileX("S");
+    pUE_BBCE[i] = hUE_BBCE[i]->ProfileX("",1,-1,"S");
     pUE_BBCE[i]->SetStats(0);
     pUE_BBCE[i]->SetName(name);
     pUE_BBCE[i]->Draw("SAME");
@@ -95,7 +95,7 @@ void dijetPlots() {
     hUE_BBCsumE[i]->Draw("COLZ");
     hUE_BBCsumE[i]->SetLineColor(kRed);
     name = "pUE_BBCsumE" + ptBinName[i];
-    pUE_BBCsumE[i] = hUE_BBCsumE[i]->ProfileX("S");
+    pUE_BBCsumE[i] = hUE_BBCsumE[i]->ProfileX("",1,-1,"S");
     pUE_BBCsumE[i]->SetStats(0);
     pUE_BBCsumE[i]->SetName(name);
     pUE_BBCsumE[i]->Draw("SAME");
@@ -106,10 +106,10 @@ void dijetPlots() {
 
   c0->Clear();  c1->Clear();
 
-  hscale1->SetStats(0);  c1->cd();    hscale1->GetYaxis()->SetRangeUser(0.0,3.0);     hscale1->Draw();
+  hscale1->SetStats(0);  c1->cd();    hscale1->GetYaxis()->SetRangeUser(0.0,4.0);     hscale1->Draw();
   for ( int i=0; i<nPtBins; ++i ) {
     pUE_BBCE[i]->SetLineColor( color[i] );    pUE_BBCE[i]->SetMarkerStyle( marker[i] );    pUE_BBCE[i]->SetMarkerColor( color[i] );    
-    pUE_BBCE[i]->GetYaxis()->SetRangeUser(0.0,3.0);         pUE_BBCE[i]->Draw("SAME");
+    pUE_BBCE[i]->GetYaxis()->SetRangeUser(0.0,4.0);         pUE_BBCE[i]->Draw("SAME");
   }
   c1->SaveAs( "plots/UE_BBCE_profile.pdf","PDF");          c1->Clear();
 
@@ -130,8 +130,9 @@ void dijetPlots() {
   TCanvas * c5 = new TCanvas( "c5" , "" ,0 ,23 ,1280 ,700 );              // CANVAS
   hscale1->SetStats(0);  c5->cd();    //  hscale1->GetYaxis()->SetRangeUser(0.0,5.0);     hscale1->Draw();
   for ( int i=0; i<nPtBins; ++i ) {
-    hUE_BBCE[i]->SetStats(0);    hUE_BBCE[i]->SetLineColor( color[i] );    hUE_BBCE[i]->SetMarkerStyle( marker[i] );    hUE_BBCE[i]->SetMarkerColor( color[i] );    
-    hUE_BBCE[i]->ProfileX("S")->Draw("SAME");
+    hUE_BBCE[i]->SetStats(0);    hUE_BBCE[i]->SetLineColor( color[i] );    hUE_BBCE[i]->SetMarkerStyle( marker[i] );    hUE_BBCE[i]->SetMarkerColor( color[i] );
+    name = "UE_BBCE_profileY" + ptBinName[i];
+    hUE_BBCE[i]->ProfileY(name,0,80000,"S")->Draw("SAME");
   }
   c5->SaveAs( "plots/UE_BBCE_profileY.pdf","PDF");          c5->Clear();
 
@@ -140,7 +141,8 @@ void dijetPlots() {
   hscale2->SetStats(0);  c6->cd();  //   hscale2->GetYaxis()->SetRangeUser(0.0,5.0);     hscale2->Draw();
   for ( int i=0; i<nPtBins; ++i ) {
     hUE_BBCsumE[i]->SetStats(0);    hUE_BBCsumE[i]->SetLineColor( color[i] );    hUE_BBCsumE[i]->SetMarkerStyle( marker[i] );    hUE_BBCsumE[i]->SetMarkerColor( color[i] );    
-    hUE_BBCsumE[i]->ProfileX("S")->Draw("SAME");
+    name = "hUE_BBCsumE_profileY" + ptBinName[i];
+    hUE_BBCsumE[i]->ProfileY(name,0,80000,"S")->Draw("SAME");
   }
   c6->SaveAs( "plots/UE_BBCsumE_profileY.pdf","PDF");        c6->Clear();
 
@@ -193,7 +195,7 @@ void dijetPlots() {
 
 
   
-  hLeadPtVsRho->GetXaxis()->SetRange(1,80);
+  hLeadPtVsRho->GetXaxis()->SetRange(1,100);
 
   
   TCanvas * c3 = new TCanvas( "c3" , "" ,0 ,23 ,1280 ,700 );              // CANVAS
@@ -245,7 +247,7 @@ void dijetPlots() {
   hTowersVsRho->GetZaxis()->SetRangeUser(0.0000001,1);
   hTowersVsRho->Draw("COLZ");
   hTowersVsRho->SetLineColor(kRed);
-  hTowersVsRho->ProfileX("S")->Draw("SAME");
+  hTowersVsRho->ProfileX("",0,25,"S")->Draw("SAME");
   c4->SaveAs("plots/TowersVsRho.pdf","PDF");
   c4->Clear();
   
@@ -256,7 +258,7 @@ void dijetPlots() {
   hPrimaryVsBBCsumE->Scale( 1./hPrimaryVsBBCsumE->Integral("width") );
   hPrimaryVsBBCsumE->Draw("COLZ");
   hPrimaryVsBBCsumE->SetLineColor(kRed);
-  hPrimaryVsBBCsumE->ProfileX("S")->Draw("SAME");
+  hPrimaryVsBBCsumE->ProfileX("",1,-1,"S")->Draw("SAME");
   c4->SaveAs("plots/PrimaryVsBBCsumE.pdf","PDF");
 
   hTowersVsBBCsumE->GetXaxis()->SetRangeUser( 0,80000 );  
@@ -264,7 +266,7 @@ void dijetPlots() {
   hTowersVsBBCsumE->Scale( 1./hTowersVsBBCsumE->Integral("width") );
   hTowersVsBBCsumE->Draw("COLZ");
   hTowersVsBBCsumE->SetLineColor(kRed);
-  hTowersVsBBCsumE->ProfileX("S")->Draw("SAME");
+  hTowersVsBBCsumE->ProfileX("",0,80000,"S")->Draw("SAME");
   c4->SaveAs("plots/hTowersVsBBCsumE.pdf","PDF");
 
   
