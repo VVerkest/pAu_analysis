@@ -247,7 +247,7 @@ void dijetPlots() {
   hTowersVsRho->GetZaxis()->SetRangeUser(0.0000001,1);
   hTowersVsRho->Draw("COLZ");
   hTowersVsRho->SetLineColor(kRed);
-  hTowersVsRho->ProfileX("",0,25,"S")->Draw("SAME");
+  hTowersVsRho->ProfileX("",1,-1,"S")->Draw("SAME");
   c4->SaveAs("plots/TowersVsRho.pdf","PDF");
   c4->Clear();
   
