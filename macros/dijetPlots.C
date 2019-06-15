@@ -41,7 +41,7 @@ void dijetPlots() {
 
   hscale0->SetStats(0);  hscale1->SetStats(0);  hscale2->SetStats(0);  
   const int nPtBins = 5;
-  TH1D * hRho[nPtBins];  TH2D * hUE_BBCE[nPtBins];  TH2D * hUE_BBCsumE[nPtBins];
+  TH1D * hRho[nPtBins];  TH2D * hUE_BBCE[nPtBins];  TH2D * hUE_BBCsumE[nPtBins];  TH2D * pUE_BBCE[nPtBins];  TH2D * pUE_BBCsumE[nPtBins];
   double ptBinLo[nPtBins] = { 10.0, 15.0, 20.0, 30.0, 40.0 };
   double ptBinHi[nPtBins] = { 15.0, 20.0, 30.0, 40.0, 100.0 };
   TString ptBinString[nPtBins] = { "10-15 GeV", "15-20 GeV",  "20-30 GeV", "30-40 GeV", ">40 GeV" };
@@ -54,7 +54,8 @@ void dijetPlots() {
   c0->SetLogz();
   TCanvas * c1 = new TCanvas( "c1" , "" ,0 ,23 ,1280 ,700 );              // CANVAS
   c1->SetLogz();
-  
+
+ 
   for ( int i=0; i<nPtBins; ++i ) {
     c0->cd();
     name = "UEvsBBCE" + ptBinName[i];
@@ -69,7 +70,11 @@ void dijetPlots() {
     hUE_BBCE[i]->Draw("COLZ");
     //hUE_BBCE[i]->RebinX();
     hUE_BBCE[i]->SetLineColor(kRed);
-    hUE_BBCE[i]->ProfileX("S")->Draw("SAME");
+    name = "profUE_BBCE" + ptBinName[i];
+    pUE_BBCE[i] = (TH1D*)hUE_BBCE[i]->ProfileX("S");
+    pUE_BBCE[i]->SetOptStat(0);
+    pUE_BBCE[i]->SetName(name);
+    pUE_BBCE[i]->Draw("SAME");
     name = "plots/UEvsBBCE" + ptBinName[i] + ".pdf";
     c0->SaveAs( name,"PDF");
     hUE_BBCE[i]->Scale( scale );                     // UN-NORMALIZE
@@ -87,12 +92,15 @@ void dijetPlots() {
     //hUE_BBCsumE[i]->Write();
     hUE_BBCsumE[i]->Draw("COLZ");
     hUE_BBCsumE[i]->SetLineColor(kRed);
-    hUE_BBCsumE[i]->ProfileX("S")->Draw("SAME");
+    name = "profUE_BBCsumE" + ptBinName[i];
+    pUE_BBCsumE[i] = (TH1D*)hUE_BBCsumE[i]->ProfileX("S");
+    pUE_BBCsumE[i]->SetOptStat(0);
+    pUE_BBCsumE[i]->SetName(name);
+    pUE_BBCsumE[i]->Draw("SAME");
     name = "plots/UEvsBBCsumE" + ptBinName[i] + ".pdf";
     c1->SaveAs( name,"PDF");
     hUE_BBCsumE[i]->Scale( scale );                     // UN-NORMALIZE
   }
-
 
   c0->Clear();  c1->Clear();
 
@@ -103,7 +111,7 @@ void dijetPlots() {
     hUE_BBCE[i]->SetStats(0);    hUE_BBCE[i]->SetLineColor( color[i] );    hUE_BBCE[i]->SetMarkerStyle( marker[i] );    hUE_BBCE[i]->SetMarkerColor( color[i] );    
     hUE_BBCE[i]->GetYaxis()->SetRangeUser(0.0,5.0);         hUE_BBCE[i]->ProfileX("S")->Draw("SAME");
   }
-  c5->SaveAs( "plots/UE_BBCE_profile.pdf","PDF");
+  c5->SaveAs( "plots/UE_BBCE_profile.pdf","PDF");          c5->Clear();
 
 
   TCanvas * c6 = new TCanvas( "c6" , "" ,0 ,23 ,1280 ,700 );              // CANVAS
@@ -112,9 +120,7 @@ void dijetPlots() {
     hUE_BBCsumE[i]->SetStats(0);    hUE_BBCsumE[i]->SetLineColor( color[i] );    hUE_BBCsumE[i]->SetMarkerStyle( marker[i] );    hUE_BBCsumE[i]->SetMarkerColor( color[i] );    
     hUE_BBCsumE[i]->GetYaxis()->SetRangeUser(0.0,5.0);         hUE_BBCsumE[i]->ProfileX("S")->Draw("SAME");
   }
-  c6->SaveAs( "plots/UE_BBCsumE_profile.pdf","PDF");
-
-  c5->Clear();  c6->Clear();
+  c6->SaveAs( "plots/UE_BBCsumE_profile.pdf","PDF");        c6->Clear();
 
   TH2D *hscale3 = new TH2D( "hscale3", "Underlying Event vs. BBC East Rate", 50,0,25, 100,0.000001,1 );
   TH2D *hscale4 = new TH2D( "hscale4", "Underlying Event vs. BBC ADC East Sum", 50,0,25, 100,0.000001,1 );
@@ -129,9 +135,8 @@ void dijetPlots() {
   c5->SetLogy();  c5->cd();  c5->Clear();  hscale3->GetYaxis()->SetRangeUser(0,1);  // hscale3->GetXaxis()->SetRangeUser(0,5);
   hscale3->Draw();
   for ( int i=0; i<nPtBins; ++i ) {
-    hUE_BBCE_py[i] = hUE_BBCE[i]->ProjectionY();        scale = hUE_BBCE_py[i]->Integral("width");        hUE_BBCE_py[i]->Scale(1.0/scale);
+    hUE_BBCE_py[i] = hUE_BBCE[i]->ProjectionY();        hUE_BBCE_py[i]->Scale(1.0/hUE_BBCE_py[i]->(Integral("width")));
     hUE_BBCE_py[i]->SetStats(0);    hUE_BBCE_py[i]->SetLineColor( color[i] );    hUE_BBCE_py[i]->SetMarkerStyle( marker[i] );    hUE_BBCE_py[i]->SetMarkerColor( color[i] );
-    //hUE_BBCE_py[i]->GetYaxis()->SetRangeUser(0,5);    // hUE_BBCsumE_py[i]->GetXaxis()->SetRangeUser(0.0,5.0);
     hUE_BBCE_py[i]->Draw("Same");
     
     avg = "";    avg += hUE_BBCE_py[i]->GetMean();    // name = "UEvsBBCE" + ptBinName[i];
@@ -151,9 +156,8 @@ void dijetPlots() {
   c6->SetLogy();  c6->cd();  c6->Clear();  hscale4->GetYaxis()->SetRangeUser(0,1);  // hscale4->GetXaxis()->SetRangeUser(0.0,5.0);
   hscale4->Draw();
   for ( int i=0; i<nPtBins; ++i ) {
-    hUE_BBCsumE_py[i] = hUE_BBCsumE[i]->ProjectionY();        scale = hUE_BBCsumE_py[i]->Integral("width");        hUE_BBCsumE_py[i]->Scale(1.0/scale);
+    hUE_BBCsumE_py[i] = hUE_BBCsumE[i]->ProjectionY();                hUE_BBCsumE_py[i]->Scale(1.0/hUE_BBCsumE_py[i]->(Integral("width")));
     hUE_BBCsumE_py[i]->SetStats(0);    hUE_BBCsumE_py[i]->SetLineColor( color[i] );    hUE_BBCsumE_py[i]->SetMarkerStyle( marker[i] );    hUE_BBCsumE_py[i]->SetMarkerColor( color[i] );
-    //hUE_BBCsumE_py[i]->GetYaxis()->SetRangeUser(0,5);    // hUE_BBCsumE_py[i]->GetXaxis()->SetRangeUser(0.0,5.0);
     hUE_BBCsumE_py[i]->Draw("Same");
 
     avg = "";    avg += hUE_BBCsumE_py[i]->GetMean();    // name = "UEvsBBCE" + ptBinName[i];
@@ -218,7 +222,7 @@ void dijetPlots() {
   hTowersVsRho->GetYaxis()->SetRangeUser( 0,200 );
   hTowersVsRho->Draw("COLZ");
   hTowersVsRho->SetLineColor(kRed);
-  hTowersVsRho->ProfileX("",1,-1,"S")->Draw("SAME");
+  hTowersVsRho->ProfileX("S")->Draw("SAME");
   c4->SaveAs("plots/TowersVsRho.pdf","PDF");
   c4->Clear();
   
@@ -229,7 +233,7 @@ void dijetPlots() {
   hPrimaryVsBBCsumE->Scale( 1./hPrimaryVsBBCsumE->Integral("width") );
   hPrimaryVsBBCsumE->Draw("COLZ");
   hPrimaryVsBBCsumE->SetLineColor(kRed);
-  hPrimaryVsBBCsumE->ProfileX("",1,-1,"S")->Draw("SAME");
+  hPrimaryVsBBCsumE->ProfileX("S")->Draw("SAME");
   c4->SaveAs("plots/PrimaryVsBBCsumE.pdf","PDF");
 
   hTowersVsBBCsumE->GetXaxis()->SetRangeUser( 0,80000 );  
@@ -237,7 +241,7 @@ void dijetPlots() {
   hTowersVsBBCsumE->Scale( 1./hTowersVsBBCsumE->Integral("width") );
   hTowersVsBBCsumE->Draw("COLZ");
   hTowersVsBBCsumE->SetLineColor(kRed);
-  hTowersVsBBCsumE->ProfileX("",1,-1,"S")->Draw("SAME");
+  hTowersVsBBCsumE->ProfileX("S")->Draw("SAME");
   c4->SaveAs("plots/hTowersVsBBCsumE.pdf","PDF");
 
   
