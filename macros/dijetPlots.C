@@ -71,7 +71,7 @@ void dijetPlots() {
     //hUE_BBCE[i]->RebinX();
     hUE_BBCE[i]->SetLineColor(kRed);
     name = "profUE_BBCE" + ptBinName[i];
-    pUE_BBCE[i] = (TH1D*)hUE_BBCE[i]->ProfileX("S");
+    pUE_BBCE[i] = hUE_BBCE[i]->ProfileX("S");
     pUE_BBCE[i]->SetStats(0);
     pUE_BBCE[i]->SetName(name);
     pUE_BBCE[i]->Draw("SAME");
@@ -84,7 +84,7 @@ void dijetPlots() {
     name = "UEvsBBCsumE" + ptBinName[i];
     title = "Underlying Event vs. BBC ADC East Sum - p_{T}^{lead}: " + ptBinString[i];
     hPt_UE_BBCsumE->GetXaxis()->SetRangeUser(ptBinLo[i], ptBinHi[i]);
-    hUE_BBCsumE[i] = (TH2D*)hPt_UE_BBCsumE->Project3D( "yz" );       // PROJECT
+    hUE_BBCsumE[i] = hPt_UE_BBCsumE->Project3D( "yz" );       // PROJECT
     hUE_BBCsumE[i]->GetYaxis()->SetRangeUser(0,10);
     scale = hUE_BBCsumE[i]->Integral("width");
     hUE_BBCsumE[i]->Scale( 1./scale );                     // NORMALIZE
