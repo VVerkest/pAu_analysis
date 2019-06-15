@@ -41,7 +41,9 @@ void dijetPlots() {
 
   hscale0->SetStats(0);  hscale1->SetStats(0);  hscale2->SetStats(0);  
   const int nPtBins = 5;
-  TH1D * hRho[nPtBins];  TH2D * hUE_BBCE[nPtBins];  TH2D * hUE_BBCsumE[nPtBins];  TH2D * pUE_BBCE[nPtBins];  TH2D * pUE_BBCsumE[nPtBins];
+  TH1D * hRho[nPtBins];  TH2D * hUE_BBCE[nPtBins];  TH2D * hUE_BBCsumE[nPtBins];
+  TProfile *pUE_BBCE[nPtBins];  TProfile *pUE_BBCsumE[nPtBins];
+  
   double ptBinLo[nPtBins] = { 10.0, 15.0, 20.0, 30.0, 40.0 };
   double ptBinHi[nPtBins] = { 15.0, 20.0, 30.0, 40.0, 100.0 };
   TString ptBinString[nPtBins] = { "10-15 GeV", "15-20 GeV",  "20-30 GeV", "30-40 GeV", ">40 GeV" };
@@ -71,7 +73,7 @@ void dijetPlots() {
     //hUE_BBCE[i]->RebinX();
     hUE_BBCE[i]->SetLineColor(kRed);
     name = "pUE_BBCE" + ptBinName[i];
-    pUE_BBCE[i] = (TH2D*)hUE_BBCE[i]->ProfileX("S");
+    pUE_BBCE[i] = hUE_BBCE[i]->ProfileX("S");
     pUE_BBCE[i]->SetStats(0);
     pUE_BBCE[i]->SetName(name);
     pUE_BBCE[i]->Draw("SAME");
@@ -93,7 +95,7 @@ void dijetPlots() {
     hUE_BBCsumE[i]->Draw("COLZ");
     hUE_BBCsumE[i]->SetLineColor(kRed);
     name = "pUE_BBCsumE" + ptBinName[i];
-    pUE_BBCsumE[i] = (TH2D*)hUE_BBCsumE[i]->ProfileX("S");
+    pUE_BBCsumE[i] = hUE_BBCsumE[i]->ProfileX("S");
     pUE_BBCsumE[i]->SetStats(0);
     pUE_BBCsumE[i]->SetName(name);
     pUE_BBCsumE[i]->Draw("SAME");
