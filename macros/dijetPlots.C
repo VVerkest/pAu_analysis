@@ -70,7 +70,7 @@ void dijetPlots() {
     hUE_BBCE[i]->Draw("COLZ");
     //hUE_BBCE[i]->RebinX();
     hUE_BBCE[i]->SetLineColor(kRed);
-    name = "profUE_BBCE" + ptBinName[i];
+    name = "pUE_BBCE" + ptBinName[i];
     pUE_BBCE[i] = (TH2D*)hUE_BBCE[i]->ProfileX("S");
     pUE_BBCE[i]->SetStats(0);
     pUE_BBCE[i]->SetName(name);
@@ -92,7 +92,7 @@ void dijetPlots() {
     //hUE_BBCsumE[i]->Write();
     hUE_BBCsumE[i]->Draw("COLZ");
     hUE_BBCsumE[i]->SetLineColor(kRed);
-    name = "profUE_BBCsumE" + ptBinName[i];
+    name = "pUE_BBCsumE" + ptBinName[i];
     pUE_BBCsumE[i] = (TH2D*)hUE_BBCsumE[i]->ProfileX("S");
     pUE_BBCsumE[i]->SetStats(0);
     pUE_BBCsumE[i]->SetName(name);
