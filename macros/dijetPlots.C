@@ -72,7 +72,7 @@ void dijetPlots() {
     hUE_BBCE[i]->SetLineColor(kRed);
     name = "profUE_BBCE" + ptBinName[i];
     pUE_BBCE[i] = (TH1D*)hUE_BBCE[i]->ProfileX("S");
-    pUE_BBCE[i]->SetOptStat(0);
+    pUE_BBCE[i]->SetStats(0);
     pUE_BBCE[i]->SetName(name);
     pUE_BBCE[i]->Draw("SAME");
     name = "plots/UEvsBBCE" + ptBinName[i] + ".pdf";
@@ -94,7 +94,7 @@ void dijetPlots() {
     hUE_BBCsumE[i]->SetLineColor(kRed);
     name = "profUE_BBCsumE" + ptBinName[i];
     pUE_BBCsumE[i] = (TH1D*)hUE_BBCsumE[i]->ProfileX("S");
-    pUE_BBCsumE[i]->SetOptStat(0);
+    pUE_BBCsumE[i]->SetStats(0);
     pUE_BBCsumE[i]->SetName(name);
     pUE_BBCsumE[i]->Draw("SAME");
     name = "plots/UEvsBBCsumE" + ptBinName[i] + ".pdf";
@@ -135,7 +135,7 @@ void dijetPlots() {
   c5->SetLogy();  c5->cd();  c5->Clear();  hscale3->GetYaxis()->SetRangeUser(0,1);  // hscale3->GetXaxis()->SetRangeUser(0,5);
   hscale3->Draw();
   for ( int i=0; i<nPtBins; ++i ) {
-    hUE_BBCE_py[i] = hUE_BBCE[i]->ProjectionY();        hUE_BBCE_py[i]->Scale(1.0/hUE_BBCE_py[i]->(Integral("width")));
+    hUE_BBCE_py[i] = hUE_BBCE[i]->ProjectionY();        hUE_BBCE_py[i]->Scale(1.0/hUE_BBCE_py[i]->Integral("width"));
     hUE_BBCE_py[i]->SetStats(0);    hUE_BBCE_py[i]->SetLineColor( color[i] );    hUE_BBCE_py[i]->SetMarkerStyle( marker[i] );    hUE_BBCE_py[i]->SetMarkerColor( color[i] );
     hUE_BBCE_py[i]->Draw("Same");
     
@@ -156,7 +156,7 @@ void dijetPlots() {
   c6->SetLogy();  c6->cd();  c6->Clear();  hscale4->GetYaxis()->SetRangeUser(0,1);  // hscale4->GetXaxis()->SetRangeUser(0.0,5.0);
   hscale4->Draw();
   for ( int i=0; i<nPtBins; ++i ) {
-    hUE_BBCsumE_py[i] = hUE_BBCsumE[i]->ProjectionY();                hUE_BBCsumE_py[i]->Scale(1.0/hUE_BBCsumE_py[i]->(Integral("width")));
+    hUE_BBCsumE_py[i] = hUE_BBCsumE[i]->ProjectionY();                hUE_BBCsumE_py[i]->Scale1.0/hUE_BBCsumE_py[i]->(Integral("width"));
     hUE_BBCsumE_py[i]->SetStats(0);    hUE_BBCsumE_py[i]->SetLineColor( color[i] );    hUE_BBCsumE_py[i]->SetMarkerStyle( marker[i] );    hUE_BBCsumE_py[i]->SetMarkerColor( color[i] );
     hUE_BBCsumE_py[i]->Draw("Same");
 
