@@ -109,7 +109,7 @@ void dijetPlots() {
   hscale1->SetStats(0);  c1->cd();    hscale1->GetYaxis()->SetRangeUser(0.0,5.0);     hscale1->Draw();
   for ( int i=0; i<nPtBins; ++i ) {
     pUE_BBCE[i]->SetLineColor( color[i] );    pUE_BBCE[i]->SetMarkerStyle( marker[i] );    pUE_BBCE[i]->SetMarkerColor( color[i] );    
-    pUE_BBCE[i]->GetYaxis()->SetRangeUser(0.0,5.0);         pUE_BBCE[i]->ProfileX("S")->Draw("SAME");
+    pUE_BBCE[i]->GetYaxis()->SetRangeUser(0.0,5.0);         pUE_BBCE[i]->Draw("SAME");
   }
   c1->SaveAs( "plots/UE_BBCE_profile.pdf","PDF");          c1->Clear();
 
@@ -118,7 +118,7 @@ void dijetPlots() {
   hscale2->SetStats(0);  c1->cd();    hscale2->GetYaxis()->SetRangeUser(0.0,5.0);     hscale2->Draw();
   for ( int i=0; i<nPtBins; ++i ) {
     pUE_BBCsumE[i]->SetLineColor( color[i] );    pUE_BBCsumE[i]->SetMarkerStyle( marker[i] );    pUE_BBCsumE[i]->SetMarkerColor( color[i] );    
-    pUE_BBCsumE[i]->GetYaxis()->SetRangeUser(0.0,5.0);         pUE_BBCsumE[i]->ProfileX("S")->Draw("SAME");
+    pUE_BBCsumE[i]->GetYaxis()->SetRangeUser(0.0,5.0);         pUE_BBCsumE[i]->Draw("SAME");
   }
   c1->SaveAs( "plots/UE_BBCsumE_profile.pdf","PDF");          c1->Clear();
 
