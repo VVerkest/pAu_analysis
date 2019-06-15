@@ -156,7 +156,7 @@ void dijetPlots() {
   c6->SetLogy();  c6->cd();  c6->Clear();  hscale4->GetYaxis()->SetRangeUser(0,1);  // hscale4->GetXaxis()->SetRangeUser(0.0,5.0);
   hscale4->Draw();
   for ( int i=0; i<nPtBins; ++i ) {
-    hUE_BBCsumE_py[i] = hUE_BBCsumE[i]->ProjectionY();                hUE_BBCsumE_py[i]->Scale1.0/hUE_BBCsumE_py[i]->(Integral("width"));
+    hUE_BBCsumE_py[i] = hUE_BBCsumE[i]->ProjectionY();                hUE_BBCsumE_py[i]->Scale(1.0/hUE_BBCsumE_py[i]->Integral("width"));
     hUE_BBCsumE_py[i]->SetStats(0);    hUE_BBCsumE_py[i]->SetLineColor( color[i] );    hUE_BBCsumE_py[i]->SetMarkerStyle( marker[i] );    hUE_BBCsumE_py[i]->SetMarkerColor( color[i] );
     hUE_BBCsumE_py[i]->Draw("Same");
 
