@@ -28,7 +28,7 @@ int main ( int argc, const char** argv ) {
 
   TH1::SetDefaultSumw2();  TH2::SetDefaultSumw2();  TH3::SetDefaultSumw2();
   
-  //TH3D *hVertex = new TH3D( "hVertex", "Event Vertex;v_{x};v_{y};v_{z}", 60,-0.3,0.3, 60,-0.3,0.3, 160,-40,40 );
+  TH3D *hVertex = new TH3D( "hVertex", "Event Vertex;v_{x};v_{y};v_{z}", 60,-0.3,0.3, 60,-0.3,0.3, 160,-40,40 );
   TH1D *hTowersPerEvent = new TH1D("hTowersPerEvent","Tower Frequency;# of Towers", 700,0,700 );
   TH2D *hTowersPerRun = new TH2D("hTowersPerRun","Tower Frequency (per run);Run no.;# of Towers", 400,16124000,16164000, 140,0,700 );
   TH1D *hPrimaryPerEvent = new TH1D("hPrimaryPerEvent","Primary Track Multiplicity (per event);# of Primary", 200,0,200 );
@@ -54,7 +54,7 @@ int main ( int argc, const char** argv ) {
   double pmin1, pmax1, pmin2, pmax2, ptSum;
   int RunID, EventID, nTowers, nPrimary, nGlobal, nVertices, refMult, gRefMult, nJets, leadNcons, subNcons, towID, nHitsPoss, nHitsFit, Charge, nCons;
   double Vx, Vy, Vz, BbcCoincidenceRate, BbcEastRate, BbcWestRate, BbcAdcSumEast, vpdVz,  leadPt, leadEta, leadPhi, leadEt, subPt, subEta, subPhi, subEt, rho, sigma, rho_avg;
-  vector<double> partPt, partEta, partPhi, partEt, deltaPhi;
+  vector<double> partPt, partEta, partPhi, partEt, deltaPhi;         vector<int> partChg;
 
   TChain* Chain = new TChain( "JetTree" );          Chain->Add( inFile.c_str() );
   TStarJetPicoReader Reader;                                int numEvents = nEvents;        // total events in HT: 152,007,032
@@ -82,7 +82,7 @@ int main ( int argc, const char** argv ) {
 
     Reader.PrintStatus(5);        nJets=0;
 
-    rawParticles.clear();    rawJets.clear();    selectedParticles.clear();    partPt.clear();    partEta.clear();    partPhi.clear();    partEt.clear();    deltaPhi.clear();//  CLEAR VECTORS
+    rawParticles.clear();    rawJets.clear();    selectedParticles.clear();    partPt.clear();    partEta.clear();    partPhi.clear();    partEt.clear();    partChg.clear();    deltaPhi.clear();//  CLEAR VECTORS
     
     event = Reader.GetEvent();            header = event->GetHeader();            container = Reader.GetOutputContainer();
 
@@ -124,7 +124,9 @@ int main ( int argc, const char** argv ) {
       for (int i=0; i<selectedParticles.size(); ++i) {
 	partPt.push_back( selectedParticles[i].pt() );             partEta.push_back( selectedParticles[i].eta() );
 	partPhi.push_back( selectedParticles[i].phi() );         partEt.push_back( selectedParticles[i].Et() );
-	deltaPhi.push_back( selectedParticles[i].delta_phi_to( rawJets[0] ) );     ptSum+=selectedParticles[i].pt();
+	deltaPhi.push_back( selectedParticles[i].delta_phi_to( rawJets[0] ) );
+	partChg.push_back( selectedParticles[i].user_index() );
+	ptSum+=selectedParticles[i].pt();
       }
       rho = (2*ptSum)/pi;
       rho_avg += (rho/4);
@@ -147,7 +149,7 @@ int main ( int argc, const char** argv ) {
     hPt_UE_BBCE->Fill(leadPt,rho_avg,BbcEastRate);                            hPt_UE_BBCsumE->Fill(leadPt,rho_avg,BbcAdcSumEast);
     hTowersVsRho->Fill(rho_avg,nTowers);                                         hLeadPtVsRho->Fill(rho_avg,leadPt);
 
-    // hVertex->Fill( Vx, Vy, Vz );                                        //  FILL HISTOGRAMS
+    hVertex->Fill( Vx, Vy, Vz );                                        //  FILL HISTOGRAMS
     hTowersPerEvent->Fill( nTowers );    hTowersPerRun->Fill( RunID, nTowers );    hPrimaryPerEvent->Fill( nPrimary );    hPt_UE_RefMult->Fill( leadPt, rho_avg, refMult);
     hPrimaryPerRun->Fill( RunID, nPrimary );    hnPrimaryVSnTowers->Fill( nTowers, nPrimary );    hPrimaryVsBBC->Fill( BbcCoincidenceRate, nPrimary );
     hPrimaryVsGlobal->Fill( nGlobal, nPrimary );    hGlobalVsBBC->Fill( BbcCoincidenceRate, nGlobal );    hPrimaryVsBBCE->Fill(BbcEastRate,nPrimary);
@@ -160,7 +162,7 @@ int main ( int argc, const char** argv ) {
 
   for ( int e=0; e<nEtaBins; ++e ) { sp[e]->Write(); }                                     //  WRITE PARTICLE TREE
   
-  // hVertex->Write();                             //  WRITE HISTOGRAMS
+  hVertex->Write();                             //  WRITE HISTOGRAMS
   hTowersPerEvent->Write();
   hTowersPerRun->Write();
   hPrimaryPerEvent->Write();
