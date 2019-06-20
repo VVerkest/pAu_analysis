@@ -41,18 +41,21 @@ int main ( int argc, const char** argv ) {
   TH2D *hGlobalVsBBCE = new TH2D("hGlobalVsBBCE","# Global Tracks vs. BBC East Rate;BBC East Rate;# Global Tracks", 80,0,80000, 150,0,3000 );
   TH2D *hPrimaryVsBBCsumE = new TH2D("hPrimaryVsBBCsumE","# Primary Tracks vs. BBC ADC East Sum;BBC ADC East Sum;# Primary Tracks", 160,0,80000, 40,0,200 );
   TH2D *hTowersVsBBCsumE = new TH2D("hTowersVsBBCsumE","# Towers vs. BBC ADC East Sum;BBC ADC East Sum;# Towers", 160,0,80000, 140,0,700 );
-  TH2D *hLeadEtaPhi = new TH2D("hLeadEtaPhi","Lead Jet #eta vs. #phi;#phi;#eta", 126,0,6.3, 80,-0.8,0.8);
-  TH2D *hSubEtaPhi = new TH2D("hSubEtaPhi","Sub Jet #eta vs. #phi;#phi;#eta", 126,0,6.3, 80,-0.8,0.8);
+  TH2D *hLeadEtaPhi = new TH2D("hLeadEtaPhi","Lead Jet #eta vs. #phi;#phi;#eta", 252,0,6.3, 160,-0.8,0.8);
+  TH2D *hSubEtaPhi = new TH2D("hSubEtaPhi","Sub Jet #eta vs. #phi;#phi;#eta", 252,0,6.3, 160,-0.8,0.8);
   TH2D *hPrimaryVsRho = new TH2D("hPrimaryVsRho","# Primary Tracks vs. Underlying Event;#rho (GeV);# Primary Tracks", 100,0,25, 40,0,200);
   TH2D *hGlobalVsRho = new TH2D("hGlobalVsRho","# Global Tracks vs. Underlying Event;#rho (GeV);# Global Tracks", 100,0,25, 150,0,3000 );
-  TH3D *hPt_UE_RefMult = new TH3D("hPt_UE_RefMult","UE vs. Ref. Mult;Lead Jet p_{T} (GeV);Underlying Event (GeV);Ref. Mult.", 250,0,125, 50,0,25, 300,0,150000 );  
-  TH3D *hPt_UE_BBCE = new TH3D("hPt_UE_BBCE","UE vs. BBC East Rate;Lead Jet p_{T} (GeV);Underlying Event (GeV);BBC East Rate", 250,0,125, 50,0,25, 140,0,7000000 );
-  TH3D *hPt_UE_BBCsumE = new TH3D("hPt_UE_BBCsumE","UE vs. BBC ADC East Sum;Lead Jet p_{T} (GeV);Underlying Event (GeV);BBC ADC East Sum", 250,0,125, 50,0,25, 160,0,80000 );
-  TH2D *hTowersVsRho = new TH2D("hTowersVsRho","# of Towers vs. UE;#rho (GeV);# of Towers", 50,0,25, 140,0,700 );
-  TH2D *hLeadPtVsRho = new TH2D("hLeadPtVsRho","Lead Jet p_{T} vs UE;#rho (GeV);p_{T}^{lead} (GeV)", 140,0,35, 140,0,70);
-    
+  TH3D *hPt_UE_RefMult = new TH3D("hPt_UE_RefMult","UE vs. Ref. Mult;Lead Jet p_{T} (GeV);Underlying Event (GeV);Ref. Mult.", 500,0,125, 50,0,25, 300,0,150000 );  
+  TH3D *hPt_UE_BBCE = new TH3D("hPt_UE_BBCE","UE vs. BBC East Rate;Lead Jet p_{T} (GeV);Underlying Event (GeV);BBC East Rate", 500,0,125, 50,0,25, 140,0,7000000 );
+  TH3D *hPt_UE_BBCsumE = new TH3D("hPt_UE_BBCsumE","UE vs. BBC ADC East Sum;Lead Jet p_{T} (GeV);Underlying Event (GeV);BBC ADC East Sum", 500,0,125, 50,0,25, 160,0,80000 );
+  TH2D *hTowersVsRho = new TH2D("hTowersVsRho","# of Towers vs. UE;#rho (GeV);# of Towers", 100,0,25, 140,0,700 );
+  TH2D *hLeadPtVsRho = new TH2D("hLeadPtVsRho","Lead Jet p_{T} vs UE;#rho (GeV);p_{T}^{lead} (GeV)", 140,0,35, 280,0,70);
+  TH3D *hCHARGED = new TH3D("hCHARGED","CHARGED: Background Patricle #eta vs. p_{T};Lead Jet p_{T}(GeV);Particle p_{T} (GeV);Particle #eta", 280,0,70, 200,0,50, 160,-0.8,0.8 );
+  TH3D *hNEUTRAL = new TH3D("hNEUTRAL","NEUTRAL: Background Patricle #eta vs. p_{T};Lead Jet p_{T}(GeV);Particle p_{T} (GeV);Particle #eta", 280,0,70, 200,0,50, 160,-0.8,0.8 );
+  TH3D *hPartPtEtaDPhi = new TH3D("hPartPtEtaDPhi","Background Particle p_{T} vs. #eta vs. #Delta#phi;Particle p_{T} (GeV);#eta;#Delta#phi", 200,0,50, 160,-0.8,0.8, 252,-pi,pi );
+  
   double pmin1, pmax1, pmin2, pmax2, ptSum;
-  int RunID, EventID, nTowers, nPrimary, nGlobal, nVertices, refMult, gRefMult, nJets, leadNcons, subNcons, towID, nHitsPoss, nHitsFit, Charge, nCons;
+  int RunID, EventID, nTowers, nPrimary, nGlobal, nVertices, refMult, gRefMult, nJets, leadNcons, subNcons, towID, nHitsPoss, nHitsFit, Charge, dPhi, nCons;
   double Vx, Vy, Vz, BbcCoincidenceRate, BbcEastRate, BbcWestRate, BbcAdcSumEast, vpdVz,  leadPt, leadEta, leadPhi, leadEt, subPt, subEta, subPhi, subEt, rho, sigma, rho_avg;
   vector<double> partPt, partEta, partPhi, partEt, deltaPhi;         vector<int> partChg;
 
@@ -113,7 +116,7 @@ int main ( int argc, const char** argv ) {
       pmin1 = phi1 + qpi;           pmax1 = phi1 + (3*qpi);           pmin2 = phi1 - (3*qpi);           pmax2 = phi1 - qpi;
       Selector bgPhiRange = SelectorPhiRange( pmin1, pmax1 ) || SelectorPhiRange( pmin2, pmax2 );
       Selector bgEtaRange = SelectorEtaRange( etaBinLo[e], etaBinHi[e] );
-      Selector bgSelector = bgPhiRange && bgEtaRange;
+      Selector bgSelector = bgPhiRange * bgEtaRange;
       GhostedAreaSpec gAreaSpec( 1.0, 1, 0.01 );
       AreaDefinition bg_area_def(active_area_explicit_ghosts, gAreaSpec);
       ClusterSequenceArea bgCluster( rawParticles, bg_jet_def, bg_area_def); 
@@ -129,6 +132,16 @@ int main ( int argc, const char** argv ) {
 	partEt.push_back( selectedParticles[i].Et() );
 	deltaPhi.push_back( selectedParticles[i].delta_phi_to( rawJets[0] ) );
 	partChg.push_back( selectedParticles[i].user_index() );
+
+	dPhi = selectedParticles[i].delta_phi_to( rawJets[0] );
+	hPartPtEtaDPhi->Fill( selectedParticles[i].pt(), selectedParticles[i].eta(), dPhi );
+	
+	Charge = selectedParticles[i].user_index();
+	//  FILL BACKGROUND PARTICLE INFO HISTOGRAMS
+	if ( Charge==0 ) { hNEUTRAL->Fill( leadPt, selectedParticles[i].pt(), selectedParticles[i].eta() ); }
+	else if ( Charge==1 || Charge==-1 ) { hCHARGED->Fill( leadPt, selectedParticles[i].pt(), selectedParticles[i].eta() ); }
+	else { cerr<<"ERROR: incorrect method of storing particle charge"<<endl; }
+	
 	ptSum+=selectedParticles[i].pt();
       }
       rho = (2*ptSum)/pi;
@@ -187,6 +200,9 @@ int main ( int argc, const char** argv ) {
   hTowersVsBBCsumE->Write();
   hPrimaryVsRho->Write();
   hGlobalVsRho->Write();
+  hCHARGED->Write();
+  hNEUTRAL->Write();
+  hPartPtEtaDPhi->Write();
   
   pAuFile->Close();
   
