@@ -116,7 +116,7 @@ int main ( int argc, const char** argv ) {
     for ( int e=0; e<nEtaBins; ++e ) {
 
       rho_avg = 0;
-      selectedJets.clear();     selectedParticles.clear();     partPt.clear();    partEta.clear();    partPhi.clear();    partEt.clear();    partChg.clear();    deltaPhi.clear();   //  CLEAR VECTORS
+      selectedParticles.clear();     partPt.clear();    partEta.clear();    partPhi.clear();    partEt.clear();    partChg.clear();    deltaPhi.clear();   //  CLEAR VECTORS
 
       pmin1 = phi1 + qpi;           pmax1 = phi1 + (3*qpi);           pmin2 = phi1 - (3*qpi);           pmax2 = phi1 - qpi;
       Selector bgPhiRange = SelectorPhiRange( pmin1, pmax1 ) || SelectorPhiRange( pmin2, pmax2 );
@@ -126,37 +126,31 @@ int main ( int argc, const char** argv ) {
       AreaDefinition bg_area_def(active_area_explicit_ghosts, gAreaSpec);
       ClusterSequenceArea bgCluster( rawParticles, bg_jet_def, bg_area_def); 
 
-      vector<PseudoJet> selectedJets = bgSelector( bgCluster.inclusive_jets() );
+      selectedParticles = bgSelector( bgCluster.inclusive_jets() );
 
       ptSum = 0;
+    
+      for (int i=0; i<selectedParticles.size(); ++i) {
+	partPt.push_back( selectedParticles[i].pt() );
+	partEta.push_back( selectedParticles[i].eta() );
+	partPhi.push_back( selectedParticles[i].phi() );
+	partEt.push_back( selectedParticles[i].Et() );
+	deltaPhi.push_back( selectedParticles[i].delta_phi_to( rawJets[0] ) );
+	partChg.push_back( selectedParticles[i].user_index() );
 
-      for (int j=0; j<selectedJets.size(); ++j) {
+	cout<<selectedParticles[i].user_index()<<endl;
+	
+	dPhi = selectedParticles[i].delta_phi_to( rawJets[0] );
+	hPartPtEtaDPhi->Fill( selectedParticles[i].pt(), selectedParticles[i].eta(), dPhi );
+	
+	Charge = selectedParticles[i].user_index();
 
-	selectedParticles = selectedJets[j].Cons()
+	//  FILL BACKGROUND PARTICLE INFO HISTOGRAMS
+	if ( Charge==1 || Charge==-1 ) { hCHARGED->Fill( leadPt, selectedParticles[i].pt(), selectedParticles[i].eta() ); }
+	else { hNEUTRAL->Fill( leadPt, selectedParticles[i].pt(), selectedParticles[i].eta() ); }
 	
-	  for (int i=0; i<selectedParticles.size(); ++i) {
-	    partPt.push_back( selectedParticles[i].pt() );
-	    partEta.push_back( selectedParticles[i].eta() );
-	    partPhi.push_back( selectedParticles[i].phi() );
-	    partEt.push_back( selectedParticles[i].Et() );
-	    deltaPhi.push_back( selectedParticles[i].delta_phi_to( rawJets[0] ) );
-	    partChg.push_back( selectedParticles[i].user_index() );
-
-	    cout<<selectedParticles[i].user_index()<<endl;
-	
-	    dPhi = selectedParticles[i].delta_phi_to( rawJets[0] );
-	    hPartPtEtaDPhi->Fill( selectedParticles[i].pt(), selectedParticles[i].eta(), dPhi );
-	
-	    Charge = selectedParticles[i].user_index();
-
-	    //  FILL BACKGROUND PARTICLE INFO HISTOGRAMS
-	    if ( Charge==1 || Charge==-1 ) { hCHARGED->Fill( leadPt, selectedParticles[i].pt(), selectedParticles[i].eta() ); }
-	    else { hNEUTRAL->Fill( leadPt, selectedParticles[i].pt(), selectedParticles[i].eta() ); }
-	
-	    ptSum+=selectedParticles[i].pt();
-	  }
+	ptSum+=selectedParticles[i].pt();
       }
-      
       rho = (2*ptSum)/pi;
       rho_avg += (rho/4);
       sp[e]->Fill();
