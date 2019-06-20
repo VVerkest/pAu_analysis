@@ -19,7 +19,6 @@ namespace pAuAnalysis {
       TStarJetVector* sv = container->Get(i);
       fastjet::PseudoJet current = fastjet::PseudoJet( *sv );
       current.set_user_index( sv->GetCharge() );
-      // std::cout<<sv->GetCharge()<<"      "<<current.user_index()<<std::endl;
       if ( std::abs(current.eta()) > etaCut )      { continue; }  // removes particles with |eta|>1
       if ( current.pt() < partMinPt )      { continue; }  // removes particles with pt<0.2GeV
 
@@ -29,6 +28,36 @@ namespace pAuAnalysis {
   }
 
   
+  std::vector<fastjet::PseudoJet> GatherCharged ( TStarJetVectorContainer<TStarJetVector> * container , std::vector<fastjet::PseudoJet> & chgParticles ){
+    for ( int i=0; i < container->GetEntries() ; ++i ) {
+      TStarJetVector* sv = container->Get(i);
+      fastjet::PseudoJet current = fastjet::PseudoJet( *sv );
+      if ( sv->GetCharge() == 0 ) { continue; }
+      current.set_user_index( sv->GetCharge() );
+      if ( std::abs(current.eta()) > etaCut )      { continue; }  // removes particles with |eta|>1
+      if ( current.pt() < partMinPt )      { continue; }  // removes particles with pt<0.2GeV
+
+      chgParticles.push_back(current);
+    }
+    return chgParticles;
+  }
+
+  
+  std::vector<fastjet::PseudoJet> GatherNeutral ( TStarJetVectorContainer<TStarJetVector> * container , std::vector<fastjet::PseudoJet> & neuParticles ){
+    for ( int i=0; i < container->GetEntries() ; ++i ) {
+      TStarJetVector* sv = container->Get(i);
+      fastjet::PseudoJet current = fastjet::PseudoJet( *sv );
+      if ( sv->GetCharge() != 0 ) { continue; }
+      current.set_user_index( sv->GetCharge() );
+      if ( std::abs(current.eta()) > etaCut )      { continue; }  // removes particles with |eta|>1
+      if ( current.pt() < partMinPt )      { continue; }  // removes particles with pt<0.2GeV
+
+      neuParticles.push_back(current);
+    }
+    return neuParticles;
+  }
+
+
   void InitReader( TStarJetPicoReader & reader, TChain* chain, int nEvents ) {
     
     // set the chain
