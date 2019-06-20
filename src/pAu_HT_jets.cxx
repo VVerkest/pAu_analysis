@@ -123,9 +123,12 @@ int main ( int argc, const char** argv ) {
       Selector bgPhiRange = SelectorPhiRange( pmin1, pmax1 ) || SelectorPhiRange( pmin2, pmax2 );
       Selector bgEtaRange = SelectorEtaRange( etaBinLo[e], etaBinHi[e] );
       Selector bgSelector = bgEtaRange * bgPhiRange;
+
+      vector<PseudoJet> bgParticles = bgSelector( rawParticles );
+      
       GhostedAreaSpec gAreaSpec( 1.0, 1, 0.01 );
       AreaDefinition bg_area_def(active_area_explicit_ghosts, gAreaSpec);
-      ClusterSequenceArea bgCluster( rawParticles, bg_jet_def, bg_area_def); 
+      ClusterSequenceArea bgCluster( bgParticles, bg_jet_def, bg_area_def); 
 
       selectedJets = bgSelector( bgCluster.inclusive_jets() );
 
