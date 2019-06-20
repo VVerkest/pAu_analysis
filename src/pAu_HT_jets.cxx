@@ -75,7 +75,7 @@ int main ( int argc, const char** argv ) {
   //  CREATE JET SELECTOR
   Selector etaSelector = SelectorAbsEtaMax( 1.0-R );    Selector ptMinSelector = SelectorPtMin(jetMinPt);  Selector etaPtSelector = etaSelector && ptMinSelector;
   JetDefinition jet_def(antikt_algorithm, R);     //  JET DEFINITION
-  JetDefinition bg_jet_def(kt_algorithm, R);     //  BACKGROUND ESTIMATION JET DEFINITION
+  JetDefinition bg_jet_def(kt_algorithm, 0.01);     //  BACKGROUND ESTIMATION JET DEFINITION
   
   vector<PseudoJet> rawParticles, chgParticles, neuParticles, rawJets, selectedJets;
   TStarJetPicoEventHeader* header;    TStarJetPicoEvent* event;    TStarJetVector* sv;    TStarJetVectorContainer<TStarJetVector> * container;
@@ -119,7 +119,7 @@ int main ( int argc, const char** argv ) {
       rho_avg = 0;
       selectedJets.clear();     partPt.clear();    partEta.clear();    partPhi.clear();    partEt.clear();    partChg.clear();    deltaPhi.clear();   //  CLEAR VECTORS
 
-      pmin1 = phi1 + qpi + R;           pmax1 = phi1 + (3*qpi) - R;           pmin2 = phi1 - (3*qpi) + R;           pmax2 = phi1 - qpi - R;
+      pmin1 = phi1 + qpi;           pmax1 = phi1 + (3*qpi);           pmin2 = phi1 - (3*qpi);           pmax2 = phi1 - qpi;
       Selector bgPhiRange = SelectorPhiRange( pmin1, pmax1 ) || SelectorPhiRange( pmin2, pmax2 );
       Selector bgEtaRange = SelectorEtaRange( etaBinLo[e], etaBinHi[e] );
       Selector bgSelector = bgEtaRange * bgPhiRange;
