@@ -142,6 +142,7 @@ int main ( int argc, const char** argv ) {
 	hPartPtEtaDPhi->Fill( selectedParticles[i].pt(), selectedParticles[i].eta(), dPhi );
 	
 	Charge = selectedParticles[i].user_index();
+	cout<<Charge<<endl;
 	//  FILL BACKGROUND PARTICLE INFO HISTOGRAMS
 	if ( Charge==1 || Charge==-1 ) { hCHARGED->Fill( leadPt, selectedParticles[i].pt(), selectedParticles[i].eta() ); }
 	else { hNEUTRAL->Fill( leadPt, selectedParticles[i].pt(), selectedParticles[i].eta() ); }
