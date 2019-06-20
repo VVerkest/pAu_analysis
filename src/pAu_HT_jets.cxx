@@ -65,7 +65,8 @@ int main ( int argc, const char** argv ) {
     name = "sp" + etaBinName[i];          title = "Selected Particles: " + etaBinString[i];          sp[i] = new TTree( name, title );
     sp[i]->Branch("partPt",&partPt);        sp[i]->Branch("partEta",&partEta);        sp[i]->Branch("partPhi",&partPhi);
     sp[i]->Branch("partEt",&partEt);        sp[i]->Branch("rho",&rho);        sp[i]->Branch("sigma",&sigma);
-    sp[i]->Branch("deltaPhi",&deltaPhi);    sp[i]->Branch("leadPt",&leadPt);        sp[i]->Branch("subPt",&subPt);        sp[i]->Branch("nTowers",&nTowers);
+    sp[i]->Branch("deltaPhi",&deltaPhi);    sp[i]->Branch("leadPt",&leadPt);        sp[i]->Branch("subPt",&subPt);
+    sp[i]->Branch("nTowers",&nTowers);        sp[i]->Branch("partChg",&partChg);
   }
   
   //  CREATE JET SELECTOR
@@ -80,7 +81,7 @@ int main ( int argc, const char** argv ) {
   // ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~  BEGIN EVENT LOOP!  ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~
   while ( Reader.NextEvent() ) {
 
-    Reader.PrintStatus(5);        nJets=0;
+    Reader.PrintStatus(10);        nJets=0;
 
     rawParticles.clear();    rawJets.clear();    selectedParticles.clear();    partPt.clear();    partEta.clear();    partPhi.clear();    partEt.clear();    partChg.clear();    deltaPhi.clear();//  CLEAR VECTORS
     
@@ -122,8 +123,10 @@ int main ( int argc, const char** argv ) {
       ptSum = 0;
     
       for (int i=0; i<selectedParticles.size(); ++i) {
-	partPt.push_back( selectedParticles[i].pt() );             partEta.push_back( selectedParticles[i].eta() );
-	partPhi.push_back( selectedParticles[i].phi() );         partEt.push_back( selectedParticles[i].Et() );
+	partPt.push_back( selectedParticles[i].pt() );
+	partEta.push_back( selectedParticles[i].eta() );
+	partPhi.push_back( selectedParticles[i].phi() );
+	partEt.push_back( selectedParticles[i].Et() );
 	deltaPhi.push_back( selectedParticles[i].delta_phi_to( rawJets[0] ) );
 	partChg.push_back( selectedParticles[i].user_index() );
 	ptSum+=selectedParticles[i].pt();
