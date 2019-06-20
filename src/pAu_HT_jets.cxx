@@ -119,7 +119,7 @@ int main ( int argc, const char** argv ) {
       rho_avg = 0;
       selectedJets.clear();     partPt.clear();    partEta.clear();    partPhi.clear();    partEt.clear();    partChg.clear();    deltaPhi.clear();   //  CLEAR VECTORS
 
-      pmin1 = phi1 + qpi;           pmax1 = phi1 + (3*qpi);           pmin2 = phi1 - (3*qpi);           pmax2 = phi1 - qpi;
+      pmin1 = phi1 + qpi + R;           pmax1 = phi1 + (3*qpi) - R;           pmin2 = phi1 - (3*qpi) + R;           pmax2 = phi1 - qpi - R;
       Selector bgPhiRange = SelectorPhiRange( pmin1, pmax1 ) || SelectorPhiRange( pmin2, pmax2 );
       Selector bgEtaRange = SelectorEtaRange( etaBinLo[e], etaBinHi[e] );
       Selector bgSelector = bgEtaRange * bgPhiRange;
