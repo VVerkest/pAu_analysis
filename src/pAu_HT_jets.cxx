@@ -86,7 +86,7 @@ int main ( int argc, const char** argv ) {
 
     Reader.PrintStatus(10);        nJets=0;
 
-    rawParticles.clear();    rawJets.clear();    selectedParticles.clear();    partPt.clear();    partEta.clear();    partPhi.clear();    partEt.clear();    partChg.clear();    deltaPhi.clear();//  CLEAR VECTORS
+    rawParticles.clear();    rawJets.clear();       //  CLEAR VECTORS
     
     event = Reader.GetEvent();            header = event->GetHeader();            container = Reader.GetOutputContainer();
 
@@ -113,6 +113,9 @@ int main ( int argc, const char** argv ) {
 
     rho_avg = 0;
     for ( int e=0; e<nEtaBins; ++e ) {
+
+      selectedParticles.clear();     partPt.clear();    partEta.clear();    partPhi.clear();    partEt.clear();    partChg.clear();    deltaPhi.clear();   //  CLEAR VECTORS
+	  
       pmin1 = phi1 + qpi;           pmax1 = phi1 + (3*qpi);           pmin2 = phi1 - (3*qpi);           pmax2 = phi1 - qpi;
       Selector bgPhiRange = SelectorPhiRange( pmin1, pmax1 ) || SelectorPhiRange( pmin2, pmax2 );
       Selector bgEtaRange = SelectorEtaRange( etaBinLo[e], etaBinHi[e] );
@@ -161,7 +164,7 @@ int main ( int argc, const char** argv ) {
 
     hLeadEtaPhi->Fill(leadPhi,leadEta);                                             hSubEtaPhi->Fill(subPhi,subEta);
 
-    hPrimaryVsRho->Fill( rho_avg, nPrimary );           hGlobalVsRho->Fill(rho_avg, nGlobal );
+    hPrimaryVsRho->Fill( rho_avg, nPrimary );                                     hGlobalVsRho->Fill(rho_avg, nGlobal );
     hPt_UE_BBCE->Fill(leadPt,rho_avg,BbcEastRate);                            hPt_UE_BBCsumE->Fill(leadPt,rho_avg,BbcAdcSumEast);
     hTowersVsRho->Fill(rho_avg,nTowers);                                         hLeadPtVsRho->Fill(rho_avg,leadPt);
 
