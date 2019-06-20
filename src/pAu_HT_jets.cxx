@@ -133,7 +133,7 @@ int main ( int argc, const char** argv ) {
     
       for (int i=0; i<selectedJets.size(); ++i) {
 
-	vector<Pseudojet> selectedParticles = selectedJets[i].constituents();
+	vector<PseudoJet> selectedParticles = selectedJets[i].constituents();
 	
 	for (int i=0; i<selectedParticles.size(); ++i) {
 	  partPt.push_back( selectedParticles[i].pt() );
