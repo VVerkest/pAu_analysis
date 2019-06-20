@@ -20,7 +20,7 @@ namespace pAuAnalysis {
       fastjet::PseudoJet current = fastjet::PseudoJet( *sv );
       current.set_user_index( sv->GetCharge() );
 
-      std::cout<<sv->GetCharge()<<std::cout<<"      "<<current.get_user_index()<<std::endl;
+      std::cout<<sv->GetCharge()<<std::cout<<"      "<<current.user_index()<<std::endl;
       
       if ( std::abs(current.eta()) > etaCut )      { continue; }  // removes particles with |eta|>1
       if ( current.pt() < partMinPt )      { continue; }  // removes particles with pt<0.2GeV
