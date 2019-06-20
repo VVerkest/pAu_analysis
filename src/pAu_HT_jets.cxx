@@ -117,7 +117,7 @@ int main ( int argc, const char** argv ) {
 
       rho_avg = 0;
       selectedParticles.clear();     partPt.clear();    partEta.clear();    partPhi.clear();    partEt.clear();    partChg.clear();    deltaPhi.clear();   //  CLEAR VECTORS
-	  
+
       pmin1 = phi1 + qpi;           pmax1 = phi1 + (3*qpi);           pmin2 = phi1 - (3*qpi);           pmax2 = phi1 - qpi;
       Selector bgPhiRange = SelectorPhiRange( pmin1, pmax1 ) || SelectorPhiRange( pmin2, pmax2 );
       Selector bgEtaRange = SelectorEtaRange( etaBinLo[e], etaBinHi[e] );
@@ -138,6 +138,8 @@ int main ( int argc, const char** argv ) {
 	deltaPhi.push_back( selectedParticles[i].delta_phi_to( rawJets[0] ) );
 	partChg.push_back( selectedParticles[i].user_index() );
 
+	cout<<selectedParticles[i].user_index()<<endl;
+	
 	dPhi = selectedParticles[i].delta_phi_to( rawJets[0] );
 	hPartPtEtaDPhi->Fill( selectedParticles[i].pt(), selectedParticles[i].eta(), dPhi );
 	
