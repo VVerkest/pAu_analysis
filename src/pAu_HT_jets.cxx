@@ -111,9 +111,11 @@ int main ( int argc, const char** argv ) {
       vector<PseudoJet> SubCons= rawJets[1].constituents();      subNcons = SubCons.size();
     }
 
-    rho_avg = 0;
+
+    
     for ( int e=0; e<nEtaBins; ++e ) {
 
+      rho_avg = 0;
       selectedParticles.clear();     partPt.clear();    partEta.clear();    partPhi.clear();    partEt.clear();    partChg.clear();    deltaPhi.clear();   //  CLEAR VECTORS
 	  
       pmin1 = phi1 + qpi;           pmax1 = phi1 + (3*qpi);           pmin2 = phi1 - (3*qpi);           pmax2 = phi1 - qpi;
@@ -141,9 +143,8 @@ int main ( int argc, const char** argv ) {
 	
 	Charge = selectedParticles[i].user_index();
 	//  FILL BACKGROUND PARTICLE INFO HISTOGRAMS
-	if ( Charge==0 ) { hNEUTRAL->Fill( leadPt, selectedParticles[i].pt(), selectedParticles[i].eta() ); }
-	else if ( Charge==1 || Charge==-1 ) { hCHARGED->Fill( leadPt, selectedParticles[i].pt(), selectedParticles[i].eta() ); }
-	else { cerr<<"ERROR: incorrect method of storing particle charge"<<endl; }
+	if ( Charge==1 || Charge==-1 ) { hCHARGED->Fill( leadPt, selectedParticles[i].pt(), selectedParticles[i].eta() ); }
+	else { hNEUTRAL->Fill( leadPt, selectedParticles[i].pt(), selectedParticles[i].eta() ); }
 	
 	ptSum+=selectedParticles[i].pt();
       }
@@ -151,6 +152,9 @@ int main ( int argc, const char** argv ) {
       rho_avg += (rho/4);
       sp[e]->Fill();
     }
+
+
+
     
     eID = Reader.GetNOfCurrentEvent();          EventID = eID;
     rID = header->GetRunId();                        RunID = rID;
