@@ -41,6 +41,7 @@ int main(){
   vector<PseudoJet> rawParticles, chgParticles, neuParticles, rawJets, selectedJets;
   TStarJetPicoEventHeader* header;    TStarJetPicoEvent* event;    TStarJetVector* sv;    TStarJetVectorContainer<TStarJetVector> * container;
 
+  int chg = 0;   int neu = 0;
 
   // ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~  BEGIN EVENT LOOP!  ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~
   while ( Reader.NextEvent() ) {
@@ -81,6 +82,8 @@ int main(){
   }
   // ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~  END EVENT LOOP!  ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~
 
+  cout<<chg<<"  charged\t"<<neu<<" neutral\t  NEF = "<<neu/chg<<endl;
+  
   TFile *pAuFile = new TFile( outFile.c_str() ,"RECREATE");
 
   for ( int e=0; e<nEtaBins; ++e ) { sp[e]->Write(); }                                     //  WRITE PARTICLE TREE
