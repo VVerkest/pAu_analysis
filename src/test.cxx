@@ -46,19 +46,25 @@ int main(){
   // ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~  BEGIN EVENT LOOP!  ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~
   while ( Reader.NextEvent() ) {
 
-    for (int i=0; i<container->GetEntries();++i){sv = container->Get(i); if (sv->GetCharge()==0){neu+=1;} else {chg+=1;} }
     
-    // Reader.PrintStatus(10);        nJets=0;
+    Reader.PrintStatus(10);        nJets=0;
 
-    // chgParticles.clear();    neuParticles.clear();    rawParticles.clear();    rawJets.clear();       //  CLEAR VECTORS
+    chgParticles.clear();    neuParticles.clear();    rawParticles.clear();    rawJets.clear();       //  CLEAR VECTORS
     
-    // event = Reader.GetEvent();            header = event->GetHeader();            container = Reader.GetOutputContainer();
+    event = Reader.GetEvent();            header = event->GetHeader();            container = Reader.GetOutputContainer();
 
-    // if (header->GetRunId() >= 16142059 && header->GetRunId() <= 16149001) { continue; }    //TEMPORARILY SKIPPING THESE RUNS
-    // if (header->GetRunId() == 16135031 || header->GetRunId() == 16135032) { continue; }
-    // if (!(header->HasTriggerId(500401) || header->HasTriggerId(500411))) {continue;}   //  ONLY SELECT JP2 TRIGGER EVENTS
-    // Vz = header->GetPrimaryVertexZ();           if ( abs(Vz) > vzCut ) { continue; }
-      
+    if (header->GetRunId() >= 16142059 && header->GetRunId() <= 16149001) { continue; }    //TEMPORARILY SKIPPING THESE RUNS
+    if (header->GetRunId() == 16135031 || header->GetRunId() == 16135032) { continue; }
+    if (!(header->HasTriggerId(500401) || header->HasTriggerId(500411))) {continue;}   //  ONLY SELECT JP2 TRIGGER EVENTS
+    Vz = header->GetPrimaryVertexZ();           if ( abs(Vz) > vzCut ) { continue; }
+
+    for (int i=0; i<container->GetEntries();++i) {
+      sv = container->Get(i);
+      if (sv->GetCharge()==0) {neu+=1;}
+      else {chg+=1;}
+    }
+
+	
     // //   JET-FINDING
     // GatherParticles( container, rawParticles);     //  GATHERS ALL PARTICLES WITH    pT >= 0.2 GeV    and    |eta|<1.0
     // ClusterSequence jetCluster( rawParticles, jet_def );           //  CLUSTER ALL JETS > 2.0 GEV
