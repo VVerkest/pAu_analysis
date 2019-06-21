@@ -8,7 +8,7 @@ using namespace pAuAnalysis;
 int main(){
   
   int eID, rID, nEvents;                 string inFile, outFile;                 TString name, title;
-  inFile = "production_pAu200_2015/HT/pAu_2015_200_HT*.root";    outFile = "out/pAuJets_test.root";    nEvents = 1000000;
+  inFile = "production_pAu200_2015/HT/pAu_2015_200_HT*.root";    outFile = "out/pAuJets_test.root";    nEvents = 100000;
 
   TH1::SetDefaultSumw2();  TH2::SetDefaultSumw2();  TH3::SetDefaultSumw2();
   TH3D *hCHARGED = new TH3D("hCHARGED","CHARGED: Background Patricle #eta vs. p_{T};Lead Jet p_{T}(GeV);Particle p_{T} (GeV);Particle #eta", 280,0,70, 200,0,50, 220,-1.1,1.1 );
@@ -60,6 +60,9 @@ int main(){
 
     for (int i=0; i<container->GetEntries();++i) {
       sv = container->Get(i);
+      PseudoJet current = (PseudoJet*) sv;
+       if ( abs(current.eta()) > etaCut )      { continue; }  // removes particles with |eta|>1
+      if ( current.pt() < partMinPt )      { continue; }  // removes particles with pt<0.2GeV
       if (sv->GetCharge()==0) {neu+=1;}
       else if (sv->GetCharge()==1 || sv->GetCharge()==-1) {chg+=1;}
       else { cout<<"charge??"<<endl; }
