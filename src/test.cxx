@@ -60,7 +60,7 @@ int main(){
 
     for (int i=0; i<container->GetEntries();++i) {
       sv = container->Get(i);
-      PseudoJet* current = sv;
+      PseudoJet** current = sv;
        if ( abs(current.eta()) > etaCut )      { continue; }  // removes particles with |eta|>1
       if ( current.pt() < partMinPt )      { continue; }  // removes particles with pt<0.2GeV
       if (sv->GetCharge()==0) {neu+=1;}
