@@ -41,13 +41,13 @@ int main(){
   vector<PseudoJet> rawParticles, chgParticles, neuParticles, rawJets, selectedJets;
   TStarJetPicoEventHeader* header;    TStarJetPicoEvent* event;    TStarJetVector* sv;    TStarJetVectorContainer<TStarJetVector> * container;
 
-  int chg = 0;   int neu = 0;   double NEF;
+  int chg = 0;   int neu = 0;     int Ech, Eneu;   double NEF;
 
   // ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~  BEGIN EVENT LOOP!  ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~
   while ( Reader.NextEvent() ) {
 
     
-    Reader.PrintStatus(10);        nJets=0;
+    Reader.PrintStatus(10);        nJets=0;      Echg = 0;    Eneu = 0;   
 
     chgParticles.clear();    neuParticles.clear();    rawParticles.clear();    rawJets.clear();       //  CLEAR VECTORS
     
@@ -58,14 +58,16 @@ int main(){
     if (!(header->HasTriggerId(500401) || header->HasTriggerId(500411))) {continue;}   //  ONLY SELECT JP2 TRIGGER EVENTS
     Vz = header->GetPrimaryVertexZ();           if ( abs(Vz) > vzCut ) { continue; }
 
-    for (int i=0; i<container->GetEntries();++i) {
+    for (int i=0; i<container->GetEntries(); ++i) {
       sv = container->Get(i);
-       if ( abs(sv->Eta()) > etaCut )      { continue; }  // removes particles with |eta|>1
+      if ( abs(sv->Eta()) > etaCut )      { continue; }  // removes particles with |eta|>1
       if ( sv->Pt() < partMinPt )      { continue; }  // removes particles with pt<0.2GeV
-      if (sv->GetCharge()==0) {neu+=1;}
-      else if (sv->GetCharge()==1 || sv->GetCharge()==-1) {chg+=1;}
+      if (sv->GetCharge()==0) {neu+=1; Eneu+=1;}
+      else if (sv->GetCharge()==1 || sv->GetCharge()==-1) {chg+=1; Echg+=1;}
       else { cout<<"charge??"<<endl; }
     }
+
+    cout<<chg<<"  charged\t"<<neu<<" neutral\t  NEF = "<<NEF<<endl;
 
 	
     // //   JET-FINDING
@@ -92,7 +94,7 @@ int main(){
   // ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~  END EVENT LOOP!  ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~
 
   NEF = (double) neu/chg;
-  cout<<chg<<"  charged\t"<<neu<<" neutral\t  NEF = "<<NEF<<endl;
+  cout<<endl<<chg<<"  charged\t"<<neu<<" neutral\t  NEF = "<<NEF<<endl;
   
   TFile *pAuFile = new TFile( outFile.c_str() ,"RECREATE");
 
