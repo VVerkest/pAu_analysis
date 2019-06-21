@@ -8,7 +8,7 @@ using namespace pAuAnalysis;
 int main(){
   
   int eID, rID, nEvents;                 string inFile, outFile;                 TString name, title;
-  inFile = "production_pAu200_2015/HT/pAu_2015_200_HT*.root";    outFile = "out/pAuJets_test.root";    nEvents = 10000;
+  inFile = "production_pAu200_2015/MB/pAu_2015_200_MB*.root";    outFile = "out/pAuJets_test.root";    nEvents = 10000;
 
   TH1::SetDefaultSumw2();  TH2::SetDefaultSumw2();  TH3::SetDefaultSumw2();
   TH3D *hCHARGED = new TH3D("hCHARGED","CHARGED: Background Patricle #eta vs. p_{T};Lead Jet p_{T}(GeV);Particle p_{T} (GeV);Particle #eta", 280,0,70, 200,0,50, 220,-1.1,1.1 );
@@ -53,15 +53,17 @@ int main(){
     
     event = Reader.GetEvent();            header = event->GetHeader();            container = Reader.GetOutputContainer();
 
-    if (header->GetRunId() >= 16142059 && header->GetRunId() <= 16149001) { continue; }    //TEMPORARILY SKIPPING THESE RUNS
-    if (header->GetRunId() == 16135031 || header->GetRunId() == 16135032) { continue; }
-    if (!(header->HasTriggerId(500401) || header->HasTriggerId(500411))) {continue;}   //  ONLY SELECT JP2 TRIGGER EVENTS
-    Vz = header->GetPrimaryVertexZ();           if ( abs(Vz) > vzCut ) { continue; }
+    if (header->GetRunId() >= 16142059 && header->GetRunId() <= 16149001) { continue; }    //TEMPORARILY SKIPPING THESE RUNS  }
+    if (header->GetRunId() == 16135031 || header->GetRunId() == 16135032) { continue; }   //                                                              }   Move these to function
+    if ( !( header->HasTriggerId(500008) || header->HasTriggerId(500018) ) ) {continue;}   //  ONLY SELECT BBCMB TRIGGER EVENTS      }
+    Vz = header->GetPrimaryVertexZ();           if ( abs(Vz) > vzCut ) { continue; }              //  VZ CUT                                                          }
 
     for (int i=0; i<container->GetEntries(); ++i) {
       sv = container->Get(i);
+      
       if ( abs(sv->Eta()) > etaCut )      { continue; }  // removes particles with |eta|>1
       if ( sv->Pt() < partMinPt )      { continue; }  // removes particles with pt<0.2GeV
+      
       if (sv->GetCharge()==0) {neu+=1; Eneu+=1;}
       else if (sv->GetCharge()==1 || sv->GetCharge()==-1) {chg+=1; Echg+=1;}
       else { cout<<"charge??"<<endl; }
