@@ -8,7 +8,7 @@ using namespace pAuAnalysis;
 int main(){
   
   int eID, rID, nEvents;                 string inFile, outFile;                 TString name, title;
-  inFile = "production_pAu200_2015/HT/pAu_2015_200_HT*.root";    outFile = "out/pAuJets_test.root";    nEvents = 10000;
+  inFile = "production_pAu200_2015/HT/pAu_2015_200_HT*.root";    outFile = "out/pAuJets_test.root";    nEvents = -1;
 
   TH1::SetDefaultSumw2();  TH2::SetDefaultSumw2();  TH3::SetDefaultSumw2();
   TH3D *hCHARGED = new TH3D("hCHARGED","CHARGED: Background Patricle #eta vs. p_{T};Lead Jet p_{T}(GeV);Particle p_{T} (GeV);Particle #eta", 280,0,70, 200,0,50, 220,-1.1,1.1 );
@@ -41,7 +41,7 @@ int main(){
   vector<PseudoJet> rawParticles, chgParticles, neuParticles, rawJets, selectedJets;
   TStarJetPicoEventHeader* header;    TStarJetPicoEvent* event;    TStarJetVector* sv;    TStarJetVectorContainer<TStarJetVector> * container;
 
-  int chg = 0;   int neu = 0;
+  int chg = 0;   int neu = 0;   double NEF;
 
   // ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~  BEGIN EVENT LOOP!  ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~
   while ( Reader.NextEvent() ) {
@@ -88,7 +88,8 @@ int main(){
   }
   // ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~  END EVENT LOOP!  ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~
 
-  cout<<chg<<"  charged\t"<<neu<<" neutral\t  NEF = "<<neu/chg<<endl;
+  NEF = (double) neu/chg;
+  cout<<chg<<"  charged\t"<<neu<<" neutral\t  NEF = "<<NEF<<endl;
   
   TFile *pAuFile = new TFile( outFile.c_str() ,"RECREATE");
 
