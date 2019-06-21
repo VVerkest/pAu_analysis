@@ -8,7 +8,7 @@ using namespace pAuAnalysis;
 int main(){
   
   int eID, rID, nEvents;                 string inFile, outFile;                 TString name, title;
-  inFile = "production_pAu200_2015/MB/pAu_2015_200_MB*.root";    outFile = "out/pAuJets_test.root";    nEvents = 10000;
+  inFile = "production_pAu200_2015/MB/pAu_2015_200_MB*.root";    outFile = "out/pAuJets_test.root";    nEvents = 100000;
 
   TH1::SetDefaultSumw2();  TH2::SetDefaultSumw2();  TH3::SetDefaultSumw2();
   TH3D *hCHARGED = new TH3D("hCHARGED","CHARGED: Background Patricle #eta vs. p_{T};Lead Jet p_{T}(GeV);Particle p_{T} (GeV);Particle #eta", 280,0,70, 200,0,50, 220,-1.1,1.1 );
@@ -69,8 +69,8 @@ int main(){
       else { cout<<"charge??"<<endl; }
     }
 
-    NEF = (double) Eneu/Echg;
-    cout<<Echg<<"  charged\t"<<Eneu<<" neutral\t  NEF = "<<NEF<<endl;
+    //NEF = (double) Eneu/Echg;
+    //cout<<Echg<<"  charged\t"<<Eneu<<" neutral\t  NEF = "<<NEF<<endl;
 
 	
     // //   JET-FINDING
