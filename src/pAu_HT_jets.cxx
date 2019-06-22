@@ -168,7 +168,7 @@ double phiRef1 = phi1;    double phiRef2 = phi1 - pi;     //  BACKGROUND ESTIMAT
     neuRho = neuPtSum / pi;
     rho = (chgPtSum+neuPtSum) / pi;
 
-    bgTree->Filll();
+    bgTree->Fill();
 
     
     eID = Reader.GetNOfCurrentEvent();          EventID = eID;
