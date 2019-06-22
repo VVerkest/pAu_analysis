@@ -18,7 +18,7 @@ namespace pAuAnalysis {
     for ( int i=0; i < container->GetEntries() ; ++i ) {
       TStarJetVector* sv = container->Get(i);
       fastjet::PseudoJet current = fastjet::PseudoJet( *sv );
-      current.set_charge( sv->GetCharge() );
+      current.set_user_index( sv->GetCharge() );
       if ( std::abs(current.eta()) > etaCut )      { continue; }  // removes particles with |eta|>1
       if ( current.pt() < partMinPt )      { continue; }  // removes particles with pt<0.2GeV
 
@@ -33,7 +33,7 @@ namespace pAuAnalysis {
       TStarJetVector* sv = container->Get(i);
       fastjet::PseudoJet current = fastjet::PseudoJet( *sv );
       if ( sv->GetCharge() == 0 ) { continue; }
-      current.set_charge( sv->GetCharge() );
+      current.set_user_index( sv->GetCharge() );
       if ( std::abs(current.eta()) > etaCut )      { continue; }  // removes particles with |eta|>1
       if ( current.pt() < partMinPt )      { continue; }  // removes particles with pt<0.2GeV
 
@@ -48,7 +48,7 @@ namespace pAuAnalysis {
       TStarJetVector* sv = container->Get(i);
       fastjet::PseudoJet current = fastjet::PseudoJet( *sv );
       if ( sv->GetCharge() != 0 ) { continue; }
-      current.set_charge( sv->GetCharge() );
+      current.set_user_index( sv->GetCharge() );
       if ( std::abs(current.eta()) > etaCut )      { continue; }  // removes particles with |eta|>1
       if ( current.pt() < partMinPt )      { continue; }  // removes particles with pt<0.2GeV
 
