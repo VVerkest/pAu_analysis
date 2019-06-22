@@ -124,7 +124,7 @@ int main ( int argc, const char** argv ) {
 
     
 
-double phiRef1 = phi1;    double phiRef2 = phi1 - pi;     //  BACKGROUND ESTIMATION 
+    double phiRef1 = phi1;    double phiRef2 = phi1 - pi;     //  BACKGROUND ESTIMATION 
     Selector BGphiSelector = !( SelectorPhiRange( phi1-qpi, phi1+qpi ) || SelectorPhiRange( phi2-qpi, phi2+qpi ) );  //  EXCLUSIVE OR
     Selector bgSelector = BGphiSelector && etaSelector;
 
