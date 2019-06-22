@@ -63,9 +63,10 @@ int main(){
       
       if ( abs(sv->Eta()) > etaCut  ||  sv->Pt() < partMinPt)      { continue; }  // removes particles with |eta|>1  OR   with pt<0.2GeV
       PseudoJet current = PseudoJet( *sv );
+      current.set_user_index( sv->GetCharge() );
       rawParticles.push_back( current );
-      if (sv->GetCharge()==0) {	neuParticles.push_back( current ); }
-      else if (sv->GetCharge()==1 || sv->GetCharge()==-1) { chgParticles.push_back( current ); }
+      if (current.user_index==0) {	neuParticles.push_back( current ); }
+      else if (current.user_index==1 || current.user_index==-1) { chgParticles.push_back( current ); }
       else { cerr<<"charge error"<<endl; }
 
     }
