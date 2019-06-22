@@ -167,9 +167,6 @@ int main ( int argc, const char** argv ) {
     chgRho = chgPtSum / pi;
     neuRho = neuPtSum / pi;
     rho = (chgPtSum+neuPtSum) / pi;
-
-    bgTree->Fill();
-
     
     eID = Reader.GetNOfCurrentEvent();          EventID = eID;
     rID = header->GetRunId();                        RunID = rID;
@@ -193,6 +190,7 @@ int main ( int argc, const char** argv ) {
     hPrimaryVsGlobal->Fill( nGlobal, nPrimary );    hGlobalVsBBC->Fill( BbcCoincidenceRate, nGlobal );    hPrimaryVsBBCE->Fill(BbcEastRate,nPrimary);
     hGlobalVsBBCE->Fill(BbcEastRate,nGlobal);    hPrimaryVsBBCsumE->Fill(BbcAdcSumEast,nPrimary);    hTowersVsBBCsumE->Fill(BbcAdcSumEast,nTowers);
 
+    bgTree->Fill();
   }
   // ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~  END EVENT LOOP!  ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~
 
