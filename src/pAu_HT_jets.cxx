@@ -94,18 +94,7 @@ int main ( int argc, const char** argv ) {
     Vz = header->GetPrimaryVertexZ();           if ( abs(Vz) > vzCut ) { continue; }
       
     //   JET-FINDING
-    // GatherParticles( container, rawParticles);     //  GATHERS ALL PARTICLES WITH    pT >= 0.2 GeV    and    |eta|<1.0
-    for (int i=0; i<container->GetEntries(); ++i) {
-      sv = container->Get(i);
-      
-      if ( abs(sv->Eta()) > etaCut  ||  sv->Pt() < partMinPt)      { continue; }  // removes particles with |eta|>1  OR   with pt<0.2GeV
-      PseudoJet current = PseudoJet( *sv );
-      current.set_user_index( sv->GetCharge() );
-      rawParticles.push_back( current );
-      if (current.user_index()==0) {	neuParticles.push_back( current ); }
-      else if (current.user_index()==1 || current.user_index()==-1) { chgParticles.push_back( current ); }
-      else { cerr<<"charge error"<<endl; }
-    }
+    GatherParticles( container, rawParticles);     //  GATHERS ALL PARTICLES WITH    pT >= 0.2 GeV    and    |eta|<1.0
     
     ClusterSequence jetCluster( rawParticles, jet_def );           //  CLUSTER ALL JETS > 2.0 GEV
     vector<PseudoJet> rawJets = sorted_by_pt( etaPtSelector( jetCluster.inclusive_jets() ) );     // EXTRACT SELECTED JETS
@@ -122,7 +111,7 @@ int main ( int argc, const char** argv ) {
     }
 
 
-    
+    GatherCharged( container, chgParticles);     GatherNeutral( container, neuParticles);
 
     double phiRef1 = phi1;    double phiRef2 = phi1 - pi;     //  BACKGROUND ESTIMATION 
     Selector BGphiSelector = !( SelectorPhiRange( phi1-qpi, phi1+qpi ) || SelectorPhiRange( phi2-qpi, phi2+qpi ) );  //  EXCLUSIVE OR
