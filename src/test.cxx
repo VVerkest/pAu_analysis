@@ -66,8 +66,8 @@ int main(){
       PseudoJet current = PseudoJet( *sv );
       current.set_user_index( sv->GetCharge() );
       rawParticles.push_back( current );
-      if (current.user_index==0) {	neuParticles.push_back( current ); }
-      else if (current.user_index==1 || current.user_index==-1) { chgParticles.push_back( current ); }
+      if (current.user_index()==0) {	neuParticles.push_back( current ); }
+      else if (current.user_index()==1 || current.user_index()==-1) { chgParticles.push_back( current ); }
       else { cerr<<"charge error"<<endl; }
 
     }
