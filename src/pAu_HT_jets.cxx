@@ -144,14 +144,14 @@ int main ( int argc, const char** argv ) {
 	  partPhi.push_back( selectedParticles[i].phi() );
 	  partEt.push_back( selectedParticles[i].Et() );
 	  deltaPhi.push_back( selectedParticles[i].delta_phi_to( rawJets[0] ) );
-	  partChg.push_back( selectedParticles[i].charge() );
+	  partChg.push_back( selectedParticles[i].get_charge() );
 
-	  //  cout<<selectedParticles[i].charge()<<endl;
+	  //  cout<<selectedParticles[i].get_charge()<<endl;
 	
 	  dPhi = selectedParticles[i].delta_phi_to( rawJets[0] );
 	  hPartPtEtaDPhi->Fill( selectedParticles[i].pt(), selectedParticles[i].eta(), dPhi );
 	
-	  Charge = selectedParticles[i].charge();
+	  Charge = selectedParticles[i].get_charge();
 
 	  //  FILL BACKGROUND PARTICLE INFO HISTOGRAMS
 	  if ( Charge==1 || Charge==-1 ) { hCHARGED->Fill( leadPt, selectedParticles[i].pt(), selectedParticles[i].eta() ); }
