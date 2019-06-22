@@ -38,14 +38,14 @@ int main(){
   Selector etaSelector = SelectorAbsEtaMax( 1.0-R );    Selector ptMinSelector = SelectorPtMin(jetMinPt);  Selector etaPtSelector = etaSelector && ptMinSelector;
   JetDefinition jet_def(antikt_algorithm, R);     //  JET DEFINITION
   
-  vector<PseudoJet> rawParticles, chgParticles, neuParticles, rawJets, chargedBG, neutralBG;
+  vector<PseudoJet> rawParticles, chgParticles, neuParticles, rawJets, chgBG, neuBG;
   TStarJetPicoEventHeader* header;    TStarJetPicoEvent* event;    TStarJetVector* sv;    TStarJetVectorContainer<TStarJetVector> * container;
 
   // ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~  BEGIN EVENT LOOP!  ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~
   while ( Reader.NextEvent() ) {
 
     
-    Reader.PrintStatus(10);        nJets=0;      Echg = 0;    Eneu = 0;   
+    Reader.PrintStatus(10);        nJets=0;
 
     chgParticles.clear();    neuParticles.clear();    rawParticles.clear();    rawJets.clear();       //  CLEAR VECTORS
     
