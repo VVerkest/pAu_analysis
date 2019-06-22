@@ -25,14 +25,11 @@ int main(){
   TStarJetPicoReader Reader;                                int numEvents = nEvents;        // total events in HT: 152,007,032
   InitReader( Reader, Chain, numEvents );
 
-  TTree *sp[1];    // currently using all eta [-1,1]
-  for ( int i=0; i<1; ++i ) {
-    name = "sp" + etaBinName[i];          title = "Selected Particles: " + etaBinString[i];          sp[i] = new TTree( name, title );
-    sp[i]->Branch("partPt",&partPt);        sp[i]->Branch("partEta",&partEta);        sp[i]->Branch("partPhi",&partPhi);
-    sp[i]->Branch("partEt",&partEt);        sp[i]->Branch("chgRho",&chgRho);        sp[i]->Branch("neuRho",&neuRho);        sp[i]->Branch("rho",&rho);
-    sp[i]->Branch("deltaPhi",&deltaPhi);    sp[i]->Branch("leadPt",&leadPt);        sp[i]->Branch("subPt",&subPt);
-    sp[i]->Branch("nTowers",&nTowers);        sp[i]->Branch("partChg",&partChg);
-  }
+  TTree *bgTree= new TTree( "bgTree", "Background Estimation Tree" );
+    bgTree->Branch("partPt",&partPt);        bgTree->Branch("partEta",&partEta);        bgTree->Branch("partPhi",&partPhi);
+    bgTree->Branch("partEt",&partEt);        bgTree->Branch("chgRho",&chgRho);        bgTree->Branch("neuRho",&neuRho);        bgTree->Branch("rho",&rho);
+    bgTree->Branch("deltaPhi",&deltaPhi);    bgTree->Branch("leadPt",&leadPt);        bgTree->Branch("subPt",&subPt);
+    bgTree->Branch("nTowers",&nTowers);        bgTree->Branch("partChg",&partChg);
   
   //  CREATE JET SELECTOR
   Selector etaSelector = SelectorAbsEtaMax( 1.0-R );    Selector ptMinSelector = SelectorPtMin(jetMinPt);  Selector etaPtSelector = etaSelector && ptMinSelector;
@@ -88,8 +85,7 @@ int main(){
       vector<PseudoJet> SubCons= rawJets[1].constituents();      subNcons = SubCons.size();
     }
 
-    // JetDefinition bg_jet_def(kt_algorithm, 0.0001);     //  BACKGROUND ESTIMATION JET DEFINITION
-    double phiRef1 = phi1;    double phiRef2 = phi1 - pi;
+    double phiRef1 = phi1;    double phiRef2 = phi1 - pi;     //  BACKGROUND ESTIMATION 
     Selector BGphiSelector = !( SelectorPhiRange( phi1-qpi, phi1+qpi ) || SelectorPhiRange( phi2-qpi, phi2+qpi ) );  //  EXCLUSIVE OR
     Selector bgSelector = BGphiSelector && etaSelector;
 
@@ -133,7 +129,7 @@ int main(){
     neuRho = neuPtSum / pi;
     rho = (chgPtSum+neuPtSum) / pi;
 
-    sp[0]->Fill();
+    bgTree->Fill();
     
   }
   // ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~  END EVENT LOOP!  ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~
@@ -141,7 +137,7 @@ int main(){
   
   TFile *pAuFile = new TFile( outFile.c_str() ,"RECREATE");
 
-  for ( int e=0; e<1; ++e ) { sp[e]->Write(); }                                     //  WRITE PARTICLE TREE
+  bgTree->Write();                                     //  WRITE PARTICLE TREE
 
   hBG->Write();
   hCHARGED->Write();
