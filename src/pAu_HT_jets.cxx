@@ -28,28 +28,28 @@ int main ( int argc, const char** argv ) {
 
   TH1::SetDefaultSumw2();  TH2::SetDefaultSumw2();  TH3::SetDefaultSumw2();
   
-  TH3D *hVertex = new TH3D( "hVertex", "Event Vertex;v_{x};v_{y};v_{z}", 60,-0.3,0.3, 60,-0.3,0.3, 160,-40,40 );
-  TH1D *hTowersPerEvent = new TH1D("hTowersPerEvent","Tower Frequency;# of Towers", 700,0,700 );
-  TH2D *hTowersPerRun = new TH2D("hTowersPerRun","Tower Frequency (per run);Run no.;# of Towers", 400,16124000,16164000, 140,0,700 );
-  TH1D *hPrimaryPerEvent = new TH1D("hPrimaryPerEvent","Primary Track Multiplicity (per event);# of Primary", 200,0,200 );
-  TH2D *hPrimaryPerRun = new TH2D("hPrimaryPerRun","Primary Track Multiplicity (per run);Run no.;# of Primary", 4000,16124000,16164000, 40,0,200 );
-  TH2D *hnPrimaryVSnTowers = new TH2D("hnPrimaryVSnTowers","# of Primary Tracks vs. # of Towers;# Towers;# Primary Tracks", 140,0,700, 40,0,200);
-  TH2D *hPrimaryVsGlobal = new TH2D("hPrimaryVsGlobal","# Primary Tracks vs. # Global Tracks;# Global Tracks;# Primary Tracks", 150,0,3000, 150,0,150 );
-  TH2D *hPrimaryVsBBC = new TH2D("hPrimaryVsBBC","# Primary Tracks vs. BBC Coincidence Rate;BBC Rate;# Primary Tracks", 3500,0,3500000, 40,0,200 );
-  TH2D *hGlobalVsBBC = new TH2D("hGlobalVsBBC","# Global Tracks vs. BBC Coincidence Rate;BBC Rate;# Global Tracks", 3500,0,3500000, 150,0,3000 );
-  TH2D *hPrimaryVsBBCE = new TH2D("hPrimaryVsBBCE","# Primary Tracks vs. BBC East Rate;BBC East Rate;# Primary Tracks", 140,0,7000000, 150,0,3000 );
-  TH2D *hGlobalVsBBCE = new TH2D("hGlobalVsBBCE","# Global Tracks vs. BBC East Rate;BBC East Rate;# Global Tracks", 80,0,80000, 150,0,3000 );
-  TH2D *hPrimaryVsBBCsumE = new TH2D("hPrimaryVsBBCsumE","# Primary Tracks vs. BBC ADC East Sum;BBC ADC East Sum;# Primary Tracks", 160,0,80000, 40,0,200 );
-  TH2D *hTowersVsBBCsumE = new TH2D("hTowersVsBBCsumE","# Towers vs. BBC ADC East Sum;BBC ADC East Sum;# Towers", 160,0,80000, 140,0,700 );
-  TH2D *hLeadEtaPhi = new TH2D("hLeadEtaPhi","Lead Jet #eta vs. #phi;#phi;#eta", 252,0,6.3, 160,-0.8,0.8);
-  TH2D *hSubEtaPhi = new TH2D("hSubEtaPhi","Sub Jet #eta vs. #phi;#phi;#eta", 252,0,6.3, 160,-0.8,0.8);
-  TH2D *hPrimaryVsRho = new TH2D("hPrimaryVsRho","# Primary Tracks vs. Underlying Event;#rho (GeV);# Primary Tracks", 100,0,25, 40,0,200);
-  TH2D *hGlobalVsRho = new TH2D("hGlobalVsRho","# Global Tracks vs. Underlying Event;#rho (GeV);# Global Tracks", 100,0,25, 150,0,3000 );
-  TH3D *hPt_UE_RefMult = new TH3D("hPt_UE_RefMult","UE vs. Ref. Mult;Lead Jet p_{T} (GeV);Underlying Event (GeV);Ref. Mult.", 500,0,125, 50,0,25, 300,0,150000 );  
-  TH3D *hPt_UE_BBCE = new TH3D("hPt_UE_BBCE","UE vs. BBC East Rate;Lead Jet p_{T} (GeV);Underlying Event (GeV);BBC East Rate", 500,0,125, 50,0,25, 140,0,7000000 );
-  TH3D *hPt_UE_BBCsumE = new TH3D("hPt_UE_BBCsumE","UE vs. BBC ADC East Sum;Lead Jet p_{T} (GeV);Underlying Event (GeV);BBC ADC East Sum", 500,0,125, 50,0,25, 160,0,80000 );
-  TH2D *hTowersVsRho = new TH2D("hTowersVsRho","# of Towers vs. UE;#rho (GeV);# of Towers", 100,0,25, 140,0,700 );
-  TH2D *hLeadPtVsRho = new TH2D("hLeadPtVsRho","Lead Jet p_{T} vs UE;#rho (GeV);p_{T}^{lead} (GeV)", 140,0,35, 280,0,70);
+  // TH3D *hVertex = new TH3D( "hVertex", "Event Vertex;v_{x};v_{y};v_{z}", 60,-0.3,0.3, 60,-0.3,0.3, 160,-40,40 );
+  // TH1D *hTowersPerEvent = new TH1D("hTowersPerEvent","Tower Frequency;# of Towers", 700,0,700 );
+  // TH2D *hTowersPerRun = new TH2D("hTowersPerRun","Tower Frequency (per run);Run no.;# of Towers", 400,16124000,16164000, 140,0,700 );
+  // TH1D *hPrimaryPerEvent = new TH1D("hPrimaryPerEvent","Primary Track Multiplicity (per event);# of Primary", 200,0,200 );
+  // TH2D *hPrimaryPerRun = new TH2D("hPrimaryPerRun","Primary Track Multiplicity (per run);Run no.;# of Primary", 4000,16124000,16164000, 40,0,200 );
+  // TH2D *hnPrimaryVSnTowers = new TH2D("hnPrimaryVSnTowers","# of Primary Tracks vs. # of Towers;# Towers;# Primary Tracks", 140,0,700, 40,0,200);
+  // TH2D *hPrimaryVsGlobal = new TH2D("hPrimaryVsGlobal","# Primary Tracks vs. # Global Tracks;# Global Tracks;# Primary Tracks", 150,0,3000, 150,0,150 );
+  // TH2D *hPrimaryVsBBC = new TH2D("hPrimaryVsBBC","# Primary Tracks vs. BBC Coincidence Rate;BBC Rate;# Primary Tracks", 3500,0,3500000, 40,0,200 );
+  // TH2D *hGlobalVsBBC = new TH2D("hGlobalVsBBC","# Global Tracks vs. BBC Coincidence Rate;BBC Rate;# Global Tracks", 3500,0,3500000, 150,0,3000 );
+  // TH2D *hPrimaryVsBBCE = new TH2D("hPrimaryVsBBCE","# Primary Tracks vs. BBC East Rate;BBC East Rate;# Primary Tracks", 140,0,7000000, 150,0,3000 );
+  // TH2D *hGlobalVsBBCE = new TH2D("hGlobalVsBBCE","# Global Tracks vs. BBC East Rate;BBC East Rate;# Global Tracks", 80,0,80000, 150,0,3000 );
+  // TH2D *hPrimaryVsBBCsumE = new TH2D("hPrimaryVsBBCsumE","# Primary Tracks vs. BBC ADC East Sum;BBC ADC East Sum;# Primary Tracks", 160,0,80000, 40,0,200 );
+  // TH2D *hTowersVsBBCsumE = new TH2D("hTowersVsBBCsumE","# Towers vs. BBC ADC East Sum;BBC ADC East Sum;# Towers", 160,0,80000, 140,0,700 );
+  // TH2D *hLeadEtaPhi = new TH2D("hLeadEtaPhi","Lead Jet #eta vs. #phi;#phi;#eta", 252,0,6.3, 160,-0.8,0.8);
+  // TH2D *hSubEtaPhi = new TH2D("hSubEtaPhi","Sub Jet #eta vs. #phi;#phi;#eta", 252,0,6.3, 160,-0.8,0.8);
+  // TH2D *hPrimaryVsRho = new TH2D("hPrimaryVsRho","# Primary Tracks vs. Underlying Event;#rho (GeV);# Primary Tracks", 100,0,25, 40,0,200);
+  // TH2D *hGlobalVsRho = new TH2D("hGlobalVsRho","# Global Tracks vs. Underlying Event;#rho (GeV);# Global Tracks", 100,0,25, 150,0,3000 );
+  // TH3D *hPt_UE_RefMult = new TH3D("hPt_UE_RefMult","UE vs. Ref. Mult;Lead Jet p_{T} (GeV);Underlying Event (GeV);Ref. Mult.", 500,0,125, 50,0,25, 300,0,150000 );  
+  // TH3D *hPt_UE_BBCE = new TH3D("hPt_UE_BBCE","UE vs. BBC East Rate;Lead Jet p_{T} (GeV);Underlying Event (GeV);BBC East Rate", 500,0,125, 50,0,25, 140,0,7000000 );
+  // TH3D *hPt_UE_BBCsumE = new TH3D("hPt_UE_BBCsumE","UE vs. BBC ADC East Sum;Lead Jet p_{T} (GeV);Underlying Event (GeV);BBC ADC East Sum", 500,0,125, 50,0,25, 160,0,80000 );
+  // TH2D *hTowersVsRho = new TH2D("hTowersVsRho","# of Towers vs. UE;#rho (GeV);# of Towers", 100,0,25, 140,0,700 );
+  // TH2D *hLeadPtVsRho = new TH2D("hLeadPtVsRho","Lead Jet p_{T} vs UE;#rho (GeV);p_{T}^{lead} (GeV)", 140,0,35, 280,0,70);
   TH3D *hBG = new TH3D("hBG","Background Patricle #eta vs. p_{T};Lead Jet p_{T}(GeV);Particle p_{T} (GeV);Particle #eta", 280,0,70, 200,0,50, 220,-1.1,1.1 );
   TH3D *hCHARGED = new TH3D("hCHARGED","CHARGED: Background Patricle #eta vs. p_{T};Lead Jet p_{T}(GeV);Particle p_{T} (GeV);Particle #eta", 280,0,70, 200,0,50, 220,-1.1,1.1 );
   TH3D *hNEUTRAL = new TH3D("hNEUTRAL","NEUTRAL: Background Patricle #eta vs. p_{T};Lead Jet p_{T}(GeV);Particle p_{T} (GeV);Particle #eta", 280,0,70, 200,0,50, 220,-1.1,1.1 );
@@ -167,17 +167,17 @@ int main ( int argc, const char** argv ) {
     BbcEastRate = header->GetBbcEastRate();                                  BbcWestRate = header->GetBbcWestRate();
     BbcAdcSumEast = header->GetBbcAdcSumEast();
 
-    hLeadEtaPhi->Fill(leadPhi,leadEta);                                             hSubEtaPhi->Fill(subPhi,subEta);
+    // hLeadEtaPhi->Fill(leadPhi,leadEta);                                             hSubEtaPhi->Fill(subPhi,subEta);
 
-    hPrimaryVsRho->Fill( rho, nPrimary );                                     hGlobalVsRho->Fill(rho, nGlobal );
-    hPt_UE_BBCE->Fill(leadPt,rho,BbcEastRate);                            hPt_UE_BBCsumE->Fill(leadPt,rho,BbcAdcSumEast);
-    hTowersVsRho->Fill(rho,nTowers);                                         hLeadPtVsRho->Fill(rho,leadPt);
+    // hPrimaryVsRho->Fill( rho, nPrimary );                                     hGlobalVsRho->Fill(rho, nGlobal );
+    // hPt_UE_BBCE->Fill(leadPt,rho,BbcEastRate);                            hPt_UE_BBCsumE->Fill(leadPt,rho,BbcAdcSumEast);
+    // hTowersVsRho->Fill(rho,nTowers);                                         hLeadPtVsRho->Fill(rho,leadPt);
 
-    hVertex->Fill( Vx, Vy, Vz );                                        //  FILL HISTOGRAMS
-    hTowersPerEvent->Fill( nTowers );    hTowersPerRun->Fill( RunID, nTowers );    hPrimaryPerEvent->Fill( nPrimary );    hPt_UE_RefMult->Fill( leadPt, rho, refMult);
-    hPrimaryPerRun->Fill( RunID, nPrimary );    hnPrimaryVSnTowers->Fill( nTowers, nPrimary );    hPrimaryVsBBC->Fill( BbcCoincidenceRate, nPrimary );
-    hPrimaryVsGlobal->Fill( nGlobal, nPrimary );    hGlobalVsBBC->Fill( BbcCoincidenceRate, nGlobal );    hPrimaryVsBBCE->Fill(BbcEastRate,nPrimary);
-    hGlobalVsBBCE->Fill(BbcEastRate,nGlobal);    hPrimaryVsBBCsumE->Fill(BbcAdcSumEast,nPrimary);    hTowersVsBBCsumE->Fill(BbcAdcSumEast,nTowers);
+    // hVertex->Fill( Vx, Vy, Vz );                                        //  FILL HISTOGRAMS
+    // hTowersPerEvent->Fill( nTowers );    hTowersPerRun->Fill( RunID, nTowers );    hPrimaryPerEvent->Fill( nPrimary );    hPt_UE_RefMult->Fill( leadPt, rho, refMult);
+    // hPrimaryPerRun->Fill( RunID, nPrimary );    hnPrimaryVSnTowers->Fill( nTowers, nPrimary );    hPrimaryVsBBC->Fill( BbcCoincidenceRate, nPrimary );
+    // hPrimaryVsGlobal->Fill( nGlobal, nPrimary );    hGlobalVsBBC->Fill( BbcCoincidenceRate, nGlobal );    hPrimaryVsBBCE->Fill(BbcEastRate,nPrimary);
+    // hGlobalVsBBCE->Fill(BbcEastRate,nGlobal);    hPrimaryVsBBCsumE->Fill(BbcAdcSumEast,nPrimary);    hTowersVsBBCsumE->Fill(BbcAdcSumEast,nTowers);
 
     bgTree->Fill();
   }
@@ -191,31 +191,31 @@ int main ( int argc, const char** argv ) {
   hCHARGED->Write();
   hNEUTRAL->Write();
   hPartPtEtaDPhi->Write();
-  hVertex->Write();
-  hTowersPerEvent->Write();
-  hTowersPerRun->Write();
-  hPrimaryPerEvent->Write();
-  hPrimaryPerRun->Write();
-  hnPrimaryVSnTowers->Write();
-  hPrimaryVsBBC->Write();
-  hPrimaryVsGlobal->Write();
-  hGlobalVsBBC->Write();
-  hPrimaryVsBBCE->Write();
-  hGlobalVsBBCE->Write();
-  hLeadEtaPhi->Write();
-  hSubEtaPhi->Write();
-  hPt_UE_BBCE->Write();
-  hPt_UE_BBCsumE->Write();
-  hTowersVsRho->Write();
-  hLeadPtVsRho->Write();
-  hPt_UE_RefMult->Write();
-  hPrimaryVsBBCsumE->Write();
-  hTowersVsBBCsumE->Write();
-  hPrimaryVsRho->Write();
-  hGlobalVsRho->Write();
-  hCHARGED->Write();
-  hNEUTRAL->Write();
-  hPartPtEtaDPhi->Write();
+  // hVertex->Write();
+  // hTowersPerEvent->Write();
+  // hTowersPerRun->Write();
+  // hPrimaryPerEvent->Write();
+  // hPrimaryPerRun->Write();
+  // hnPrimaryVSnTowers->Write();
+  // hPrimaryVsBBC->Write();
+  // hPrimaryVsGlobal->Write();
+  // hGlobalVsBBC->Write();
+  // hPrimaryVsBBCE->Write();
+  // hGlobalVsBBCE->Write();
+  // hLeadEtaPhi->Write();
+  // hSubEtaPhi->Write();
+  // hPt_UE_BBCE->Write();
+  // hPt_UE_BBCsumE->Write();
+  // hTowersVsRho->Write();
+  // hLeadPtVsRho->Write();
+  // hPt_UE_RefMult->Write();
+  // hPrimaryVsBBCsumE->Write();
+  // hTowersVsBBCsumE->Write();
+  // hPrimaryVsRho->Write();
+  // hGlobalVsRho->Write();
+  // hCHARGED->Write();
+  // hNEUTRAL->Write();
+  // hPartPtEtaDPhi->Write();
   
   pAuFile->Close();
   
