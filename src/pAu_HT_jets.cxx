@@ -58,7 +58,7 @@ int main ( int argc, const char** argv ) {
   double pmin1, pmax1, pmin2, pmax2, ptSum, dPhi;
   int RunID, EventID, nTowers, nPrimary, nGlobal, nVertices, refMult, gRefMult, nJets, leadNcons, subNcons, towID, nHitsPoss, nHitsFit, Charge, nCons;
   double Vx, Vy, Vz, BbcCoincidenceRate, BbcEastRate, BbcWestRate, BbcAdcSumEast, vpdVz,  leadPt, leadEta, leadPhi, leadEt, subPt, subEta, subPhi, subEt, rho, chgRho, neuRho;
-  vector<double> partPt, partEta, partPhi, partEt, deltaPhi;         vector<int> partChg;
+  double partPt, partEta, partPhi, partEt, deltaPhi;         int partChg;
 
   TChain* Chain = new TChain( "JetTree" );          Chain->Add( inFile.c_str() );
   TStarJetPicoReader Reader;                                int numEvents = nEvents;        // total events in HT: 152,007,032
