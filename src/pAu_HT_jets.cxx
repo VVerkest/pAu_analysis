@@ -125,8 +125,8 @@ int main ( int argc, const char** argv ) {
       dPhi = chgBG[i].delta_phi_to( rawJets[0] );
       hPartPtEtaDPhi->Fill( chgBG[i].pt(), chgBG[i].eta(), dPhi );
       Charge = chgBG[i].user_index();
-      hCHARGED->Fill( leadPt, chgBG[i].pt(), chgBG[i].eta();
-      hBG->Fill( leadPt, chgBG[i].pt(), chgBG[i].eta();
+      hCHARGED->Fill( leadPt, chgBG[i].pt(), chgBG[i].eta() );
+      hBG->Fill( leadPt, chgBG[i].pt(), chgBG[i].eta() );
       chgPtSum+=chgBG[i].pt();
       ptSum+=chgBG[i].pt();
     }
