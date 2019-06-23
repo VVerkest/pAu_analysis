@@ -141,7 +141,7 @@ int main ( int argc, const char** argv ) {
       dPhi = neuBG[i].delta_phi_to( rawJets[0] );
       hPartPtEtaDPhi->Fill( neuBG[i].pt(), neuBG[i].eta(), dPhi );
       Charge = neuBG[i].user_index();
-      hCHARGED->Fill( leadPt, neuBG[i].pt(), neuBG[i].eta() );
+      hNEUTRAL->Fill( leadPt, neuBG[i].pt(), neuBG[i].eta() );
       hBG->Fill( leadPt, neuBG[i].pt(), neuBG[i].eta() );
       neuPtSum+=neuBG[i].pt();
       ptSum+=neuBG[i].pt();
