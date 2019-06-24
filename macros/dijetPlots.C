@@ -149,6 +149,9 @@ void dijetPlots() {
   TH2D *hscale3 = new TH2D( "hscale3", "Underlying Event vs. BBC East Rate", 50,0,25, 100,0.000001,1 );
   TH2D *hscale4 = new TH2D( "hscale4", "Underlying Event vs. BBC ADC East Sum", 50,0,25, 100,0.000001,1 );
   hscale3->SetStats(0);     hscale4->SetStats(0);
+
+  hPt_UE_BBCsumE->GetYaxis()->SetRangeUser( 0.0,25 );
+  hPt_UE_BBCE->GetYaxis()->SetRangeUser( 0.0,25 );
   
   TH1D *hUE_BBCE_py[nPtBins];        TH1D *hUE_BBCsumE_py[nPtBins];
     
