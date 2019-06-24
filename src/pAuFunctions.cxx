@@ -28,14 +28,19 @@ namespace pAuAnalysis {
   }
 
   
-  std::vector<fastjet::PseudoJet> GatherCharged ( TStarJetVectorContainer<TStarJetVector> * container , std::vector<fastjet::PseudoJet> & chgParticles ){
+  std::vector<fastjet::PseudoJet> GatherChargedBG ( fastjet::PseudoJet* trigJet, TStarJetVectorContainer<TStarJetVector> * container , std::vector<fastjet::PseudoJet> & chgParticles ){
     for ( int i=0; i < container->GetEntries() ; ++i ) {
       TStarJetVector* sv = container->Get(i);
       fastjet::PseudoJet current = fastjet::PseudoJet( *sv );
       if ( sv->GetCharge() == 0 ) { continue; }
-      current.set_user_index( sv->GetCharge() );
+
+      double absDeltaPhi = fabs( current.delta_phi_to( trigJet ) );
+      if ( absDeltaPhi < 1.0  ||  absDeltaPhi > 2.14159265 ) { continue; }       //  1 < delta phi < ( pi - 1 )
+      
       if ( std::abs(current.eta()) > etaCut )      { continue; }  // removes particles with |eta|>1
       if ( current.pt() < partMinPt )      { continue; }  // removes particles with pt<0.2GeV
+
+      current.set_user_index( sv->GetCharge() );
 
       chgParticles.push_back(current);
     }
@@ -43,14 +48,19 @@ namespace pAuAnalysis {
   }
 
   
-  std::vector<fastjet::PseudoJet> GatherNeutral ( TStarJetVectorContainer<TStarJetVector> * container , std::vector<fastjet::PseudoJet> & neuParticles ){
+  std::vector<fastjet::PseudoJet> GatherNeutralBG ( fastjet::PseudoJet* trigJet, TStarJetVectorContainer<TStarJetVector> * container , std::vector<fastjet::PseudoJet> & neuParticles ){
     for ( int i=0; i < container->GetEntries() ; ++i ) {
       TStarJetVector* sv = container->Get(i);
       fastjet::PseudoJet current = fastjet::PseudoJet( *sv );
       if ( sv->GetCharge() != 0 ) { continue; }
-      current.set_user_index( sv->GetCharge() );
+
+      double absDeltaPhi = fabs( current.delta_phi_to( trigJet ) );
+      if ( absDeltaPhi < 1.0  ||  absDeltaPhi > 2.14159265 ) { continue; }       //  1 < delta phi < ( pi - 1 )
+      
       if ( std::abs(current.eta()) > etaCut )      { continue; }  // removes particles with |eta|>1
       if ( current.pt() < partMinPt )      { continue; }  // removes particles with pt<0.2GeV
+
+      current.set_user_index( sv->GetCharge() );
 
       neuParticles.push_back(current);
     }

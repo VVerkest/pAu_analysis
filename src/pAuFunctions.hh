@@ -65,9 +65,9 @@ namespace pAuAnalysis {
   
   std::vector<fastjet::PseudoJet> GatherParticles ( TStarJetVectorContainer<TStarJetVector> * container , std::vector<fastjet::PseudoJet> & rawParticles );
 
-  std::vector<fastjet::PseudoJet> GatherCharged ( TStarJetVectorContainer<TStarJetVector> * container , std::vector<fastjet::PseudoJet> & chgParticles );
+  std::vector<fastjet::PseudoJet> GatherChargedBG (  fastjet::PseudoJet* trigJet, TStarJetVectorContainer<TStarJetVector> * container , std::vector<fastjet::PseudoJet> & chgParticles );
 
-  std::vector<fastjet::PseudoJet> GatherNeutral ( TStarJetVectorContainer<TStarJetVector> * container , std::vector<fastjet::PseudoJet> & newParticles );
+  std::vector<fastjet::PseudoJet> GatherNeutralBG (  fastjet::PseudoJet* trigJet, TStarJetVectorContainer<TStarJetVector> * container , std::vector<fastjet::PseudoJet> & newParticles );
 
   void InitReader( TStarJetPicoReader & reader, TChain* chain, int nEvents );
   
