@@ -28,7 +28,7 @@ namespace pAuAnalysis {
   }
 
   
-  std::vector<fastjet::PseudoJet> GatherChargedBG ( fastjet::PseudoJet* trigJet, TStarJetVectorContainer<TStarJetVector> * container , std::vector<fastjet::PseudoJet> & chgParticles ){
+  std::vector<fastjet::PseudoJet> GatherChargedBG ( fastjet::PseudoJet trigJet, TStarJetVectorContainer<TStarJetVector> * container , std::vector<fastjet::PseudoJet> & chgParticles ){
     for ( int i=0; i < container->GetEntries() ; ++i ) {
       TStarJetVector* sv = container->Get(i);
       fastjet::PseudoJet current = fastjet::PseudoJet( *sv );
@@ -48,7 +48,7 @@ namespace pAuAnalysis {
   }
 
   
-  std::vector<fastjet::PseudoJet> GatherNeutralBG ( fastjet::PseudoJet* trigJet, TStarJetVectorContainer<TStarJetVector> * container , std::vector<fastjet::PseudoJet> & neuParticles ){
+  std::vector<fastjet::PseudoJet> GatherNeutralBG ( fastjet::PseudoJet trigJet, TStarJetVectorContainer<TStarJetVector> * container , std::vector<fastjet::PseudoJet> & neuParticles ){
     for ( int i=0; i < container->GetEntries() ; ++i ) {
       TStarJetVector* sv = container->Get(i);
       fastjet::PseudoJet current = fastjet::PseudoJet( *sv );
