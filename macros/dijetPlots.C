@@ -125,7 +125,8 @@ void dijetPlots() {
 
 
 
-  
+  hPt_UE_BBCsumE->GetYaxis()->SetRangeUser( 0.0,25 );
+  hPt_UE_BBCE->GetYaxis()->SetRangeUser( 0.0,25 );
 
   TCanvas * c5 = new TCanvas( "c5" , "" ,0 ,23 ,1280 ,700 );              // CANVAS
   hscale1->SetStats(0);  c5->cd();    //  hscale1->GetYaxis()->SetRangeUser(0.0,5.0);     hscale1->Draw();
@@ -150,8 +151,8 @@ void dijetPlots() {
   TH2D *hscale4 = new TH2D( "hscale4", "Underlying Event vs. BBC ADC East Sum", 50,0,25, 100,0.000001,1 );
   hscale3->SetStats(0);     hscale4->SetStats(0);
 
-  hPt_UE_BBCsumE->GetYaxis()->SetRangeUser( 0.0,25 );
-  hPt_UE_BBCE->GetYaxis()->SetRangeUser( 0.0,25 );
+  hPt_UE_BBCsumE->GetYaxis()->SetRangeUser( 0.0,10 );
+  hPt_UE_BBCE->GetYaxis()->SetRangeUser( 0.0,10 );
   
   TH1D *hUE_BBCE_py[nPtBins];        TH1D *hUE_BBCsumE_py[nPtBins];
     
