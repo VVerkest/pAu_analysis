@@ -80,7 +80,7 @@ void dijetPlots() {
     name = "plots/UEvsBBCE" + ptBinName[i] + ".pdf";
     c0->SaveAs( name,"PDF");
     hUE_BBCE[i]->Scale( scale );                     // UN-NORMALIZE
-    hUE_BBCE[i]->GetYaxis()->SetRangeUser(0,25));
+    hUE_BBCE[i]->GetYaxis()->SetRangeUser(0,25);
 
 
     c1->cd();
