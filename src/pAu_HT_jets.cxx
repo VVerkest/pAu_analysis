@@ -111,8 +111,9 @@ int main ( int argc, const char** argv ) {
     Selector BGphiSelector = !( SelectorPhiRange( phi1-qpi, phi1+qpi ) || SelectorPhiRange( phi2-qpi, phi2+qpi ) );  //  EXCLUSIVE OR
     Selector bgSelector = BGphiSelector && etaSelector;
 
+    double chgPtSum = 0;    double neuPtSum = 0;
+    
     // chgBG = bgSelector( chgParticles );
-    // double chgPtSum = 0;    double neuPtSum = 0;
     // for (int i=0; i<chgBG.size(); ++i) {
     //   partPt = chgBG[i].pt();
     //   partEta = chgBG[i].eta();
