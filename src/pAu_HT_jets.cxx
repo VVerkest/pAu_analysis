@@ -55,8 +55,8 @@ int main ( int argc, const char** argv ) {
   TH3D *hBG = new TH3D("hBG","Background Particle #eta vs. p_{T};Lead Jet p_{T}(GeV);Particle p_{T} (GeV);Particle #eta", 280,0,70, 200,0,50, 220,-1.1,1.1 );
   TH3D *hCHARGED = new TH3D("hCHARGED","CHARGED: Background Particle #eta vs. p_{T};Lead Jet p_{T}(GeV);Particle p_{T} (GeV);Particle #eta", 280,0,70, 200,0,50, 220,-1.1,1.1 );
   TH3D *hNEUTRAL = new TH3D("hNEUTRAL","NEUTRAL: Background Particle #eta vs. p_{T};Lead Jet p_{T}(GeV);Particle p_{T} (GeV);Particle #eta", 280,0,70, 200,0,50, 220,-1.1,1.1 );
-  TH3D *hPartPtDEtaDPhi = new TH3D("hPartPtDEtaDPhi","Background Particle p_{T} vs. #Delta#eta vs. #Delta#phi;Particle p_{T} (GeV);#Delta#eta;#Delta#phi", 200,0,50, 400,-2.0,2.0, 252,-pi,pi );
-  TH3D *hPartPtEtaPhi = new TH3D("hPartPtEtaPhi","Background Particle p_{T} vs. #eta vs. #phi;Particle p_{T} (GeV);#eta;#phi", 200,0,50, 220,-1.1,1.1, 252,-pi,pi );
+  TH3D *hPartPtDEtaDPhi = new TH3D("hPartPtDEtaDPhi","Background Particle p_{T} vs. #Delta#eta vs. #Delta#phi;Particle p_{T} (GeV);#Delta#eta;#Delta#phi", 120,0,30, 400,-2.0,2.0, 252,-pi,pi );
+  TH3D *hPartPtEtaPhi = new TH3D("hPartPtEtaPhi","Background Particle p_{T} vs. #eta vs. #phi;Particle p_{T} (GeV);#eta;#phi", 120,0,30, 220,-1.1,1.1, 252,0,2*pi );
   
   double RunID, EventID, pmin1, pmax1, pmin2, pmax2, ptSum, dPhi, dEta, partPt, partEta, partPhi, partEt, deltaPhi;
   int nTowers, nPrimary, nGlobal, nVertices, refMult, gRefMult, nJets, leadNcons, subNcons, towID, nHitsPoss, nHitsFit, Charge, nCons, partChg;
