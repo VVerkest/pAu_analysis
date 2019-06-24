@@ -37,7 +37,7 @@ int main ( int argc, const char** argv ) {
   TH2D *hPrimaryVsGlobal = new TH2D("hPrimaryVsGlobal","# Primary Tracks vs. # Global Tracks;# Global Tracks;# Primary Tracks", 150,0,3000, 150,0,150 );
   TH2D *hPrimaryVsBBC = new TH2D("hPrimaryVsBBC","# Primary Tracks vs. BBC Coincidence Rate;BBC Rate;# Primary Tracks", 3500,0,3500000, 40,0,200 );
   TH2D *hGlobalVsBBC = new TH2D("hGlobalVsBBC","# Global Tracks vs. BBC Coincidence Rate;BBC Rate;# Global Tracks", 3500,0,3500000, 150,0,3000 );
-  TH2D *hPrimaryVsBBCE = new TH2D("hPrimaryVsBBCE","# Primary Tracks vs. BBC East Rate;BBC East Rate;# Primary Tracks", 140,0,7000000, 150,0,3000 );
+  TH2D *hPrimaryVsBBCE = new TH2D("hPrimaryVsBBCE","# Primary Tracks vs. BBC East Rate;BBC East Rate;# Primary Tracks", 140,0,7000000, 40,0,200 );
   TH2D *hGlobalVsBBCE = new TH2D("hGlobalVsBBCE","# Global Tracks vs. BBC East Rate;BBC East Rate;# Global Tracks", 80,0,80000, 150,0,3000 );
   TH2D *hPrimaryVsBBCsumE = new TH2D("hPrimaryVsBBCsumE","# Primary Tracks vs. BBC ADC East Sum;BBC ADC East Sum;# Primary Tracks", 160,0,80000, 40,0,200 );
   TH2D *hTowersVsBBCsumE = new TH2D("hTowersVsBBCsumE","# Towers vs. BBC ADC East Sum;BBC ADC East Sum;# Towers", 160,0,80000, 140,0,700 );
@@ -45,7 +45,7 @@ int main ( int argc, const char** argv ) {
   TH2D *hSubEtaPhi = new TH2D("hSubEtaPhi","Sub Jet #eta vs. #phi;#phi;#eta", 252,0,6.3, 160,-0.8,0.8);
   TH2D *hPrimaryVsRho = new TH2D("hPrimaryVsRho","# Primary Tracks vs. Underlying Event;#rho (GeV);# Primary Tracks", 100,0,25, 40,0,200);
   TH2D *hGlobalVsRho = new TH2D("hGlobalVsRho","# Global Tracks vs. Underlying Event;#rho (GeV);# Global Tracks", 100,0,25, 150,0,3000 );
-  TH3D *hPt_UE_RefMult = new TH3D("hPt_UE_RefMult","UE vs. Ref. Mult;Lead Jet p_{T} (GeV);Underlying Event (GeV);Ref. Mult.", 500,0,125, 50,0,25, 300,0,150000 );  
+  TH3D *hPt_UE_RefMult = new TH3D("hPt_UE_RefMult","UE vs. Ref. Mult;Lead Jet p_{T} (GeV);Underlying Event (GeV);Ref. Mult.", 500,0,125, 50,0,25, 100,0,1000 );  
   TH3D *hPt_UE_BBCE = new TH3D("hPt_UE_BBCE","UE vs. BBC East Rate;Lead Jet p_{T} (GeV);Underlying Event (GeV);BBC East Rate", 500,0,125, 50,0,25, 140,0,7000000 );
   TH3D *hPt_UE_BBCsumE = new TH3D("hPt_UE_BBCsumE","UE vs. BBC ADC East Sum;Lead Jet p_{T} (GeV);Underlying Event (GeV);BBC ADC East Sum", 500,0,125, 50,0,25, 160,0,80000 );
   TH2D *hTowersVsRho = new TH2D("hTowersVsRho","# of Towers vs. UE;#rho (GeV);# of Towers", 100,0,25, 140,0,700 );
@@ -55,8 +55,8 @@ int main ( int argc, const char** argv ) {
   TH3D *hNEUTRAL = new TH3D("hNEUTRAL","NEUTRAL: Background Patricle #eta vs. p_{T};Lead Jet p_{T}(GeV);Particle p_{T} (GeV);Particle #eta", 280,0,70, 200,0,50, 220,-1.1,1.1 );
   TH3D *hPartPtEtaDPhi = new TH3D("hPartPtEtaDPhi","Background Particle p_{T} vs. #eta vs. #Delta#phi;Particle p_{T} (GeV);#eta;#Delta#phi", 200,0,50, 220,-1.1,1.1, 252,-pi,pi );
   
-  double pmin1, pmax1, pmin2, pmax2, ptSum, dPhi;
-  int RunID, EventID, nTowers, nPrimary, nGlobal, nVertices, refMult, gRefMult, nJets, leadNcons, subNcons, towID, nHitsPoss, nHitsFit, Charge, nCons;
+  double RunID, EventID, pmin1, pmax1, pmin2, pmax2, ptSum, dPhi;
+  int nTowers, nPrimary, nGlobal, nVertices, refMult, gRefMult, nJets, leadNcons, subNcons, towID, nHitsPoss, nHitsFit, Charge, nCons;
   double Vx, Vy, Vz, BbcCoincidenceRate, BbcEastRate, BbcWestRate, BbcAdcSumEast, vpdVz,  leadPt, leadEta, leadPhi, leadEt, subPt, subEta, subPhi, subEt, rho, chgRho, neuRho;
   double partPt, partEta, partPhi, partEt, deltaPhi;         int partChg;
 
@@ -112,8 +112,6 @@ int main ( int argc, const char** argv ) {
     Selector bgSelector = BGphiSelector && etaSelector;
 
     chgBG = bgSelector( chgParticles );
-    neuBG = bgSelector( neuParticles );
-
     double chgPtSum = 0;    double neuPtSum = 0;
     for (int i=0; i<chgBG.size(); ++i) {
       partPt = chgBG[i].pt();
@@ -131,21 +129,22 @@ int main ( int argc, const char** argv ) {
       ptSum+=chgBG[i].pt();
     }
 
-    for (int i=0; i<neuBG.size(); ++i) {
-      partPt = neuBG[i].pt();
-      partEta = neuBG[i].eta();
-      partPhi = neuBG[i].phi();
-      partEt = neuBG[i].Et();
-      deltaPhi = neuBG[i].delta_phi_to( rawJets[0] );
-      partChg = neuBG[i].user_index();
-      dPhi = neuBG[i].delta_phi_to( rawJets[0] );
-      hPartPtEtaDPhi->Fill( neuBG[i].pt(), neuBG[i].eta(), dPhi );
-      Charge = neuBG[i].user_index();
-      hNEUTRAL->Fill( leadPt, neuBG[i].pt(), neuBG[i].eta() );
-      hBG->Fill( leadPt, neuBG[i].pt(), neuBG[i].eta() );
-      neuPtSum+=neuBG[i].pt();
-      ptSum+=neuBG[i].pt();
-    }
+    // neuBG = bgSelector( neuParticles );
+    // for (int i=0; i<neuBG.size(); ++i) {
+    //   partPt = neuBG[i].pt();
+    //   partEta = neuBG[i].eta();
+    //   partPhi = neuBG[i].phi();
+    //   partEt = neuBG[i].Et();
+    //   deltaPhi = neuBG[i].delta_phi_to( rawJets[0] );
+    //   partChg = neuBG[i].user_index();
+    //   dPhi = neuBG[i].delta_phi_to( rawJets[0] );
+    //   hPartPtEtaDPhi->Fill( neuBG[i].pt(), neuBG[i].eta(), dPhi );
+    //   Charge = neuBG[i].user_index();
+    //   hNEUTRAL->Fill( leadPt, neuBG[i].pt(), neuBG[i].eta() );
+    //   hBG->Fill( leadPt, neuBG[i].pt(), neuBG[i].eta() );
+    //   neuPtSum+=neuBG[i].pt();
+    //   ptSum+=neuBG[i].pt();
+    // }
 		      
     chgRho = chgPtSum / pi;
     neuRho = neuPtSum / pi;
