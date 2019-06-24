@@ -123,8 +123,8 @@ int main ( int argc, const char** argv ) {
       partEt = chgParticles[i].Et();
       deltaPhi = chgParticles[i].delta_phi_to( rawJets[0] );
       partChg = chgParticles[i].user_index();
-      dPhi =  rawJets[0].phi() - chgParticles[i].phi();
-      dEta = chgParticles[i].delta_eta_to( rawJets[0] );
+      dPhi = chgParticles[i].delta_phi_to( rawJets[0] );
+      dEta = rawJets[0].eta() - chgParticles[i].eta();
       hPartPtDEtaDPhi->Fill( chgParticles[i].pt(), dEta, dPhi );
       hPartPtEtaPhi->Fill( chgParticles[i].pt(), chgParticles[i].eta(), chgParticles[i].phi() );      Charge = chgParticles[i].user_index();
       hCHARGED->Fill( leadPt, chgParticles[i].pt(), chgParticles[i].eta() );
@@ -140,8 +140,8 @@ int main ( int argc, const char** argv ) {
       partEt = neuParticles[i].Et();
       deltaPhi = neuParticles[i].delta_phi_to( rawJets[0] );
       partChg = neuParticles[i].user_index();
-      dPhi = rawJets[0].phi() - neuParticles[i].phi();
-      dEta = neuParticles[i].delta_eta_to( rawJets[0] );
+      dPhi = neuParticles[i].delta_phi_to( rawJets[0] );
+      dEta = rawJets[0].eta() - neuParticles[i].eta();
       hPartPtDEtaDPhi->Fill( neuParticles[i].pt(), dEta, dPhi );
       hPartPtEtaPhi->Fill( neuParticles[i].pt(), neuParticles[i].eta(), neuParticles[i].phi() );
       Charge = neuParticles[i].user_index();
