@@ -111,40 +111,40 @@ int main ( int argc, const char** argv ) {
     Selector BGphiSelector = !( SelectorPhiRange( phi1-qpi, phi1+qpi ) || SelectorPhiRange( phi2-qpi, phi2+qpi ) );  //  EXCLUSIVE OR
     Selector bgSelector = BGphiSelector && etaSelector;
 
-    chgBG = bgSelector( chgParticles );
-    double chgPtSum = 0;    double neuPtSum = 0;
-    for (int i=0; i<chgBG.size(); ++i) {
-      partPt = chgBG[i].pt();
-      partEta = chgBG[i].eta();
-      partPhi = chgBG[i].phi();
-      partEt = chgBG[i].Et();
-      deltaPhi = chgBG[i].delta_phi_to( rawJets[0] );
-      partChg = chgBG[i].user_index();
-      dPhi = chgBG[i].delta_phi_to( rawJets[0] );
-      hPartPtEtaDPhi->Fill( chgBG[i].pt(), chgBG[i].eta(), dPhi );
-      Charge = chgBG[i].user_index();
-      hCHARGED->Fill( leadPt, chgBG[i].pt(), chgBG[i].eta() );
-      hBG->Fill( leadPt, chgBG[i].pt(), chgBG[i].eta() );
-      chgPtSum+=chgBG[i].pt();
-      ptSum+=chgBG[i].pt();
-    }
-
-    // neuBG = bgSelector( neuParticles );
-    // for (int i=0; i<neuBG.size(); ++i) {
-    //   partPt = neuBG[i].pt();
-    //   partEta = neuBG[i].eta();
-    //   partPhi = neuBG[i].phi();
-    //   partEt = neuBG[i].Et();
-    //   deltaPhi = neuBG[i].delta_phi_to( rawJets[0] );
-    //   partChg = neuBG[i].user_index();
-    //   dPhi = neuBG[i].delta_phi_to( rawJets[0] );
-    //   hPartPtEtaDPhi->Fill( neuBG[i].pt(), neuBG[i].eta(), dPhi );
-    //   Charge = neuBG[i].user_index();
-    //   hNEUTRAL->Fill( leadPt, neuBG[i].pt(), neuBG[i].eta() );
-    //   hBG->Fill( leadPt, neuBG[i].pt(), neuBG[i].eta() );
-    //   neuPtSum+=neuBG[i].pt();
-    //   ptSum+=neuBG[i].pt();
+    // chgBG = bgSelector( chgParticles );
+    // double chgPtSum = 0;    double neuPtSum = 0;
+    // for (int i=0; i<chgBG.size(); ++i) {
+    //   partPt = chgBG[i].pt();
+    //   partEta = chgBG[i].eta();
+    //   partPhi = chgBG[i].phi();
+    //   partEt = chgBG[i].Et();
+    //   deltaPhi = chgBG[i].delta_phi_to( rawJets[0] );
+    //   partChg = chgBG[i].user_index();
+    //   dPhi = chgBG[i].delta_phi_to( rawJets[0] );
+    //   hPartPtEtaDPhi->Fill( chgBG[i].pt(), chgBG[i].eta(), dPhi );
+    //   Charge = chgBG[i].user_index();
+    //   hCHARGED->Fill( leadPt, chgBG[i].pt(), chgBG[i].eta() );
+    //   hBG->Fill( leadPt, chgBG[i].pt(), chgBG[i].eta() );
+    //   chgPtSum+=chgBG[i].pt();
+    //   ptSum+=chgBG[i].pt();
     // }
+
+    neuBG = bgSelector( neuParticles );
+    for (int i=0; i<neuBG.size(); ++i) {
+      partPt = neuBG[i].pt();
+      partEta = neuBG[i].eta();
+      partPhi = neuBG[i].phi();
+      partEt = neuBG[i].Et();
+      deltaPhi = neuBG[i].delta_phi_to( rawJets[0] );
+      partChg = neuBG[i].user_index();
+      dPhi = neuBG[i].delta_phi_to( rawJets[0] );
+      hPartPtEtaDPhi->Fill( neuBG[i].pt(), neuBG[i].eta(), dPhi );
+      Charge = neuBG[i].user_index();
+      hNEUTRAL->Fill( leadPt, neuBG[i].pt(), neuBG[i].eta() );
+      hBG->Fill( leadPt, neuBG[i].pt(), neuBG[i].eta() );
+      neuPtSum+=neuBG[i].pt();
+      ptSum+=neuBG[i].pt();
+    }
 		      
     chgRho = chgPtSum / pi;
     neuRho = neuPtSum / pi;
