@@ -42,7 +42,7 @@ int main ( int argc, const char** argv ) {
   TH2D *hPrimaryVsBBCsumE = new TH2D("hPrimaryVsBBCsumE","# Primary Tracks vs. BBC ADC East Sum;BBC ADC East Sum;# Primary Tracks", 160,0,80000, 40,0,200 );
   TH2D *hTowersVsBBCsumE = new TH2D("hTowersVsBBCsumE","# Towers vs. BBC ADC East Sum;BBC ADC East Sum;# Towers", 160,0,80000, 140,0,700 );
 
-  TH3D *hLeadPtEtaPhi = new TH2D("hLeadPtEtaPhi","Lead Jet p_{T} vs. #eta vs. #phi;p_{T} (GeV);#phi;#eta", 280,0,70, 252,0,6.3, 160,-0.8,0.8);
+  TH3D *hLeadPtEtaPhi = new TH3D("hLeadPtEtaPhi","Lead Jet p_{T} vs. #eta vs. #phi;p_{T} (GeV);#phi;#eta", 280,0,70, 252,0,6.3, 160,-0.8,0.8);
   TH2D *hLeadEtaPhi = new TH2D("hLeadEtaPhi","Lead Jet #eta vs. #phi;#phi;#eta", 252,0,6.3, 160,-0.8,0.8);
   TH2D *hSubEtaPhi = new TH2D("hSubEtaPhi","Sub Jet #eta vs. #phi;#phi;#eta", 252,0,6.3, 160,-0.8,0.8);
   TH2D *hPrimaryVsRho = new TH2D("hPrimaryVsRho","# Primary Tracks vs. Underlying Event;#rho (GeV);# Primary Tracks", 100,0,25, 40,0,200);
@@ -123,7 +123,7 @@ int main ( int argc, const char** argv ) {
       partEt = chgParticles[i].Et();
       deltaPhi = chgParticles[i].delta_phi_to( rawJets[0] );
       partChg = chgParticles[i].user_index();
-      dPhi = chgParticles[i].delta_phi_to( rawJets[0] );
+      dPhi =  rawJets[0].phi() - chgParticles[i].phi();
       dEta = chgParticles[i].delta_eta_to( rawJets[0] );
       hPartPtDEtaDPhi->Fill( chgParticles[i].pt(), dEta, dPhi );
       hPartPtEtaPhi->Fill( chgParticles[i].pt(), chgParticles[i].eta(), chgParticles[i].phi() );      Charge = chgParticles[i].user_index();
@@ -140,7 +140,7 @@ int main ( int argc, const char** argv ) {
       partEt = neuParticles[i].Et();
       deltaPhi = neuParticles[i].delta_phi_to( rawJets[0] );
       partChg = neuParticles[i].user_index();
-      dPhi = neuParticles[i].delta_phi_to( rawJets[0] );
+      dPhi = rawJets[0].phi() - neuParticles[i].phi();
       dEta = neuParticles[i].delta_eta_to( rawJets[0] );
       hPartPtDEtaDPhi->Fill( neuParticles[i].pt(), dEta, dPhi );
       hPartPtEtaPhi->Fill( neuParticles[i].pt(), neuParticles[i].eta(), neuParticles[i].phi() );
@@ -218,7 +218,6 @@ int main ( int argc, const char** argv ) {
   hGlobalVsRho->Write();
   hCHARGED->Write();
   hNEUTRAL->Write();
-  hPartPtEtaDPhi->Write();
   
   pAuFile->Close();
   
