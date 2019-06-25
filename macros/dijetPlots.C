@@ -135,20 +135,20 @@ void dijetPlots() {
   hscale_1->SetStats(0);  c5->cd();    //  hscale_1->GetYaxis()->SetRangeUser(0.0,5.0);     hscale_1->Draw();
   for ( int i=0; i<nPtBins; ++i ) {
     hUE_BBCE[i]->SetStats(0);    hUE_BBCE[i]->SetLineColor( color[i] );    hUE_BBCE[i]->SetMarkerStyle( marker[i] );    hUE_BBCE[i]->SetMarkerColor( color[i] );
-    name = "UE_BBCE_profileY" + ptBinName[i];
-    hUE_BBCE[i]->ProfileY(name,0,80000,"S")->Draw("SAME");
+    name = "UE_BBCE_profileX" + ptBinName[i];
+    hUE_BBCE[i]->ProfileX(name,0,25,"S")->Draw("SAME");
   }
-  c5->SaveAs( "plots/neu/UE_BBCE_profileY.pdf","PDF");          c5->Clear();
+  c5->SaveAs( "plots/neu/UE_BBCE_profileX.pdf","PDF");          c5->Clear();
 
 
   TCanvas * c6 = new TCanvas( "c6" , "" ,0 ,23 ,1280 ,700 );              // CANVAS
   hscale_2->SetStats(0);  c6->cd();  //   hscale_2->GetYaxis()->SetRangeUser(0.0,5.0);     hscale_2->Draw();
   for ( int i=0; i<nPtBins; ++i ) {
     hUE_BBCsumE[i]->SetStats(0);    hUE_BBCsumE[i]->SetLineColor( color[i] );    hUE_BBCsumE[i]->SetMarkerStyle( marker[i] );    hUE_BBCsumE[i]->SetMarkerColor( color[i] );    
-    name = "hUE_BBCsumE_profileY" + ptBinName[i];
-    hUE_BBCsumE[i]->ProfileY(name,0,80000,"S")->Draw("SAME");
+    name = "hUE_BBCsumE_profileX" + ptBinName[i];
+    hUE_BBCsumE[i]->ProfileX(name,0,25,"S")->Draw("SAME");
   }
-  c6->SaveAs( "plots/neu/UE_BBCsumE_profileY.pdf","PDF");        c6->Clear();
+  c6->SaveAs( "plots/neu/UE_BBCsumE_profileX.pdf","PDF");        c6->Clear();
 
   TH2D *hscale3 = new TH2D( "hscale3", "Underlying Event vs. BBC East Rate", 50,0,25, 100,0.000001,1 );
   TH2D *hscale4 = new TH2D( "hscale4", "Underlying Event vs. BBC ADC East Sum", 50,0,25, 100,0.000001,1 );
