@@ -64,7 +64,7 @@ void dijetPlots() {
     title = "Underlying Event vs. BBC East Rate - p_{T}^{lead}: " + ptBinString[i];
     hPt_UE_BBCE->GetXaxis()->SetRangeUser(ptBinLo[i], ptBinHi[i]);
     hUE_BBCE[i] = (TH2D*)hPt_UE_BBCE->Project3D( "yz" );       // PROJECT
-    hUE_BBCE[i]->GetYaxis()->SetRangeUser(0.0,10.0);
+    hUE_BBCE[i]->GetYaxis()->SetRangeUser(0,25);
     scale = hUE_BBCE[i]->Integral("width");
     hUE_BBCE[i]->Scale( 1./scale );                     // NORMALIZE
     hUE_BBCE[i]->SetNameTitle(name,title);
@@ -88,7 +88,7 @@ void dijetPlots() {
     title = "Underlying Event vs. BBC ADC East Sum - p_{T}^{lead}: " + ptBinString[i];
     hPt_UE_BBCsumE->GetXaxis()->SetRangeUser(ptBinLo[i], ptBinHi[i]);
     hUE_BBCsumE[i] = (TH2D*)hPt_UE_BBCsumE->Project3D( "yz" );       // PROJECT
-    hUE_BBCsumE[i]->GetYaxis()->SetRangeUser(0,10);
+    hUE_BBCsumE[i]->GetYaxis()->SetRangeUser(0,25);
     scale = hUE_BBCsumE[i]->Integral("width");
     hUE_BBCsumE[i]->Scale( 1./scale );                     // NORMALIZE
     hUE_BBCsumE[i]->SetNameTitle(name,title);
@@ -125,13 +125,14 @@ void dijetPlots() {
   c1->SaveAs( "plots/UE_BBCsumE_profile.pdf","PDF");          c1->Clear();
 
 
-
+  TH2D *hscale_1 = new TH2D( "hscale_1", "Underlying Event vs. BBC East Rate", 140,0,7000000, 50,0,25 );
+  TH2D *hscale_2 = new TH2D( "hscale_2", "Underlying Event vs. BBC ADC East Sum", 150,0,100000, 50,0,25 );
 
   hPt_UE_BBCsumE->GetYaxis()->SetRangeUser( 0.0,25 );
   hPt_UE_BBCE->GetYaxis()->SetRangeUser( 0.0,25 );
 
   TCanvas * c5 = new TCanvas( "c5" , "" ,0 ,23 ,1280 ,700 );              // CANVAS
-  hscale1->SetStats(0);  c5->cd();    //  hscale1->GetYaxis()->SetRangeUser(0.0,5.0);     hscale1->Draw();
+  hscale_1->SetStats(0);  c5->cd();    //  hscale_1->GetYaxis()->SetRangeUser(0.0,5.0);     hscale_1->Draw();
   for ( int i=0; i<nPtBins; ++i ) {
     hUE_BBCE[i]->SetStats(0);    hUE_BBCE[i]->SetLineColor( color[i] );    hUE_BBCE[i]->SetMarkerStyle( marker[i] );    hUE_BBCE[i]->SetMarkerColor( color[i] );
     name = "UE_BBCE_profileY" + ptBinName[i];
@@ -141,7 +142,7 @@ void dijetPlots() {
 
 
   TCanvas * c6 = new TCanvas( "c6" , "" ,0 ,23 ,1280 ,700 );              // CANVAS
-  hscale2->SetStats(0);  c6->cd();  //   hscale2->GetYaxis()->SetRangeUser(0.0,5.0);     hscale2->Draw();
+  hscale_2->SetStats(0);  c6->cd();  //   hscale_2->GetYaxis()->SetRangeUser(0.0,5.0);     hscale_2->Draw();
   for ( int i=0; i<nPtBins; ++i ) {
     hUE_BBCsumE[i]->SetStats(0);    hUE_BBCsumE[i]->SetLineColor( color[i] );    hUE_BBCsumE[i]->SetMarkerStyle( marker[i] );    hUE_BBCsumE[i]->SetMarkerColor( color[i] );    
     name = "hUE_BBCsumE_profileY" + ptBinName[i];
