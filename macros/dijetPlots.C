@@ -32,8 +32,8 @@ void dijetPlots() {
   TH2D *hLeadPtVsRho = (TH2D*) inFile->Get("hLeadPtVsRho");
 
   hPt_UE_BBCsumE->GetZaxis()->SetRangeUser( 0.0, 80000.0 );
-  hPt_UE_BBCsumE->GetYaxis()->SetRangeUser( 0.0,10 );
-  hPt_UE_BBCE->GetYaxis()->SetRangeUser( 0.0,10 );
+  // hPt_UE_BBCsumE->GetYaxis()->SetRangeUser( 0.0,10 );
+  // hPt_UE_BBCE->GetYaxis()->SetRangeUser( 0.0,10 );
   
   TH2D *hscale0 = new TH2D( "hscale0", "Underlying Event by Lead Jet p_{T};#rho (GeV);", 50,0,25, 10,0.000001, 1.0 );
   TH2D *hscale1 = new TH2D( "hscale1", "Underlying Event vs. BBC East Rate", 140,0,7000000, 20,0,10 );
@@ -64,7 +64,7 @@ void dijetPlots() {
     title = "Underlying Event vs. BBC East Rate - p_{T}^{lead}: " + ptBinString[i];
     hPt_UE_BBCE->GetXaxis()->SetRangeUser(ptBinLo[i], ptBinHi[i]);
     hUE_BBCE[i] = (TH2D*)hPt_UE_BBCE->Project3D( "yz" );       // PROJECT
-    hUE_BBCE[i]->GetYaxis()->SetRangeUser(0,25);
+    hUE_BBCE[i]->GetYaxis()->SetRangeUser(0,10);
     scale = hUE_BBCE[i]->Integral("width");
     hUE_BBCE[i]->Scale( 1./scale );                     // NORMALIZE
     hUE_BBCE[i]->SetNameTitle(name,title);
@@ -88,7 +88,7 @@ void dijetPlots() {
     title = "Underlying Event vs. BBC ADC East Sum - p_{T}^{lead}: " + ptBinString[i];
     hPt_UE_BBCsumE->GetXaxis()->SetRangeUser(ptBinLo[i], ptBinHi[i]);
     hUE_BBCsumE[i] = (TH2D*)hPt_UE_BBCsumE->Project3D( "yz" );       // PROJECT
-    hUE_BBCsumE[i]->GetYaxis()->SetRangeUser(0,25);
+    hUE_BBCsumE[i]->GetYaxis()->SetRangeUser(0,10);
     scale = hUE_BBCsumE[i]->Integral("width");
     hUE_BBCsumE[i]->Scale( 1./scale );                     // NORMALIZE
     hUE_BBCsumE[i]->SetNameTitle(name,title);
@@ -171,6 +171,7 @@ void dijetPlots() {
     hUE_BBCE_py[i]->Draw("Same");
     
     avg = "";    avg += hUE_BBCE_py[i]->GetMean();    // name = "UEvsBBCE" + ptBinName[i];
+    avg = avg(0,6);
     title = ptBinString[i];
     leg0->AddEntry( hUE_BBCE_py[i], title, lpf );    leg0->AddEntry((TObject*)0,avg, "");    lpf += "lpf";
   }
@@ -192,6 +193,7 @@ void dijetPlots() {
     hUE_BBCsumE_py[i]->Draw("Same");
 
     avg = "";    avg += hUE_BBCsumE_py[i]->GetMean();    // name = "UEvsBBCE" + ptBinName[i];
+    avg = avg(0,6);
     title = ptBinString[i];
     leg1->AddEntry( hUE_BBCsumE_py[i], title, lpf );    leg1->AddEntry((TObject*)0,avg, "");    lpf += "lpf";
   }
@@ -227,6 +229,7 @@ void dijetPlots() {
     hRho[i]->Draw("SAME");                                                    // DRAW
     Ndj = ""; avg = "";    Ndj += hRho[i]->GetEntries();
     avg += hRho[i]->GetMean(1);                                           // 1 denotes x-axis
+    avg = avg(0,6);
     leg2->AddEntry( name, title, lpf );                            // ADD TO LEGEND
     leg2->AddEntry((TObject*)0,Ndj, "");    leg2->AddEntry((TObject*)0,avg, "");    lpf += "lpf";
   }
