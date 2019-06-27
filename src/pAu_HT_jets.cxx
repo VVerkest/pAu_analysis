@@ -42,9 +42,9 @@ int main ( int argc, const char** argv ) {
   TH2D *hPrimaryVsBBCsumE = new TH2D("hPrimaryVsBBCsumE","# Primary Tracks vs. BBC ADC East Sum;BBC ADC East Sum;# Primary Tracks", 160,0,80000, 40,0,200 );
   TH2D *hTowersVsBBCsumE = new TH2D("hTowersVsBBCsumE","# Towers vs. BBC ADC East Sum;BBC ADC East Sum;# Towers", 160,0,80000, 140,0,700 );
 
-  TH3D *hLeadPtEtaPhi = new TH3D("hLeadPtEtaPhi","Lead Jet p_{T} vs. #eta vs. #phi;p_{T} (GeV);#phi;#eta", 280,0,70, 252,0,6.3, 160,-0.8,0.8);
-  TH2D *hLeadEtaPhi = new TH2D("hLeadEtaPhi","Lead Jet #eta vs. #phi;#phi;#eta", 252,0,6.3, 160,-0.8,0.8);
-  TH2D *hSubEtaPhi = new TH2D("hSubEtaPhi","Sub Jet #eta vs. #phi;#phi;#eta", 252,0,6.3, 160,-0.8,0.8);
+  TH3D *hLeadPtEtaPhi = new TH3D("hLeadPtEtaPhi","Lead Jet p_{T} vs. #eta vs. #phi;p_{T} (GeV);#phi;#eta", 280,0,70, 120,0,6.3, 40,-1.0,1.0);
+  TH2D *hLeadEtaPhi = new TH2D("hLeadEtaPhi","Lead Jet #eta vs. #phi;#phi;#eta", 120,0,6.3, 40,-1.0,1.0);
+  TH2D *hSubEtaPhi = new TH2D("hSubEtaPhi","Sub Jet #eta vs. #phi;#phi;#eta", 120,0,6.3, 40,-1.0,1.0);
   TH2D *hPrimaryVsRho = new TH2D("hPrimaryVsRho","# Primary Tracks vs. Underlying Event;#rho (GeV);# Primary Tracks", 100,0,25, 40,0,200);
   TH2D *hGlobalVsRho = new TH2D("hGlobalVsRho","# Global Tracks vs. Underlying Event;#rho (GeV);# Global Tracks", 100,0,25, 150,0,3000 );
   TH3D *hPt_UE_RefMult = new TH3D("hPt_UE_RefMult","UE vs. Ref. Mult;Lead Jet p_{T} (GeV);Underlying Event (GeV);Ref. Mult.", 500,0,125, 50,0,25, 100,0,1000 );  
@@ -55,13 +55,14 @@ int main ( int argc, const char** argv ) {
   TH3D *hBG = new TH3D("hBG","Background Particle #eta vs. p_{T};Lead Jet p_{T}(GeV);Particle p_{T} (GeV);Particle #eta", 280,0,70, 200,0,50, 220,-1.1,1.1 );
   TH3D *hCHARGED = new TH3D("hCHARGED","CHARGED: Background Particle #eta vs. p_{T};Lead Jet p_{T}(GeV);Particle p_{T} (GeV);Particle #eta", 280,0,70, 200,0,50, 220,-1.1,1.1 );
   TH3D *hNEUTRAL = new TH3D("hNEUTRAL","NEUTRAL: Background Particle #eta vs. p_{T};Lead Jet p_{T}(GeV);Particle p_{T} (GeV);Particle #eta", 280,0,70, 200,0,50, 220,-1.1,1.1 );
-  TH3D *hPartPtDEtaDPhi = new TH3D("hPartPtDEtaDPhi","Background Particle p_{T} vs. #Delta#eta vs. #Delta#phi;Particle p_{T} (GeV);#Delta#eta;#Delta#phi", 120,0,30, 400,-2.0,2.0, 252,-pi,pi );
-  TH3D *hPartPtEtaPhi = new TH3D("hPartPtEtaPhi","Background Particle p_{T} vs. #eta vs. #phi;Particle p_{T} (GeV);#eta;#phi", 120,0,30, 220,-1.1,1.1, 252,0,2*pi );
+  TH3D *hPartPtDEtaDPhi = new TH3D("hPartPtDEtaDPhi","Background Particle p_{T} vs. #Delta#eta vs. #Delta#phi;Particle p_{T} (GeV);#Delta#eta;#Delta#phi", 120,0,30, 80,-2.0,2.0, 120,-pi,pi );
+  TH3D *hPartPtEtaPhi = new TH3D("hPartPtEtaPhi","Background Particle p_{T} vs. #eta vs. #phi;Particle p_{T} (GeV);#eta;#phi", 120,0,30, 40,-1.0,1.0, 120,0,2*pi );
+  TH3D *hAllPtEtaPhi = new TH3D("hAllPtEtaPhi","All Particles p_{T} vs. #eta vs. #phi;Particle p_{T} (GeV);#eta;#phi", 120,0,30, 40,-1.0,1.0, 120,0,2*pi );
   
   double RunID, EventID, pmin1, pmax1, pmin2, pmax2, ptSum, dPhi, dEta, partPt, partEta, partPhi, partEt, deltaPhi;
   int nTowers, nPrimary, nGlobal, nVertices, refMult, gRefMult, nJets, leadNcons, subNcons, towID, nHitsPoss, nHitsFit, Charge, nCons, partChg;
   double Vx, Vy, Vz, BbcCoincidenceRate, BbcEastRate, BbcWestRate, BbcAdcSumEast, vpdVz,  leadPt, leadEta, leadPhi, leadEt, subPt, subEta, subPhi, subEt, rho, chgRho, neuRho;
-  double AREA = 4*(pi - 2);
+  double AREA = 4*(pi - 2);   // (  2 in eta  ) X (  2*( pi-1 - 1 ) in phi  )
 
   TChain* Chain = new TChain( "JetTree" );          Chain->Add( inFile.c_str() );
   TStarJetPicoReader Reader;                                int numEvents = nEvents;        // total events in HT: 152,007,032
@@ -70,7 +71,6 @@ int main ( int argc, const char** argv ) {
   //  CREATE JET SELECTOR
   Selector etaSelector = SelectorAbsEtaMax( 1.0-R );    Selector ptMinSelector = SelectorPtMin(jetMinPt);  Selector etaPtSelector = etaSelector && ptMinSelector;
   JetDefinition jet_def(antikt_algorithm, R);     //  JET DEFINITION
-  JetDefinition bg_jet_def(kt_algorithm, 0.0001);     //  BACKGROUND ESTIMATION JET DEFINITION
   
   vector<PseudoJet> rawParticles, chgParticles, neuParticles, rawJets, chgBG, neuBG;
   TStarJetPicoEventHeader* header;    TStarJetPicoEvent* event;    TStarJetVector* sv;    TStarJetVectorContainer<TStarJetVector> * container;
@@ -92,6 +92,8 @@ int main ( int argc, const char** argv ) {
       
     //   JET-FINDING
     GatherParticles( container, rawParticles);     //  GATHERS ALL PARTICLES WITH    pT >= 0.2 GeV    and    |eta|<1.0
+
+    for ( int i=0; i<rawParticles.size(); ++i ) { hAllPtEtaPhi->Fill( rawParticles[i].pt(), rawParticles[i].eta(), rawParticles[i].phi() ); }
     
     ClusterSequence jetCluster( rawParticles, jet_def );           //  CLUSTER ALL JETS > 2.0 GEV
     vector<PseudoJet> rawJets = sorted_by_pt( etaPtSelector( jetCluster.inclusive_jets() ) );     // EXTRACT SELECTED JETS
@@ -111,27 +113,25 @@ int main ( int argc, const char** argv ) {
     //   MAKE FUNCTION: GatherChargedBG (include eta/phi cuts) (absolute delta phi: go from -1 away from jet axis)
     GatherChargedBG( rawJets[0], container, chgParticles);     GatherNeutralBG( rawJets[0], container, neuParticles);
 
-                 //  BACKGROUND ESTIMATION 
-    
-
+    //  BACKGROUND ESTIMATION 
     double chgPtSum = 0;    double neuPtSum = 0;
     
-    // for (int i=0; i<chgParticles.size(); ++i) {
-    //   partPt = chgParticles[i].pt();
-    //   partEta = chgParticles[i].eta();
-    //   partPhi = chgParticles[i].phi();
-    //   partEt = chgParticles[i].Et();
-    //   deltaPhi = chgParticles[i].delta_phi_to( rawJets[0] );
-    //   partChg = chgParticles[i].user_index();
-    //   dPhi = chgParticles[i].delta_phi_to( rawJets[0] );
-    //   dEta = rawJets[0].eta() - chgParticles[i].eta();
-    //   hPartPtDEtaDPhi->Fill( chgParticles[i].pt(), dEta, dPhi );
-    //   hPartPtEtaPhi->Fill( chgParticles[i].pt(), chgParticles[i].eta(), chgParticles[i].phi() );      Charge = chgParticles[i].user_index();
-    //   hCHARGED->Fill( leadPt, chgParticles[i].pt(), chgParticles[i].eta() );
-    //   hBG->Fill( leadPt, chgParticles[i].pt(), chgParticles[i].eta() );
-    //   chgPtSum+=chgParticles[i].pt();
-    //   ptSum+=chgParticles[i].pt();
-    // }
+    for (int i=0; i<chgParticles.size(); ++i) {
+      partPt = chgParticles[i].pt();
+      partEta = chgParticles[i].eta();
+      partPhi = chgParticles[i].phi();
+      partEt = chgParticles[i].Et();
+      deltaPhi = chgParticles[i].delta_phi_to( rawJets[0] );
+      partChg = chgParticles[i].user_index();
+      dPhi = chgParticles[i].delta_phi_to( rawJets[0] );
+      dEta = rawJets[0].eta() - chgParticles[i].eta();
+      hPartPtDEtaDPhi->Fill( chgParticles[i].pt(), dEta, dPhi );
+      hPartPtEtaPhi->Fill( chgParticles[i].pt(), chgParticles[i].eta(), chgParticles[i].phi() );      Charge = chgParticles[i].user_index();
+      hCHARGED->Fill( leadPt, chgParticles[i].pt(), chgParticles[i].eta() );
+      hBG->Fill( leadPt, chgParticles[i].pt(), chgParticles[i].eta() );
+      chgPtSum+=chgParticles[i].pt();
+      ptSum+=chgParticles[i].pt();
+    }
 
     for (int i=0; i<neuParticles.size(); ++i) {
       partPt = neuParticles[i].pt();
@@ -153,7 +153,7 @@ int main ( int argc, const char** argv ) {
 		      
     chgRho = chgPtSum / AREA;
     neuRho = neuPtSum / AREA;
-    rho = (chgPtSum+neuPtSum) / pi;
+    rho = (chgPtSum+neuPtSum) / AREA;
 
 
     
@@ -192,6 +192,7 @@ int main ( int argc, const char** argv ) {
   hCHARGED->Write();
   hNEUTRAL->Write();
   hPartPtEtaPhi->Write();
+  hAllPtEtaPhi->Write();
   hPartPtDEtaDPhi->Write();
   hVertex->Write();
   hTowersPerEvent->Write();
