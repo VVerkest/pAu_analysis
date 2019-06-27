@@ -89,7 +89,7 @@ int main ( int argc, const char** argv ) {
     if (header->GetRunId() == 16135031 || header->GetRunId() == 16135032) { continue; }
     if (!(header->HasTriggerId(500401) || header->HasTriggerId(500411))) {continue;}   //  ONLY SELECT JP2 TRIGGER EVENTS
     Vz = header->GetPrimaryVertexZ();           if ( abs(Vz) > vzCut ) { continue; }
-    //if ( header->GetBbcAdcSumEast() >= 64000 ) { continue; }
+    if ( header->GetBbcAdcSumEast() >= 64000 ) { continue; }
 
       
     //   JET-FINDING
@@ -118,23 +118,23 @@ int main ( int argc, const char** argv ) {
     //  BACKGROUND ESTIMATION 
     double chgPtSum = 0;    double neuPtSum = 0;
     
-    // for (int i=0; i<chgParticles.size(); ++i) {
-    //   partPt = chgParticles[i].pt();
-    //   partEta = chgParticles[i].eta();
-    //   partPhi = chgParticles[i].phi();
-    //   partEt = chgParticles[i].Et();
-    //   deltaPhi = chgParticles[i].delta_phi_to( rawJets[0] );
-    //   partChg = chgParticles[i].user_index();
-    //   dPhi = chgParticles[i].delta_phi_to( rawJets[0] );
-    //   dEta = rawJets[0].eta() - chgParticles[i].eta();
-    //   hPartPtDEtaDPhi->Fill( chgParticles[i].pt(), dEta, dPhi );
-    //   hPartPtEtaPhi->Fill( chgParticles[i].pt(), chgParticles[i].eta(), chgParticles[i].phi() );
-    //   Charge = chgParticles[i].user_index();
-    //   hCHARGED->Fill( leadPt, chgParticles[i].pt(), chgParticles[i].eta() );
-    //   hBG->Fill( leadPt, chgParticles[i].pt(), chgParticles[i].eta() );
-    //   chgPtSum+=chgParticles[i].pt();
-    //   ptSum+=chgParticles[i].pt();
-    // }
+    for (int i=0; i<chgParticles.size(); ++i) {
+      partPt = chgParticles[i].pt();
+      partEta = chgParticles[i].eta();
+      partPhi = chgParticles[i].phi();
+      partEt = chgParticles[i].Et();
+      deltaPhi = chgParticles[i].delta_phi_to( rawJets[0] );
+      partChg = chgParticles[i].user_index();
+      dPhi = chgParticles[i].delta_phi_to( rawJets[0] );
+      dEta = rawJets[0].eta() - chgParticles[i].eta();
+      hPartPtDEtaDPhi->Fill( chgParticles[i].pt(), dEta, dPhi );
+      hPartPtEtaPhi->Fill( chgParticles[i].pt(), chgParticles[i].eta(), chgParticles[i].phi() );
+      Charge = chgParticles[i].user_index();
+      hCHARGED->Fill( leadPt, chgParticles[i].pt(), chgParticles[i].eta() );
+      hBG->Fill( leadPt, chgParticles[i].pt(), chgParticles[i].eta() );
+      chgPtSum+=chgParticles[i].pt();
+      ptSum+=chgParticles[i].pt();
+    }
 
     for (int i=0; i<neuParticles.size(); ++i) {
       partPt = neuParticles[i].pt();
