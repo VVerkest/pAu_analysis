@@ -171,6 +171,7 @@ void dijetPlots() {
     hUE_BBCE_py[i]->Draw("Same");
     
     avg = "";    avg += hUE_BBCE_py[i]->GetMean();    // name = "UEvsBBCE" + ptBinName[i];
+    avg = avg(0,6);
     title = ptBinString[i];
     leg0->AddEntry( hUE_BBCE_py[i], title, lpf );    leg0->AddEntry((TObject*)0,avg, "");    lpf += "lpf";
   }
@@ -192,6 +193,7 @@ void dijetPlots() {
     hUE_BBCsumE_py[i]->Draw("Same");
 
     avg = "";    avg += hUE_BBCsumE_py[i]->GetMean();    // name = "UEvsBBCE" + ptBinName[i];
+    avg = avg(0,6);
     title = ptBinString[i];
     leg1->AddEntry( hUE_BBCsumE_py[i], title, lpf );    leg1->AddEntry((TObject*)0,avg, "");    lpf += "lpf";
   }
@@ -226,6 +228,7 @@ void dijetPlots() {
     hRho[i]->SetLineColor( color[i] );    hRho[i]->SetMarkerStyle( marker[i] );    hRho[i]->SetMarkerColor( color[i] );
     hRho[i]->Draw("SAME");                                                    // DRAW
     Ndj = ""; avg = "";    Ndj += hRho[i]->GetEntries();
+    avg = avg(0,6);
     avg += hRho[i]->GetMean(1);                                           // 1 denotes x-axis
     leg2->AddEntry( name, title, lpf );                            // ADD TO LEGEND
     leg2->AddEntry((TObject*)0,Ndj, "");    leg2->AddEntry((TObject*)0,avg, "");    lpf += "lpf";
