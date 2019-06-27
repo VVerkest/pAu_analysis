@@ -1,7 +1,7 @@
 //  dijetPlots.C
 //  Veronica Verkest     May 22, 2019
 
-void dijetPlots() {
+void dijetPlots_chg() {
   
   const float pi = 3.141592;
   const double twopi = 2*3.14159265358979;
