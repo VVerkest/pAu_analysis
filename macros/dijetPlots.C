@@ -192,7 +192,7 @@ void dijetPlots() {
     hUE_BBCsumE_py[i]->SetStats(0);    hUE_BBCsumE_py[i]->SetLineColor( color[i] );    hUE_BBCsumE_py[i]->SetMarkerStyle( marker[i] );    hUE_BBCsumE_py[i]->SetMarkerColor( color[i] );
     hUE_BBCsumE_py[i]->Draw("Same");
 
-    avg = "";    avg += hUE_BBCsumE_py[i]->GetMean();    // name = "UEvsBBCE" + ptBinName[i];
+    avg = "";    avg += hUE_BBCsumE_py[i]->GetMean();
     avg = avg(0,6);
     title = ptBinString[i];
     leg1->AddEntry( hUE_BBCsumE_py[i], title, lpf );    leg1->AddEntry((TObject*)0,avg, "");    lpf += "lpf";
