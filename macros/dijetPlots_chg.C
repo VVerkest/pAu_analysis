@@ -228,8 +228,8 @@ void dijetPlots_chg() {
     hRho[i]->SetLineColor( color[i] );    hRho[i]->SetMarkerStyle( marker[i] );    hRho[i]->SetMarkerColor( color[i] );
     hRho[i]->Draw("SAME");                                                    // DRAW
     Ndj = ""; avg = "";    Ndj += hRho[i]->GetEntries();
-    avg = avg(0,6);
     avg += hRho[i]->GetMean(1);                                           // 1 denotes x-axis
+    avg = avg(0,6);
     leg2->AddEntry( name, title, lpf );                            // ADD TO LEGEND
     leg2->AddEntry((TObject*)0,Ndj, "");    leg2->AddEntry((TObject*)0,avg, "");    lpf += "lpf";
   }
