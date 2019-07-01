@@ -104,7 +104,7 @@ namespace pAuAnalysis {
     // Towers
     TStarJetPicoTowerCuts* towerCuts = reader.GetTowerCuts();
     towerCuts->SetMaxEtCut( 30.0 );
-    towerCuts->AddBadTowers( "src/dummy_tower_list.txt" );
+    towerCuts->AddBadTowers( "src/bad_tower_list.txt" );
 
     std::cout << "Using these tower cuts:" << std::endl;
     std::cout << "  GetMaxEtCut = " << towerCuts->GetMaxEtCut() << std::endl;
