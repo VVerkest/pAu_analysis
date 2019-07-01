@@ -30,7 +30,9 @@ void dijetPlots_neu() {
   TH3D *hPt_UE_BBCsumE = (TH3D*) inFile->Get("hPt_UE_BBCsumE");
   TH2D *hTowersVsRho = (TH2D*) inFile->Get("hTowersVsRho");
   TH2D *hLeadPtVsRho = (TH2D*) inFile->Get("hLeadPtVsRho");
-
+  TH3D *hPartPtEtaPhi = (TH3D*) inFile->Get("hPartPtEtaPhi");
+  TH3D *hAllPtEtaPhi = (TH3D*) inFile->Get("hAllPtEtaPhi");
+  
   hPt_UE_BBCsumE->GetZaxis()->SetRangeUser( 0.0, 80000.0 );
   hPt_UE_BBCsumE->GetYaxis()->SetRangeUser( 0.0,10 );
   hPt_UE_BBCE->GetYaxis()->SetRangeUser( 0.0,10 );
@@ -57,6 +59,16 @@ void dijetPlots_neu() {
   TCanvas * c1 = new TCanvas( "c1" , "" ,0 ,23 ,1280 ,700 );              // CANVAS
   c1->SetLogz();
 
+  TH2D* hPartEtaPhi = (TH2D*) hPartPtEtaPhi->Project3D("YZ");
+  hPartEtaPhi->SetTitle("Neutral BG Particles #eta vs. #phi");
+  hPartEtaPhi->Scale(1./hPartEtaPhi->Integral("WIDTH"));
+  hPartEtaPhi->Draw("COLZ");
+  hPartEtaPhi->SaveAs("plots/neu/bg_eta_phi.pdf","PDF");
+  // TH2D* hAllEtaPhi = (TH2D*) hAllPtEtaPhi->Project3D("YZ");
+  // hAllEtaPhi->SetTitle("All Neutral Particles #eta vs. #phi");
+  // hAllEtaPhi->Scale(1./hAllEtaPhi->Integral("WIDTH"));
+  // hAllEtaPhi->Draw("COLZ");
+  // hAllEtaPhi->SaveAs("plots/neu/all_eta_phi.pdf","PDF");
  
   for ( int i=0; i<nPtBins; ++i ) {
     c0->cd();
