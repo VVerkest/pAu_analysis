@@ -25,7 +25,7 @@ void dijetPlots_neu() {
   TH2D *hLeadEtaPhi =(TH2D*) inFile->Get("hLeadEtaPhi");
   TH2D *hSubEtaPhi = (TH2D*) inFile->Get("hSubEtaPhi");
   TH1D *hTowersPerEvent = (TH1D*) inFile->Get("hTowersPerEvent");
-  TH1D *hPrimaryPerEvent = (TH1D*) inFile->Get("hPrimaryPerEvent");  
+  TH1D *hPrimaryPerEvent = (TH1D*) inFile->Get("hPrimaryPerEvent");
   TH3D *hPt_UE_BBCE = (TH3D*) inFile->Get("hPt_UE_BBCE");
   TH3D *hPt_UE_BBCsumE = (TH3D*) inFile->Get("hPt_UE_BBCsumE");
   TH2D *hTowersVsRho = (TH2D*) inFile->Get("hTowersVsRho");
