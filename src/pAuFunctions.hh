@@ -47,6 +47,18 @@
 
 namespace pAuAnalysis {
 
+  const int RefMultCut = 0;
+  const int MinNFitPointsCut = 20;
+
+  const double VertexZCut = 30.0;
+  const double MaxEventPtCut = 30.0;
+  const double MaxEventEtCut = 30.0;
+  const double MinEventEtCut = 0.2;
+  const double DCACut = 1.0;
+  const double FitOverMaxPointsCut = 0.52;
+  const double MaxPtCut = 30.0;
+  const double MaxEtCut = 30.0;
+  
   const double R = 0.4;
   const double vzCut = 30.0;   // |Vz|<=30 cm
   const double dcaCut = 3.0;   // DCA<=3.0 cm
@@ -60,9 +72,7 @@ namespace pAuAnalysis {
   const double etaBinHi[nEtaBins] = { -0.5, 0.0, 0.5, 1.0 };
   const TString etaBinName[nEtaBins] = { "_n10_n05", "_n05_00", "_00_05", "_05_10" };
   const TString etaBinString[nEtaBins] = { "-1.0<#eta<-0.5", "-0.5<#eta<0.0", "0.0<#eta<0.5", "0.5<#eta<1.0" };
-  
-  double ConvertPhi( double &phi );
-  
+    
   std::vector<fastjet::PseudoJet> GatherParticles ( TStarJetVectorContainer<TStarJetVector> * container , std::vector<fastjet::PseudoJet> & rawParticles );
 
   std::vector<fastjet::PseudoJet> GatherChargedBG (  fastjet::PseudoJet trigJet, TStarJetVectorContainer<TStarJetVector> * container , std::vector<fastjet::PseudoJet> & chgParticles );

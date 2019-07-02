@@ -4,14 +4,6 @@
 #include "pAuFunctions.hh"
 
 namespace pAuAnalysis {
-
-  double ConvertPhi( double &phi ) {
-    double pi = 3.14159265;
-    if ( phi<0 ) { phi += 2*pi; return phi; }
-    else if ( phi>2*pi ) { phi -= 2*pi; return phi; }
-    else if ( phi>0 && phi<2*pi ) { return phi; }
-    else { std::cerr<<"FUNTION 'ConvertPhi' IS BROKEN"<<std::endl; return -1; }
-  }
   
 
   std::vector<fastjet::PseudoJet> GatherParticles ( TStarJetVectorContainer<TStarJetVector> * container , std::vector<fastjet::PseudoJet> & rawParticles ){
@@ -81,19 +73,19 @@ namespace pAuAnalysis {
     // -------------------------
     
     TStarJetPicoEventCuts* evCuts = reader.GetEventCuts();
-    evCuts->SetVertexZCut ( 30.0 );
-    evCuts->SetRefMultCut( 0 );
-    evCuts->SetMaxEventPtCut( 30.0 );
-    evCuts->SetMaxEventEtCut( 30.0 );
-    evCuts->SetMinEventEtCut( 0.2 );
+    evCuts->SetVertexZCut ( VertexZCut );
+    evCuts->SetRefMultCut( RefMultCut );
+    evCuts->SetMaxEventPtCut( MaxEventPtCut );
+    evCuts->SetMaxEventEtCut( MaxEventEtCut );
+    evCuts->SetMinEventEtCut( MinEventEtCut );
     evCuts->SetVertexZDiffCut( 3.0 );
     
     // Tracks cuts
     TStarJetPicoTrackCuts* trackCuts = reader.GetTrackCuts();
-    trackCuts->SetDCACut( 3.0 );
-    trackCuts->SetMinNFitPointsCut( 20 );
-    trackCuts->SetFitOverMaxPointsCut( 0.52 );
-    trackCuts->SetMaxPtCut ( 30.0 );
+    trackCuts->SetDCACut( DCACut );
+    trackCuts->SetMinNFitPointsCut( MinNFitPointsCut );
+    trackCuts->SetFitOverMaxPointsCut( FitOverMaxPointsCut );
+    trackCuts->SetMaxPtCut ( MaxPtCut );
 
     
     std::cout << "Using these track cuts:" << std::endl;
@@ -103,8 +95,8 @@ namespace pAuAnalysis {
     
     // Towers
     TStarJetPicoTowerCuts* towerCuts = reader.GetTowerCuts();
-    towerCuts->SetMaxEtCut( 30.0 );
-    towerCuts->AddBadTowers( "src/bad_tower_list.txt" );
+    towerCuts->SetMaxEtCut( MaxEtCut );
+    towerCuts->AddBadTowers( "/nfs/rhi/STAR/Data/P16id/resources/bad_towers_pAu2015.list" );
 
     std::cout << "Using these tower cuts:" << std::endl;
     std::cout << "  GetMaxEtCut = " << towerCuts->GetMaxEtCut() << std::endl;

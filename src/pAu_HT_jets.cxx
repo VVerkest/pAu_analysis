@@ -42,6 +42,10 @@ int main ( int argc, const char** argv ) {
   TH2D *hPrimaryVsBBCsumE = new TH2D("hPrimaryVsBBCsumE","# Primary Tracks vs. BBC ADC East Sum;BBC ADC East Sum;# Primary Tracks", 160,0,80000, 40,0,200 );
   TH2D *hTowersVsBBCsumE = new TH2D("hTowersVsBBCsumE","# Towers vs. BBC ADC East Sum;BBC ADC East Sum;# Towers", 160,0,80000, 140,0,700 );
 
+  TH1D *hAllJetsPt = new TH1D( "hAllJetsPt", "Inclusive Jets p_{T};Jet p_{T} (GeV)", 400, 0.0, 100.0 );
+  TH1D *hAllJetsEta = new TH1D( "hAllJetsEta", "Inclusive Jets #eta;Jet #eta", 80, -1.0, 1.0  );
+  TH1D *hAllJetsPhi = new TH1D( "hAllJetsPhi", "Inclusive Jets #phi;Jet #phi", 240, 0, 2*pi );
+  
   TH3D *hLeadPtEtaPhi = new TH3D("hLeadPtEtaPhi","Lead Jet p_{T} vs. #eta vs. #phi;p_{T} (GeV);#phi;#eta", 280,0,70, 120,0,6.3, 40,-1.0,1.0);
   TH2D *hLeadEtaPhi = new TH2D("hLeadEtaPhi","Lead Jet #eta vs. #phi;#phi;#eta", 120,0,6.3, 40,-1.0,1.0);
   TH2D *hSubEtaPhi = new TH2D("hSubEtaPhi","Sub Jet #eta vs. #phi;#phi;#eta", 120,0,6.3, 40,-1.0,1.0);
@@ -110,7 +114,8 @@ int main ( int argc, const char** argv ) {
       subPt = rawJets[1].pt();      subEta = rawJets[1].eta();      subPhi = rawJets[1].phi();      subEt = rawJets[1].Et();
       vector<PseudoJet> SubCons= rawJets[1].constituents();      subNcons = SubCons.size();
     }
-
+    
+    for ( int i=0; i<rawJets.size(); ++i ) {      hAllJetsPt->Fill( rawJets[i].pt() );      hAllJetsEta->Fill( rawJets[i].eta() );      hAllJetsPhi->Fill( rawJets[i].phi() );    }
 
     //   MAKE FUNCTION: GatherChargedBG (include eta/phi cuts) (absolute delta phi: go from -1 away from jet axis)
     GatherChargedBG( rawJets[0], container, chgParticles);     GatherNeutralBG( rawJets[0], container, neuParticles);
@@ -210,6 +215,9 @@ int main ( int argc, const char** argv ) {
   hGlobalVsBBCE->Write();
   hLeadPtEtaPhi->Write();
   hLeadEtaPhi->Write();
+  hAllJetsPt->Write();
+  hAllJetsEta->Write();
+  hAllJetsPhi->Write();
   hSubEtaPhi->Write();
   hPt_UE_BBCE->Write();
   hPt_UE_BBCsumE->Write();
