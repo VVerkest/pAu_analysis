@@ -141,23 +141,23 @@ int main ( int argc, const char** argv ) {
       ptSum+=chgParticles[i].pt();
     }
 
-    for (int i=0; i<neuParticles.size(); ++i) {
-      partPt = neuParticles[i].pt();
-      partEta = neuParticles[i].eta();
-      partPhi = neuParticles[i].phi();
-      partEt = neuParticles[i].Et();
-      deltaPhi = neuParticles[i].delta_phi_to( rawJets[0] );
-      partChg = neuParticles[i].user_index();
-      dPhi = neuParticles[i].delta_phi_to( rawJets[0] );
-      dEta = rawJets[0].eta() - neuParticles[i].eta();
-      hPartPtDEtaDPhi->Fill( neuParticles[i].pt(), dEta, dPhi );
-      hPartPtEtaPhi->Fill( neuParticles[i].pt(), neuParticles[i].eta(), neuParticles[i].phi() );
-      Charge = neuParticles[i].user_index();
-      hNEUTRAL->Fill( leadPt, neuParticles[i].pt(), neuParticles[i].eta() );
-      hBG->Fill( leadPt, neuParticles[i].pt(), neuParticles[i].eta() );
-      neuPtSum+=neuParticles[i].pt();
-      ptSum+=neuParticles[i].pt();
-    }
+    // for (int i=0; i<neuParticles.size(); ++i) {
+    //   partPt = neuParticles[i].pt();
+    //   partEta = neuParticles[i].eta();
+    //   partPhi = neuParticles[i].phi();
+    //   partEt = neuParticles[i].Et();
+    //   deltaPhi = neuParticles[i].delta_phi_to( rawJets[0] );
+    //   partChg = neuParticles[i].user_index();
+    //   dPhi = neuParticles[i].delta_phi_to( rawJets[0] );
+    //   dEta = rawJets[0].eta() - neuParticles[i].eta();
+    //   hPartPtDEtaDPhi->Fill( neuParticles[i].pt(), dEta, dPhi );
+    //   hPartPtEtaPhi->Fill( neuParticles[i].pt(), neuParticles[i].eta(), neuParticles[i].phi() );
+    //   Charge = neuParticles[i].user_index();
+    //   hNEUTRAL->Fill( leadPt, neuParticles[i].pt(), neuParticles[i].eta() );
+    //   hBG->Fill( leadPt, neuParticles[i].pt(), neuParticles[i].eta() );
+    //   neuPtSum+=neuParticles[i].pt();
+    //   ptSum+=neuParticles[i].pt();
+    // }
 		      
     chgRho = chgPtSum / AREA;
     neuRho = neuPtSum / AREA;
