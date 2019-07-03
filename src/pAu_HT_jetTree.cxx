@@ -75,7 +75,7 @@ int main ( int argc, const char** argv ) {
   JetDefinition jet_def(antikt_algorithm, R);     //  JET DEFINITION
   JetDefinition bg_jet_def(kt_algorithm, R);     //  BACKGROUND ESTIMATION JET DEFINITION
   //  cambridge_algorithm??
-  vector<PseudoJet> rawParticles, rawJets;
+  vector<PseudoJet> rawParticles, rawJets, chgParticles, neuParticles;
   int eID, rID;
   
   TStarJetPicoEventHeader* header;    TStarJetPicoEvent* event;    TStarJetVector* sv;
@@ -86,6 +86,7 @@ int main ( int argc, const char** argv ) {
 
     rawParticles.clear();     rawJets.clear();     nCons.clear();     towID.clear();     Charge.clear();     towEt.clear();     towEta.clear();     towPhi.clear();
     trEta.clear();     trPhi.clear();     trPz.clear();     trPt.clear();     jetPt.clear();     jetEta.clear();     jetPhi.clear();     jetEt.clear();     DCA.clear();
+    chgParticles.clear();      neuParticles.clear();
     nHitsPoss.clear();     nHitsFit.clear();        //  clear vectors
 
     Reader.PrintStatus(5);
@@ -143,6 +144,7 @@ int main ( int argc, const char** argv ) {
     GatherParticles( container, rawParticles);     //  GATHERS ALL PARTICLES WITH    pT>=2.0GeV    and    |eta|<1.0
     ClusterSequence jetCluster( rawParticles, jet_def );           //  CLUSTER ALL JETS
     vector<PseudoJet> rawJets = sorted_by_pt( etaPtSelector( jetCluster.inclusive_jets() ) );     // EXTRACT SELECTED JETS
+    double AREA = 4*(pi - 2);   // (  2 in eta  ) X (  2*( pi-1 - 1 ) in phi  )
 
     nJets=0;
     
@@ -156,6 +158,7 @@ int main ( int argc, const char** argv ) {
       nJets+=1;
     }
 
+    GatherChargedBG( rawJets[0], container, chgParticles);     GatherNeutralBG( rawJets[0], container, neuParticles);
 
 
     //  BACKGROUND ESTIMATION 
