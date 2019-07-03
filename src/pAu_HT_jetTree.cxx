@@ -101,17 +101,14 @@ int main ( int argc, const char** argv ) {
     Vz = header->GetPrimaryVertexZ();           if ( abs(Vz) > vzCut ) { continue; }
     if ( header->GetBbcAdcSumEast() < 64000 ) { continue; }    
 
-    dca = event->GetPrimaryTrack(i)->GetDCA();
-    if ( dca > dcaCut ) { nPrimary -= 1;   continue; }                   // track DCA cut
-
-    eta = (double) event->GetPrimaryTrack(i)->GetEta();
-    if ( abs(eta) > etaCut ) { nPrimary -= 1;   continue; }            // track eta cut
 
     //   JET-FINDING
     GatherParticles( container, rawParticles);     //  GATHERS ALL PARTICLES WITH    pT>=2.0GeV    and    |eta|<1.0
     ClusterSequence jetCluster( rawParticles, jet_def );           //  CLUSTER ALL JETS
     vector<PseudoJet> rawJets = sorted_by_pt( etaPtSelector( jetCluster.inclusive_jets() ) );     // EXTRACT SELECTED JETS
     double AREA = 4*(pi - 2);   // (  2 in eta  ) X (  2*( pi-1 - 1 ) in phi  )
+
+    nJets=0;
 
     if ( rawJets.size()<2) { continue; }                                                       //  REQUIRE DIJET
     double phi1 = rawJets[0].phi();     double phi2 = rawJets[1].phi();
@@ -125,9 +122,17 @@ int main ( int argc, const char** argv ) {
     }
 
     
-    nJets=0;
+    for ( int i=0; i<rawJets.size(); ++i ) {                              //  FILL JET INFO
+      jetPt.push_back( rawJets[i].pt() );
+      jetEta.push_back( rawJets[i].eta() );
+      jetPhi.push_back( rawJets[i].phi() );
+      jetEt.push_back( rawJets[i].Et() );
+      vector<PseudoJet> Cons= rawJets[i].constituents();
+      nCons.push_back( Cons.size() );
+      nJets+=1;
+    }
 
-
+    
     
     eID = Reader.GetNOfCurrentEvent();          EventID = eID;
     rID = header->GetRunId();                        RunID = rID;
@@ -142,7 +147,11 @@ int main ( int argc, const char** argv ) {
     
     for ( int i=0; i<npt; ++i ) {                                         //  FILL EVENT DATA
 
+      dca = event->GetPrimaryTrack(i)->GetDCA();
+      if ( dca > dcaCut ) { nPrimary -= 1;   continue; }                   // track DCA cut
       DCA.push_back( dca );
+      eta = (double) event->GetPrimaryTrack(i)->GetEta();
+      if ( abs(eta) > etaCut ) { nPrimary -= 1;   continue; }            // track eta cut
       trEta.push_back(eta);
       trPt.push_back((double) event->GetPrimaryTrack(i)->GetPt());
       trPz.push_back((double) event->GetPrimaryTrack(i)->GetPz());
@@ -162,18 +171,6 @@ int main ( int argc, const char** argv ) {
       towID.push_back(event->GetTower(i)->GetId());
     }
 
-
-
-    
-    for ( int i=0; i<rawJets.size(); ++i ) {                              //  FILL JET INFO
-      jetPt.push_back( rawJets[i].pt() );
-      jetEta.push_back( rawJets[i].eta() );
-      jetPhi.push_back( rawJets[i].phi() );
-      jetEt.push_back( rawJets[i].Et() );
-      vector<PseudoJet> Cons= rawJets[i].constituents();
-      nCons.push_back( Cons.size() );
-      nJets+=1;
-    }
 
     GatherChargedBG( rawJets[0], container, chgParticles);     GatherNeutralBG( rawJets[0], container, neuParticles);
 
