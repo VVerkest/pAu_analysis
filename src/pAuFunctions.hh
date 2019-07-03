@@ -51,10 +51,11 @@ namespace pAuAnalysis {
   const int MinNFitPointsCut = 20;
 
   const double VertexZCut = 30.0;
+  const double VertexZDiffCut = 3.0;
   const double MaxEventPtCut = 30.0;
   const double MaxEventEtCut = 30.0;
   const double MinEventEtCut = 0.2;
-  const double DCACut = 1.0;
+  const double DCACut = 3.0;
   const double FitOverMaxPointsCut = 0.52;
   const double MaxPtCut = 30.0;
   const double MaxEtCut = 30.0;

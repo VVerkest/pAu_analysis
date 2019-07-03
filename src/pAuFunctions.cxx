@@ -78,7 +78,7 @@ namespace pAuAnalysis {
     evCuts->SetMaxEventPtCut( MaxEventPtCut );
     evCuts->SetMaxEventEtCut( MaxEventEtCut );
     evCuts->SetMinEventEtCut( MinEventEtCut );
-    evCuts->SetVertexZDiffCut( 3.0 );
+    evCuts->SetVertexZDiffCut( VertexZDiffCut );
     
     // Tracks cuts
     TStarJetPicoTrackCuts* trackCuts = reader.GetTrackCuts();

@@ -99,7 +99,7 @@ int main ( int argc, const char** argv ) {
     if (header->GetRunId() == 16135031 || header->GetRunId() == 16135032) { continue; }
     if (!(header->HasTriggerId(500401) || header->HasTriggerId(500411))) {continue;}   //  ONLY SELECT JP2 TRIGGER EVENTS
     Vz = header->GetPrimaryVertexZ();           if ( abs(Vz) > vzCut ) { continue; }
-    if ( header->GetBbcAdcSumEast() < 63000 ) { continue; }    
+    if ( header->GetBbcAdcSumEast() < 64000 ) { continue; }    
 
 
     //   JET-FINDING
