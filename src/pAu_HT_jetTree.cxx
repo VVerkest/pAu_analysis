@@ -30,8 +30,8 @@ int main ( int argc, const char** argv ) {
   else if ( argc ==  1 ) {
     vector<string> arguments( argv+1, argv+argc );
     inFile = "production_pAu200_2015/HT/pAu_2015_200_HT*.root";
-    outFile = "out/pAuJets_HT.root";
-    nEvents = 1000;
+    outFile = "out/HTjets/pAu_HT_BBCEsumOver64000.root";
+    nEvents = -1;
   }
   else { cerr<< "incorrect number of command line arguments"; return -1; }
 
@@ -94,10 +94,11 @@ int main ( int argc, const char** argv ) {
     header = event->GetHeader();
     container = Reader.GetOutputContainer();
     
+    if (header->GetRunId() >= 16142059 && header->GetRunId() <= 16149001) { continue; }    //TEMPORARILY SKIPPING THESE RUNS
+    if (header->GetRunId() == 16135031 || header->GetRunId() == 16135032) { continue; }
     if (!(header->HasTriggerId(500401) || header->HasTriggerId(500411))) {continue;}   //  ONLY SELECT JP2 TRIGGER EVENTS
-    
-    Vz = header->GetPrimaryVertexZ();
-    if ( abs(Vz) > vzCut ) { continue; }
+    Vz = header->GetPrimaryVertexZ();           if ( abs(Vz) > vzCut ) { continue; }
+    if ( header->GetBbcAdcSumEast() < 64000 ) { continue; }    
 
     eID = Reader.GetNOfCurrentEvent();          EventID = eID;
     rID = header->GetRunId();                        RunID = rID;
@@ -156,35 +157,31 @@ int main ( int argc, const char** argv ) {
     }
 
 
-    if ( rawJets.size()<2) { continue; }
-    
-    double phi1 = rawJets[0].phi();     double phi2 = rawJets[1].phi();
-    double dphi = fabs( phi1 - phi2 - pi );
 
-    if ( dphi> R || rawJets[0].pt()<2.0 || rawJets[1].pt()<2.0 ) { continue; }
-    else {                        //  CREATE DIJET PAIR  
-      leadPt = rawJets[0].pt();      leadEta = rawJets[0].eta();      leadPhi = rawJets[0].phi();      leadEt = rawJets[0].Et();
-      vector<PseudoJet> LeadCons= rawJets[0].constituents();      leadNcons = LeadCons.size();
-      subPt = rawJets[1].pt();      subEta = rawJets[1].eta();      subPhi = rawJets[1].phi();      subEt = rawJets[1].Et();
-      vector<PseudoJet> SubCons= rawJets[1].constituents();      subNcons = SubCons.size();
+    //  BACKGROUND ESTIMATION 
+    double chgPtSum = 0;    double neuPtSum = 0;    double ptSum = 0;
+    double partPt, partEta, partPhi, partEt;
+    
+    for (int i=0; i<chgParticles.size(); ++i) {
+      partPt = chgParticles[i].pt();
+      partEta = chgParticles[i].eta();
+      partPhi = chgParticles[i].phi();
+      chgPtSum+=chgParticles[i].pt();
+      ptSum+=chgParticles[i].pt();
     }
-    
-    double tanPhi = tan(phi1) + tan(phi2);          tanPhi /= 2;
-    double djAxisPhi = atan( tanPhi );       // qpi = quarter of pi
-    pmin1 = djAxisPhi + qpi;           pmax1 = djAxisPhi + (3*qpi);
-    pmin2 = djAxisPhi - (3*qpi);      pmax2 = djAxisPhi - qpi;
-    Selector bgPhiRange = SelectorPhiRange( pmin1, pmax1 ) || SelectorPhiRange( pmin2, pmax2 );
-    Selector bgSelector = bgPhiRange && SelectorAbsEtaMax( 1.0 );
 
-    GhostedAreaSpec gAreaSpec( 1.0, 1, 0.01 );
-    AreaDefinition bg_area_def(active_area_explicit_ghosts, gAreaSpec);
+    for (int i=0; i<neuParticles.size(); ++i) {
+      partPt = neuParticles[i].pt();
+      partEta = neuParticles[i].eta();
+      partPhi = neuParticles[i].phi();
+      neuPtSum+=neuParticles[i].pt();
+      ptSum+=neuParticles[i].pt();
+    }
+		      
+    double chgRho = chgPtSum / AREA;
+    double neuRho = neuPtSum / AREA;
+    rho = (chgPtSum+neuPtSum) / AREA;
     
-    ClusterSequenceArea bgCluster( rawParticles, bg_jet_def, bg_area_def);
-    JetMedianBackgroundEstimator UE( bgSelector, bgCluster );
-    rho = UE.rho();
-    sigma = UE.sigma();
-
-    cout << "rho = "<<rho<<"\t  sigma = "<<sigma<<endl<<endl;
     
     HTjetTree->Fill();                                                           //  FILL TREE
   }
