@@ -101,6 +101,34 @@ int main ( int argc, const char** argv ) {
     Vz = header->GetPrimaryVertexZ();           if ( abs(Vz) > vzCut ) { continue; }
     if ( header->GetBbcAdcSumEast() < 64000 ) { continue; }    
 
+    dca = event->GetPrimaryTrack(i)->GetDCA();
+    if ( dca > dcaCut ) { nPrimary -= 1;   continue; }                   // track DCA cut
+
+    eta = (double) event->GetPrimaryTrack(i)->GetEta();
+    if ( abs(eta) > etaCut ) { nPrimary -= 1;   continue; }            // track eta cut
+
+    //   JET-FINDING
+    GatherParticles( container, rawParticles);     //  GATHERS ALL PARTICLES WITH    pT>=2.0GeV    and    |eta|<1.0
+    ClusterSequence jetCluster( rawParticles, jet_def );           //  CLUSTER ALL JETS
+    vector<PseudoJet> rawJets = sorted_by_pt( etaPtSelector( jetCluster.inclusive_jets() ) );     // EXTRACT SELECTED JETS
+    double AREA = 4*(pi - 2);   // (  2 in eta  ) X (  2*( pi-1 - 1 ) in phi  )
+
+    if ( rawJets.size()<2) { continue; }                                                       //  REQUIRE DIJET
+    double phi1 = rawJets[0].phi();     double phi2 = rawJets[1].phi();
+    double dphi = fabs( fabs( phi1 - phi2 ) - pi );
+    if ( dphi> R || rawJets[0].pt()<10.0 || rawJets[1].pt()<2.0 ) { continue; }
+    else {                        //  CREATE DIJET PAIR  
+      leadPt = rawJets[0].pt();      leadEta = rawJets[0].eta();      leadPhi = rawJets[0].phi();      leadEt = rawJets[0].Et();
+      vector<PseudoJet> LeadCons= rawJets[0].constituents();      leadNcons = LeadCons.size();
+      subPt = rawJets[1].pt();      subEta = rawJets[1].eta();      subPhi = rawJets[1].phi();      subEt = rawJets[1].Et();
+      vector<PseudoJet> SubCons= rawJets[1].constituents();      subNcons = SubCons.size();
+    }
+
+    
+    nJets=0;
+
+
+    
     eID = Reader.GetNOfCurrentEvent();          EventID = eID;
     rID = header->GetRunId();                        RunID = rID;
 
@@ -114,11 +142,7 @@ int main ( int argc, const char** argv ) {
     
     for ( int i=0; i<npt; ++i ) {                                         //  FILL EVENT DATA
 
-      dca = event->GetPrimaryTrack(i)->GetDCA();
-      if ( dca > dcaCut ) { nPrimary -= 1;   continue; }                   // track DCA cut
       DCA.push_back( dca );
-      eta = (double) event->GetPrimaryTrack(i)->GetEta();
-      if ( abs(eta) > etaCut ) { nPrimary -= 1;   continue; }            // track eta cut
       trEta.push_back(eta);
       trPt.push_back((double) event->GetPrimaryTrack(i)->GetPt());
       trPz.push_back((double) event->GetPrimaryTrack(i)->GetPz());
@@ -140,13 +164,6 @@ int main ( int argc, const char** argv ) {
 
 
 
-    //   JET-FINDING
-    GatherParticles( container, rawParticles);     //  GATHERS ALL PARTICLES WITH    pT>=2.0GeV    and    |eta|<1.0
-    ClusterSequence jetCluster( rawParticles, jet_def );           //  CLUSTER ALL JETS
-    vector<PseudoJet> rawJets = sorted_by_pt( etaPtSelector( jetCluster.inclusive_jets() ) );     // EXTRACT SELECTED JETS
-    double AREA = 4*(pi - 2);   // (  2 in eta  ) X (  2*( pi-1 - 1 ) in phi  )
-
-    nJets=0;
     
     for ( int i=0; i<rawJets.size(); ++i ) {                              //  FILL JET INFO
       jetPt.push_back( rawJets[i].pt() );
@@ -162,28 +179,12 @@ int main ( int argc, const char** argv ) {
 
 
     //  BACKGROUND ESTIMATION 
-    double chgPtSum = 0;    double neuPtSum = 0;    double ptSum = 0;
-    double partPt, partEta, partPhi, partEt;
-    
-    for (int i=0; i<chgParticles.size(); ++i) {
-      partPt = chgParticles[i].pt();
-      partEta = chgParticles[i].eta();
-      partPhi = chgParticles[i].phi();
-      chgPtSum+=chgParticles[i].pt();
-      ptSum+=chgParticles[i].pt();
-    }
-
-    for (int i=0; i<neuParticles.size(); ++i) {
-      partPt = neuParticles[i].pt();
-      partEta = neuParticles[i].eta();
-      partPhi = neuParticles[i].phi();
-      neuPtSum+=neuParticles[i].pt();
-      ptSum+=neuParticles[i].pt();
-    }
+    double ptSum = 0;
+    for (int i=0; i<chgParticles.size(); ++i) {      ptSum+=chgParticles[i].pt();    }
+    for (int i=0; i<neuParticles.size(); ++i) {      ptSum+=neuParticles[i].pt();    }
 		      
-    double chgRho = chgPtSum / AREA;
-    double neuRho = neuPtSum / AREA;
-    rho = (chgPtSum+neuPtSum) / AREA;
+
+    rho = ptSum / AREA;
     
     
     HTjetTree->Fill();                                                           //  FILL TREE
