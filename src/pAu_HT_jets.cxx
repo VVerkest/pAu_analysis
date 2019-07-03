@@ -46,8 +46,8 @@ int main ( int argc, const char** argv ) {
   //  JET PT, ETA, PHI FOR 2+, 5+, 10+, AND 20+ GEV
   
   TH3D *hLeadPtEtaPhi = new TH3D("hLeadPtEtaPhi","Lead Jet p_{T} vs. #eta vs. #phi;p_{T} (GeV);#phi;#eta", 280,0,70, 120,0,6.3, 40,-1.0,1.0);
-  TH2D *hLeadEtaPhi = new TH2D("hLeadEtaPhi","Lead Jet #eta vs. #phi;#phi;#eta", 120,0,6.3, 40,-1.0,1.0);
-  TH2D *hSubEtaPhi = new TH2D("hSubEtaPhi","Sub Jet #eta vs. #phi;#phi;#eta", 120,0,6.3, 40,-1.0,1.0);
+  TH2D *hLeadEtaPhi = new TH2D("hLeadEtaPhi","Lead Jet #eta vs. #phi;#phi;#eta", 120,0,2*pi, 40,-1.0,1.0);
+  TH2D *hSubEtaPhi = new TH2D("hSubEtaPhi","Sub Jet #eta vs. #phi;#phi;#eta", 120,0,2*pi, 40,-1.0,1.0);
   TH2D *hPrimaryVsRho = new TH2D("hPrimaryVsRho","# Primary Tracks vs. Underlying Event;#rho (GeV);# Primary Tracks", 100,0,25, 40,0,200);
   TH2D *hGlobalVsRho = new TH2D("hGlobalVsRho","# Global Tracks vs. Underlying Event;#rho (GeV);# Global Tracks", 100,0,25, 150,0,3000 );
   TH3D *hPt_UE_RefMult = new TH3D("hPt_UE_RefMult","UE vs. Ref. Mult;Lead Jet p_{T} (GeV);Underlying Event (GeV);Ref. Mult.", 500,0,125, 50,0,25, 100,0,1000 );  
@@ -59,7 +59,7 @@ int main ( int argc, const char** argv ) {
   TH3D *hCHARGED = new TH3D("hCHARGED","CHARGED: Background Particle #eta vs. p_{T};Lead Jet p_{T}(GeV);Particle p_{T} (GeV);Particle #eta", 280,0,70, 200,0,50, 220,-1.1,1.1 );
   TH3D *hNEUTRAL = new TH3D("hNEUTRAL","NEUTRAL: Background Particle #eta vs. p_{T};Lead Jet p_{T}(GeV);Particle p_{T} (GeV);Particle #eta", 280,0,70, 200,0,50, 220,-1.1,1.1 );
   TH3D *hPartPtDEtaDPhi = new TH3D("hPartPtDEtaDPhi","Background Particle p_{T} vs. #Delta#eta vs. #Delta#phi;Particle p_{T} (GeV);#Delta#eta;#Delta#phi", 120,0,30, 80,-2.0,2.0, 120,-pi,pi );
-  TH3D *hPartPtEtaPhi = new TH3D("hPartPtEtaPhi","Background Particle p_{T} vs. #eta vs. #phi;Particle p_{T} (GeV);#eta;#phi", 120,0,30, 40,-1.0,1.0, 120,0,2*pi );
+  TH3D *hPartPtEtaPhi = new TH3D("hPartPtEtaPhi","Lead Jet p_{T} vs. #eta vs. #phi;Particle p_{T} (GeV);#eta;#phi", 120,0,30, 40,-1.0,1.0, 120,0,2*pi );
   TH3D *hAllPtEtaPhi = new TH3D("hAllPtEtaPhi","All Particles p_{T} vs. #eta vs. #phi;Particle p_{T} (GeV);#eta;#phi", 120,0,30, 40,-1.0,1.0, 120,0,2*pi );
   
   double RunID, EventID, pmin1, pmax1, pmin2, pmax2, ptSum, dPhi, dEta, partPt, partEta, partPhi, partEt, deltaPhi;
@@ -131,7 +131,7 @@ int main ( int argc, const char** argv ) {
       dPhi = chgParticles[i].delta_phi_to( rawJets[0] );
       dEta = rawJets[0].eta() - chgParticles[i].eta();
       hPartPtDEtaDPhi->Fill( chgParticles[i].pt(), dEta, dPhi );
-      hPartPtEtaPhi->Fill( chgParticles[i].pt(), chgParticles[i].eta(), chgParticles[i].phi() );
+      hPartPtEtaPhi->Fill( leadPt, chgParticles[i].eta(), chgParticles[i].phi() );
       Charge = chgParticles[i].user_index();
       hCHARGED->Fill( leadPt, chgParticles[i].pt(), chgParticles[i].eta() );
       hBG->Fill( leadPt, chgParticles[i].pt(), chgParticles[i].eta() );
