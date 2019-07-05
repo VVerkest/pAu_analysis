@@ -88,6 +88,7 @@ void dijetPlots() {
   leg3->SetNColumns(2);  leg3->AddEntry((TObject*)0,"#bf{p_{T}^{Lead} (GeV)}", "");  leg3->AddEntry((TObject*)0,"#bf{Particle} #bf{#eta}", "");
 
   c1->cd();
+  c1->SetLogy();
   TH2D *hscale5  = new TH2D( "hscale5", "Background Particle #eta by Lead Jet p_{T};#eta;", 40,-1.0,1.0, 10,0.0,1.0 );
   hscale5->SetStats(0);
   hscale5->Draw();
@@ -103,7 +104,7 @@ void dijetPlots() {
   }
   leg3->Draw();        c1->Modified();        c1->cd();        c1->SetSelected(c1);
   
-  path = "plots/" + dir + "bg_eta_byPtBin.pdf";
+  path = "plots/" + dir + "bg_eta_byPtBin_logY.pdf";
   c1->SaveAs( path ,"PDF");
   hPartPtEtaPhi->GetXaxis()->SetRangeUser( 0, 100.0 );
   
