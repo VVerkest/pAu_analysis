@@ -80,8 +80,11 @@ void dijetPlots() {
     name = "plots/" + dir + "BG_eta_phi_" + ptBinName[i] + ".pdf";
     c0->SaveAs( name ,"PDF");
   }
-  
+
   c1->cd();
+  TH2D *hscale5  = new TH2D( "hscale5", "Background Particle #eta by Lead Jet p_{T};#eta;", 40,-1.0,1.0, 10,0.2, 0.65 );
+  hscale5->SetStats(0);
+  hscale5->Draw();
   for ( int i=0; i<nPtBins; ++i ) {
     hPartPtEtaPhi->GetXaxis()->SetRangeUser( ptBinLo[i], ptBinHi[i] );
     hBGEta[i] = (TH1D*) hPartPtEtaPhi->ProjectionY();
