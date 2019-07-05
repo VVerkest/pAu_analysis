@@ -88,8 +88,8 @@ void dijetPlots() {
   for ( int i=0; i<nPtBins; ++i ) {
     hPartPtEtaPhi->GetXaxis()->SetRangeUser( ptBinLo[i], ptBinHi[i] );
     name = "BGEta_" + ptBinName[i];
-    hBGEta[i]->SetName( name );
     hBGEta[i] = (TH1D*) hPartPtEtaPhi->ProjectionY();
+    hBGEta[i]->SetName( name );
     hBGEta[i]->Scale( 1./hBGEta[i]->Integral("width") );
     hBGEta[i]->SetLineColor( color[i] );     hBGEta[i]->SetMarkerColor( color[i] );     hBGEta[i]->SetMarkerStyle( marker[i] );
     hBGEta[i]->SetStats(0);
