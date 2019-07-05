@@ -88,7 +88,7 @@ void dijetPlots() {
   leg3->SetNColumns(2);  leg3->AddEntry((TObject*)0,"#bf{p_{T}^{Lead} (GeV)}", "");  leg3->AddEntry((TObject*)0,"#bf{Particle} #bf{#eta}", "");
 
   c1->cd();
-  TH2D *hscale5  = new TH2D( "hscale5", "Background Particle #eta by Lead Jet p_{T};#eta;", 40,-1.0,1.0, 10,0.2, 0.65 );
+  TH2D *hscale5  = new TH2D( "hscale5", "Background Particle #eta by Lead Jet p_{T};#eta;", 40,-1.0,1.0, 10,0.0,1.0 );
   hscale5->SetStats(0);
   hscale5->Draw();
   for ( int i=0; i<nPtBins; ++i ) {
@@ -97,7 +97,8 @@ void dijetPlots() {
     hBGEta[i]->SetStats(0);
     hBGEta[i]->Draw("SAME");
     avg = "";     avg += hBGEta[i]->GetMean();
-    avg = avg(0,6);
+    avg = avg(0,8);
+    title = "p_{T}^{lead}: " + ptBinString[i];
     leg3->AddEntry( hBGEta[i], title, "lpf" );    leg3->AddEntry((TObject*)0,avg, "");
   }
   leg3->Draw();        c1->Modified();        c1->cd();        c1->SetSelected(c1);
