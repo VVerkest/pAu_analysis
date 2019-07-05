@@ -12,7 +12,7 @@ void dijetPlots() {
   TString dir = "HTjets/allTowers";
   // TString dir = "HTjets/towersRemoved";
   TString path = "out/" + dir + "pAu_HT_dijets.root";
-  TFile* inFile = new TFile( path.c_str() , "READ" );
+  TFile* inFile = new TFile( path , "READ" );
 
   TH3D *hVertex = (TH3D*) inFile->Get("hVertex");
   TH2D *hTowersPerRun = (TH2D*) inFile->Get("hTowersPerRun");
@@ -97,7 +97,7 @@ void dijetPlots() {
   leg3->Draw();        c1->Modified();        c1->cd();        c1->SetSelected(c1);
   
   path = "plots/" + dir + "bg_eta_byPtBin.pdf";
-  c1->SaveAs( path.c_str() ,"PDF");
+  c1->SaveAs( path ,"PDF");
   hPartPtEtaPhi->GetXaxis()->SetRangeUser( 0, 100.0 );
   
   c0->SetLogz();
@@ -108,14 +108,14 @@ void dijetPlots() {
   hPartEtaPhi->Scale(1./hPartEtaPhi->Integral("WIDTH"));
   hPartEtaPhi->Draw("COLZ");
   path = "plots/" + dir + "bg_eta_phi.pdf";
-  c1->SaveAs( path.c_str() ,"PDF");
+  c1->SaveAs( path ,"PDF");
 
   TH2D* hAllEtaPhi = (TH2D*) hAllPtEtaPhi->Project3D("ZY");
   hAllEtaPhi->SetTitle("All Particles #eta vs. #phi");
   hAllEtaPhi->Scale(1./hAllEtaPhi->Integral("WIDTH"));
   hAllEtaPhi->Draw("COLZ");
   path = "plots/" + dir + "all_eta_phi.pdf";
-  c1->SaveAs( path.c_str() ,"PDF");
+  c1->SaveAs( path ,"PDF");
  
   for ( int i=0; i<nPtBins; ++i ) {
     c0->cd();
@@ -173,7 +173,7 @@ void dijetPlots() {
     pUE_BBCE[i]->GetYaxis()->SetRangeUser(0.0,4.0);         pUE_BBCE[i]->Draw("SAME");
   }
   path = "plots/" + dir + "UE_BBCE_profile.pdf";
-  c1->SaveAs(  path.c_str() ,"PDF");          c1->Clear();
+  c1->SaveAs(  path ,"PDF");          c1->Clear();
 
 
   
@@ -183,7 +183,7 @@ void dijetPlots() {
     pUE_BBCsumE[i]->GetYaxis()->SetRangeUser(0.0,5.0);         pUE_BBCsumE[i]->Draw("SAME");
   }
   path = "plots/" + dir + "UE_BBCsumE_profile.pdf";
-  c1->SaveAs( path.c_str() ,"PDF");          c1->Clear();
+  c1->SaveAs( path ,"PDF");          c1->Clear();
 
 
   TH2D *hscale_1 = new TH2D( "hscale_1", "Underlying Event vs. BBC East Rate", 140,0,7000000, 50,0,25 );
@@ -201,7 +201,7 @@ void dijetPlots() {
   //   name = "UE_BBCE_profileX" + ptBinName[i];
   //   hUE_BBCE[i]->ProfileX(name,0,25,"S")->Draw("SAME");
   // }
-  // path = "plots/" + dir + "UE_BBCE_profileX.pdf";   c5->SaveAs( path.c_str() ,"PDF");          c5->Clear();
+  // path = "plots/" + dir + "UE_BBCE_profileX.pdf";   c5->SaveAs( path ,"PDF");          c5->Clear();
 
   // hscale_2->SetStats(0);  c6->cd();  //   hscale_2->GetYaxis()->SetRangeUser(0.0,5.0);     hscale_2->Draw();
   // for ( int i=0; i<nPtBins; ++i ) {
@@ -209,7 +209,7 @@ void dijetPlots() {
   //   name = "hUE_BBCsumE_profileX" + ptBinName[i];
   //   hUE_BBCsumE[i]->ProfileX(name,0,25,"S")->Draw("SAME");
   // }
-  // path = "plots/" + dir + "UE_BBCsumE_profileX.pdf";   c6->SaveAs( path.c_str() ,"PDF");        c6->Clear();
+  // path = "plots/" + dir + "UE_BBCsumE_profileX.pdf";   c6->SaveAs( path ,"PDF");        c6->Clear();
 
   TH2D *hscale3 = new TH2D( "hscale3", "Underlying Event vs. BBC East Rate", 50,0,25, 100,0.000001,1 );
   TH2D *hscale4 = new TH2D( "hscale4", "Underlying Event vs. BBC ADC East Sum", 50,0,25, 100,0.000001,1 );
@@ -239,7 +239,7 @@ void dijetPlots() {
   
   leg0->Draw();        c5->Modified();        c5->cd();        c5->SetSelected(c5);
   path = "plots/" + dir + "UE_BBCE_projectionY.pdf";
-  c5->SaveAs( path.c_str() ,"PDF");
+  c5->SaveAs( path ,"PDF");
 
   
   
@@ -262,7 +262,7 @@ void dijetPlots() {
   
   leg1->Draw();        c6->Modified();        c6->cd();        c6->SetSelected(c6);
   path = "plots/" + dir + "UE_BBCsumE_projectionY.pdf";
-  c6->SaveAs( path.c_str() ,"PDF");
+  c6->SaveAs( path ,"PDF");
 
 
 
@@ -299,7 +299,7 @@ void dijetPlots() {
 
   leg2->Draw();  c3->Modified();  c3->cd();  c3->SetSelected(c3);
   path = "plots/" + dir + "RhoByLeadPt.pdf";
-  c3->SaveAs( path.c_str() , "PDF");
+  c3->SaveAs( path , "PDF");
 
 
 
@@ -310,12 +310,12 @@ void dijetPlots() {
   hLeadEtaPhi->Scale( 1./hLeadEtaPhi->Integral("width") );
   hLeadEtaPhi->Draw("COLZ");
   path = "plots/" + dir + "LeadEtaPhi.pdf";
-  c4->SaveAs( path.c_str() ,"PDF");
+  c4->SaveAs( path ,"PDF");
 
   hSubEtaPhi->Scale( 1./hSubEtaPhi->Integral("width") );
   hSubEtaPhi->Draw("COLZ");
   path = "plots/" + dir + "SubEtaPhi.pdf";
-  c4->SaveAs( path.c_str() ,"PDF");
+  c4->SaveAs( path ,"PDF");
 
   c4->SetLogz();
   hTowersVsRho->Scale( 1./hTowersVsRho->Integral("width") );
@@ -326,20 +326,20 @@ void dijetPlots() {
   hTowersVsRho->SetLineColor(kRed);
   hTowersVsRho->ProfileX("",1,-1,"S")->Draw("SAME");
   path = "plots/" + dir + "TowersVsRho.pdf";
-  c4->SaveAs( path.c_str() ,"PDF");
+  c4->SaveAs( path ,"PDF");
   c4->Clear();
   
   hPrimaryVsGlobal->Scale( 1./hPrimaryVsGlobal->Integral("width") );
   hPrimaryVsGlobal->Draw("COLZ");
   path = "plots/" + dir + "PrimaryVsGlobal.pdf";
-  c4->SaveAs( path.c_str() ,"PDF");
+  c4->SaveAs( path ,"PDF");
 
   hPrimaryVsBBCsumE->Scale( 1./hPrimaryVsBBCsumE->Integral("width") );
   hPrimaryVsBBCsumE->Draw("COLZ");
   hPrimaryVsBBCsumE->SetLineColor(kRed);
   hPrimaryVsBBCsumE->ProfileX("",1,-1,"S")->Draw("SAME");
   path = "plots/" + dir + "PrimaryVsBBCsumE.pdf";
-  c4->SaveAs( path.c_str() ,"PDF");
+  c4->SaveAs( path ,"PDF");
 
   hTowersVsBBCsumE->GetXaxis()->SetRangeUser( 0,80000 );  
   hTowersVsBBCsumE->GetYaxis()->SetRangeUser( 0,200 );  
@@ -348,7 +348,7 @@ void dijetPlots() {
   hTowersVsBBCsumE->SetLineColor(kRed);
   hTowersVsBBCsumE->ProfileX("",0,80000,"S")->Draw("SAME");
   path = "plots/" + dir + "hTowersVsBBCsumE.pdf";
-  c4->SaveAs( path.c_str() ,"PDF");
+  c4->SaveAs( path ,"PDF");
 
   
   inFile->Close();
