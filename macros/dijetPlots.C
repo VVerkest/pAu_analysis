@@ -76,15 +76,16 @@ void dijetPlots() {
     name = "plots/" + dir + "BG_eta_phi_" + ptBinName[i] + ".pdf";
     c0->SaveAs( name ,"PDF");
     name = "BGEta_" + ptBinName[i];
+    title = "p_{T}^{lead}: " + ptBinString[i];
     hBGEta[i] = (TH1D*) hPartPtEtaPhi->ProjectionY();
-    hBGEta[i]->SetName( name );
+    hBGEta[i]->SetNameTitle( name, title );
   }
 
   TCanvas * c1 = new TCanvas( "c1" , "" ,0 ,23 ,1280 ,700 );              // CANVAS
 
   TLegend *leg3 = new TLegend(0.65, 0.65, 0.9, 0.9,NULL,"brNDC");    // LEGEND
   leg3->SetBorderSize(1);   leg3->SetLineColor(1);   leg3->SetLineStyle(1);   leg3->SetLineWidth(1);   leg3->SetFillColor(0);   leg3->SetFillStyle(1001);
-  leg3->SetNColumns(2);  leg3->AddEntry((TObject*)0,"#bf{p_{T}^{Lead} (GeV)}", "");  leg3->AddEntry((TObject*)0,"#bf{Particle #eta}", "");
+  leg3->SetNColumns(2);  leg3->AddEntry((TObject*)0,"#bf{p_{T}^{Lead} (GeV)}", "");  leg3->AddEntry((TObject*)0,"#bf{Particle} #bf{#eta}", "");
 
   c1->cd();
   TH2D *hscale5  = new TH2D( "hscale5", "Background Particle #eta by Lead Jet p_{T};#eta;", 40,-1.0,1.0, 10,0.2, 0.65 );
