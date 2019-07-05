@@ -63,23 +63,23 @@ void dijetPlots() {
   TH1D* hBGEta[nPtBins];
 
 
-  // //     UNDER CONSTRUCTION
-  // for ( int i=0; i<nPtBins; ++i ) {
-  //   c0->cd();
-  //   hPartPtEtaPhi->GetXaxis()->SetRangeUser( ptBinLo[i], ptBinHi[i] );
-  //   hBGEtaPhi[i] = (TH2D*) hPartPtEtaPhi->Project3D("YZ");
-  //   name = "BGEtaPhi_" + ptBinName[i];
-  //   title = "p_{T}^{lead}: " + ptBinString[i];
-  //   hBGEtaPhi[i]->SetNameTitle( name, title );
-  //   hBGEtaPhi[i]->Scale(1./hBGEtaPhi[i]->Integral("width"));
-  //   hBGEtaPhi[i]->Draw("COLZ");
-  //   name = "plots/" + dir + "BG_eta_phi_" + ptBinName[i] + ".pdf";
-  //   c0->SaveAs( name ,"PDF");
-  //   name = "BGEta_" + ptBinName[i];
-  //   title = "p_{T}^{lead}: " + ptBinString[i];
-  //   hBGEta[i] = (TH1D*) hBGEtaPhi[i]->ProjectionX();
-  //   hBGEta[i]->SetNameTitle( name, title );
-  // }
+  //     UNDER CONSTRUCTION
+  for ( int i=0; i<nPtBins; ++i ) {
+    c0->cd();
+    hPartPtEtaPhi->GetXaxis()->SetRangeUser( ptBinLo[i], ptBinHi[i] );
+    hBGEtaPhi[i] = (TH2D*) hPartPtEtaPhi->Project3D("YZ");
+    name = "BGEtaPhi_" + ptBinName[i];
+    title = "p_{T}^{lead}: " + ptBinString[i];
+    hBGEtaPhi[i]->SetNameTitle( name, title );
+    hBGEtaPhi[i]->Scale(1./hBGEtaPhi[i]->Integral("width"));
+    hBGEtaPhi[i]->Draw("COLZ");
+    name = "plots/" + dir + "BG_eta_phi_" + ptBinName[i] + ".pdf";
+    c0->SaveAs( name ,"PDF");
+    name = "BGEta_" + ptBinName[i];
+    title = "p_{T}^{lead}: " + ptBinString[i];
+    hBGEta[i] = (TH1D*) hBGEtaPhi[i]->ProjectionX();
+    hBGEta[i]->SetNameTitle( name, title );
+  }
 
   TCanvas * c1 = new TCanvas( "c1" , "" ,0 ,23 ,1280 ,700 );              // CANVAS
 
