@@ -77,7 +77,7 @@ void dijetPlots() {
     c0->SaveAs( name ,"PDF");
     name = "BGEta_" + ptBinName[i];
     title = "p_{T}^{lead}: " + ptBinString[i];
-    hBGEta[i] = (TH1D*) hBGEtaPhi[i]->ProjectionX();
+    hBGEta[i] = (TH1D*) hBGEtaPhi[i]->ProjectionY();
     hBGEta[i]->SetNameTitle( name, title );
   }
 
