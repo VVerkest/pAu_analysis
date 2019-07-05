@@ -92,7 +92,7 @@ void dijetPlots() {
   hscale5->SetStats(0);
   hscale5->Draw();
   for ( int i=0; i<nPtBins; ++i ) {
-    //hBGEta[i]->Scale( 1./hBGEta[i]->Integral("width") );
+    hBGEta[i]->Scale( 1./hBGEta[i]->Integral("width") );
     hBGEta[i]->SetLineColor( color[i] );     hBGEta[i]->SetMarkerColor( color[i] );     hBGEta[i]->SetMarkerStyle( marker[i] );
     hBGEta[i]->SetStats(0);
     hBGEta[i]->Draw("SAME");
