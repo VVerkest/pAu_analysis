@@ -81,17 +81,15 @@ void dijetPlots() {
     c0->SaveAs( name ,"PDF");
   }
   
+  c1->cd();
   for ( int i=0; i<nPtBins; ++i ) {
-    c1->cd();
     hPartPtEtaPhi->GetXaxis()->SetRangeUser( ptBinLo[i], ptBinHi[i] );
     hBGEta[i] = (TH1D*) hPartPtEtaPhi->ProjectionY();
-    hBGEta[i]->SetLineColor( color[i] );
-    hBGEta[i]->SetMarkerColor( color[i] );
-    hBGEta[i]->SetMarkerStyle( marker[i] );
     hBGEta[i]->Scale( 1./hBGEta[i]->Integral("width") );
+    hBGEta[i]->SetLineColor( color[i] );     hBGEta[i]->SetMarkerColor( color[i] );     hBGEta[i]->SetMarkerStyle( marker[i] );
     hBGEta[i]->SetStats(0);
     hBGEta[i]->Draw("SAME");
-    avg = hBGEta[i]->GetMean();
+    avg = "";     avg += hBGEta[i]->GetMean();
     avg = avg(0,6);
     leg3->AddEntry( hBGEta[i], title, "lpf" );    leg3->AddEntry((TObject*)0,avg, "");
   }
