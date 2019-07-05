@@ -89,7 +89,7 @@ void dijetPlots() {
 
   c1->cd();
   c1->SetLogy();
-  TH2D *hscale5  = new TH2D( "hscale5", "Background Particle #eta by Lead Jet p_{T};#eta;", 40,-1.0,1.0, 10,0.0,1.0 );
+  TH2D *hscale5  = new TH2D( "hscale5", "Background Particle #eta by Lead Jet p_{T};#eta;", 40,-1.0,1.0, 10,0.2,1.0 );
   hscale5->SetStats(0);
   hscale5->Draw();
   for ( int i=0; i<nPtBins; ++i ) {
@@ -106,8 +106,14 @@ void dijetPlots() {
   
   path = "plots/" + dir + "bg_eta_byPtBin_logY.pdf";
   c1->SaveAs( path ,"PDF");
+
+  c1->SetLogy(0);
+  path = "plots/" + dir + "bg_eta_byPtBin.pdf";
+  c1->SaveAs( path ,"PDF");
+
+
   hPartPtEtaPhi->GetXaxis()->SetRangeUser( 0, 100.0 );
-  
+
   c0->SetLogz();
   c1->SetLogz();
 
