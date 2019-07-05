@@ -86,14 +86,11 @@ int main ( int argc, const char** argv ) {
 
     rawParticles.clear();     rawJets.clear();     nCons.clear();     towID.clear();     Charge.clear();     towEt.clear();     towEta.clear();     towPhi.clear();
     trEta.clear();     trPhi.clear();     trPz.clear();     trPt.clear();     jetPt.clear();     jetEta.clear();     jetPhi.clear();     jetEt.clear();     DCA.clear();
-    chgParticles.clear();      neuParticles.clear();
-    nHitsPoss.clear();     nHitsFit.clear();        //  clear vectors
+    chgParticles.clear();      neuParticles.clear();     nHitsPoss.clear();     nHitsFit.clear();        //  clear vectors
 
     Reader.PrintStatus(5);
 
-    event = Reader.GetEvent();
-    header = event->GetHeader();
-    container = Reader.GetOutputContainer();
+    event = Reader.GetEvent();    header = event->GetHeader();    container = Reader.GetOutputContainer();
     
     if (header->GetRunId() >= 16142059 && header->GetRunId() <= 16149001) { continue; }    //TEMPORARILY SKIPPING THESE RUNS
     if (header->GetRunId() == 16135031 || header->GetRunId() == 16135032) { continue; }
