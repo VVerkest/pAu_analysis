@@ -65,7 +65,7 @@ void dijetPlots() {
 
   TLegend *leg3 = new TLegend(0.65, 0.65, 0.9, 0.9,NULL,"brNDC");    // LEGEND
   leg3->SetBorderSize(1);   leg3->SetLineColor(1);   leg3->SetLineStyle(1);   leg3->SetLineWidth(1);   leg3->SetFillColor(0);   leg3->SetFillStyle(1001);
-  leg3->SetNColumns(2);  leg3->AddEntry((TObject*)0,"#bf{p_{T}^{Lead} (GeV)}", "");  leg3->AddEntry((TObject*)0,"#bf{Background Particle #eta}", "");
+  leg3->SetNColumns(2);  leg3->AddEntry((TObject*)0,"#bf{p_{T}^{Lead} (GeV)}", "");  leg3->AddEntry((TObject*)0,"#bf{Particle #eta}", "");
 
   //     UNDER CONSTRUCTION
   for ( int i=0; i<nPtBins; ++i ) {
@@ -79,8 +79,11 @@ void dijetPlots() {
     hBGEtaPhi[i]->Draw("COLZ");
     name = "plots/" + dir + "BG_eta_phi_" + ptBinName[i] + ".pdf";
     c0->SaveAs( name ,"PDF");
-
+  }
+  
+  for ( int i=0; i<nPtBins; ++i ) {
     c1->cd();
+    hPartPtEtaPhi->GetXaxis()->SetRangeUser( ptBinLo[i], ptBinHi[i] );
     hBGEta[i] = (TH1D*) hPartPtEtaPhi->ProjectionY();
     hBGEta[i]->SetLineColor( color[i] );
     hBGEta[i]->SetMarkerColor( color[i] );
@@ -88,11 +91,9 @@ void dijetPlots() {
     hBGEta[i]->Scale( 1./hBGEta[i]->Integral("width") );
     hBGEta[i]->SetStats(0);
     hBGEta[i]->Draw("SAME");
-    avg = hBGEta[i]->GetMean(1);
+    avg = hBGEta[i]->GetMean();
     avg = avg(0,6);
     leg3->AddEntry( hBGEta[i], title, lpf );    leg3->AddEntry((TObject*)0,avg, "");
-
-    
   }
   leg3->Draw();        c1->Modified();        c1->cd();        c1->SetSelected(c1);
   
