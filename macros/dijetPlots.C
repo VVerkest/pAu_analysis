@@ -93,7 +93,7 @@ void dijetPlots() {
     hBGEta[i]->Draw("SAME");
     avg = hBGEta[i]->GetMean();
     avg = avg(0,6);
-    leg3->AddEntry( hBGEta[i], title, lpf );    leg3->AddEntry((TObject*)0,avg, "");
+    leg3->AddEntry( hBGEta[i], title, "lpf" );    leg3->AddEntry((TObject*)0,avg, "");
   }
   leg3->Draw();        c1->Modified();        c1->cd();        c1->SetSelected(c1);
   
