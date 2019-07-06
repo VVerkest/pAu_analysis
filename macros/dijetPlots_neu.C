@@ -238,47 +238,12 @@ TCanvas * c0 = new TCanvas( "c0" , "" ,0 ,23 ,1280 ,700 );              // CANVA
   leg0->SetNColumns(2);  leg0->AddEntry((TObject*)0,"#bf{p_{T}^{Lead} (GeV)}", "");  leg0->AddEntry((TObject*)0,"#bf{<#rho> (GeV)}", "");
   
   c5->SetLogy();  c5->cd();  c5->Clear();  hscale3->GetYaxis()->SetRangeUser(0,1);  // hscale3->GetXaxis()->SetRangeUser(0,5);
-  hscale3->Draw();
-  for ( int i=0; i<nPtBins; ++i ) {
-    hUE_BBCE_py[i] = hUE_BBCE[i]->ProjectionY();        hUE_BBCE_py[i]->Scale(1.0/hUE_BBCE_py[i]->Integral("width"));
-    hUE_BBCE_py[i]->SetStats(0);    hUE_BBCE_py[i]->SetLineColor( color[i] );    hUE_BBCE_py[i]->SetMarkerStyle( marker[i] );    hUE_BBCE_py[i]->SetMarkerColor( color[i] );
-    hUE_BBCE_py[i]->Draw("Same");
-    
-    avg = "";    avg += hUE_BBCE_py[i]->GetMean();    // name = "UEvsBBCE" + ptBinName[i];
-    avg = avg(0,6);
-    title = ptBinString[i];
-    leg0->AddEntry( hUE_BBCE_py[i], title, lpf );    leg0->AddEntry((TObject*)0,avg, "");    lpf += "lpf";
-  }
-  
-  leg0->Draw();        c5->Modified();        c5->cd();        c5->SetSelected(c5);
-  path = "plots/" + dir + "UE_BBCE_projectionY.pdf";
-  c5->SaveAs( path ,"PDF");
-
-  
   
   TLegend *leg1 = new TLegend(0.65, 0.65, 0.9, 0.9,NULL,"brNDC");    // LEGEND
   leg1->SetBorderSize(1);   leg1->SetLineColor(1);   leg1->SetLineStyle(1);   leg1->SetLineWidth(1);   leg1->SetFillColor(0);   leg1->SetFillStyle(1001);
   leg1->SetNColumns(2);  leg1->AddEntry((TObject*)0,"#bf{p_{T}^{Lead} (GeV)}", "");  leg1->AddEntry((TObject*)0,"#bf{<#rho> (GeV)}", "");
   
   c6->SetLogy();  c6->cd();  c6->Clear();  hscale4->GetYaxis()->SetRangeUser(0,1);  // hscale4->GetXaxis()->SetRangeUser(0.0,5.0);
-  hscale4->Draw();
-  for ( int i=0; i<nPtBins; ++i ) {
-    hUE_BBCsumE_py[i] = hUE_BBCsumE[i]->ProjectionY();                hUE_BBCsumE_py[i]->Scale(1.0/hUE_BBCsumE_py[i]->Integral("width"));
-    hUE_BBCsumE_py[i]->SetStats(0);    hUE_BBCsumE_py[i]->SetLineColor( color[i] );    hUE_BBCsumE_py[i]->SetMarkerStyle( marker[i] );    hUE_BBCsumE_py[i]->SetMarkerColor( color[i] );
-    hUE_BBCsumE_py[i]->Draw("Same");
-
-    avg = "";    avg += hUE_BBCsumE_py[i]->GetMean();
-    avg = avg(0,6);
-    title = ptBinString[i];
-    leg1->AddEntry( hUE_BBCsumE_py[i], title, lpf );    leg1->AddEntry((TObject*)0,avg, "");    lpf += "lpf";
-  }
-  
-  leg1->Draw();        c6->Modified();        c6->cd();        c6->SetSelected(c6);
-  path = "plots/" + dir + "UE_BBCsumE_projectionY.pdf";
-  c6->SaveAs( path ,"PDF");
-
-
-
   
   hLeadPtVsRho->GetXaxis()->SetRange(1,100);
 
