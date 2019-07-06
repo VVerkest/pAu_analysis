@@ -80,7 +80,7 @@ void dijetPlots() {
     hBGEta[i] = (TH1D*) hBGEtaPhi[i]->ProjectionY();
     hBGEta[i]->SetNameTitle( name, title );
   }
-  /*
+
   TCanvas * c1 = new TCanvas( "c1" , "" ,0 ,23 ,1280 ,700 );              // CANVAS
 
   TLegend *leg3 = new TLegend(0.65, 0.65, 0.9, 0.9,NULL,"brNDC");    // LEGEND
@@ -363,7 +363,7 @@ void dijetPlots() {
   hTowersVsBBCsumE->ProfileX("",0,80000,"S")->Draw("SAME");
   path = "plots/" + dir + "hTowersVsBBCsumE.pdf";
   c4->SaveAs( path ,"PDF");
-  */
+
   
   inFile->Close();
 
