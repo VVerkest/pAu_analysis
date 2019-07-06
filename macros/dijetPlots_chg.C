@@ -9,8 +9,8 @@ void dijetPlots_chg() {
   double scale;
   TH1::SetDefaultSumw2();  TH2::SetDefaultSumw2();  TH3::SetDefaultSumw2();
 
-  TString dir = "HTjets/allTowers/chg/";
-  // TString dir = "HTjets/towersRemoved/chg/";
+  // TString dir = "HTjets/allTowers/chg/";
+  TString dir = "HTjets/towersRemoved/chg/";
   TString path = "out/" + dir + "pAu_HT_dijets_CHG.root";
   TFile* inFile = new TFile( path, "READ" );
   
