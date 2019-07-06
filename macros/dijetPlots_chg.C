@@ -9,8 +9,8 @@ void dijetPlots_chg() {
   double scale;
   TH1::SetDefaultSumw2();  TH2::SetDefaultSumw2();  TH3::SetDefaultSumw2();
 
-  TString dir = "HTjets/allTowers/";
-  // TString dir = "HTjets/towersRemoved";
+  TString dir = "HTjets/allTowers/chg/";
+  // TString dir = "HTjets/towersRemoved/chg/";
   TString path = "out/" + dir + "pAu_HT_dijets_CHG.root";
   TFile* inFile = new TFile( path, "READ" );
   
@@ -37,8 +37,8 @@ void dijetPlots_chg() {
   TH3D *hAllPtEtaPhi = (TH3D*) inFile->Get("hAllPtEtaPhi");
   
   hPt_UE_BBCsumE->GetZaxis()->SetRangeUser( 0.0, 80000.0 );
-  hPt_UE_BBCsumE->GetYaxis()->SetRangeUser( 0.0,10 );
-  hPt_UE_BBCE->GetYaxis()->SetRangeUser( 0.0,10 );
+  // hPt_UE_BBCsumE->GetYaxis()->SetRangeUser( 0.0,10 );
+  // hPt_UE_BBCE->GetYaxis()->SetRangeUser( 0.0,10 );
   
   TH2D *hscale0 = new TH2D( "hscale0", "Underlying Event by Lead Jet p_{T};#rho (GeV);", 50,0,25, 10,0.000001, 1.0 );
   TH2D *hscale1 = new TH2D( "hscale1", "Underlying Event vs. BBC East Rate", 140,0,7000000, 20,0,10 );
