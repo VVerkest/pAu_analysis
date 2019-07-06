@@ -55,7 +55,7 @@ int main ( int argc, const char** argv ) {
   TH3D *hPt_UE_BBCsumE = new TH3D("hPt_UE_BBCsumE","UE vs. BBC ADC East Sum;Lead Jet p_{T} (GeV);Underlying Event (GeV);BBC ADC East Sum", 500,0,125, 50,0,25, 160,0,80000 );
   TH2D *hTowersVsRho = new TH2D("hTowersVsRho","# of Towers vs. UE;#rho (GeV);# of Towers", 100,0,25, 140,0,700 );
   TH2D *hLeadPtVsRho = new TH2D("hLeadPtVsRho","Lead Jet p_{T} vs UE;#rho (GeV);p_{T}^{lead} (GeV)", 140,0,35, 280,0,70);
-  TH3D *hBG = new TH3D("hBG","Background Particle #eta-#phi vs. p_{T};Lead Jet p_{T}(GeV);Particle #eta;Particle #phi", 280,0,70, 220,-1.1,1.1, 120,0,2*pi );
+  TH3D *hBG = new TH3D("hBG","Background Particle #eta-#phi vs. p_{T};Lead Jet p_{T}(GeV);Particle #eta;Particle #phi", 280,0,70, 40,-1,1, 120,0,2*pi );
   TH3D *hCHARGED = new TH3D("hCHARGED","CHARGED: Background Particle #eta vs. p_{T};Lead Jet p_{T}(GeV);Particle p_{T} (GeV);Particle #eta", 280,0,70, 200,0,50, 220,-1.1,1.1 );
   TH3D *hNEUTRAL = new TH3D("hNEUTRAL","NEUTRAL: Background Particle #eta vs. p_{T};Lead Jet p_{T}(GeV);Particle p_{T} (GeV);Particle #eta", 280,0,70, 200,0,50, 220,-1.1,1.1 );
   TH3D *hPartPtDEtaDPhi = new TH3D("hPartPtDEtaDPhi","Background Particle p_{T} vs. #Delta#eta vs. #Delta#phi;Particle p_{T} (GeV);#Delta#eta;#Delta#phi", 120,0,30, 80,-2.0,2.0, 120,-pi,pi );
@@ -134,7 +134,7 @@ int main ( int argc, const char** argv ) {
       hPartPtEtaPhi->Fill( leadPt, chgParticles[i].eta(), chgParticles[i].phi() );
       Charge = chgParticles[i].user_index();
       hCHARGED->Fill( leadPt, chgParticles[i].pt(), chgParticles[i].eta() );
-      hBG->Fill( leadPt, chgParticles[i].pt(), chgParticles[i].eta() );
+      hBG->Fill( leadPt, chgParticles[i].eta(), chgParticles[i].phi() );
       chgPtSum+=chgParticles[i].pt();
       ptSum+=chgParticles[i].pt();
     }
@@ -152,7 +152,7 @@ int main ( int argc, const char** argv ) {
       hPartPtEtaPhi->Fill( neuParticles[i].pt(), neuParticles[i].eta(), neuParticles[i].phi() );
       Charge = neuParticles[i].user_index();
       hNEUTRAL->Fill( leadPt, neuParticles[i].pt(), neuParticles[i].eta() );
-      hBG->Fill( leadPt, neuParticles[i].pt(), neuParticles[i].eta() );
+      hBG->Fill( leadPt, neuParticles[i].eta(), neuParticles[i].phi() );
       neuPtSum+=neuParticles[i].pt();
       ptSum+=neuParticles[i].pt();
     }
