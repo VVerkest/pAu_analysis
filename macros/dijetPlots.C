@@ -67,7 +67,7 @@ void dijetPlots() {
   c0->SetLogz();
   for ( int i=0; i<nPtBins; ++i ) {
     c0->cd();
-    hPartPtEtaPhi->GetXaxis()->SetRangeUser( ptBinLo[i], ptBinHi[i] );
+    hBG->GetXaxis()->SetRangeUser( ptBinLo[i], ptBinHi[i] );
     hBGEtaPhi[i] = (TH2D*) hBG->Project3D("YZ");
     name = "BGEtaPhi_" + ptBinName[i];
     title = "p_{T}^{lead}: " + ptBinString[i];
@@ -113,7 +113,7 @@ void dijetPlots() {
   c1->SaveAs( path ,"PDF");
 
 
-  hPartPtEtaPhi->GetXaxis()->SetRangeUser( 0, 100.0 );
+  hBG->GetXaxis()->SetRangeUser( 0, 100.0 );
 
   c0->SetLogz();
   c1->SetLogz();
