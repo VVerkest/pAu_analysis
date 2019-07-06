@@ -63,7 +63,7 @@ TCanvas * c0 = new TCanvas( "c0" , "" ,0 ,23 ,1280 ,700 );              // CANVA
   TH1D* hBGEta[nPtBins];
 
 
-  //     UNDER CONSTRUCTION
+  c0->SetLogz();
   for ( int i=0; i<nPtBins; ++i ) {
     c0->cd();
     hPartPtEtaPhi->GetXaxis()->SetRangeUser( ptBinLo[i], ptBinHi[i] );
