@@ -35,6 +35,7 @@ void dijetPlots() {
   TH2D *hLeadPtVsRho = (TH2D*) inFile->Get("hLeadPtVsRho");
   TH3D *hPartPtEtaPhi = (TH3D*) inFile->Get("hPartPtEtaPhi");
   TH3D *hAllPtEtaPhi = (TH3D*) inFile->Get("hAllPtEtaPhi");
+  TH3D *hBG = (TH3D*) inFile->Get("hBG");
 
   hPt_UE_BBCsumE->GetZaxis()->SetRangeUser( 0.0, 80000.0 );
   // hPt_UE_BBCsumE->GetYaxis()->SetRangeUser( 0.0,10 );
@@ -67,7 +68,7 @@ void dijetPlots() {
   for ( int i=0; i<nPtBins; ++i ) {
     c0->cd();
     hPartPtEtaPhi->GetXaxis()->SetRangeUser( ptBinLo[i], ptBinHi[i] );
-    hBGEtaPhi[i] = (TH2D*) hPartPtEtaPhi->Project3D("YZ");
+    hBGEtaPhi[i] = (TH2D*) hBG->Project3D("YZ");
     name = "BGEtaPhi_" + ptBinName[i];
     title = "p_{T}^{lead}: " + ptBinString[i];
     hBGEtaPhi[i]->SetNameTitle( name, title );

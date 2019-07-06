@@ -9,8 +9,8 @@ void dijetPlots_neu() {
   double scale;
   TH1::SetDefaultSumw2();  TH2::SetDefaultSumw2();  TH3::SetDefaultSumw2();
 
-  TString dir = "HTjets/allTowers/neu/";
-  // TString dir = "HTjets/towersRemoved/neu/";
+  //TString dir = "HTjets/allTowers/neu/";
+  TString dir = "HTjets/towersRemoved/neu/";
   TString path = "out/" + dir + "pAu_HT_dijets_NEU.root";
   TFile* inFile = new TFile( path, "READ" );
 
@@ -35,7 +35,8 @@ void dijetPlots_neu() {
   TH2D *hLeadPtVsRho = (TH2D*) inFile->Get("hLeadPtVsRho");
   TH3D *hPartPtEtaPhi = (TH3D*) inFile->Get("hPartPtEtaPhi");
   TH3D *hAllPtEtaPhi = (TH3D*) inFile->Get("hAllPtEtaPhi");
-  
+  TH3D *hBG = (TH3D*) inFile->Get("hBG");
+
   hPt_UE_BBCsumE->GetZaxis()->SetRangeUser( 0.0, 80000.0 );
   // hPt_UE_BBCsumE->GetYaxis()->SetRangeUser( 0.0,10 );
   // hPt_UE_BBCE->GetYaxis()->SetRangeUser( 0.0,10 );
@@ -66,7 +67,7 @@ TCanvas * c0 = new TCanvas( "c0" , "" ,0 ,23 ,1280 ,700 );              // CANVA
   for ( int i=0; i<nPtBins; ++i ) {
     c0->cd();
     hPartPtEtaPhi->GetXaxis()->SetRangeUser( ptBinLo[i], ptBinHi[i] );
-    hBGEtaPhi[i] = (TH2D*) hPartPtEtaPhi->Project3D("YZ");
+    hBGEtaPhi[i] = (TH2D*) hBG->Project3D("YZ");
     name = "BGEtaPhi_" + ptBinName[i];
     title = "p_{T}^{lead}: " + ptBinString[i];
     hBGEtaPhi[i]->SetNameTitle( name, title );
