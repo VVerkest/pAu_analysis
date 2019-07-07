@@ -192,7 +192,7 @@ void dijetPlots() {
     pUE_BBCE[i]->SetLineColor( color[i] );    pUE_BBCE[i]->SetMarkerStyle( marker[i] );    pUE_BBCE[i]->SetMarkerColor( color[i] );    
     pUE_BBCE[i]->GetYaxis()->SetRangeUser(0.0,4.0);         pUE_BBCE[i]->Draw("SAME");
     title = "p_{T}^{lead}: " + ptBinString[i];
-    avg = "";    avg += hUE_BBCE[i]->GetMean(2);    avg = avg(0,8);
+    avg = "";    avg += hUE_BBCE[i]->GetMean(2);    avg = avg(0,6);
     leg4->AddEntry( pUE_BBCE[i], title, "lpf" );    leg4->AddEntry((TObject*)0,avg, "");
   }
   leg4->Draw();        c1->Modified();        c1->cd();        c1->SetSelected(c1);
