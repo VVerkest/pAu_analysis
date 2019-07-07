@@ -118,14 +118,14 @@ void dijetPlots() {
   c0->SetLogz();
   c1->SetLogz();
 
-  TH2D* hPartEtaPhi = (TH2D*) hPartPtEtaPhi->Project3D("ZY");
+  TH2D* hPartEtaPhi = (TH2D*) hPartPtEtaPhi->Project3D("YZ");
   hPartEtaPhi->SetTitle("All BG Particles #eta vs. #phi");
   hPartEtaPhi->Scale(1./hPartEtaPhi->Integral("WIDTH"));
   hPartEtaPhi->Draw("COLZ");
   path = "plots/" + dir + "bg_eta_phi.pdf";
   c1->SaveAs( path ,"PDF");
 
-  TH2D* hAllEtaPhi = (TH2D*) hAllPtEtaPhi->Project3D("ZY");
+  TH2D* hAllEtaPhi = (TH2D*) hAllPtEtaPhi->Project3D("YZ");
   hAllEtaPhi->SetTitle("All Particles #eta vs. #phi");
   hAllEtaPhi->Scale(1./hAllEtaPhi->Integral("WIDTH"));
   hAllEtaPhi->Draw("COLZ");
