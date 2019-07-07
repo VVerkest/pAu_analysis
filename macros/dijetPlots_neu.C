@@ -10,6 +10,7 @@ void dijetPlots_neu() {
   TH1::SetDefaultSumw2();  TH2::SetDefaultSumw2();  TH3::SetDefaultSumw2();
 
   //TString dir = "HTjets/allTowers/neu/";
+  //TString dir = "HTjets/good/neu/";
   TString dir = "HTjets/towersRemoved/neu/";
   TString path = "out/" + dir + "pAu_HT_dijets_NEU.root";
   TFile* inFile = new TFile( path, "READ" );
@@ -72,7 +73,6 @@ TCanvas * c0 = new TCanvas( "c0" , "" ,0 ,23 ,1280 ,700 );              // CANVA
     title = "p_{T}^{lead}: " + ptBinString[i];
     hBGEtaPhi[i]->SetNameTitle( name, title );
     hBGEtaPhi[i]->Scale(1./hBGEtaPhi[i]->Integral("width"));
-    hBGEtaPhi[i]->GetZaxis()->SetRangeUser(0.000001,1);
     hBGEtaPhi[i]->Draw("COLZ");
     name = "plots/" + dir + "BG_eta_phi_" + ptBinName[i] + ".pdf";
     c0->SaveAs( name ,"PDF");
@@ -121,6 +121,7 @@ TCanvas * c0 = new TCanvas( "c0" , "" ,0 ,23 ,1280 ,700 );              // CANVA
   TH2D* hPartEtaPhi = (TH2D*) hPartPtEtaPhi->Project3D("YZ");
   hPartEtaPhi->SetTitle("Neutral BG Particles #eta vs. #phi");
   hPartEtaPhi->Scale(1./hPartEtaPhi->Integral("WIDTH"));
+  hPartEtaPhi->GetZaxis()->SetRangeUser(0.000001,1);
   hPartEtaPhi->Draw("COLZ");
   path = "plots/" + dir + "bg_eta_phi.pdf";
   c1->SaveAs( path ,"PDF");
@@ -128,6 +129,7 @@ TCanvas * c0 = new TCanvas( "c0" , "" ,0 ,23 ,1280 ,700 );              // CANVA
   TH2D* hAllEtaPhi = (TH2D*) hAllPtEtaPhi->Project3D("YZ");
   hAllEtaPhi->SetTitle("All Particles #eta vs. #phi");
   hAllEtaPhi->Scale(1./hAllEtaPhi->Integral("WIDTH"));
+  hAllEtaPhi->GetZaxis()->SetRangeUser(0.000001,1);
   hAllEtaPhi->Draw("COLZ");
   path = "plots/" + dir + "all_eta_phi.pdf";
   c1->SaveAs( path ,"PDF");
