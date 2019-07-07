@@ -41,9 +41,9 @@ void dijetPlots_chg() {
   // hPt_UE_BBCsumE->GetYaxis()->SetRangeUser( 0.0,10 );
   // hPt_UE_BBCE->GetYaxis()->SetRangeUser( 0.0,10 );
   
-  TH2D *hscale0 = new TH2D( "hscale0", "Underlying Event by Lead Jet p_{T};#rho (GeV);", 50,0,25, 10,0.000001, 1.0 );
-  TH2D *hscale1 = new TH2D( "hscale1", "Underlying Event vs. BBC East Rate", 140,0,7000000, 20,0,10 );
-  TH2D *hscale2 = new TH2D( "hscale2", "Underlying Event vs. BBC ADC East Sum", 150,0,100000, 20,0,10 );
+  TH2D *hscale0 = new TH2D( "hscale0", "Charged Underlying Event by Lead Jet p_{T};#rho (GeV);", 50,0,25, 10,0.000001, 1.0 );
+  TH2D *hscale1 = new TH2D( "hscale1", "Charged Underlying Event vs. BBC East Rate", 140,0,7000000, 20,0,10 );
+  TH2D *hscale2 = new TH2D( "hscale2", "Charged Underlying Event vs. BBC ADC East Sum", 150,0,100000, 20,0,10 );
 
   hscale0->SetStats(0);  hscale1->SetStats(0);  hscale2->SetStats(0);  
   const int nPtBins = 5;
@@ -54,7 +54,7 @@ void dijetPlots_chg() {
   double ptBinHi[nPtBins] = { 15.0, 20.0, 30.0, 40.0, 100.0 };
   TString ptBinString[nPtBins] = { "10-15 GeV", "15-20 GeV",  "20-30 GeV", "30-40 GeV", ">40 GeV" };
   TString ptBinName[nPtBins] = { "_10_15", "_15_20", "_20_30", "_30_40", "_40" };
-  int color[nPtBins] = { 633, 613, 596, 414, 797 };
+  int color[nPtBins] = { 896, 796, 835, 856, 879 };
   int marker[nPtBins] = { 33, 34, 22, 21, 20 };
   TString name, title;
 
@@ -90,7 +90,7 @@ TCanvas * c0 = new TCanvas( "c0" , "" ,0 ,23 ,1280 ,700 );              // CANVA
 
   c1->cd();
   c1->SetLogy();
-  TH2D *hscale5  = new TH2D( "hscale5", "Background Particle #eta by Lead Jet p_{T};#eta;", 40,-1.0,1.0, 10,0.2,1.0 );
+  TH2D *hscale5  = new TH2D( "hscale5", "Charged Background Particle #eta by Lead Jet p_{T};#eta;", 40,-1.0,1.0, 10,0.2,1.0 );
   hscale5->SetStats(0);
   hscale5->Draw();
   for ( int i=0; i<nPtBins; ++i ) {
@@ -119,7 +119,7 @@ TCanvas * c0 = new TCanvas( "c0" , "" ,0 ,23 ,1280 ,700 );              // CANVA
   c1->SetLogz();
 
   TH2D* hPartEtaPhi = (TH2D*) hPartPtEtaPhi->Project3D("YZ");
-  hPartEtaPhi->SetTitle("All BG Particles #eta vs. #phi");
+  hPartEtaPhi->SetTitle("Charged BG Particles #eta vs. #phi");
   hPartEtaPhi->Scale(1./hPartEtaPhi->Integral("WIDTH"));
   hPartEtaPhi->Draw("COLZ");
   path = "plots/" + dir + "bg_eta_phi.pdf";
@@ -135,7 +135,7 @@ TCanvas * c0 = new TCanvas( "c0" , "" ,0 ,23 ,1280 ,700 );              // CANVA
   for ( int i=0; i<nPtBins; ++i ) {
     c0->cd();
     name = "UEvsBBCE" + ptBinName[i];
-    title = "Underlying Event vs. BBC East Rate - p_{T}^{lead}: " + ptBinString[i];
+    title = "Charged Underlying Event vs. BBC East Rate - p_{T}^{lead}: " + ptBinString[i];
     hPt_UE_BBCE->GetXaxis()->SetRangeUser(ptBinLo[i], ptBinHi[i]);
     hUE_BBCE[i] = (TH2D*)hPt_UE_BBCE->Project3D( "yz" );       // PROJECT
     hUE_BBCE[i]->GetYaxis()->SetRangeUser(0,10);
@@ -159,7 +159,7 @@ TCanvas * c0 = new TCanvas( "c0" , "" ,0 ,23 ,1280 ,700 );              // CANVA
 
     c1->cd();
     name = "UEvsBBCsumE" + ptBinName[i];
-    title = "Underlying Event vs. BBC ADC East Sum - p_{T}^{lead}: " + ptBinString[i];
+    title = "Charged Underlying Event vs. BBC ADC East Sum - p_{T}^{lead}: " + ptBinString[i];
     hPt_UE_BBCsumE->GetXaxis()->SetRangeUser(ptBinLo[i], ptBinHi[i]);
     hUE_BBCsumE[i] = (TH2D*)hPt_UE_BBCsumE->Project3D( "yz" );       // PROJECT
     hUE_BBCsumE[i]->GetYaxis()->SetRangeUser(0,10);
@@ -182,27 +182,42 @@ TCanvas * c0 = new TCanvas( "c0" , "" ,0 ,23 ,1280 ,700 );              // CANVA
 
   c0->Clear();  c1->Clear();
 
+  TLegend *leg4 = new TLegend(0.65, 0.65, 0.9, 0.9,NULL,"brNDC");    // LEGEND
+  leg4->SetBorderSize(1);   leg4->SetLineColor(1);   leg4->SetLineStyle(1);   leg4->SetLineWidth(1);   leg4->SetFillColor(0);   leg4->SetFillStyle(1001);
+  leg4->SetNColumns(2);  leg4->AddEntry((TObject*)0,"#bf{p_{T}^{Lead} (GeV)}", "");  leg4->AddEntry((TObject*)0,"#bf{Particle} #bf{#eta}", "");
+  
   hscale1->SetStats(0);  c1->cd();    hscale1->GetYaxis()->SetRangeUser(0.0,4.0);     hscale1->Draw();
   for ( int i=0; i<nPtBins; ++i ) {
     pUE_BBCE[i]->SetLineColor( color[i] );    pUE_BBCE[i]->SetMarkerStyle( marker[i] );    pUE_BBCE[i]->SetMarkerColor( color[i] );    
     pUE_BBCE[i]->GetYaxis()->SetRangeUser(0.0,4.0);         pUE_BBCE[i]->Draw("SAME");
+    title = "p_{T}^{lead}: " + ptBinString[i];
+    avg = "";    avg += pUE_BBCE[i]->GetMean();    avg = avg(0,8);
+    leg4->AddEntry( pUE_BBCE[i], title, "lpf" );    leg4->AddEntry((TObject*)0,avg, "");
   }
+  leg4->Draw();        c1->Modified();        c1->cd();        c1->SetSelected(c1);
   path = "plots/" + dir + "UE_BBCE_profile.pdf";
   c1->SaveAs(  path ,"PDF");          c1->Clear();
 
 
+  TLegend *leg5 = new TLegend(0.65, 0.65, 0.9, 0.9,NULL,"brNDC");    // LEGEND
+  leg5->SetBorderSize(1);   leg5->SetLineColor(1);   leg5->SetLineStyle(1);   leg5->SetLineWidth(1);   leg5->SetFillColor(0);   leg5->SetFillStyle(1001);
+  leg5->SetNColumns(2);  leg5->AddEntry((TObject*)0,"#bf{p_{T}^{Lead} (GeV)}", "");  leg5->AddEntry((TObject*)0,"#bf{Particle} #bf{#eta}", "");
   
   hscale2->SetStats(0);  c1->cd();    hscale2->GetYaxis()->SetRangeUser(0.0,5.0);     hscale2->Draw();
   for ( int i=0; i<nPtBins; ++i ) {
     pUE_BBCsumE[i]->SetLineColor( color[i] );    pUE_BBCsumE[i]->SetMarkerStyle( marker[i] );    pUE_BBCsumE[i]->SetMarkerColor( color[i] );    
     pUE_BBCsumE[i]->GetYaxis()->SetRangeUser(0.0,5.0);         pUE_BBCsumE[i]->Draw("SAME");
+    title = "p_{T}^{lead}: " + ptBinString[i];
+    avg = "";    avg += pUE_BBCsumE[i]->GetMean();    avg = avg(0,8);
+    leg4->AddEntry( pUE_BBCsumE[i], title, "lpf" );    leg4->AddEntry((TObject*)0,avg, "");
   }
+  leg5->Draw();        c1->Modified();        c1->cd();        c1->SetSelected(c1);
   path = "plots/" + dir + "UE_BBCsumE_profile.pdf";
   c1->SaveAs( path ,"PDF");          c1->Clear();
 
 
-  TH2D *hscale_1 = new TH2D( "hscale_1", "Underlying Event vs. BBC East Rate", 140,0,7000000, 50,0,25 );
-  TH2D *hscale_2 = new TH2D( "hscale_2", "Underlying Event vs. BBC ADC East Sum", 150,0,100000, 50,0,25 );
+  TH2D *hscale_1 = new TH2D( "hscale_1", "Charged Underlying Event vs. BBC East Rate", 140,0,7000000, 50,0,25 );
+  TH2D *hscale_2 = new TH2D( "hscale_2", "Charged Underlying Event vs. BBC ADC East Sum", 150,0,100000, 50,0,25 );
 
   hPt_UE_BBCsumE->GetYaxis()->SetRangeUser( 0.0,25 );
   hPt_UE_BBCE->GetYaxis()->SetRangeUser( 0.0,25 );
@@ -210,24 +225,8 @@ TCanvas * c0 = new TCanvas( "c0" , "" ,0 ,23 ,1280 ,700 );              // CANVA
   TCanvas * c5 = new TCanvas( "c5" , "" ,0 ,23 ,1280 ,700 );              // CANVAS
   TCanvas * c6 = new TCanvas( "c6" , "" ,0 ,23 ,1280 ,700 );              // CANVAS
 
-  // hscale_1->SetStats(0);  c5->cd();    //  hscale_1->GetYaxis()->SetRangeUser(0.0,5.0);     hscale_1->Draw();
-  // for ( int i=0; i<nPtBins; ++i ) {
-  //   hUE_BBCE[i]->SetStats(0);    hUE_BBCE[i]->SetLineColor( color[i] );    hUE_BBCE[i]->SetMarkerStyle( marker[i] );    hUE_BBCE[i]->SetMarkerColor( color[i] );
-  //   name = "UE_BBCE_profileX" + ptBinName[i];
-  //   hUE_BBCE[i]->ProfileX(name,0,25,"S")->Draw("SAME");
-  // }
-  // path = "plots/" + dir + "UE_BBCE_profileX.pdf";   c5->SaveAs( path ,"PDF");          c5->Clear();
-
-  // hscale_2->SetStats(0);  c6->cd();  //   hscale_2->GetYaxis()->SetRangeUser(0.0,5.0);     hscale_2->Draw();
-  // for ( int i=0; i<nPtBins; ++i ) {
-  //   hUE_BBCsumE[i]->SetStats(0);    hUE_BBCsumE[i]->SetLineColor( color[i] );    hUE_BBCsumE[i]->SetMarkerStyle( marker[i] );    hUE_BBCsumE[i]->SetMarkerColor( color[i] );    
-  //   name = "hUE_BBCsumE_profileX" + ptBinName[i];
-  //   hUE_BBCsumE[i]->ProfileX(name,0,25,"S")->Draw("SAME");
-  // }
-  // path = "plots/" + dir + "UE_BBCsumE_profileX.pdf";   c6->SaveAs( path ,"PDF");        c6->Clear();
-
-  TH2D *hscale3 = new TH2D( "hscale3", "Underlying Event vs. BBC East Rate", 50,0,25, 100,0.000001,1 );
-  TH2D *hscale4 = new TH2D( "hscale4", "Underlying Event vs. BBC ADC East Sum", 50,0,25, 100,0.000001,1 );
+  TH2D *hscale3 = new TH2D( "hscale3", "Charged Underlying Event vs. BBC East Rate", 50,0,25, 100,0.000001,1 );
+  TH2D *hscale4 = new TH2D( "hscale4", "Charged Underlying Event vs. BBC ADC East Sum", 50,0,25, 100,0.000001,1 );
   hscale3->SetStats(0);     hscale4->SetStats(0);
 
   hPt_UE_BBCsumE->GetYaxis()->SetRangeUser( 0.0,10 );

@@ -54,7 +54,7 @@ void dijetPlots() {
   double ptBinHi[nPtBins] = { 15.0, 20.0, 30.0, 40.0, 100.0 };
   TString ptBinString[nPtBins] = { "10-15 GeV", "15-20 GeV",  "20-30 GeV", "30-40 GeV", ">40 GeV" };
   TString ptBinName[nPtBins] = { "_10_15", "_15_20", "_20_30", "_30_40", "_40" };
-  int color[nPtBins] = { 633, 613, 596, 414, 797 };
+  int color[nPtBins] = { 896, 796, 835, 856, 879 };
   int marker[nPtBins] = { 33, 34, 22, 21, 20 };
   TString name, title;
 
@@ -182,21 +182,37 @@ void dijetPlots() {
 
   c0->Clear();  c1->Clear();
 
+  
+  TLegend *leg4 = new TLegend(0.65, 0.65, 0.9, 0.9,NULL,"brNDC");    // LEGEND
+  leg4->SetBorderSize(1);   leg4->SetLineColor(1);   leg4->SetLineStyle(1);   leg4->SetLineWidth(1);   leg4->SetFillColor(0);   leg4->SetFillStyle(1001);
+  leg4->SetNColumns(2);  leg4->AddEntry((TObject*)0,"#bf{p_{T}^{Lead} (GeV)}", "");  leg4->AddEntry((TObject*)0,"#bf{Particle} #bf{#eta}", "");
+  
   hscale1->SetStats(0);  c1->cd();    hscale1->GetYaxis()->SetRangeUser(0.0,4.0);     hscale1->Draw();
   for ( int i=0; i<nPtBins; ++i ) {
     pUE_BBCE[i]->SetLineColor( color[i] );    pUE_BBCE[i]->SetMarkerStyle( marker[i] );    pUE_BBCE[i]->SetMarkerColor( color[i] );    
     pUE_BBCE[i]->GetYaxis()->SetRangeUser(0.0,4.0);         pUE_BBCE[i]->Draw("SAME");
+    title = "p_{T}^{lead}: " + ptBinString[i];
+    avg = "";    avg += pUE_BBCE[i]->GetMean();    avg = avg(0,8);
+    leg4->AddEntry( pUE_BBCE[i], title, "lpf" );    leg4->AddEntry((TObject*)0,avg, "");
   }
+  leg4->Draw();        c1->Modified();        c1->cd();        c1->SetSelected(c1);
   path = "plots/" + dir + "UE_BBCE_profile.pdf";
   c1->SaveAs(  path ,"PDF");          c1->Clear();
 
 
+  TLegend *leg5 = new TLegend(0.65, 0.65, 0.9, 0.9,NULL,"brNDC");    // LEGEND
+  leg5->SetBorderSize(1);   leg5->SetLineColor(1);   leg5->SetLineStyle(1);   leg5->SetLineWidth(1);   leg5->SetFillColor(0);   leg5->SetFillStyle(1001);
+  leg5->SetNColumns(2);  leg5->AddEntry((TObject*)0,"#bf{p_{T}^{Lead} (GeV)}", "");  leg5->AddEntry((TObject*)0,"#bf{Particle} #bf{#eta}", "");
   
   hscale2->SetStats(0);  c1->cd();    hscale2->GetYaxis()->SetRangeUser(0.0,5.0);     hscale2->Draw();
   for ( int i=0; i<nPtBins; ++i ) {
     pUE_BBCsumE[i]->SetLineColor( color[i] );    pUE_BBCsumE[i]->SetMarkerStyle( marker[i] );    pUE_BBCsumE[i]->SetMarkerColor( color[i] );    
     pUE_BBCsumE[i]->GetYaxis()->SetRangeUser(0.0,5.0);         pUE_BBCsumE[i]->Draw("SAME");
+    title = "p_{T}^{lead}: " + ptBinString[i];
+    avg = "";    avg += pUE_BBCsumE[i]->GetMean();    avg = avg(0,8);
+    leg4->AddEntry( pUE_BBCsumE[i], title, "lpf" );    leg4->AddEntry((TObject*)0,avg, "");
   }
+  leg5->Draw();        c1->Modified();        c1->cd();        c1->SetSelected(c1);
   path = "plots/" + dir + "UE_BBCsumE_profile.pdf";
   c1->SaveAs( path ,"PDF");          c1->Clear();
 
@@ -209,22 +225,6 @@ void dijetPlots() {
 
   TCanvas * c5 = new TCanvas( "c5" , "" ,0 ,23 ,1280 ,700 );              // CANVAS
   TCanvas * c6 = new TCanvas( "c6" , "" ,0 ,23 ,1280 ,700 );              // CANVAS
-
-  // hscale_1->SetStats(0);  c5->cd();    //  hscale_1->GetYaxis()->SetRangeUser(0.0,5.0);     hscale_1->Draw();
-  // for ( int i=0; i<nPtBins; ++i ) {
-  //   hUE_BBCE[i]->SetStats(0);    hUE_BBCE[i]->SetLineColor( color[i] );    hUE_BBCE[i]->SetMarkerStyle( marker[i] );    hUE_BBCE[i]->SetMarkerColor( color[i] );
-  //   name = "UE_BBCE_profileX" + ptBinName[i];
-  //   hUE_BBCE[i]->ProfileX(name,0,25,"S")->Draw("SAME");
-  // }
-  // path = "plots/" + dir + "UE_BBCE_profileX.pdf";   c5->SaveAs( path ,"PDF");          c5->Clear();
-
-  // hscale_2->SetStats(0);  c6->cd();  //   hscale_2->GetYaxis()->SetRangeUser(0.0,5.0);     hscale_2->Draw();
-  // for ( int i=0; i<nPtBins; ++i ) {
-  //   hUE_BBCsumE[i]->SetStats(0);    hUE_BBCsumE[i]->SetLineColor( color[i] );    hUE_BBCsumE[i]->SetMarkerStyle( marker[i] );    hUE_BBCsumE[i]->SetMarkerColor( color[i] );    
-  //   name = "hUE_BBCsumE_profileX" + ptBinName[i];
-  //   hUE_BBCsumE[i]->ProfileX(name,0,25,"S")->Draw("SAME");
-  // }
-  // path = "plots/" + dir + "UE_BBCsumE_profileX.pdf";   c6->SaveAs( path ,"PDF");        c6->Clear();
 
   TH2D *hscale3 = new TH2D( "hscale3", "Underlying Event vs. BBC East Rate", 50,0,25, 100,0.000001,1 );
   TH2D *hscale4 = new TH2D( "hscale4", "Underlying Event vs. BBC ADC East Sum", 50,0,25, 100,0.000001,1 );
