@@ -71,6 +71,7 @@ TCanvas * c0 = new TCanvas( "c0" , "" ,0 ,23 ,1280 ,700 );              // CANVA
     name = "BGEtaPhi_" + ptBinName[i];
     title = "p_{T}^{lead}: " + ptBinString[i];
     hBGEtaPhi[i]->SetNameTitle( name, title );
+    hBGEtaPhi[i]->GetZaxis()->SetRangeUser(0.000001,1);
     hBGEtaPhi[i]->Scale(1./hBGEtaPhi[i]->Integral("width"));
     hBGEtaPhi[i]->Draw("COLZ");
     name = "plots/" + dir + "BG_eta_phi_" + ptBinName[i] + ".pdf";

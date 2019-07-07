@@ -71,6 +71,7 @@ void dijetPlots() {
     hBGEtaPhi[i] = (TH2D*) hBG->Project3D("YZ");
     name = "BGEtaPhi_" + ptBinName[i];
     title = "p_{T}^{lead}: " + ptBinString[i];
+    hBGEtaPhi[i]->GetZaxis()->SetRangeUser(0.000001,1);
     hBGEtaPhi[i]->SetNameTitle( name, title );
     hBGEtaPhi[i]->Scale(1./hBGEtaPhi[i]->Integral("width"));
     hBGEtaPhi[i]->Draw("COLZ");
