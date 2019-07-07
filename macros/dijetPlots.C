@@ -54,7 +54,7 @@ void dijetPlots() {
   double ptBinHi[nPtBins] = { 15.0, 20.0, 30.0, 40.0, 100.0 };
   TString ptBinString[nPtBins] = { "10-15 GeV", "15-20 GeV",  "20-30 GeV", "30-40 GeV", ">40 GeV" };
   TString ptBinName[nPtBins] = { "_10_15", "_15_20", "_20_30", "_30_40", "_40" };
-  int color[nPtBins] = { 896, 796, 835, 856, 879 };
+  int color[nPtBins] = { 879, 856, 835, 796, 896 };
   int marker[nPtBins] = { 33, 34, 22, 21, 20 };
   TString name, title;
 
@@ -71,9 +71,9 @@ void dijetPlots() {
     hBGEtaPhi[i] = (TH2D*) hBG->Project3D("YZ");
     name = "BGEtaPhi_" + ptBinName[i];
     title = "p_{T}^{lead}: " + ptBinString[i];
-    hBGEtaPhi[i]->GetZaxis()->SetRangeUser(0.000001,1);
     hBGEtaPhi[i]->SetNameTitle( name, title );
     hBGEtaPhi[i]->Scale(1./hBGEtaPhi[i]->Integral("width"));
+    hBGEtaPhi[i]->GetZaxis()->SetRangeUser(0.000001,1);
     hBGEtaPhi[i]->Draw("COLZ");
     name = "plots/" + dir + "BG_eta_phi_" + ptBinName[i] + ".pdf";
     c0->SaveAs( name ,"PDF");
