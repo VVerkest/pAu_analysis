@@ -9,8 +9,8 @@ void dijetPlots() {
   double scale;
   TH1::SetDefaultSumw2();  TH2::SetDefaultSumw2();  TH3::SetDefaultSumw2();
 
-  TString dir = "HTjets/allTowers/all/";
-  //TString dir = "HTjets/good/all/";
+  //TString dir = "HTjets/allTowers/all/";
+  TString dir = "HTjets/good/all/";
   //TString dir = "HTjets/towersRemoved/all/";
   TString path = "out/" + dir + "pAu_HT_dijets.root";
   TFile* inFile = new TFile( path , "READ" );
