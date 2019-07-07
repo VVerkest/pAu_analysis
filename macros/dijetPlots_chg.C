@@ -184,14 +184,14 @@ TCanvas * c0 = new TCanvas( "c0" , "" ,0 ,23 ,1280 ,700 );              // CANVA
 
   TLegend *leg4 = new TLegend(0.65, 0.65, 0.9, 0.9,NULL,"brNDC");    // LEGEND
   leg4->SetBorderSize(1);   leg4->SetLineColor(1);   leg4->SetLineStyle(1);   leg4->SetLineWidth(1);   leg4->SetFillColor(0);   leg4->SetFillStyle(1001);
-  leg4->SetNColumns(2);  leg4->AddEntry((TObject*)0,"#bf{p_{T}^{Lead} (GeV)}", "");  leg4->AddEntry((TObject*)0,"#bf{Particle} #bf{#eta}", "");
+  leg4->SetNColumns(2);  leg4->AddEntry((TObject*)0,"#bf{p_{T}^{Lead} (GeV)}", "");  leg4->AddEntry((TObject*)0,"#bf{<#rho> (GeV)}", "");
   
   hscale1->SetStats(0);  c1->cd();    hscale1->GetYaxis()->SetRangeUser(0.0,4.0);     hscale1->Draw();
   for ( int i=0; i<nPtBins; ++i ) {
     pUE_BBCE[i]->SetLineColor( color[i] );    pUE_BBCE[i]->SetMarkerStyle( marker[i] );    pUE_BBCE[i]->SetMarkerColor( color[i] );    
     pUE_BBCE[i]->GetYaxis()->SetRangeUser(0.0,4.0);         pUE_BBCE[i]->Draw("SAME");
     title = "p_{T}^{lead}: " + ptBinString[i];
-    avg = "";    avg += pUE_BBCE[i]->GetMean();    avg = avg(0,8);
+    avg = "";    avg += hUE_BBCE[i]->GetMean(2);    avg = avg(0,6);
     leg4->AddEntry( pUE_BBCE[i], title, "lpf" );    leg4->AddEntry((TObject*)0,avg, "");
   }
   leg4->Draw();        c1->Modified();        c1->cd();        c1->SetSelected(c1);
@@ -201,15 +201,15 @@ TCanvas * c0 = new TCanvas( "c0" , "" ,0 ,23 ,1280 ,700 );              // CANVA
 
   TLegend *leg5 = new TLegend(0.65, 0.65, 0.9, 0.9,NULL,"brNDC");    // LEGEND
   leg5->SetBorderSize(1);   leg5->SetLineColor(1);   leg5->SetLineStyle(1);   leg5->SetLineWidth(1);   leg5->SetFillColor(0);   leg5->SetFillStyle(1001);
-  leg5->SetNColumns(2);  leg5->AddEntry((TObject*)0,"#bf{p_{T}^{Lead} (GeV)}", "");  leg5->AddEntry((TObject*)0,"#bf{Particle} #bf{#eta}", "");
+  leg5->SetNColumns(2);  leg5->AddEntry((TObject*)0,"#bf{p_{T}^{Lead} (GeV)}", "");  leg5->AddEntry((TObject*)0,"#bf{<#rho> (GeV)}", "");
   
   hscale2->SetStats(0);  c1->cd();    hscale2->GetYaxis()->SetRangeUser(0.0,5.0);     hscale2->Draw();
   for ( int i=0; i<nPtBins; ++i ) {
     pUE_BBCsumE[i]->SetLineColor( color[i] );    pUE_BBCsumE[i]->SetMarkerStyle( marker[i] );    pUE_BBCsumE[i]->SetMarkerColor( color[i] );    
     pUE_BBCsumE[i]->GetYaxis()->SetRangeUser(0.0,5.0);         pUE_BBCsumE[i]->Draw("SAME");
     title = "p_{T}^{lead}: " + ptBinString[i];
-    avg = "";    avg += pUE_BBCsumE[i]->GetMean();    avg = avg(0,8);
-    leg4->AddEntry( pUE_BBCsumE[i], title, "lpf" );    leg4->AddEntry((TObject*)0,avg, "");
+    avg = "";    avg += hUE_BBCsumE[i]->GetMean(2);    avg = avg(0,6);
+    leg5->AddEntry( pUE_BBCsumE[i], title, "lpf" );    leg5->AddEntry((TObject*)0,avg, "");
   }
   leg5->Draw();        c1->Modified();        c1->cd();        c1->SetSelected(c1);
   path = "plots/" + dir + "UE_BBCsumE_profile.pdf";
