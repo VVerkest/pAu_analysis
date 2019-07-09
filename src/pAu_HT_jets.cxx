@@ -42,7 +42,10 @@ int main ( int argc, const char** argv ) {
   TH2D *hPrimaryVsBBCsumE = new TH2D("hPrimaryVsBBCsumE","# Primary Tracks vs. BBC ADC East Sum;BBC ADC East Sum;# Primary Tracks", 160,0,80000, 40,0,200 );
   TH2D *hTowersVsBBCsumE = new TH2D("hTowersVsBBCsumE","# Towers vs. BBC ADC East Sum;BBC ADC East Sum;# Towers", 160,0,80000, 140,0,700 );
 
+  TH2D *hChgVsNeuBG = new TH2D("hChgVsNeuBG","Charged vs. Neutral Background;Neutral #rho;Charged #rho",100,0,25,100,0,25);
+  
   TH3D *hAllJetsPtEtaPhi = new TH3D( "hAllJetsPtEtaPhi", "Inclusive Jets p_{T}, #eta, #phi;Jet p_{T} (GeV);Jet #eta;Jet #phi", 400,0.0,100.0, 40,-1.0,1.0, 120,0.0,2*pi  );
+  TH3D *hAllJetsPtRhoEta = new TH3D( "hAllJetsPtRhoEta", "Inclusive Jets p_{T}, #rho, #eta;Jet p_{T} (GeV);#rho;Jet #eta", 400,0.0,100.0, 100,0,25, 40,-1.0,1.0 );
   //  JET PT, ETA, PHI FOR 2+, 5+, 10+, AND 20+ GEV
   
   TH3D *hLeadPtEtaPhi = new TH3D("hLeadPtEtaPhi","Lead Jet p_{T} vs. #eta vs. #phi;p_{T} (GeV);#phi;#eta", 280,0,70, 120,0,6.3, 40,-1.0,1.0);
@@ -121,23 +124,23 @@ int main ( int argc, const char** argv ) {
     //  BACKGROUND ESTIMATION 
     double chgPtSum = 0;    double neuPtSum = 0;
     
-    // for (int i=0; i<chgParticles.size(); ++i) {
-    //   partPt = chgParticles[i].pt();
-    //   partEta = chgParticles[i].eta();
-    //   partPhi = chgParticles[i].phi();
-    //   partEt = chgParticles[i].Et();
-    //   deltaPhi = chgParticles[i].delta_phi_to( rawJets[0] );
-    //   partChg = chgParticles[i].user_index();
-    //   dPhi = chgParticles[i].delta_phi_to( rawJets[0] );
-    //   dEta = rawJets[0].eta() - chgParticles[i].eta();
-    //   hPartPtDEtaDPhi->Fill( chgParticles[i].pt(), dEta, dPhi );
-    //   hPartPtEtaPhi->Fill( leadPt, chgParticles[i].eta(), chgParticles[i].phi() );
-    //   Charge = chgParticles[i].user_index();
-    //   hCHARGED->Fill( leadPt, chgParticles[i].pt(), chgParticles[i].eta() );
-    //   hBG->Fill( leadPt, chgParticles[i].eta(), chgParticles[i].phi() );
-    //   chgPtSum+=chgParticles[i].pt();
-    //   ptSum+=chgParticles[i].pt();
-    // }
+    for (int i=0; i<chgParticles.size(); ++i) {
+      partPt = chgParticles[i].pt();
+      partEta = chgParticles[i].eta();
+      partPhi = chgParticles[i].phi();
+      partEt = chgParticles[i].Et();
+      deltaPhi = chgParticles[i].delta_phi_to( rawJets[0] );
+      partChg = chgParticles[i].user_index();
+      dPhi = chgParticles[i].delta_phi_to( rawJets[0] );
+      dEta = rawJets[0].eta() - chgParticles[i].eta();
+      hPartPtDEtaDPhi->Fill( chgParticles[i].pt(), dEta, dPhi );
+      hPartPtEtaPhi->Fill( leadPt, chgParticles[i].eta(), chgParticles[i].phi() );
+      Charge = chgParticles[i].user_index();
+      hCHARGED->Fill( leadPt, chgParticles[i].pt(), chgParticles[i].eta() );
+      hBG->Fill( leadPt, chgParticles[i].eta(), chgParticles[i].phi() );
+      chgPtSum+=chgParticles[i].pt();
+      ptSum+=chgParticles[i].pt();
+    }
 
     for (int i=0; i<neuParticles.size(); ++i) {
       partPt = neuParticles[i].pt();
@@ -174,8 +177,11 @@ int main ( int argc, const char** argv ) {
     BbcAdcSumEast = header->GetBbcAdcSumEast();
 
 
-    
-    hLeadPtEtaPhi->Fill(leadPt,leadPhi,leadEta);                                        //  FILL HISTOGRAMS
+
+                                        //  FILL HISTOGRAMS
+    for ( int i=0; i<rawJets.size(); ++i ) { hAllJetsPtRhoEta->Fill( rawJets[i].pt(), rho,rawJets[i].eta() ); }
+
+    hLeadPtEtaPhi->Fill(leadPt,leadPhi,leadEta);
     hLeadEtaPhi->Fill(leadPhi,leadEta);                                             hSubEtaPhi->Fill(subPhi,subEta);
 
     hPrimaryVsRho->Fill( rho, nPrimary );                                     hGlobalVsRho->Fill(rho, nGlobal );
@@ -188,6 +194,7 @@ int main ( int argc, const char** argv ) {
     hPrimaryVsGlobal->Fill( nGlobal, nPrimary );    hGlobalVsBBC->Fill( BbcCoincidenceRate, nGlobal );    hPrimaryVsBBCE->Fill(BbcEastRate,nPrimary);
     hGlobalVsBBCE->Fill(BbcEastRate,nGlobal);    hPrimaryVsBBCsumE->Fill(BbcAdcSumEast,nPrimary);    hTowersVsBBCsumE->Fill(BbcAdcSumEast,nTowers);
 
+    hChgVsNeuBG->Fill(neuRho,chgRho);            
   }
   // ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~  END EVENT LOOP!  ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~
 
@@ -197,6 +204,8 @@ int main ( int argc, const char** argv ) {
   hBG->Write();                             //  WRITE HISTOGRAMS
   hCHARGED->Write();
   hNEUTRAL->Write();
+  hChgVsNeuBG->Write();
+  hAllJetsPtRhoEta->Write();
   hPartPtEtaPhi->Write();
   hAllPtEtaPhi->Write();
   hPartPtDEtaDPhi->Write();
