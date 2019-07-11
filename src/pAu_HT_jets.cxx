@@ -162,7 +162,7 @@ int main ( int argc, const char** argv ) {
     nPrimary =  header->GetNOfPrimaryTracks();
 
     TStarJetPicoTower *tow;
-    TList *SelectedTowers = reader.GetListOfSelectedTowers();
+    TList *SelectedTowers = Reader.GetListOfSelectedTowers();
     nTowers = 0;
     for (int i=0; i<SelectedTowers->GetEntries(); ++i) {
       tow = (TStarJetPicoTower *) SelectedTowers->At(i);
