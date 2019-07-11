@@ -46,20 +46,30 @@ void dijetPlots_neu() {
   TH2D *hscale1 = new TH2D( "hscale1", "Neutral Underlying Event vs. BBC East Rate", 140,0,7000000, 20,0,10 );
   TH2D *hscale2 = new TH2D( "hscale2", "Neutral Underlying Event vs. BBC ADC East Sum", 150,0,100000, 20,0,10 );
 
+  //  const int nPtBins = 5;
+  const int nPtBins = 4;
+
   hscale0->SetStats(0);  hscale1->SetStats(0);  hscale2->SetStats(0);  
-  const int nPtBins = 5;
   TH1D * hRho[nPtBins];  TH2D * hUE_BBCE[nPtBins];  TH2D * hUE_BBCsumE[nPtBins];
   TProfile *pUE_BBCE[nPtBins];  TProfile *pUE_BBCsumE[nPtBins];
   
-  double ptBinLo[nPtBins] = { 10.0, 15.0, 20.0, 30.0, 40.0 };
-  double ptBinHi[nPtBins] = { 15.0, 20.0, 30.0, 40.0, 100.0 };
-  TString ptBinString[nPtBins] = { "10-15 GeV", "15-20 GeV",  "20-30 GeV", "30-40 GeV", ">40 GeV" };
-  TString ptBinName[nPtBins] = { "_10_15", "_15_20", "_20_30", "_30_40", "_40" };
-  int color[nPtBins] = { 879, 856, 835, 796, 896 };
-  int marker[nPtBins] = { 33, 34, 22, 21, 20 };
+  // double ptBinLo[nPtBins] = { 10.0, 15.0, 20.0, 30.0, 40.0 };
+  // double ptBinHi[nPtBins] = { 15.0, 20.0, 30.0, 40.0, 100.0 };
+  // TString ptBinString[nPtBins] = { "10-15 GeV", "15-20 GeV",  "20-30 GeV", "30-40 GeV", ">40 GeV" };
+  // TString ptBinName[nPtBins] = { "_10_15", "_15_20", "_20_30", "_30_40", "_40" };
+  // int color[nPtBins] = { 879, 856, 835, 796, 896 };
+  // int marker[nPtBins] = { 33, 34, 22, 21, 20 };
+  // TString name, title;
+
+  double ptBinLo[nPtBins] = { 10.0, 15.0, 20.0, 30.0 };
+  double ptBinHi[nPtBins] = { 15.0, 20.0, 30.0, 100.0 };
+  TString ptBinString[nPtBins] = { "10-15 GeV", "15-20 GeV",  "20-30 GeV", ">30 GeV" };
+  TString ptBinName[nPtBins] = { "_10_15", "_15_20", "_20_30", "_30" };
+  int color[nPtBins] = { 879, 856, 796, 896 };
+  int marker[nPtBins] = { 33, 22, 21, 20 };
   TString name, title;
 
-TCanvas * c0 = new TCanvas( "c0" , "" ,0 ,23 ,1280 ,700 );              // CANVAS
+  TCanvas * c0 = new TCanvas( "c0" , "" ,0 ,23 ,1280 ,700 );              // CANVAS
 
   TH2D* hBGEtaPhi[nPtBins];
   TH1D* hBGEta[nPtBins];
