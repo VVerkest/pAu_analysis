@@ -80,6 +80,8 @@ namespace pAuAnalysis {
 
   std::vector<fastjet::PseudoJet> GatherNeutralBG (  fastjet::PseudoJet trigJet, TStarJetVectorContainer<TStarJetVector> * container , std::vector<fastjet::PseudoJet> & newParticles );
 
+  void InitHistograms( );
+  
   void InitReader( TStarJetPicoReader & reader, TChain* chain, int nEvents );
   
 }
