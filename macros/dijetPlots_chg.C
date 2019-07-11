@@ -68,7 +68,8 @@ void dijetPlots_chg() {
   int color[nPtBins] = { 879, 856, 796, 896 };
   int marker[nPtBins] = { 33, 22, 21, 20 };
   TString name, title;
-TCanvas * c0 = new TCanvas( "c0" , "" ,0 ,23 ,1280 ,700 );              // CANVAS
+  
+  TCanvas * c0 = new TCanvas( "c0" , "" ,0 ,23 ,1280 ,700 );              // CANVAS
 
   TH2D* hBGEtaPhi[nPtBins];
   TH1D* hBGEta[nPtBins];
