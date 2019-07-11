@@ -111,11 +111,11 @@ namespace pAuAnalysis {
   }
 
 
-  bool UseEvent( TStarJetPicoEventHeader* Header, double vz_cut ) {
+  bool UseEvent( TStarJetPicoEventHeader* Header, double vz_cut, double vz ) {
     if (Header->GetRunId() >= 16142059 && Header->GetRunId() <= 16149001) { continue; }    //TEMPORARILY SKIPPING THESE RUNS
     if (Header->GetRunId() == 16135031 || Header->GetRunId() == 16135032) { continue; }
     if (!(Header->HasTriggerId(500401) || Header->HasTriggerId(500411))) {continue;}   //  ONLY SELECT JP2 TRIGGER EVENTS
-    Vz = Header->GetPrimaryVertexZ();           if ( abs(Vz) > vz_cut ) { continue; }
+    if ( abs(vz) > vz_cut ) { continue; }
     if ( Header->GetBbcAdcSumEast() > 64000 ) { continue; } 
   }
 
