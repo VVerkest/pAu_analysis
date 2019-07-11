@@ -86,8 +86,8 @@ int main ( int argc, const char** argv ) {
     chgParticles.clear();    neuParticles.clear();    rawParticles.clear();    rawJets.clear();       //  CLEAR VECTORS
     
     event = Reader.GetEvent();            header = event->GetHeader();            container = Reader.GetOutputContainer();
-    Vz = Header->GetPrimaryVertexZ();
-    if ( UseEvent( header, vzCut ) == false ) { continue; }
+    Vz = header->GetPrimaryVertexZ();
+    if ( UseEvent( header, vzCut, Vz ) == false ) { continue; }
       
     //   JET-FINDING
     GatherParticles( container, rawParticles);     //  GATHERS ALL PARTICLES WITH    pT >= 0.2 GeV    and    |eta|<1.0
