@@ -48,6 +48,38 @@ namespace pAuAnalysis {
     return n_towers;
   }
 
+
+  std::vector<fastjet::PseudoJet> GatherCharged ( TStarJetVectorContainer<TStarJetVector> * container , std::vector<fastjet::PseudoJet> & rawParticles ){
+    for ( int i=0; i < container->GetEntries() ; ++i ) {
+      TStarJetVector* sv = container->Get(i);
+      if ( sv->GetCharge() != 0 ) {
+	fastjet::PseudoJet current = fastjet::PseudoJet( *sv );
+	current.set_user_index( sv->GetCharge() );
+	if ( std::abs(current.eta()) > etaCut )      { continue; }  // removes particles with |eta|>1
+	if ( current.pt() < partMinPt )      { continue; }  // removes particles with pt<0.2GeV
+
+	rawParticles.push_back(current);
+      }
+    }
+    return rawParticles;
+  }
+
+
+  std::vector<fastjet::PseudoJet> GatherNeutral ( TStarJetVectorContainer<TStarJetVector> * container , std::vector<fastjet::PseudoJet> & rawParticles ){
+    for ( int i=0; i < container->GetEntries() ; ++i ) {
+      TStarJetVector* sv = container->Get(i);
+      if ( sv->GetCharge() == 0 ) {
+	fastjet::PseudoJet current = fastjet::PseudoJet( *sv );
+	current.set_user_index( sv->GetCharge() );
+	if ( std::abs(current.eta()) > etaCut )      { continue; }  // removes particles with |eta|>1
+	if ( current.pt() < partMinPt )      { continue; }  // removes particles with pt<0.2GeV
+
+	rawParticles.push_back(current);
+      }
+    }
+    return rawParticles;
+  }
+
   
   std::vector<fastjet::PseudoJet> GatherParticles ( TStarJetVectorContainer<TStarJetVector> * container , std::vector<fastjet::PseudoJet> & rawParticles ){
     for ( int i=0; i < container->GetEntries() ; ++i ) {
@@ -100,6 +132,16 @@ namespace pAuAnalysis {
       neuParticles.push_back(current);
     }
     return neuParticles;
+  }
+
+
+  void GetHeaderInfo( TStarJetPicoEventHeader* Header, int Nglobal, int Nvertices, int ref_mult, int Nprimary, double BBC_CoincidenceRate,
+		      double vpdVz, double BBC_EastRate, double BBC_WestRate, double BBC_AdcSumEast, int EventID ) {
+    int Nglobal = Header->GetNGlobalTracks();						int Nvertices = Header->GetNumberOfVertices();
+    int ref_mult = Header->GetReferenceMultiplicity();					int Nprimary =  Header->GetNOfPrimaryTracks();
+    double BBC_CoincidenceRate = Header->GetBbcCoincidenceRate();		double vpdVz = Header->GetVpdVz();
+    double BBC_EastRate = Header->GetBbcEastRate();					double BBC_WestRate = Header->GetBbcWestRate();
+    double BBC_AdcSumEast = Header->GetBbcAdcSumEast();		       	int EventID = Reader.GetNOfCurrentEvent();
   }
 
 

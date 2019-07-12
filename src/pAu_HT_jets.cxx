@@ -109,12 +109,9 @@ int main ( int argc, const char** argv ) {
     chgRho = chgPtSum / AREA;		neuRho = neuPtSum / AREA;			rho = (chgPtSum+neuPtSum) / AREA;
 
     TList *SelectedTowers = Reader.GetListOfSelectedTowers();	nTowers = CountTowers( SelectedTowers );
-    nGlobal = header->GetNGlobalTracks();					nVertices = header->GetNumberOfVertices();
-    refMult = header->GetReferenceMultiplicity();				nPrimary =  header->GetNOfPrimaryTracks();
-    BbcCoincidenceRate = header->GetBbcCoincidenceRate();		vpdVz = header->GetVpdVz();
-    BbcEastRate = header->GetBbcEastRate();					BbcWestRate = header->GetBbcWestRate();
-    BbcAdcSumEast = header->GetBbcAdcSumEast();			EventID = Reader.GetNOfCurrentEvent();
 
+    GetHeaderInfo( header, nGlobal, nVertices, refMult, nPrimary, BbcCoincidenceRate, vpdVz, BbcEastRate, BbcWestRate, BbcAdcSumEast, EventID );
+    
     for ( int i=0; i<rawJets.size(); ++i ) { hAllJetsPtRhoEta->Fill( rawJets[i].pt(), rho,rawJets[i].eta() ); }                      //  FILL HISTOGRAMS
     
     hLeadPtEtaPhi->Fill(rawJets[0].pt(),rawJets[0].phi(),rawJets[0].eta());	hLeadEtaPhi->Fill(rawJets[0].phi(),rawJets[0].eta());			hSubEtaPhi->Fill(rawJets[1].phi(),rawJets[1].eta());

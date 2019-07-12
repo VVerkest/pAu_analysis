@@ -81,12 +81,19 @@ namespace pAuAnalysis {
 			     TH3D *PartPtDEtaDPhi, TH3D *PartPtEtaPhi, TH3D *CHARGED, TH3D *NEUTRAL, TH3D *BG, double chgSum, double neuSum );
 
   int CountTowers( TList *selectedtowers );
+
+  std::vector<fastjet::PseudoJet> GatherCharged ( TStarJetVectorContainer<TStarJetVector> * container , std::vector<fastjet::PseudoJet> & rawParticles );
+
+  std::vector<fastjet::PseudoJet> GatherNeutral ( TStarJetVectorContainer<TStarJetVector> * container , std::vector<fastjet::PseudoJet> & rawParticles )
     
   std::vector<fastjet::PseudoJet> GatherParticles ( TStarJetVectorContainer<TStarJetVector> * container , std::vector<fastjet::PseudoJet> & rawParticles );
 
   std::vector<fastjet::PseudoJet> GatherChargedBG (  fastjet::PseudoJet trigJet, TStarJetVectorContainer<TStarJetVector> * container , std::vector<fastjet::PseudoJet> & chgParticles );
 
   std::vector<fastjet::PseudoJet> GatherNeutralBG (  fastjet::PseudoJet trigJet, TStarJetVectorContainer<TStarJetVector> * container , std::vector<fastjet::PseudoJet> & newParticles );
+
+  void GetHeaderInfo( TStarJetPicoEventHeader* Header, int Nglobal, int Nvertices, int ref_mult, int Nprimary, double BBC_CoincidenceRate,
+		      double vpdVz, double BBC_EastRate, double BBC_WestRate, double BBC_AdcSumEast, int EventID );
 
   void InitReader( TStarJetPicoReader & reader, TChain* chain, int nEvents );
 
