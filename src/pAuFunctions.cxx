@@ -6,7 +6,7 @@
 namespace pAuAnalysis {
 
 
-  void BackGroundEstimation( std::vector<fastjet::PseudoJet> *chgPart, std::vector<fastjet::PseudoJet> *neuPart, fastjet::PseudoJet *leadJet,
+  void BackGroundEstimation( std::vector<fastjet::PseudoJet> chgPart, std::vector<fastjet::PseudoJet> neuPart, fastjet::PseudoJet leadJet,
 			     TH3D *PartPtDEtaDPhi, TH3D *PartPtEtaPhi, TH3D *CHARGED, TH3D *NEUTRAL, TH3D *BG, double chgSum, double neuSum ) {
 
     chgSum = 0;
