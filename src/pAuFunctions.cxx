@@ -40,7 +40,7 @@ namespace pAuAnalysis {
   int CountTowers( TList *selectedtowers ) {
 
     TStarJetPicoTower *tow;
-    double n_towers = 0;
+    int n_towers = 0;
     for (int i=0; i<selectedtowers->GetEntries(); ++i) {
       tow = (TStarJetPicoTower *) selectedtowers->At(i);
       if ( fabs(tow->GetEta())<=etaCut ) { n_towers+=1; }
