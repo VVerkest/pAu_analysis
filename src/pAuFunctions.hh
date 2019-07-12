@@ -77,7 +77,7 @@ namespace pAuAnalysis {
   const TString etaBinString[nEtaBins] = { "-1.0<#eta<-0.5", "-0.5<#eta<0.0", "0.0<#eta<0.5", "0.5<#eta<1.0" };
 
 
-  void BackGroundEstimation( std::vector<fastjet::PseudoJet> chgPart, std::vector<fastjet::PseudoJet> neuPart, fastjet::PseudoJet *leadJet,
+  void BackGroundEstimation( std::vector<fastjet::PseudoJet> chgPart, std::vector<fastjet::PseudoJet> neuPart, fastjet::PseudoJet leadJet,
 			     TH3D *PartPtDEtaDPhi, TH3D *PartPtEtaPhi, TH3D *CHARGED, TH3D *NEUTRAL, TH3D *BG, double chgSum, double neuSum );
 
   int CountTowers( TList *selectedtowers );
