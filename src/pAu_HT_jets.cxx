@@ -11,17 +11,15 @@ using namespace std;
 using namespace fastjet;
 using namespace pAuAnalysis;
 
-// tracks and towers have eta and DCA cuts specified in pAuFunctions.hh
-
-int main ( int argc, const char** argv ) {
+int main ( int argc, const char** argv ) {         // tracks and towers have eta and DCA cuts specified in pAuFunctions.hh
 
   int nEvents;		string inFile, outFile;	TString name, title;
   TString BackgroundChargeBias = "allBG";     // options: chgBG, neuBG, allBG
   TString JetChargeBias = "allJets";     // options: chgJets, neuJets, allJets
   
   vector<string> arguments( argv+1, argv+argc );
-  if ( argc ==  4 ) {    inFile = arguments[0];    outFile = arguments[1];    nEvents = atoi(arguments[2].c_str());  }
-  else if ( argc ==  1 ) {    inFile = "production_pAu200_2015/HT/pAu_2015_200_HT*.root";    outFile = "out/pAuJets_HT.root";    nEvents = 100000;  }
+  if ( argc ==  6 ) {    inFile = arguments[0];    outFile = arguments[1];    nEvents = atoi(arguments[2].c_str());    BackgroundChargeBias = arguments[3];    JetChargeBias = arguments[4]; }
+  else if ( argc==1 ) { inFile="production_pAu200_2015/HT/pAu_2015_200_HT*.root"; outFile="out/pAuJets_HT.root"; nEvents=100000; BackgroundChargeBias="allBG"; JetChargeBias="allJets"; }
   else { cerr<< "incorrect number of command line arguments"; return -1; }
 
   TH1::SetDefaultSumw2();  TH2::SetDefaultSumw2();  TH3::SetDefaultSumw2();
@@ -87,8 +85,12 @@ int main ( int argc, const char** argv ) {
     
     Vz = header->GetPrimaryVertexZ();
     if ( UseEvent( header, vzCut, Vz ) == false ) { continue; }   //  Skip events based on: Run#, vz cut, BBCEastSum;    only accept JP2 Trigger events
-      
-    GatherParticles( container, rawParticles );     //  GATHERS ALL PARTICLES WITH    pT >= 0.2 GeV    and    |eta|<1.0
+    
+     //  GATHERS ALL PARTICLES WITH    pT >= 0.2 GeV    and    |eta|<1.0
+    if ( JetChargeBias == "allJets" ) { GatherParticles( container, rawParticles ); }
+    else if ( JetChargeBias == "chgJets" ) { GatherCharged( container, rawParticles ); }
+    else if ( JetChargeBias == "neuJets" ) { GatherNeutral( container, rawParticles ); }
+    else { cerr<<"INCORRECT ARGUMENT FOR JetChargeBias:  CHOOSE FROM { allJets, chgJets, neuJets }"<<endl; break; }
     
     //   JET-FINDING
     ClusterSequence jetCluster( rawParticles, jet_def );           //  CLUSTER ALL JETS > 2.0 GEV
@@ -129,8 +131,8 @@ int main ( int argc, const char** argv ) {
 
   TFile *pAuFile = new TFile( outFile.c_str() ,"RECREATE");
 
-  hNEUTRAL->Write();			hBG->Write();				//  ~ ~ ~ ~ ~ ~ ~ ~ WRITE HISTOGRAMS ~ ~ ~ ~ ~ ~ ~ ~
-  hCHARGED->Write();			hNEUTRAL->Write();		hChgVsNeuBG->Write();		hAllJetsPtRhoEta->Write();
+  //  ~ ~ ~ ~ ~ ~ ~ ~ WRITE HISTOGRAMS ~ ~ ~ ~ ~ ~ ~ ~
+  hBG->Write();				hNEUTRAL->Write();		hChgVsNeuBG->Write();		hAllJetsPtRhoEta->Write();
   hPartPtEtaPhi->Write();			hAllPtEtaPhi->Write(); 		hPartPtDEtaDPhi->Write();      	hVertex->Write();
   hTowersPerEvent->Write();		hTowersPerRun->Write();	hPrimaryPerEvent->Write();	hPrimaryPerRun->Write();
   hnPrimaryVSnTowers->Write();	hPrimaryVsBBC->Write();		hPrimaryVsGlobal->Write();	hGlobalVsBBC->Write();

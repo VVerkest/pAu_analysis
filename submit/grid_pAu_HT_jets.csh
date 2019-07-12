@@ -7,9 +7,11 @@
 
 set ExecPath = `pwd`
 set execute = './bin/pAu_HT_jets'
-set numevents = -1
+set numevents = 1000
 set base = /wsu/home/el/el98/el9852/physics/analysis/pAu_analysis/production_pAu200_2015/HT/pAu_2015_200_HT
-set outFile = HTjets
+set BackgroundChargeBias = allBG
+set JetChargeBias = allJets
+set outFile = HT_JP2
 
 # Create the folder name for output
 #set outFile = stock
@@ -29,7 +31,7 @@ foreach input ( ${base}* )
 # Create the output file base name                                                                                                                                             
 set OutBase = `basename $input | sed 's/.root//g'`
 set uscore = "_"
-set OutBase = "$OutBase$uscore$outFile"
+set OutBase = "$OutBase$uscore$outFile$uscore$uscore$BackgroundChargeBias$uscore$JetChargeBias"
     
 # Make the output names and path                                                                                                                                               
 set outLocation = out/${outFile}/
@@ -45,7 +47,7 @@ set ErrFile     = log/${outFile}/${OutBase}.err
 echo "Logging output to " $LogFile
 echo "Logging errors to " $ErrFile
     
-set arg = "$Files $outLocation$outName $numevents"
+set arg = "$Files $outLocation$outName $numevents $BackgroundChargeBias $JetChargeBias"
 
 echo "now submitting this script: "
 echo qsub -V -l mem=4GB -o $LogFile -e $ErrFile -N $1 -- ${ExecPath}/submit/qwrap.sh ${ExecPath} $execute $arg
