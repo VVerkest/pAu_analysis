@@ -1,13 +1,9 @@
 //  pAu_analysis.cxx
-//  Veronica Verkest       May 14, 2019
+//  Veronica Verkest		May 14, 2019
 
-//  (from Isaac's code:)
 //for pAu, need to ask if the event has the trigger. The trigger IDs are:
-//HT2*BBCMB : 500205, 500215
-//JP2 : 500401, 500411
-//BBCMB : 500008, 500018
-//VPDMB :  500904
-
+//HT2*BBCMB : 500205, 500215		JP2 : 500401, 500411
+//BBCMB : 500008, 500018			VPDMB :  500904
 
 #include "pAuFunctions.hh"
 
@@ -19,7 +15,9 @@ using namespace pAuAnalysis;
 
 int main ( int argc, const char** argv ) {
 
-  int eID, rID, nEvents;                 string inFile, outFile;                 TString name, title;
+  int nEvents;		string inFile, outFile;	TString name, title;
+  TString BackgroundChargeBias = "allBG";     // options: chgBG, neuBG, allBG
+  TString JetChargeBias = "allJets";     // options: chgJets, neuJets, allJets
   
   vector<string> arguments( argv+1, argv+argc );
   if ( argc ==  4 ) {    inFile = arguments[0];    outFile = arguments[1];    nEvents = atoi(arguments[2].c_str());  }
@@ -61,10 +59,9 @@ int main ( int argc, const char** argv ) {
   TH3D *hPartPtEtaPhi = new TH3D("hPartPtEtaPhi","Lead Jet p_{T} vs. #eta vs. #phi;Lead Jet p_{T} (GeV);Particle #eta;Particle #phi", 120,0,30, 40,-1.0,1.0, 120,0,2*pi );
   TH3D *hAllPtEtaPhi = new TH3D("hAllPtEtaPhi","All Particles p_{T} vs. #eta vs. #phi;Particle p_{T} (GeV);Particle #eta;Particle #phi", 120,0,30, 40,-1.0,1.0, 120,0,2*pi );
   
-  double RunID, EventID, pmin1, pmax1, pmin2, pmax2, ptSum, dPhi, dEta, partPt, partEta, partPhi, partEt, deltaPhi;
-  int nTowers, nPrimary, nGlobal, nVertices, refMult, gRefMult, nJets, leadNcons, subNcons, towID, nHitsPoss, nHitsFit, Charge, nCons, partChg;
+  double EventID, dPhi, dEta, partPt, partEta, partPhi, partEt, deltaPhi;
+  int nTowers, nPrimary, nGlobal, nVertices, refMult, towID, nHitsPoss, nHitsFit, nCons;
   double Vx, Vy, Vz, BbcCoincidenceRate, BbcEastRate, BbcWestRate, BbcAdcSumEast, vpdVz,  leadPt, leadEta, leadPhi, leadEt, subPt, subEta, subPhi, subEt, rho, chgRho, neuRho;
-  double AREA = 4*(pi - 2);   // (  2 in eta  ) X (  2*( pi-1 - 1 ) in phi  )
 
   TChain* Chain = new TChain( "JetTree" );          Chain->Add( inFile.c_str() );
   TStarJetPicoReader Reader;                                int numEvents = nEvents;        // total events in HT: 152,007,032
@@ -81,13 +78,16 @@ int main ( int argc, const char** argv ) {
   // ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~  BEGIN EVENT LOOP!  ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~
   while ( Reader.NextEvent() ) {
 
-    Reader.PrintStatus(10);        nJets=0;
+    Reader.PrintStatus(10);
 
     chgParticles.clear();    neuParticles.clear();    rawParticles.clear();    rawJets.clear();       //  CLEAR VECTORS
     
-    event = Reader.GetEvent();            header = event->GetHeader();            container = Reader.GetOutputContainer();
+    event = Reader.GetEvent();
+    header = event->GetHeader();
+    container = Reader.GetOutputContainer();
+    
     Vz = header->GetPrimaryVertexZ();
-    if ( UseEvent( header, vzCut, Vz ) == false ) { continue; }
+    if ( UseEvent( header, vzCut, Vz ) == false ) { continue; }   //  Skip events based on: Run#, vz cut, BBCEastSum;    only accept JP2 Trigger events
       
     //   JET-FINDING
     GatherParticles( container, rawParticles);     //  GATHERS ALL PARTICLES WITH    pT >= 0.2 GeV    and    |eta|<1.0
@@ -103,17 +103,15 @@ int main ( int argc, const char** argv ) {
     if ( dphi> R || rawJets[0].pt()<10.0 || rawJets[1].pt()<2.0 ) { continue; }
     else {                        //  CREATE DIJET PAIR  
       leadPt = rawJets[0].pt();      leadEta = rawJets[0].eta();      leadPhi = rawJets[0].phi();      leadEt = rawJets[0].Et();
-      vector<PseudoJet> LeadCons= rawJets[0].constituents();      leadNcons = LeadCons.size();
       subPt = rawJets[1].pt();      subEta = rawJets[1].eta();      subPhi = rawJets[1].phi();      subEt = rawJets[1].Et();
-      vector<PseudoJet> SubCons= rawJets[1].constituents();      subNcons = SubCons.size();
     }
 
     for ( int i=0; i<rawParticles.size(); ++i ) { hAllPtEtaPhi->Fill( rawParticles[i].pt(), rawParticles[i].eta(), rawParticles[i].phi() ); }
     
-    GatherChargedBG( rawJets[0], container, chgParticles);     GatherNeutralBG( rawJets[0], container, neuParticles);
+    if ( BackgroundChargeBias = "allBG" || BackgroundChargeBias = "chgBG" ) {  GatherChargedBG( rawJets[0], container, chgParticles);  }    //  Gather background particles based on
+    if ( BackgroundChargeBias = "allBG" || BackgroundChargeBias = "neuBG" ) {  GatherNeutralBG( rawJets[0], container, neuParticles);  }     //   BackgroundChargeBias (arg)
 
-    //  BACKGROUND ESTIMATION 
-    double chgPtSum = 0;    double neuPtSum = 0;
+    double chgPtSum = 0;    double neuPtSum = 0;            //  BACKGROUND ESTIMATION 
     
     for (int i=0; i<chgParticles.size(); ++i) {
       partPt = chgParticles[i].pt();
@@ -121,16 +119,13 @@ int main ( int argc, const char** argv ) {
       partPhi = chgParticles[i].phi();
       partEt = chgParticles[i].Et();
       deltaPhi = chgParticles[i].delta_phi_to( rawJets[0] );
-      partChg = chgParticles[i].user_index();
       dPhi = chgParticles[i].delta_phi_to( rawJets[0] );
       dEta = rawJets[0].eta() - chgParticles[i].eta();
       hPartPtDEtaDPhi->Fill( chgParticles[i].pt(), dEta, dPhi );
       hPartPtEtaPhi->Fill( leadPt, chgParticles[i].eta(), chgParticles[i].phi() );
-      Charge = chgParticles[i].user_index();
       hCHARGED->Fill( leadPt, chgParticles[i].pt(), chgParticles[i].eta() );
       hBG->Fill( leadPt, chgParticles[i].eta(), chgParticles[i].phi() );
       chgPtSum+=chgParticles[i].pt();
-      ptSum+=chgParticles[i].pt();
     }
 
     for (int i=0; i<neuParticles.size(); ++i) {
@@ -139,30 +134,19 @@ int main ( int argc, const char** argv ) {
       partPhi = neuParticles[i].phi();
       partEt = neuParticles[i].Et();
       deltaPhi = neuParticles[i].delta_phi_to( rawJets[0] );
-      partChg = neuParticles[i].user_index();
       dPhi = neuParticles[i].delta_phi_to( rawJets[0] );
       dEta = rawJets[0].eta() - neuParticles[i].eta();
       hPartPtDEtaDPhi->Fill( neuParticles[i].pt(), dEta, dPhi );
       hPartPtEtaPhi->Fill( neuParticles[i].pt(), neuParticles[i].eta(), neuParticles[i].phi() );
-      Charge = neuParticles[i].user_index();
       hNEUTRAL->Fill( leadPt, neuParticles[i].pt(), neuParticles[i].eta() );
       hBG->Fill( leadPt, neuParticles[i].eta(), neuParticles[i].phi() );
       neuPtSum+=neuParticles[i].pt();
-      ptSum+=neuParticles[i].pt();
     }
 		      
-    chgRho = chgPtSum / AREA;
-    neuRho = neuPtSum / AREA;
-    rho = (chgPtSum+neuPtSum) / AREA;
+    chgRho = chgPtSum / AREA;		neuRho = neuPtSum / AREA;			rho = (chgPtSum+neuPtSum) / AREA;
 
-
-    
-    eID = Reader.GetNOfCurrentEvent();          EventID = eID;
-    rID = header->GetRunId();                        RunID = rID;
-    nPrimary =  header->GetNOfPrimaryTracks();
-
+    TList *SelectedTowers = Reader.GetListOfSelectedTowers();    
     TStarJetPicoTower *tow;
-    TList *SelectedTowers = Reader.GetListOfSelectedTowers();
     nTowers = 0;
     for (int i=0; i<SelectedTowers->GetEntries(); ++i) {
       tow = (TStarJetPicoTower *) SelectedTowers->At(i);
@@ -170,72 +154,49 @@ int main ( int argc, const char** argv ) {
       if ( fabs(tow->GetEta())<=etaCut ) {nTowers+=1;}
     }
     
-    Vx = header->GetPrimaryVertexX();                                           Vy = header->GetPrimaryVertexY();
-    nGlobal = header->GetNGlobalTracks();                                    nVertices = header->GetNumberOfVertices();
-    refMult = header->GetReferenceMultiplicity();                           gRefMult = header->GetGReferenceMultiplicity();
-    BbcCoincidenceRate = header->GetBbcCoincidenceRate();        vpdVz = header->GetVpdVz();
-    BbcEastRate = header->GetBbcEastRate();                                  BbcWestRate = header->GetBbcWestRate();
-    BbcAdcSumEast = header->GetBbcAdcSumEast();
-
+    nGlobal = header->GetNGlobalTracks();					nVertices = header->GetNumberOfVertices();
+    refMult = header->GetReferenceMultiplicity();				nPrimary =  header->GetNOfPrimaryTracks();
+    BbcCoincidenceRate = header->GetBbcCoincidenceRate();		vpdVz = header->GetVpdVz();
+    BbcEastRate = header->GetBbcEastRate();					BbcWestRate = header->GetBbcWestRate();
+    BbcAdcSumEast = header->GetBbcAdcSumEast();			EventID = Reader.GetNOfCurrentEvent();
 
 
                                         //  FILL HISTOGRAMS
     for ( int i=0; i<rawJets.size(); ++i ) { hAllJetsPtRhoEta->Fill( rawJets[i].pt(), rho,rawJets[i].eta() ); }
-
-    hLeadPtEtaPhi->Fill(leadPt,leadPhi,leadEta);
-    hLeadEtaPhi->Fill(leadPhi,leadEta);                                             hSubEtaPhi->Fill(subPhi,subEta);
-
-    hPrimaryVsRho->Fill( rho, nPrimary );                                     hGlobalVsRho->Fill(rho, nGlobal );
-    hPt_UE_BBCE->Fill(leadPt,rho,BbcEastRate);                            hPt_UE_BBCsumE->Fill(leadPt,rho,BbcAdcSumEast);
-    hTowersVsRho->Fill(rho,nTowers);                                         hLeadPtVsRho->Fill(rho,leadPt);
-
-    hVertex->Fill( Vx, Vy, Vz );
-    hTowersPerEvent->Fill( nTowers );    hTowersPerRun->Fill( RunID, nTowers );    hPrimaryPerEvent->Fill( nPrimary );    hPt_UE_RefMult->Fill( leadPt, rho, refMult);
-    hPrimaryPerRun->Fill( RunID, nPrimary );    hnPrimaryVSnTowers->Fill( nTowers, nPrimary );    hPrimaryVsBBC->Fill( BbcCoincidenceRate, nPrimary );
-    hPrimaryVsGlobal->Fill( nGlobal, nPrimary );    hGlobalVsBBC->Fill( BbcCoincidenceRate, nGlobal );    hPrimaryVsBBCE->Fill(BbcEastRate,nPrimary);
-    hGlobalVsBBCE->Fill(BbcEastRate,nGlobal);    hPrimaryVsBBCsumE->Fill(BbcAdcSumEast,nPrimary);    hTowersVsBBCsumE->Fill(BbcAdcSumEast,nTowers);
-
-    hChgVsNeuBG->Fill(neuRho,chgRho);            
+    
+    hLeadPtEtaPhi->Fill(leadPt,leadPhi,leadEta);	hLeadEtaPhi->Fill(leadPhi,leadEta);		hSubEtaPhi->Fill(subPhi,subEta);
+    hPrimaryVsRho->Fill( rho, nPrimary );			hGlobalVsRho->Fill(rho, nGlobal );		hPt_UE_BBCE->Fill(leadPt,rho,BbcEastRate);
+    hTowersVsRho->Fill(rho,nTowers);	       		hLeadPtVsRho->Fill(rho,leadPt);		hPt_UE_BBCsumE->Fill(leadPt,rho,BbcAdcSumEast);
+    hVertex->Fill( header->GetPrimaryVertexX(), header->GetPrimaryVertexY(), Vz );
+    hTowersPerEvent->Fill( nTowers );
+    hTowersPerRun->Fill( header->GetRunId(), nTowers );
+    hPrimaryPerRun->Fill( header->GetRunId(), nPrimary );
+    hPrimaryPerEvent->Fill( nPrimary );
+    hPt_UE_RefMult->Fill( leadPt, rho, refMult);
+    hnPrimaryVSnTowers->Fill( nTowers, nPrimary );			hPrimaryVsBBC->Fill( BbcCoincidenceRate, nPrimary );
+    hPrimaryVsGlobal->Fill( nGlobal, nPrimary );				hGlobalVsBBC->Fill( BbcCoincidenceRate, nGlobal );
+    hPrimaryVsBBCE->Fill(BbcEastRate,nPrimary);				hGlobalVsBBCE->Fill(BbcEastRate,nGlobal);
+    hPrimaryVsBBCsumE->Fill(BbcAdcSumEast,nPrimary);		hTowersVsBBCsumE->Fill(BbcAdcSumEast,nTowers);
+    hChgVsNeuBG->Fill(neuRho,chgRho);
+    
   }
   // ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~  END EVENT LOOP!  ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~
 
   TFile *pAuFile = new TFile( outFile.c_str() ,"RECREATE");
 
-
-  hBG->Write();                             //  WRITE HISTOGRAMS
-  hCHARGED->Write();
-  hNEUTRAL->Write();
-  hChgVsNeuBG->Write();
-  hAllJetsPtRhoEta->Write();
-  hPartPtEtaPhi->Write();
-  hAllPtEtaPhi->Write();
-  hPartPtDEtaDPhi->Write();
-  hVertex->Write();
-  hTowersPerEvent->Write();
-  hTowersPerRun->Write();
-  hPrimaryPerEvent->Write();
-  hPrimaryPerRun->Write();
-  hnPrimaryVSnTowers->Write();
-  hPrimaryVsBBC->Write();
-  hPrimaryVsGlobal->Write();
-  hGlobalVsBBC->Write();
-  hPrimaryVsBBCE->Write();
-  hGlobalVsBBCE->Write();
-  hLeadPtEtaPhi->Write();
-  hLeadEtaPhi->Write();
-  hAllJetsPtEtaPhi->Write();
-  hSubEtaPhi->Write();
-  hPt_UE_BBCE->Write();
-  hPt_UE_BBCsumE->Write();
-  hTowersVsRho->Write();
-  hLeadPtVsRho->Write();
-  hPt_UE_RefMult->Write();
-  hPrimaryVsBBCsumE->Write();
-  hTowersVsBBCsumE->Write();
-  hPrimaryVsRho->Write();
-  hGlobalVsRho->Write();
-  hCHARGED->Write();
-  hNEUTRAL->Write();
+  //  ~ ~ ~ ~ ~ ~ WRITE HISTOGRAMS ~ ~ ~ ~ ~ ~ //
+  hCHARGED->Write();			hNEUTRAL->Write();		hChgVsNeuBG->Write();
+  hAllJetsPtRhoEta->Write();		hPartPtEtaPhi->Write();		hAllPtEtaPhi->Write();
+  hPartPtDEtaDPhi->Write();		hVertex->Write();			hTowersPerEvent->Write();
+  hTowersPerRun->Write();		hPrimaryPerEvent->Write();	hPrimaryPerRun->Write();
+  hnPrimaryVSnTowers->Write();	hPrimaryVsBBC->Write();		hPrimaryVsGlobal->Write();
+  hGlobalVsBBC->Write();			hPrimaryVsBBCE->Write();	hGlobalVsBBCE->Write();
+  hLeadPtEtaPhi->Write();		hLeadEtaPhi->Write();		hAllJetsPtEtaPhi->Write();
+  hSubEtaPhi->Write();			hPt_UE_BBCE->Write();		hPt_UE_BBCsumE->Write();
+  hTowersVsRho->Write();		hLeadPtVsRho->Write();		hPt_UE_RefMult->Write();
+  hPrimaryVsBBCsumE->Write();	hTowersVsBBCsumE->Write();	hPrimaryVsRho->Write();
+  hGlobalVsRho->Write();		hCHARGED->Write();		hNEUTRAL->Write();
+  hBG->Write();
   
   pAuFile->Close();
   
