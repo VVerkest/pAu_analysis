@@ -98,9 +98,7 @@ int main ( int argc, const char** argv ) {
     for ( int i=0; i<rawJets.size(); ++i ) { hAllJetsPtEtaPhi->Fill( rawJets[i].pt(), rawJets[i].eta(), rawJets[i].phi() ); }
     
     if ( rawJets.size()<2) { continue; }                                                       //  REQUIRE DIJET
-    double phi1 = rawJets[0].phi();     double phi2 = rawJets[1].phi();
-    double dphi = fabs( fabs( phi1 - phi2 ) - pi );
-    if ( dphi> R || rawJets[0].pt()<10.0 || rawJets[1].pt()<2.0 ) { continue; }
+    if ( fabs( fabs( rawJets[0].phi() - rawJets[1].phi() ) - pi ) > R || rawJets[0].pt()<10.0 || rawJets[1].pt()<2.0 ) { continue; }    // Require Lead>=10; Sublead>=2;  pi-R < |dphi| < pi+R
     else {                        //  CREATE DIJET PAIR  
       leadPt = rawJets[0].pt();      leadEta = rawJets[0].eta();      leadPhi = rawJets[0].phi();      leadEt = rawJets[0].Et();
       subPt = rawJets[1].pt();      subEta = rawJets[1].eta();      subPhi = rawJets[1].phi();      subEt = rawJets[1].Et();
@@ -114,10 +112,6 @@ int main ( int argc, const char** argv ) {
     double chgPtSum = 0;    double neuPtSum = 0;            //  BACKGROUND ESTIMATION 
     
     for (int i=0; i<chgParticles.size(); ++i) {
-      partPt = chgParticles[i].pt();
-      partEta = chgParticles[i].eta();
-      partPhi = chgParticles[i].phi();
-      partEt = chgParticles[i].Et();
       deltaPhi = chgParticles[i].delta_phi_to( rawJets[0] );
       dPhi = chgParticles[i].delta_phi_to( rawJets[0] );
       dEta = rawJets[0].eta() - chgParticles[i].eta();
@@ -129,10 +123,6 @@ int main ( int argc, const char** argv ) {
     }
 
     for (int i=0; i<neuParticles.size(); ++i) {
-      partPt = neuParticles[i].pt();
-      partEta = neuParticles[i].eta();
-      partPhi = neuParticles[i].phi();
-      partEt = neuParticles[i].Et();
       deltaPhi = neuParticles[i].delta_phi_to( rawJets[0] );
       dPhi = neuParticles[i].delta_phi_to( rawJets[0] );
       dEta = rawJets[0].eta() - neuParticles[i].eta();
@@ -145,9 +135,7 @@ int main ( int argc, const char** argv ) {
 		      
     chgRho = chgPtSum / AREA;		neuRho = neuPtSum / AREA;			rho = (chgPtSum+neuPtSum) / AREA;
 
-    TList *SelectedTowers = Reader.GetListOfSelectedTowers();
-    nTowers = CountTowers( SelectedTowers );
-    
+    TList *SelectedTowers = Reader.GetListOfSelectedTowers();	nTowers = CountTowers( SelectedTowers );
     nGlobal = header->GetNGlobalTracks();					nVertices = header->GetNumberOfVertices();
     refMult = header->GetReferenceMultiplicity();				nPrimary =  header->GetNOfPrimaryTracks();
     BbcCoincidenceRate = header->GetBbcCoincidenceRate();		vpdVz = header->GetVpdVz();
@@ -155,42 +143,32 @@ int main ( int argc, const char** argv ) {
     BbcAdcSumEast = header->GetBbcAdcSumEast();			EventID = Reader.GetNOfCurrentEvent();
 
 
-                                        //  FILL HISTOGRAMS
-    for ( int i=0; i<rawJets.size(); ++i ) { hAllJetsPtRhoEta->Fill( rawJets[i].pt(), rho,rawJets[i].eta() ); }
+    for ( int i=0; i<rawJets.size(); ++i ) { hAllJetsPtRhoEta->Fill( rawJets[i].pt(), rho,rawJets[i].eta() ); }                      //  FILL HISTOGRAMS
     
     hLeadPtEtaPhi->Fill(leadPt,leadPhi,leadEta);	hLeadEtaPhi->Fill(leadPhi,leadEta);		hSubEtaPhi->Fill(subPhi,subEta);
     hPrimaryVsRho->Fill( rho, nPrimary );			hGlobalVsRho->Fill(rho, nGlobal );		hPt_UE_BBCE->Fill(leadPt,rho,BbcEastRate);
     hTowersVsRho->Fill(rho,nTowers);	       		hLeadPtVsRho->Fill(rho,leadPt);		hPt_UE_BBCsumE->Fill(leadPt,rho,BbcAdcSumEast);
-    hVertex->Fill( header->GetPrimaryVertexX(), header->GetPrimaryVertexY(), Vz );
-    hTowersPerEvent->Fill( nTowers );
-    hTowersPerRun->Fill( header->GetRunId(), nTowers );
-    hPrimaryPerRun->Fill( header->GetRunId(), nPrimary );
-    hPrimaryPerEvent->Fill( nPrimary );
-    hPt_UE_RefMult->Fill( leadPt, rho, refMult);
+    hTowersPerEvent->Fill( nTowers );		       	hPrimaryPerEvent->Fill( nPrimary );		hPt_UE_RefMult->Fill( leadPt, rho, refMult);
+    hVertex->Fill( header->GetPrimaryVertexX(), header->GetPrimaryVertexY(), Vz );		hChgVsNeuBG->Fill(neuRho,chgRho);
+    hTowersPerRun->Fill( header->GetRunId(), nTowers );		hPrimaryPerRun->Fill( header->GetRunId(), nPrimary );
     hnPrimaryVSnTowers->Fill( nTowers, nPrimary );			hPrimaryVsBBC->Fill( BbcCoincidenceRate, nPrimary );
     hPrimaryVsGlobal->Fill( nGlobal, nPrimary );				hGlobalVsBBC->Fill( BbcCoincidenceRate, nGlobal );
     hPrimaryVsBBCE->Fill(BbcEastRate,nPrimary);				hGlobalVsBBCE->Fill(BbcEastRate,nGlobal);
     hPrimaryVsBBCsumE->Fill(BbcAdcSumEast,nPrimary);		hTowersVsBBCsumE->Fill(BbcAdcSumEast,nTowers);
-    hChgVsNeuBG->Fill(neuRho,chgRho);
-    
   }
   // ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~  END EVENT LOOP!  ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~
 
   TFile *pAuFile = new TFile( outFile.c_str() ,"RECREATE");
 
-  //  ~ ~ ~ ~ ~ ~ WRITE HISTOGRAMS ~ ~ ~ ~ ~ ~ //
-  hCHARGED->Write();			hNEUTRAL->Write();		hChgVsNeuBG->Write();
-  hAllJetsPtRhoEta->Write();		hPartPtEtaPhi->Write();		hAllPtEtaPhi->Write();
-  hPartPtDEtaDPhi->Write();		hVertex->Write();			hTowersPerEvent->Write();
-  hTowersPerRun->Write();		hPrimaryPerEvent->Write();	hPrimaryPerRun->Write();
-  hnPrimaryVSnTowers->Write();	hPrimaryVsBBC->Write();		hPrimaryVsGlobal->Write();
-  hGlobalVsBBC->Write();			hPrimaryVsBBCE->Write();	hGlobalVsBBCE->Write();
-  hLeadPtEtaPhi->Write();		hLeadEtaPhi->Write();		hAllJetsPtEtaPhi->Write();
-  hSubEtaPhi->Write();			hPt_UE_BBCE->Write();		hPt_UE_BBCsumE->Write();
-  hTowersVsRho->Write();		hLeadPtVsRho->Write();		hPt_UE_RefMult->Write();
-  hPrimaryVsBBCsumE->Write();	hTowersVsBBCsumE->Write();	hPrimaryVsRho->Write();
-  hGlobalVsRho->Write();		hCHARGED->Write();		hNEUTRAL->Write();
-  hBG->Write();
+  hNEUTRAL->Write();			hBG->Write();				//  ~ ~ ~ ~ ~ ~ ~ ~ WRITE HISTOGRAMS ~ ~ ~ ~ ~ ~ ~ ~
+  hCHARGED->Write();			hNEUTRAL->Write();		hChgVsNeuBG->Write();		hAllJetsPtRhoEta->Write();
+  hPartPtEtaPhi->Write();			hAllPtEtaPhi->Write(); 		hPartPtDEtaDPhi->Write();      	hVertex->Write();
+  hTowersPerEvent->Write();		hTowersPerRun->Write();	hPrimaryPerEvent->Write();	hPrimaryPerRun->Write();
+  hnPrimaryVSnTowers->Write();	hPrimaryVsBBC->Write();		hPrimaryVsGlobal->Write();	hGlobalVsBBC->Write();
+  hPrimaryVsBBCE->Write();		hGlobalVsBBCE->Write();		hLeadPtEtaPhi->Write();		hLeadEtaPhi->Write();
+  hAllJetsPtEtaPhi->Write();		hSubEtaPhi->Write();	       	hPt_UE_BBCE->Write();		hPt_UE_BBCsumE->Write();
+  hTowersVsRho->Write();		hLeadPtVsRho->Write();		hPt_UE_RefMult->Write();	hPrimaryVsBBCsumE->Write();
+  hTowersVsBBCsumE->Write();	hPrimaryVsRho->Write();		hGlobalVsRho->Write();		hCHARGED->Write();
   
   pAuFile->Close();
   
