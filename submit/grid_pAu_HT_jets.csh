@@ -7,11 +7,11 @@
 
 set ExecPath = `pwd`
 set execute = './bin/pAu_HT_jets'
-set numevents = 1000
+set numevents = -1
 set base = /wsu/home/el/el98/el9852/physics/analysis/pAu_analysis/production_pAu200_2015/HT/pAu_2015_200_HT
 set BackgroundChargeBias = allBG
 set JetChargeBias = allJets
-set outFile = HT_JP2
+set outFile = HTJP2
 
 # Create the folder name for output
 #set outFile = stock
