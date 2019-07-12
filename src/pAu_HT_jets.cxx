@@ -21,7 +21,7 @@ int main ( int argc, const char** argv ) {
   
   vector<string> arguments( argv+1, argv+argc );
   if ( argc ==  4 ) {    inFile = arguments[0];    outFile = arguments[1];    nEvents = atoi(arguments[2].c_str());  }
-  else if ( argc ==  1 ) {    inFile = "production_pAu200_2015/HT/pAu_2015_200_HT*.root";    outFile = "out/pAuJets_HT.root";    nEvents = 10000;  }
+  else if ( argc ==  1 ) {    inFile = "production_pAu200_2015/HT/pAu_2015_200_HT*.root";    outFile = "out/pAuJets_HT.root";    nEvents = 100000;  }
   else { cerr<< "incorrect number of command line arguments"; return -1; }
 
   TH1::SetDefaultSumw2();  TH2::SetDefaultSumw2();  TH3::SetDefaultSumw2();
@@ -110,7 +110,8 @@ int main ( int argc, const char** argv ) {
 
     TList *SelectedTowers = Reader.GetListOfSelectedTowers();	nTowers = CountTowers( SelectedTowers );
 
-    GetHeaderInfo( header, nGlobal, nVertices, refMult, nPrimary, BbcCoincidenceRate, vpdVz, BbcEastRate, BbcWestRate, BbcAdcSumEast, EventID );
+    EventID = Reader.GetNOfCurrentEvent();
+    GetHeaderInfo( header, nGlobal, nVertices, refMult, nPrimary, BbcCoincidenceRate, vpdVz, BbcEastRate, BbcWestRate, BbcAdcSumEast );
     
     for ( int i=0; i<rawJets.size(); ++i ) { hAllJetsPtRhoEta->Fill( rawJets[i].pt(), rho,rawJets[i].eta() ); }                      //  FILL HISTOGRAMS
     
