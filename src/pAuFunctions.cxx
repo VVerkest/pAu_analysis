@@ -4,8 +4,20 @@
 #include "pAuFunctions.hh"
 
 namespace pAuAnalysis {
-  
 
+  
+  int CountTowers( TList *selectedtowers ) {
+
+    TStarJetPicoTower *tow;
+    double n_towers = 0;
+    for (int i=0; i<selectedtowers->GetEntries(); ++i) {
+      tow = (TStarJetPicoTower *) selectedtowers->At(i);
+      if ( fabs(tow->GetEta())<=etaCut ) { n_towers+=1; }
+    }
+    return n_towers;
+  }
+
+  
   std::vector<fastjet::PseudoJet> GatherParticles ( TStarJetVectorContainer<TStarJetVector> * container , std::vector<fastjet::PseudoJet> & rawParticles ){
     for ( int i=0; i < container->GetEntries() ; ++i ) {
       TStarJetVector* sv = container->Get(i);

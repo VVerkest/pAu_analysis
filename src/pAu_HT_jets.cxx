@@ -145,14 +145,8 @@ int main ( int argc, const char** argv ) {
 		      
     chgRho = chgPtSum / AREA;		neuRho = neuPtSum / AREA;			rho = (chgPtSum+neuPtSum) / AREA;
 
-    TList *SelectedTowers = Reader.GetListOfSelectedTowers();    
-    TStarJetPicoTower *tow;
-    nTowers = 0;
-    for (int i=0; i<SelectedTowers->GetEntries(); ++i) {
-      tow = (TStarJetPicoTower *) SelectedTowers->At(i);
-      cout<<tow->GetEta()<<endl;
-      if ( fabs(tow->GetEta())<=etaCut ) {nTowers+=1;}
-    }
+    TList *SelectedTowers = Reader.GetListOfSelectedTowers();
+    nTowers = CountTowers( SelectedTowers );
     
     nGlobal = header->GetNGlobalTracks();					nVertices = header->GetNumberOfVertices();
     refMult = header->GetReferenceMultiplicity();				nPrimary =  header->GetNOfPrimaryTracks();
