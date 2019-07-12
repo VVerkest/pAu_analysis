@@ -24,14 +24,13 @@ if ( ! -d log/${outFile} ) then
 mkdir -p log/${outFile}
 endif
 
-#echo ${base}
 # Now Submit jobs for each data file                                                                                                                                           
 foreach input ( ${base}* )
 
 # Create the output file base name                                                                                                                                             
 set OutBase = `basename $input | sed 's/.root//g'`
 set uscore = "_"
-set OutBase = "$OutBase$uscore$outFile$uscore$uscore$BackgroundChargeBias$uscore$JetChargeBias"
+set OutBase = "$OutBase$uscore$BackgroundChargeBias$uscore$JetChargeBias"
     
 # Make the output names and path                                                                                                                                               
 set outLocation = out/${outFile}/
@@ -55,6 +54,221 @@ echo qsub -V -l mem=4GB -o $LogFile -e $ErrFile -N $1 -- ${ExecPath}/submit/qwra
 
 qsub -V -q wsuq -l mem=4GB -o $LogFile -e $ErrFile -N pAu_analysis -- ${ExecPath}/submit/qwrap.sh ${ExecPath} $execute $arg
 
-@ i++
+
+
+
+set BackgroundChargeBias = chgBG
+set JetChargeBias = chgJets
+
+# Now Submit jobs for each data file                                                                                                                                           
+foreach input ( ${base}* )
+
+# Create the output file base name                                                                                                                                             
+set OutBase = `basename $input | sed 's/.root//g'`
+set uscore = "_"
+set OutBase = "$OutBase$uscore$BackgroundChargeBias$uscore$JetChargeBias"
+    
+# Make the output names and path                                                                                                                                               
+set outLocation = out/${outFile}/
+set outName = ${OutBase}.root
+
+# Input files                                                                                                                                                                  
+set Files = ${input}
+
+# Logfiles. Thanks cshell for this "elegant" syntax to split err and out                                                                                                       
+set LogFile     = log/${outFile}/${OutBase}.log
+set ErrFile     = log/${outFile}/${OutBase}.err
+
+echo "Logging output to " $LogFile
+echo "Logging errors to " $ErrFile
+    
+set arg = "$Files $outLocation$outName $numevents $BackgroundChargeBias $JetChargeBias"
+
+echo "now submitting this script: "
+echo qsub -V -l mem=4GB -o $LogFile -e $ErrFile -N $1 -- ${ExecPath}/submit/qwrap.sh ${ExecPath} $execute $arg
+    
+
+qsub -V -q wsuq -l mem=4GB -o $LogFile -e $ErrFile -N pAu_analysis -- ${ExecPath}/submit/qwrap.sh ${ExecPath} $execute $arg
+
+
+
+
+set BackgroundChargeBias = neuBG
+set JetChargeBias = neuJets
+
+# Now Submit jobs for each data file                                                                                                                                           
+foreach input ( ${base}* )
+
+# Create the output file base name                                                                                                                                             
+set OutBase = `basename $input | sed 's/.root//g'`
+set uscore = "_"
+set OutBase = "$OutBase$uscore$BackgroundChargeBias$uscore$JetChargeBias"
+    
+# Make the output names and path                                                                                                                                               
+set outLocation = out/${outFile}/
+set outName = ${OutBase}.root
+
+# Input files                                                                                                                                                                  
+set Files = ${input}
+
+# Logfiles. Thanks cshell for this "elegant" syntax to split err and out                                                                                                       
+set LogFile     = log/${outFile}/${OutBase}.log
+set ErrFile     = log/${outFile}/${OutBase}.err
+
+echo "Logging output to " $LogFile
+echo "Logging errors to " $ErrFile
+    
+set arg = "$Files $outLocation$outName $numevents $BackgroundChargeBias $JetChargeBias"
+
+echo "now submitting this script: "
+echo qsub -V -l mem=4GB -o $LogFile -e $ErrFile -N $1 -- ${ExecPath}/submit/qwrap.sh ${ExecPath} $execute $arg
+    
+
+qsub -V -q wsuq -l mem=4GB -o $LogFile -e $ErrFile -N pAu_analysis -- ${ExecPath}/submit/qwrap.sh ${ExecPath} $execute $arg
+
+
+
+
+set BackgroundChargeBias = allBG
+set JetChargeBias = chgJets
+
+# Now Submit jobs for each data file                                                                                                                                           
+foreach input ( ${base}* )
+
+# Create the output file base name                                                                                                                                             
+set OutBase = `basename $input | sed 's/.root//g'`
+set uscore = "_"
+set OutBase = "$OutBase$uscore$BackgroundChargeBias$uscore$JetChargeBias"
+    
+# Make the output names and path                                                                                                                                               
+set outLocation = out/${outFile}/
+set outName = ${OutBase}.root
+
+# Input files                                                                                                                                                                  
+set Files = ${input}
+
+# Logfiles. Thanks cshell for this "elegant" syntax to split err and out                                                                                                       
+set LogFile     = log/${outFile}/${OutBase}.log
+set ErrFile     = log/${outFile}/${OutBase}.err
+
+echo "Logging output to " $LogFile
+echo "Logging errors to " $ErrFile
+    
+set arg = "$Files $outLocation$outName $numevents $BackgroundChargeBias $JetChargeBias"
+
+echo "now submitting this script: "
+echo qsub -V -l mem=4GB -o $LogFile -e $ErrFile -N $1 -- ${ExecPath}/submit/qwrap.sh ${ExecPath} $execute $arg
+    
+
+qsub -V -q wsuq -l mem=4GB -o $LogFile -e $ErrFile -N pAu_analysis -- ${ExecPath}/submit/qwrap.sh ${ExecPath} $execute $arg
+
+
+
+
+set BackgroundChargeBias = allBG
+set JetChargeBias = neuJets
+
+# Now Submit jobs for each data file                                                                                                                                           
+foreach input ( ${base}* )
+
+# Create the output file base name                                                                                                                                             
+set OutBase = `basename $input | sed 's/.root//g'`
+set uscore = "_"
+set OutBase = "$OutBase$uscore$BackgroundChargeBias$uscore$JetChargeBias"
+    
+# Make the output names and path                                                                                                                                               
+set outLocation = out/${outFile}/
+set outName = ${OutBase}.root
+
+# Input files                                                                                                                                                                  
+set Files = ${input}
+
+# Logfiles. Thanks cshell for this "elegant" syntax to split err and out                                                                                                       
+set LogFile     = log/${outFile}/${OutBase}.log
+set ErrFile     = log/${outFile}/${OutBase}.err
+
+echo "Logging output to " $LogFile
+echo "Logging errors to " $ErrFile
+    
+set arg = "$Files $outLocation$outName $numevents $BackgroundChargeBias $JetChargeBias"
+
+echo "now submitting this script: "
+echo qsub -V -l mem=4GB -o $LogFile -e $ErrFile -N $1 -- ${ExecPath}/submit/qwrap.sh ${ExecPath} $execute $arg
+    
+
+qsub -V -q wsuq -l mem=4GB -o $LogFile -e $ErrFile -N pAu_analysis -- ${ExecPath}/submit/qwrap.sh ${ExecPath} $execute $arg
+
+
+
+
+set BackgroundChargeBias = chgBG
+set JetChargeBias = allJets
+
+# Now Submit jobs for each data file                                                                                                                                           
+foreach input ( ${base}* )
+
+# Create the output file base name                                                                                                                                             
+set OutBase = `basename $input | sed 's/.root//g'`
+set uscore = "_"
+set OutBase = "$OutBase$uscore$BackgroundChargeBias$uscore$JetChargeBias"
+    
+# Make the output names and path                                                                                                                                               
+set outLocation = out/${outFile}/
+set outName = ${OutBase}.root
+
+# Input files                                                                                                                                                                  
+set Files = ${input}
+
+# Logfiles. Thanks cshell for this "elegant" syntax to split err and out                                                                                                       
+set LogFile     = log/${outFile}/${OutBase}.log
+set ErrFile     = log/${outFile}/${OutBase}.err
+
+echo "Logging output to " $LogFile
+echo "Logging errors to " $ErrFile
+    
+set arg = "$Files $outLocation$outName $numevents $BackgroundChargeBias $JetChargeBias"
+
+echo "now submitting this script: "
+echo qsub -V -l mem=4GB -o $LogFile -e $ErrFile -N $1 -- ${ExecPath}/submit/qwrap.sh ${ExecPath} $execute $arg
+    
+
+    qsub -V -q wsuq -l mem=4GB -o $LogFile -e $ErrFile -N pAu_analysis -- ${ExecPath}/submit/qwrap.sh ${ExecPath} $execute $arg
+
+
+
+
+set BackgroundChargeBias = neuBG
+set JetChargeBias = allJets
+
+# Now Submit jobs for each data file                                                                                                                                           
+foreach input ( ${base}* )
+
+# Create the output file base name                                                                                                                                             
+set OutBase = `basename $input | sed 's/.root//g'`
+set uscore = "_"
+set OutBase = "$OutBase$uscore$BackgroundChargeBias$uscore$JetChargeBias"
+    
+# Make the output names and path                                                                                                                                               
+set outLocation = out/${outFile}/
+set outName = ${OutBase}.root
+
+# Input files                                                                                                                                                                  
+set Files = ${input}
+
+# Logfiles. Thanks cshell for this "elegant" syntax to split err and out                                                                                                       
+set LogFile     = log/${outFile}/${OutBase}.log
+set ErrFile     = log/${outFile}/${OutBase}.err
+
+echo "Logging output to " $LogFile
+echo "Logging errors to " $ErrFile
+    
+set arg = "$Files $outLocation$outName $numevents $BackgroundChargeBias $JetChargeBias"
+
+echo "now submitting this script: "
+echo qsub -V -l mem=4GB -o $LogFile -e $ErrFile -N $1 -- ${ExecPath}/submit/qwrap.sh ${ExecPath} $execute $arg
+    
+
+    qsub -V -q wsuq -l mem=4GB -o $LogFile -e $ErrFile -N pAu_analysis -- ${ExecPath}/submit/qwrap.sh ${ExecPath} $execute $arg
+
 
 end
