@@ -108,8 +108,8 @@ int main ( int argc, const char** argv ) {
 
     for ( int i=0; i<rawParticles.size(); ++i ) { hAllPtEtaPhi->Fill( rawParticles[i].pt(), rawParticles[i].eta(), rawParticles[i].phi() ); }
     
-    if ( BackgroundChargeBias = "allBG" || BackgroundChargeBias = "chgBG" ) {  GatherChargedBG( rawJets[0], container, chgParticles);  }    //  Gather background particles based on
-    if ( BackgroundChargeBias = "allBG" || BackgroundChargeBias = "neuBG" ) {  GatherNeutralBG( rawJets[0], container, neuParticles);  }     //   BackgroundChargeBias (arg)
+    if ( BackgroundChargeBias == "allBG" || BackgroundChargeBias == "chgBG" ) {  GatherChargedBG( rawJets[0], container, chgParticles);  }    //  Gather background particles based on
+    if ( BackgroundChargeBias == "allBG" || BackgroundChargeBias == "neuBG" ) {  GatherNeutralBG( rawJets[0], container, neuParticles);  }     //   BackgroundChargeBias (arg)
 
     double chgPtSum = 0;    double neuPtSum = 0;            //  BACKGROUND ESTIMATION 
     
