@@ -41,7 +41,6 @@ int main ( int argc, const char** argv ) {         // tracks and towers have eta
   TH3D *hAllJetsPtEtaPhi = new TH3D( "hAllJetsPtEtaPhi", "Inclusive Jets p_{T}, #eta, #phi;Jet p_{T} (GeV);Jet #eta;Jet #phi", 400,0.0,100.0, 40,-1.0,1.0, 120,0.0,2*pi  );
   TH3D *hAllJetsPtRhoEta = new TH3D( "hAllJetsPtRhoEta", "Inclusive Jets p_{T}, #rho, #eta;Jet p_{T} (GeV);#rho;Jet #eta", 400,0.0,100.0, 100,0,25, 40,-1.0,1.0 );
   TH3D *hLeadPtEtaPhi = new TH3D("hLeadPtEtaPhi","Lead Jet p_{T} vs. #eta vs. #phi;p_{T} (GeV);#phi;#eta", 280,0,70, 120,0,6.3, 40,-1.0,1.0);
-  TH2D *hLeadEtaPhi = new TH2D("hLeadEtaPhi","Lead Jet #eta vs. #phi;#phi;#eta", 120,0,2*pi, 40,-1.0,1.0);
   TH2D *hSubEtaPhi = new TH2D("hSubEtaPhi","Sub Jet #eta vs. #phi;#phi;#eta", 120,0,2*pi, 40,-1.0,1.0);
   TH2D *hPrimaryVsRho = new TH2D("hPrimaryVsRho","# Primary Tracks vs. Underlying Event;#rho (GeV);# Primary Tracks", 100,0,25, 40,0,200);
   TH2D *hGlobalVsRho = new TH2D("hGlobalVsRho","# Global Tracks vs. Underlying Event;#rho (GeV);# Global Tracks", 100,0,25, 150,0,3000 );
@@ -69,7 +68,7 @@ int main ( int argc, const char** argv ) {         // tracks and towers have eta
   JetDefinition jet_def(antikt_algorithm, R);     //  JET DEFINITION
   
   vector<PseudoJet> rawParticles, chgParticles, neuParticles, rawJets, chgBG, neuBG;
-  TStarJetPicoEventHeader* header;    TStarJetPicoEvent* event;    TStarJetVector* sv;    TStarJetVectorContainer<TStarJetVector> * container;
+  TStarJetPicoEventHeader* header;    TStarJetPicoEvent* event;    TStarJetVectorContainer<TStarJetVector> * container;
   
   
   // ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~  BEGIN EVENT LOOP!  ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~
@@ -117,7 +116,7 @@ int main ( int argc, const char** argv ) {         // tracks and towers have eta
     
     for ( int i=0; i<rawJets.size(); ++i ) { hAllJetsPtRhoEta->Fill( rawJets[i].pt(), rho,rawJets[i].eta() ); }                      //  FILL HISTOGRAMS
     
-    hLeadPtEtaPhi->Fill(rawJets[0].pt(),rawJets[0].phi(),rawJets[0].eta());	hLeadEtaPhi->Fill(rawJets[0].phi(),rawJets[0].eta());			hSubEtaPhi->Fill(rawJets[1].phi(),rawJets[1].eta());
+    hLeadPtEtaPhi->Fill(rawJets[0].pt(),rawJets[0].phi(),rawJets[0].eta());	hSubEtaPhi->Fill(rawJets[1].phi(),rawJets[1].eta());
     hPrimaryVsRho->Fill( rho, nPrimary );							hGlobalVsRho->Fill(rho, nGlobal );						hPt_UE_BBCE->Fill(rawJets[0].pt(),rho,BbcEastRate);
     hTowersVsRho->Fill(rho,nTowers);	       						hLeadPtVsRho->Fill(rho,rawJets[0].pt());					hPt_UE_BBCsumE->Fill(rawJets[0].pt(),rho,BbcAdcSumEast);
     hTowersPerEvent->Fill( nTowers );						       	hPrimaryPerEvent->Fill( nPrimary );						hPt_UE_RefMult->Fill( rawJets[0].pt(), rho, refMult);
@@ -136,7 +135,7 @@ int main ( int argc, const char** argv ) {         // tracks and towers have eta
   hPartPtEtaPhi->Write();			hAllPtEtaPhi->Write(); 		hPartPtDEtaDPhi->Write();      	hVertex->Write();
   hTowersPerEvent->Write();		hTowersPerRun->Write();	hPrimaryPerEvent->Write();	hPrimaryPerRun->Write();
   hnPrimaryVSnTowers->Write();	hPrimaryVsBBC->Write();		hPrimaryVsGlobal->Write();	hGlobalVsBBC->Write();
-  hPrimaryVsBBCE->Write();		hGlobalVsBBCE->Write();		hLeadPtEtaPhi->Write();		hLeadEtaPhi->Write();
+  hPrimaryVsBBCE->Write();		hGlobalVsBBCE->Write();		hLeadPtEtaPhi->Write();		
   hAllJetsPtEtaPhi->Write();		hSubEtaPhi->Write();	       	hPt_UE_BBCE->Write();		hPt_UE_BBCsumE->Write();
   hTowersVsRho->Write();		hLeadPtVsRho->Write();		hPt_UE_RefMult->Write();	hPrimaryVsBBCsumE->Write();
   hTowersVsBBCsumE->Write();	hPrimaryVsRho->Write();		hGlobalVsRho->Write();		hCHARGED->Write();
