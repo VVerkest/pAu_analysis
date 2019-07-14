@@ -7,7 +7,7 @@ void HTJP2Plot() {
 
   TString BackgroundChargeBias = "allBG";     // options: chgBG, neuBG, allBG
   TString JetChargeBias = "allJets";     // options: chgJets, neuJets, allJets
-  string fileName;			TString name, title;
+  TString fileName;			TString name, title;
 
   fileName = "out/HTJP2/pAu_2015_200_" + BackgroundChargeBias + "_" + JetChargeBias + ".root";
   TFile* inFile = new TFile( fileName, "READ" );
