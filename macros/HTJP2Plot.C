@@ -34,7 +34,7 @@ void HTJP2Plot() {
   TH2D *hSubEtaPhi = (TH2D*) inFile->Get("hSubEtaPhi");					hSubEtaPhi->Scale(1.0/hSubEtaPhi->Integral("WIDTH"));
   TH2D *hTowersVsRho = (TH2D*) inFile->Get("hTowersVsRho");				hTowersVsRho->Scale(1.0/hTowersVsRho->Integral("WIDTH"));
   TH2D *hLeadPtVsRho = (TH2D*) inFile->Get("hLeadPtVsRho");
-  TH3D *hPt_UE_BBCE = (TH3D*) inFile->Get(hPt_UE_BBCE"");
+  TH3D *hPt_UE_BBCE = (TH3D*) inFile->Get("hPt_UE_BBCE");
   TH3D *hPt_UE_BBCsumE = (TH3D*) inFile->Get("hPt_UE_BBCsumE");
   TH3D *hBG = (TH3D*) inFile->Get("hBG");
   TH3D *hNEUTRAL = (TH3D*) inFile->Get("hBG");
