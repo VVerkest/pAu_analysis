@@ -49,7 +49,7 @@ void HTJP2Plot() {
   TH3D *hAllJetsPtEtaPhi = (TH3D*) inFile->Get("hAllJetsPtEtaPhi");
 
 
-  inFile->Close();
+
 
   TCanvas * c0 = new TCanvas( "c0" , "" ,700 ,500 );              // CANVAS
   
@@ -76,5 +76,6 @@ void HTJP2Plot() {
 
   hGlobalVsRho->Draw("COLZ");			name = "plots/HTJP2/GlobalVsRho_" + BackgroundChargeBias + "_" + JetChargeBias + ".pdf";				c0->SaveAs( name, "PDF" );
 
+  inFile->Close();
 
 }
