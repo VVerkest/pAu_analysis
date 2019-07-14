@@ -64,31 +64,31 @@ void HTJP2Plot() {
 
   c0->SetLogy(0);		c0->SetLogz();
 
-  hChgVsNeuBG->GetZaxis()->SetRangeUser(0.0000001,1);
+  hChgVsNeuBG->GetZaxis()->SetRangeUser(0.00001,1);
   hChgVsNeuBG->Draw("COLZ");			name = "plots/HTJP2/ChgVsNeuBG_" + BackgroundChargeBias + "_" + JetChargeBias + ".pdf";				c0->SaveAs( name, "PDF" );
 
-  hnPrimaryVSnTowers->GetZaxis()->SetRangeUser(0.0000001,1);
+  hnPrimaryVSnTowers->GetZaxis()->SetRangeUser(0.00001,1);
   hnPrimaryVSnTowers->Draw("COLZ");		name = "plots/HTJP2/nPrimaryVSnTowers_" + BackgroundChargeBias + "_" + JetChargeBias + ".pdf";			c0->SaveAs( name, "PDF" );
 
-  hPrimaryVsBBC->GetZaxis()->SetRangeUser(0.0000001,1);
+  hPrimaryVsBBC->GetZaxis()->SetRangeUser(0.00001,1);
   hPrimaryVsBBC->Draw("COLZ");			name = "plots/HTJP2/PrimaryVsBBC_" + BackgroundChargeBias + "_" + JetChargeBias + ".pdf";				c0->SaveAs( name, "PDF" );
 
-  hPrimaryVsGlobal->GetZaxis()->SetRangeUser(0.0000001,1);
+  hPrimaryVsGlobal->GetZaxis()->SetRangeUser(0.00001,1);
   hPrimaryVsGlobal->Draw("COLZ");		name = "plots/HTJP2/PrimaryVsGlobal_" + BackgroundChargeBias + "_" + JetChargeBias + ".pdf";			c0->SaveAs( name, "PDF" );
 
-  hPrimaryVsRho->GetZaxis()->SetRangeUser(0.0000001,1);
+  hPrimaryVsRho->GetZaxis()->SetRangeUser(0.00001,1);
   hPrimaryVsRho->Draw("COLZ");			name = "plots/HTJP2/PrimaryVsRho_" + BackgroundChargeBias + "_" + JetChargeBias + ".pdf";				c0->SaveAs( name, "PDF" );
 
-  hGlobalVsRho->GetZaxis()->SetRangeUser(0.0000001,1);
+  hGlobalVsRho->GetZaxis()->SetRangeUser(0.00001,1);
   hGlobalVsRho->Draw("COLZ");			name = "plots/HTJP2/GlobalVsRho_" + BackgroundChargeBias + "_" + JetChargeBias + ".pdf";				c0->SaveAs( name, "PDF" );
 
-  hSubEtaPhi->GetZaxis()->SetRangeUser(0.0000001,1);
+  hSubEtaPhi->GetZaxis()->SetRangeUser(0.00001,1);
   hSubEtaPhi->Draw("COLZ");				name = "plots/HTJP2/SubEtaPhi_" + BackgroundChargeBias + "_" + JetChargeBias + ".pdf";					c0->SaveAs( name, "PDF" );
 
-  hTowersVsRho->GetZaxis()->SetRangeUser(0.0000001,1);
+  hTowersVsRho->GetZaxis()->SetRangeUser(0.00001,1);
   hTowersVsRho->Draw("COLZ");			name = "plots/HTJP2/TowersVsRho_" + BackgroundChargeBias + "_" + JetChargeBias + ".pdf";				c0->SaveAs( name, "PDF" );
 
-  scale = hLeadPtVsRho->Integral("WIDTH");			hLeadPtVsRho->Scale(1.0/scale);			hLeadPtVsRho->GetZaxis()->SetRangeUser(0.0000001,1);
+  scale = hLeadPtVsRho->Integral("WIDTH");			hLeadPtVsRho->Scale(1.0/scale);			hLeadPtVsRho->GetZaxis()->SetRangeUser(0.00001,1);
   hLeadPtVsRho->Draw("COLZ");			name = "plots/HTJP2/LeadPtVsRho_" + BackgroundChargeBias + "_" + JetChargeBias + ".pdf";				c0->SaveAs( name, "PDF" );
   hLeadPtVsRho->Scale(scale);
 
