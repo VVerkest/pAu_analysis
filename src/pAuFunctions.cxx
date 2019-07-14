@@ -135,8 +135,8 @@ namespace pAuAnalysis {
   }
 
 
-  void GetHeaderInfo( TStarJetPicoEventHeader* Header, int Nglobal, int Nvertices, int ref_mult, int Nprimary, double BBC_CoincidenceRate,
-		      double vpdVz, double BBC_EastRate, double BBC_WestRate, double BBC_AdcSumEast ) {
+  void GetHeaderInfo( TStarJetPicoEventHeader* Header, int &Nglobal, int &Nvertices, int &ref_mult, int &Nprimary, double &BBC_CoincidenceRate,
+		      double &vpdVz, double &BBC_EastRate, double &BBC_WestRate, double &BBC_AdcSumEast ) {
     Nglobal = Header->GetNGlobalTracks();						Nvertices = Header->GetNumberOfVertices();
     ref_mult = Header->GetReferenceMultiplicity();					Nprimary =  Header->GetNOfPrimaryTracks();
     BBC_CoincidenceRate = Header->GetBbcCoincidenceRate();		vpdVz = Header->GetVpdVz();
