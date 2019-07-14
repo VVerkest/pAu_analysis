@@ -7,9 +7,10 @@ void HTJP2Plot() {
 
   TString BackgroundChargeBias = "allBG";     // options: chgBG, neuBG, allBG
   TString JetChargeBias = "allJets";     // options: chgJets, neuJets, allJets
-  string inFile;			TString name, title;
+  string fileName;			TString name, title;
 
-  inFile = "out/HTJP2/pAu_2015_200_" + BackgroundChargeBias + "_" + JetChargeBias + ".root";
+  fileName = "out/HTJP2/pAu_2015_200_" + BackgroundChargeBias + "_" + JetChargeBias + ".root";
+  TFile* inFile = new TFile( fileName, "READ" );
 
   TH1D *hTowersPerEvent = (TH1D*) inFile->Get("hTowersPerEvent");		TH1D *hPrimaryPerEvent = (TH1D*) inFile->Get("hPrimaryPerEvent");
   TH2D *hChgVsNeuBG = (TH2D*) inFile->Get("hChgVsNeuBG");			TH2D *hTowersPerRun = (TH2D*) inFile->Get("hChgVsNeuBG");
