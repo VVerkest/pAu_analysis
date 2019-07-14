@@ -8,7 +8,7 @@ void HTJP2Plot() {
   // const int acn = 3;
   // TString BackgroundChargeBias[acn] = { "allBG", "chgBG", "neuBG" };
   // TString JetChargeBias[acn] = { "allJets", "chgJets", "neuJets" };
-  TString fileName;			TString name, title;
+  TString fileName;			TString name, title;			double scale;
 
   TString BackgroundChargeBias = "allBG";     //  [  "allBG",  "chgBG",  "neuBG"  ]
   TString JetChargeBias = "allJets";                  //  [ "allJets", "chgJets", "neuJets" ]
@@ -59,22 +59,39 @@ void HTJP2Plot() {
 
   hPrimaryPerEvent->Draw();				name = "plots/HTJP2/PrimaryPerEvent_" + BackgroundChargeBias + "_" + JetChargeBias + ".pdf";			c0->SaveAs( name, "PDF" );
 
-  TH1D *hAllJetsPt = (TH1D*) hAllJetsPtEtaPhi->ProjectionX();				hAllJetsPt->Scale(1.0/hAllJetsPt->Integral());
+  TH1D *hAllJetsPt = (TH1D*) hAllJetsPtEtaPhi->ProjectionX();		hAllJetsPt->Scale(1.0/hAllJetsPt->Integral());			hAllJetsPt->SetTitle("Inclusive Jet p_{T};p_{T} (GeV)");
   hAllJetsPt->Draw();					name = "plots/HTJP2/AllJetsPt_" + BackgroundChargeBias + "_" + JetChargeBias + ".pdf";					c0->SaveAs( name, "PDF" );
 
   c0->SetLogy(0);		c0->SetLogz();
 
+  hChgVsNeuBG->GetZaxis()->SetRangeUser(0.0000001,1);
   hChgVsNeuBG->Draw("COLZ");			name = "plots/HTJP2/ChgVsNeuBG_" + BackgroundChargeBias + "_" + JetChargeBias + ".pdf";				c0->SaveAs( name, "PDF" );
 
+  hnPrimaryVSnTowers->GetZaxis()->SetRangeUser(0.0000001,1);
   hnPrimaryVSnTowers->Draw("COLZ");		name = "plots/HTJP2/nPrimaryVSnTowers_" + BackgroundChargeBias + "_" + JetChargeBias + ".pdf";			c0->SaveAs( name, "PDF" );
 
+  hPrimaryVsBBC->GetZaxis()->SetRangeUser(0.0000001,1);
   hPrimaryVsBBC->Draw("COLZ");			name = "plots/HTJP2/PrimaryVsBBC_" + BackgroundChargeBias + "_" + JetChargeBias + ".pdf";				c0->SaveAs( name, "PDF" );
 
+  hPrimaryVsGlobal->GetZaxis()->SetRangeUser(0.0000001,1);
   hPrimaryVsGlobal->Draw("COLZ");		name = "plots/HTJP2/PrimaryVsGlobal_" + BackgroundChargeBias + "_" + JetChargeBias + ".pdf";			c0->SaveAs( name, "PDF" );
 
+  hPrimaryVsRho->GetZaxis()->SetRangeUser(0.0000001,1);
   hPrimaryVsRho->Draw("COLZ");			name = "plots/HTJP2/PrimaryVsRho_" + BackgroundChargeBias + "_" + JetChargeBias + ".pdf";				c0->SaveAs( name, "PDF" );
 
+  hGlobalVsRho->GetZaxis()->SetRangeUser(0.0000001,1);
   hGlobalVsRho->Draw("COLZ");			name = "plots/HTJP2/GlobalVsRho_" + BackgroundChargeBias + "_" + JetChargeBias + ".pdf";				c0->SaveAs( name, "PDF" );
+
+  hSubEtaPhi->GetZaxis()->SetRangeUser(0.0000001,1);
+  hSubEtaPhi->Draw("COLZ");				name = "plots/HTJP2/SubEtaPhi_" + BackgroundChargeBias + "_" + JetChargeBias + ".pdf";					c0->SaveAs( name, "PDF" );
+
+  hTowersVsRho->GetZaxis()->SetRangeUser(0.0000001,1);
+  hTowersVsRho->Draw("COLZ");			name = "plots/HTJP2/TowersVsRho_" + BackgroundChargeBias + "_" + JetChargeBias + ".pdf";				c0->SaveAs( name, "PDF" );
+
+  scale = hLeadPtVsRho->Integral("WIDTH");			hLeadPtVsRho->Scale(1.0/scale);			hLeadPtVsRho->GetZaxis()->SetRangeUser(0.0000001,1);
+  hLeadPtVsRho->Draw("COLZ");			name = "plots/HTJP2/LeadPtVsRho_" + BackgroundChargeBias + "_" + JetChargeBias + ".pdf";				c0->SaveAs( name, "PDF" );
+  hLeadPtVsRho->Scale(scale);
+
 
   inFile->Close();
 
