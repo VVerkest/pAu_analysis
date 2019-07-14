@@ -8,13 +8,13 @@ void HTJP2Plot() {
   // const int acn = 3;
   // TString BackgroundChargeBias[acn] = { "allBG", "chgBG", "neuBG" };
   // TString JetChargeBias[acn] = { "allJets", "chgJets", "neuJets" };
-  TString fileName;			TString name, title;			TFile* inFile[acn][acn];
+  TString fileName;			TString name, title;
 
   TString BackgroundChargeBias = "allBG";     //  [  "allBG",  "chgBG",  "neuBG"  ]
   TString JetChargeBias = "allJets";                  //  [ "allJets", "chgJets", "neuJets" ]
 
   fileName = "out/HTJP2/pAu_2015_200_" + BackgroundChargeBias + "_" + JetChargeBias + ".root";
-  inFile = new TFile( fileName, "READ" );
+  TFile* inFile = new TFile( fileName, "READ" );
 
   TH1D *hTowersPerEvent = (TH1D*) inFile->Get("hTowersPerEvent");			hTowersPerEvent->Scale(1.0/hTowersPerEvent->Integral("WIDTH"));
   TH1D *hPrimaryPerEvent = (TH1D*) inFile->Get("hPrimaryPerEvent");			hPrimaryPerEvent->Scale(1.0/hPrimaryPerEvent->Integral("WIDTH"));
@@ -48,7 +48,6 @@ void HTJP2Plot() {
   TH3D *hLeadPtEtaPhi = (TH3D*) inFile->Get("hLeadPtEtaPhi");
   TH3D *hAllJetsPtEtaPhi = (TH3D*) inFile->Get("hAllJetsPtEtaPhi");
 
-  TH
 
   inFile->Close();
 
