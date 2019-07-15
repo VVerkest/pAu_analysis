@@ -72,16 +72,20 @@ void HTJP2Plot() {
 
   TCanvas * c0 = new TCanvas( "c0" , "" ,700 ,500 );              // CANVAS
 
+  TH2D *sLeadEta = new TH2D( "sLeadEta", "Lead Jet #eta by p_{T};#eta;", 40,-1.0,1.0, 10,0.000001, 1.0 );
+  sLeadEta->SetStats(0);
+  
   TLegend *leg0 = new TLegend(0.65, 0.65, 0.9, 0.9,NULL,"brNDC");    // LEGEND
   leg0->SetBorderSize(1);   leg0->SetLineColor(1);   leg0->SetLineStyle(1);   leg0->SetLineWidth(1);   leg0->SetFillColor(0);   leg0->SetFillStyle(1001);
   leg0->SetNColumns(3);
   leg0->AddEntry((TObject*)0,"#bf{p_{T}^{Lead} (GeV)}", "");
   leg0->AddEntry((TObject*)0,"#bf{# of Dijets}", "");
   leg0->AddEntry((TObject*)0,"#bf{<#eta> (GeV)}", "");
-  
+
+  sLeadEta->Draw();
   for ( int i=0; i<nPtBins; ++i ) {
     name = "LeadEta" + ptBinName[i];      title = ptBinString[i];
-    hLeadPtEtaPhi->GetYaxis()->SetRangeUser(ptBinLo[i], ptBinHi[i]);
+    hLeadPtEtaPhi->GetXaxis()->SetRangeUser(ptBinLo[i], ptBinHi[i]);
     hLeadEta[i] = hLeadPtEtaPhi->ProjectionY( name );       // PROJECT
     hLeadEta[i]->SetStats(0);
     hLeadEta[i]->Scale( 1./hLeadEta[i]->Integral() );                     // NORMALIZE
