@@ -50,8 +50,6 @@ int main ( int argc, const char** argv ) {         // tracks and towers have eta
   TH2D *hTowersVsRho = new TH2D("hTowersVsRho","# of Towers vs. UE;#rho (GeV);# of Towers", 100,0,25, 200,0,200 );
   TH2D *hLeadPtVsRho = new TH2D("hLeadPtVsRho","Lead Jet p_{T} vs UE;#rho (GeV);p_{T}^{lead} (GeV)", 140,0,35, 280,0,70);
   TH3D *hBG = new TH3D("hBG","Background Particle #eta-#phi vs. p_{T};Background Particle p_{T}(GeV);Particle #eta;Particle #phi", 80,0,20, 40,-1,1, 120,0,2*pi );
-  TH3D *hCHARGED = new TH3D("hCHARGED","CHARGED: Background Particle #eta vs. p_{T};Lead Jet p_{T}(GeV);Particle p_{T} (GeV);Particle #eta", 280,0,70, 200,0,50, 220,-1.1,1.1 );
-  TH3D *hNEUTRAL = new TH3D("hNEUTRAL","NEUTRAL: Background Particle #eta vs. p_{T};Lead Jet p_{T}(GeV);Particle p_{T} (GeV);Particle #eta", 280,0,70, 200,0,50, 220,-1.1,1.1 );
   TH3D *hPartPtDEtaDPhi = new TH3D("hPartPtDEtaDPhi","Background Particle p_{T} vs. #Delta#eta vs. #Delta#phi;Particle p_{T} (GeV);#Delta#eta;#Delta#phi", 120,0,30, 80,-2.0,2.0, 120,-pi,pi );
   TH3D *hPartPtEtaPhi = new TH3D("hPartPtEtaPhi","Lead Jet p_{T} vs. #eta vs. #phi;Lead Jet p_{T} (GeV);Particle #eta;Particle #phi", 120,0,30, 40,-1.0,1.0, 120,0,2*pi );
   TH3D *hAllPtEtaPhi = new TH3D("hAllPtEtaPhi","All Particles p_{T} vs. #eta vs. #phi;Particle p_{T} (GeV);Particle #eta;Particle #phi", 120,0,30, 40,-1.0,1.0, 120,0,2*pi );
@@ -106,7 +104,7 @@ int main ( int argc, const char** argv ) {         // tracks and towers have eta
     if ( BackgroundChargeBias == "allBG" || BackgroundChargeBias == "neuBG" ) {  GatherNeutralBG( rawJets[0], container, neuParticles);  }     //   BackgroundChargeBias (arg)
 
     double chgPtSum = 0;    double neuPtSum = 0;					//  BACKGROUND ESTIMATION 
-    BackGroundEstimation( chgParticles, neuParticles, rawJets[0], hPartPtDEtaDPhi, hPartPtEtaPhi, hCHARGED, hNEUTRAL, hBG, chgPtSum, neuPtSum );
+    BackGroundEstimation( chgParticles, neuParticles, rawJets[0], hPartPtDEtaDPhi, hPartPtEtaPhi, hBG, chgPtSum, neuPtSum );
     chgRho = chgPtSum / AREA;		neuRho = neuPtSum / AREA;			rho = (chgPtSum+neuPtSum) / AREA;
 
     TList *SelectedTowers = Reader.GetListOfSelectedTowers();	nTowers = CountTowers( SelectedTowers );
@@ -131,14 +129,14 @@ int main ( int argc, const char** argv ) {         // tracks and towers have eta
   TFile *pAuFile = new TFile( outFile.c_str() ,"RECREATE");
 
   //  ~ ~ ~ ~ ~ ~ ~ ~ WRITE HISTOGRAMS ~ ~ ~ ~ ~ ~ ~ ~
-  hBG->Write();				hNEUTRAL->Write();		hChgVsNeuBG->Write();		hAllJetsPtRhoEta->Write();
+  hBG->Write();			      	hChgVsNeuBG->Write();		hAllJetsPtRhoEta->Write();
   hPartPtEtaPhi->Write();			hAllPtEtaPhi->Write(); 		hPartPtDEtaDPhi->Write();      	hVertex->Write();
   hTowersPerEvent->Write();		hTowersPerRun->Write();	hPrimaryPerEvent->Write();	hPrimaryPerRun->Write();
   hnPrimaryVSnTowers->Write();	hPrimaryVsBBC->Write();		hPrimaryVsGlobal->Write();	hGlobalVsBBC->Write();
   hPrimaryVsBBCE->Write();		hGlobalVsBBCE->Write();		hLeadPtEtaPhi->Write();		
   hAllJetsPtEtaPhi->Write();		hSubPtEtaPhi->Write();	       	hPt_UE_BBCE->Write();		hPt_UE_BBCsumE->Write();
   hTowersVsRho->Write();		hLeadPtVsRho->Write();		hPt_UE_RefMult->Write();	hPrimaryVsBBCsumE->Write();
-  hTowersVsBBCsumE->Write();	hPrimaryVsRho->Write();		hGlobalVsRho->Write();		hCHARGED->Write();
+  hTowersVsBBCsumE->Write();	hPrimaryVsRho->Write();		hGlobalVsRho->Write();
   
   pAuFile->Close();
   

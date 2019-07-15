@@ -31,21 +31,19 @@ void HTJP2Plot() {
   // TH2D *hTowersVsBBCsumE = (TH2D*) inFile->Get("hTowersVsBBCsumE");		hTowersVsBBCsumE->Scale(1.0/hTowersVsBBCsumE->Integral("WIDTH"));
   TH2D *hPrimaryVsRho = (TH2D*) inFile->Get("hPrimaryVsRho");				hPrimaryVsRho->Scale(1.0/hPrimaryVsRho->Integral("WIDTH"));
   TH2D *hGlobalVsRho = (TH2D*) inFile->Get("hGlobalVsRho");				hGlobalVsRho->Scale(1.0/hGlobalVsRho->Integral("WIDTH"));
-  TH2D *hSubEtaPhi = (TH2D*) inFile->Get("hSubEtaPhi");					hSubEtaPhi->Scale(1.0/hSubEtaPhi->Integral("WIDTH"));
   TH2D *hTowersVsRho = (TH2D*) inFile->Get("hTowersVsRho");				hTowersVsRho->Scale(1.0/hTowersVsRho->Integral("WIDTH"));
   TH2D *hLeadPtVsRho = (TH2D*) inFile->Get("hLeadPtVsRho");
   TH3D *hPt_UE_BBCE = (TH3D*) inFile->Get("hPt_UE_BBCE");
   TH3D *hPt_UE_BBCsumE = (TH3D*) inFile->Get("hPt_UE_BBCsumE");
   TH3D *hBG = (TH3D*) inFile->Get("hBG");
-  TH3D *hNEUTRAL = (TH3D*) inFile->Get("hBG");
   TH3D *hPt_UE_RefMult = (TH3D*) inFile->Get("hPt_UE_RefMult");
-  TH3D *hCHARGED = (TH3D*) inFile->Get("hPt_UE_RefMult");
   TH3D *hAllJetsPtRhoEta = (TH3D*) inFile->Get("hAllJetsPtRhoEta");
   TH3D *hPartPtEtaPhi = (TH3D*) inFile->Get("hPartPtEtaPhi");
   TH3D *hAllPtEtaPhi = (TH3D*) inFile->Get("hAllPtEtaPhi");
   TH3D *hPartPtDEtaDPhi = (TH3D*) inFile->Get("hPartPtDEtaDPhi");
   TH3D *hVertex = (TH3D*) inFile->Get("hVertex");
   TH3D *hLeadPtEtaPhi = (TH3D*) inFile->Get("hLeadPtEtaPhi");
+  TH3D *hSubEtaPhi = (TH3D*) inFile->Get("hSubEtaPhi");
   TH3D *hAllJetsPtEtaPhi = (TH3D*) inFile->Get("hAllJetsPtEtaPhi");
 
   hPrimaryVsRho->GetXaxis()->SetRangeUser(0.0,10.0);
@@ -104,18 +102,60 @@ void HTJP2Plot() {
   c0->SaveAs( path , "PDF");
   
   hLeadPtEtaPhi->GetXaxis()->SetRangeUser(0.0,100.0);
+
+
+
+  TH2D *sSubEta = new TH2D( "sSubEta", "Sub Jet #eta by p_{T};#eta;", 40,-1.0,1.0, 10,0.4, 1.3 );
+  sSubEta->SetStats(0);
+  
+  TLegend *leg1 = new TLegend(0.65, 0.65, 0.9, 0.9,NULL,"brNDC");    // LEGEND
+  leg1->SetBorderSize(1);   leg1->SetLineColor(1);   leg1->SetLineStyle(1);   leg1->SetLineWidth(1);   leg1->SetFillColor(0);   leg1->SetFillStyle(1001);
+  leg1->SetNColumns(3);
+  leg1->AddEntry((TObject*)0,"#bf{p_{T}^{Sub} (GeV)}", "");
+  leg1->AddEntry((TObject*)0,"#bf{# of Dijets}", "");
+  leg1->AddEntry((TObject*)0,"#bf{<#eta>}", "");
+
+  sSubEta->Draw();
+  for ( int i=0; i<nPtBins; ++i ) {
+    name = "SubEta" + ptBinName[i];      title = ptBinString[i];
+    hSubPtEtaPhi->GetXaxis()->SetRangeUser(ptBinLo[i], ptBinHi[i]);
+    hSubEta[i] = (TH1D*) hSubPtEtaPhi->Project3D( "Z" );       // PROJECT
+    hSubEta[i]->SetNameTitle(name,title);
+    hSubEta[i]->SetStats(0);
+    hSubEta[i]->Scale( 1./hSubEta[i]->Integral("WIDTH") );                     // NORMALIZE
+    hSubEta[i]->SetLineColor( color[i] );    hSubEta[i]->SetMarkerStyle( marker[i] );    hSubEta[i]->SetMarkerColor( color[i] );
+    hSubEta[i]->Draw("SAME");                                                    // DRAW
+    Ndj = ""; avg = "";    Ndj += hSubEta[i]->GetEntries();
+    avg += hSubEta[i]->GetMean(1);                                           // 1 denotes x-axis
+    avg = avg(0,6);
+    leg1->AddEntry( name, title, "lpf" );                            // ADD TO LEGEND
+    leg1->AddEntry((TObject*)0,Ndj, "");    leg1->AddEntry((TObject*)0,avg, "");
+  }
+
+  leg1->Draw();  c0->Modified();  c0->cd();  c0->SetSelected(c0);
+  path = "plots/HTJP2/SubEtaDist_" + BackgroundChargeBias + "_" + JetChargeBias + ".pdf";
+  c0->SaveAs( path , "PDF");
+  
+  hSubPtEtaPhi->GetXaxis()->SetRangeUser(0.0,100.0);
+
+
+
+
+
+
+
   
   // c0->SetLogy();
   
   // TH2D *sLeadPtVsRho = new TH2D( "sLeadPtVsRho", "Underlying Event by Lead Jet p_{T};#rho (GeV);", 50,0,15, 10,0.000001, 1.0 );
   // sLeadPtVsRho->SetStats(0);
 
-  // TLegend *leg1 = new TLegend(0.65, 0.65, 0.9, 0.9,NULL,"brNDC");    // LEGEND
-  // leg1->SetBorderSize(1);   leg1->SetLineColor(1);   leg1->SetLineStyle(1);   leg1->SetLineWidth(1);   leg1->SetFillColor(0);   leg1->SetFillStyle(1001);
-  // leg1->SetNColumns(3);
-  // leg1->AddEntry((TObject*)0,"#bf{p_{T}^{Lead} (GeV)}", "");
-  // leg1->AddEntry((TObject*)0,"#bf{# of Dijets}", "");
-  // leg1->AddEntry((TObject*)0,"#bf{<#rho> (GeV)}", "");
+  // TLegend *leg2 = new TLegend(0.65, 0.65, 0.9, 0.9,NULL,"brNDC");    // LEGEND
+  // leg2->SetBorderSize(1);   leg2->SetLineColor(1);   leg2->SetLineStyle(1);   leg2->SetLineWidth(1);   leg2->SetFillColor(0);   leg2->SetFillStyle(1001);
+  // leg2->SetNColumns(3);
+  // leg2->AddEntry((TObject*)0,"#bf{p_{T}^{Lead} (GeV)}", "");
+  // leg2->AddEntry((TObject*)0,"#bf{# of Dijets}", "");
+  // leg2->AddEntry((TObject*)0,"#bf{<#rho> (GeV)}", "");
 
   // sLeadPtVsRho->Draw();
   // for ( int i=0; i<nPtBins; ++i ) {
@@ -129,11 +169,11 @@ void HTJP2Plot() {
   //   Ndj = ""; avg = "";    Ndj += hRho[i]->GetEntries();
   //   avg += hRho[i]->GetMean(1);                                           // 1 denotes x-axis
   //   avg = avg(0,6);
-  //   leg1->AddEntry( name, title, "lpf" );                            // ADD TO LEGEND
-  //   leg1->AddEntry((TObject*)0,Ndj, "");    leg1->AddEntry((TObject*)0,avg, "");
+  //   leg2->AddEntry( name, title, "lpf" );                            // ADD TO LEGEND
+  //   leg2->AddEntry((TObject*)0,Ndj, "");    leg2->AddEntry((TObject*)0,avg, "");
   // }
 
-  // leg1->Draw();  c0->Modified();  c0->cd();  c0->SetSelected(c0);
+  // leg2->Draw();  c0->Modified();  c0->cd();  c0->SetSelected(c0);
   // path = "plots/HTJP2/RhoByLeadPt_" + BackgroundChargeBias + "_" + JetChargeBias + ".pdf";
   // c0->SaveAs( path , "PDF");
 

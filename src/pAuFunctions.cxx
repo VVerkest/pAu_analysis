@@ -7,7 +7,7 @@ namespace pAuAnalysis {
 
 
   void BackGroundEstimation( std::vector<fastjet::PseudoJet> chgPart, std::vector<fastjet::PseudoJet> neuPart, fastjet::PseudoJet leadJet,
-			     TH3D *PartPtDEtaDPhi, TH3D *PartPtEtaPhi, TH3D *CHARGED, TH3D *NEUTRAL, TH3D *BG, double &chgSum, double &neuSum ) {
+			     TH3D *PartPtDEtaDPhi, TH3D *PartPtEtaPhi, TH3D *BG, double &chgSum, double &neuSum ) {
 
     chgSum = 0;
     neuSum = 0;
@@ -18,7 +18,6 @@ namespace pAuAnalysis {
       double dEta = leadJet.eta() - chgPart[i].eta();
       PartPtDEtaDPhi->Fill( chgPart[i].pt(), dEta, dPhi );
       PartPtEtaPhi->Fill( leadJet.pt(), chgPart[i].eta(), chgPart[i].phi() );
-      CHARGED->Fill( leadJet.pt(), chgPart[i].pt(), chgPart[i].eta() );
       BG->Fill( chgPart[i].pt(), chgPart[i].eta(), chgPart[i].phi() );
       chgSum+=chgPart[i].pt();
     }
@@ -29,7 +28,6 @@ namespace pAuAnalysis {
       double dEta = leadJet.eta() - neuPart[i].eta();
       PartPtDEtaDPhi->Fill( neuPart[i].pt(), dEta, dPhi );
       PartPtEtaPhi->Fill( neuPart[i].pt(), neuPart[i].eta(), neuPart[i].phi() );
-      NEUTRAL->Fill( leadJet.pt(), neuPart[i].pt(), neuPart[i].eta() );
       BG->Fill( neuPart[i].pt(), neuPart[i].eta(), neuPart[i].phi() );
       neuSum+=neuPart[i].pt();
     }
