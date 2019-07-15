@@ -86,7 +86,7 @@ void HTJP2Plot() {
   for ( int i=0; i<nPtBins; ++i ) {
     name = "LeadEta" + ptBinName[i];      title = ptBinString[i];
     hLeadPtEtaPhi->GetXaxis()->SetRangeUser(ptBinLo[i], ptBinHi[i]);
-    hLeadEta[i] = hLeadPtEtaPhi->ProjectionY( name );       // PROJECT
+    hLeadEta[i] = hLeadPtEtaPhi->ProjectionZ( name );       // PROJECT
     hLeadEta[i]->SetStats(0);
     hLeadEta[i]->Scale( 1./hLeadEta[i]->Integral() );                     // NORMALIZE
     hLeadEta[i]->SetLineColor( color[i] );    hLeadEta[i]->SetMarkerStyle( marker[i] );    hLeadEta[i]->SetMarkerColor( color[i] );
@@ -101,7 +101,8 @@ void HTJP2Plot() {
   leg0->Draw();  c0->Modified();  c0->cd();  c0->SetSelected(c0);
   path = "plots/HTJP2/LeadEtaDist_" + BackgroundChargeBias + "_" + JetChargeBias + ".pdf";
   c0->SaveAs( path , "PDF");
-
+  
+  hLeadPtEtaPhi->GetXaxis()->SetRangeUser(0.0,100.0);
   
   c0->SetLogy();
   
