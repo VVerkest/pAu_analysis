@@ -43,7 +43,7 @@ void HTJP2Plot() {
   TH3D *hPartPtDEtaDPhi = (TH3D*) inFile->Get("hPartPtDEtaDPhi");
   TH3D *hVertex = (TH3D*) inFile->Get("hVertex");
   TH3D *hLeadPtEtaPhi = (TH3D*) inFile->Get("hLeadPtEtaPhi");
-  TH3D *hSubEtaPhi = (TH3D*) inFile->Get("hSubEtaPhi");
+  TH3D *hSubPtEtaPhi = (TH3D*) inFile->Get("hSubPtEtaPhi");
   TH3D *hAllJetsPtEtaPhi = (TH3D*) inFile->Get("hAllJetsPtEtaPhi");
 
   hPrimaryVsRho->GetXaxis()->SetRangeUser(0.0,10.0);
@@ -66,7 +66,7 @@ void HTJP2Plot() {
   int color[nPtBins] = { 879, 856, 796, 896 };
   int marker[nPtBins] = { 33, 22, 21, 20 };
 
-  TH1D * hRho[nPtBins];		TH1D * hLeadEta[nPtBins];
+  TH1D *hRho[nPtBins];		TH1D *hLeadEta[nPtBins];		TH1D *hSubEta[nPtBins];
 
   TCanvas * c0 = new TCanvas( "c0" , "" ,700 ,500 );              // CANVAS
 
