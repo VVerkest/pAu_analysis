@@ -72,7 +72,7 @@ void HTJP2Plot() {
 
   TCanvas * c0 = new TCanvas( "c0" , "" ,700 ,500 );              // CANVAS
 
-  TH2D *sLeadEta = new TH2D( "sLeadEta", "Lead Jet #eta by p_{T};#eta;", 40,-1.0,1.0, 10,0.0, 10.0 );
+  TH2D *sLeadEta = new TH2D( "sLeadEta", "Lead Jet #eta by p_{T};#eta;", 40,-1.0,1.0, 10,0.0, 1.0 );
   sLeadEta->SetStats(0);
   
   TLegend *leg0 = new TLegend(0.65, 0.65, 0.9, 0.9,NULL,"brNDC");    // LEGEND
