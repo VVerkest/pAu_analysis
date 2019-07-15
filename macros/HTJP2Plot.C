@@ -84,7 +84,7 @@ void HTJP2Plot() {
   for ( int i=0; i<nPtBins; ++i ) {
     name = "LeadEta" + ptBinName[i];      title = ptBinString[i];
     hLeadPtEtaPhi->GetXaxis()->SetRangeUser(ptBinLo[i], ptBinHi[i]);
-    hLeadEta[i] = (TH1D*) hLeadPtEtaPhi->Project3D( "Z" );       // PROJECT
+    hLeadEta[i] = (TH1D*) hLeadPtEtaPhi->Project3D( "Y" );       // PROJECT
     hLeadEta[i]->SetNameTitle(name,title);
     hLeadEta[i]->SetStats(0);
     hLeadEta[i]->Scale( 1./hLeadEta[i]->Integral("WIDTH") );                     // NORMALIZE
@@ -119,7 +119,7 @@ void HTJP2Plot() {
   for ( int i=0; i<nPtBins; ++i ) {
     name = "SubEta" + ptBinName[i];      title = ptBinString[i];
     hSubPtEtaPhi->GetXaxis()->SetRangeUser(ptBinLo[i], ptBinHi[i]);
-    hSubEta[i] = (TH1D*) hSubPtEtaPhi->Project3D( "Z" );       // PROJECT
+    hSubEta[i] = (TH1D*) hSubPtEtaPhi->Project3D( "Y" );       // PROJECT
     hSubEta[i]->SetNameTitle(name,title);
     hSubEta[i]->SetStats(0);
     hSubEta[i]->Scale( 1./hSubEta[i]->Integral("WIDTH") );                     // NORMALIZE
