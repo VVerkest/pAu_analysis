@@ -8,8 +8,7 @@ void HTJP2Plot() {
   // const int acn = 3;
   // TString BackgroundChargeBias[acn] = { "allBG", "chgBG", "neuBG" };
   // TString JetChargeBias[acn] = { "allJets", "chgJets", "neuJets" };
-  TString fileName, name, title, path, avg;			double scale;
-  int Ndj;
+  TString fileName, name, title, path, Ndj, avg;			double scale;
 
   TString BackgroundChargeBias = "allBG";     //  [  "allBG",  "chgBG",  "neuBG"  ]
   TString JetChargeBias = "allJets";                  //  [ "allJets", "chgJets", "neuJets" ]
@@ -91,8 +90,8 @@ void HTJP2Plot() {
     Ndj = ""; avg = "";    Ndj += hRho[i]->GetEntries();
     avg += hRho[i]->GetMean(1);                                           // 1 denotes x-axis
     avg = avg(0,6);
-    leg2->AddEntry( name, title, lpf );                            // ADD TO LEGEND
-    leg2->AddEntry((TObject*)0,Ndj, "");    leg2->AddEntry((TObject*)0,avg, "");    lpf += "lpf";
+    leg2->AddEntry( name, title, "lpf" );                            // ADD TO LEGEND
+    leg2->AddEntry((TObject*)0,Ndj, "");    leg2->AddEntry((TObject*)0,avg, "");
   }
 
   leg2->Draw();  c0->Modified();  c0->cd();  c0->SetSelected(c0);
