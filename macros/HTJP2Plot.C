@@ -104,6 +104,7 @@ void HTJP2Plot() {
   path = "plots/HTJP2/RhoByLeadPt_" + BackgroundChargeBias + "_" + JetChargeBias + ".pdf";
   c0->SaveAs( path , "PDF");
 
+  hLeadPtVsRho->GetXaxis()->SetRangeUser(0.0, 10.0);
   hLeadPtVsRho->GetYaxis()->SetRangeUser(0.0, 100.0);
   
 
@@ -122,7 +123,7 @@ void HTJP2Plot() {
   hAllJetsEtaPhi->Draw("COLZ");			name = "plots/HTJP2/AllJetsEtaPhi_" + BackgroundChargeBias + "_" + JetChargeBias + ".pdf";			       	c0->SaveAs( name, "PDF" );
   
   TH2D *hLeadEtaPhi = (TH2D*) hLeadPtEtaPhi->Project3D("ZY");			hLeadEtaPhi->Scale(1.0/hLeadEtaPhi->Integral());
-  hLeadEtaPhi->SetTitle("Inclusive Jet #eta-#phi;#eta;#phi");				hLeadEtaPhi->GetZaxis()->SetRangeUser(0.00001,1);
+  hLeadEtaPhi->SetTitle("Lead Jet #eta-#phi;#eta;#phi");				hLeadEtaPhi->GetZaxis()->SetRangeUser(0.00001,1);
   hLeadEtaPhi->Draw("COLZ");			name = "plots/HTJP2/LeadEtaPhi_" + BackgroundChargeBias + "_" + JetChargeBias + ".pdf";			       	c0->SaveAs( name, "PDF" );
   
   TH2D *hAllEtaPhi = (TH2D*) hAllPtEtaPhi->Project3D("ZY");			hAllEtaPhi->Scale(1.0/hAllEtaPhi->Integral());
