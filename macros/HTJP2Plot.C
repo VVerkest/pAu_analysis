@@ -87,8 +87,9 @@ void HTJP2Plot() {
     name = "LeadEta" + ptBinName[i];      title = ptBinString[i];
     hLeadPtEtaPhi->GetXaxis()->SetRangeUser(ptBinLo[i], ptBinHi[i]);
     hLeadEta[i] = hLeadPtEtaPhi->ProjectionZ( name );       // PROJECT
+    hLeadEta[i]->SetNameTitle(name,title);
     hLeadEta[i]->SetStats(0);
-    hLeadEta[i]->Scale( 1./hLeadEta[i]->Integral() );                     // NORMALIZE
+    hLeadEta[i]->Scale( 1./hLeadEta[i]->Integral("WIDTH") );                     // NORMALIZE
     hLeadEta[i]->SetLineColor( color[i] );    hLeadEta[i]->SetMarkerStyle( marker[i] );    hLeadEta[i]->SetMarkerColor( color[i] );
     hLeadEta[i]->Draw("SAME");                                                    // DRAW
     Ndj = ""; avg = "";    Ndj += hLeadEta[i]->GetEntries();
