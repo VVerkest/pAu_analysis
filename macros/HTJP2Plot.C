@@ -83,7 +83,7 @@ void HTJP2Plot() {
   leg0->AddEntry((TObject*)0,"#bf{<#eta>}", "");
 
   sLeadEta->Draw();
-  for ( int i=0; i<nPtBins; ++i ) {
+  for ( int i=0; i<1; ++i ) {
     name = "LeadEta" + ptBinName[i];      title = ptBinString[i];
     hLeadPtEtaPhi->GetXaxis()->SetRangeUser(ptBinLo[i], ptBinHi[i]);
     hLeadEta[i] = (TH1D*) hLeadPtEtaPhi->ProjectionZ( name );       // PROJECT
