@@ -58,6 +58,7 @@ void HTJP2Plot() {
   hGlobalVsRho->GetXaxis()->SetRangeUser(0.0,10.0);
   hnPrimaryVSnTowers->GetXaxis()->SetRangeUser(0.0,100.0);
   hnPrimaryVSnTowers->GetYaxis()->SetRangeUser(0.0,100.0);
+  hLeadPtVsRho->GetYaxis()->SetRangeUser(0.0,10.0);
   
   const int nPtBins = 4;
   double ptBinLo[nPtBins] = { 10.0, 15.0, 20.0, 30.0 };
@@ -103,7 +104,7 @@ void HTJP2Plot() {
   path = "plots/HTJP2/RhoByLeadPt_" + BackgroundChargeBias + "_" + JetChargeBias + ".pdf";
   c0->SaveAs( path , "PDF");
 
-
+  hLeadPtVsRho->GetYaxis()->SetRangeUser(0.0, 100.0);
   
 
   
@@ -125,11 +126,11 @@ void HTJP2Plot() {
   hLeadEtaPhi->Draw("COLZ");			name = "plots/HTJP2/LeadEtaPhi_" + BackgroundChargeBias + "_" + JetChargeBias + ".pdf";			       	c0->SaveAs( name, "PDF" );
   
   TH2D *hAllEtaPhi = (TH2D*) hAllPtEtaPhi->Project3D("ZY");			hAllEtaPhi->Scale(1.0/hAllEtaPhi->Integral());
-  hAllEtaPhi->SetTitle("All Particles #eta-#phi;#eta;#phi");				hAllEtaPhi->GetZaxis()->SetRangeUser(0.00001,1);
+  hAllEtaPhi->SetTitle("All Particles #eta-#phi;#eta;#phi");				hAllEtaPhi->GetZaxis()->SetRangeUser(0.000001,1);
   hAllEtaPhi->Draw("COLZ");			name = "plots/HTJP2/AllEtaPhi_" + BackgroundChargeBias + "_" + JetChargeBias + ".pdf";			  	  	       	c0->SaveAs( name, "PDF" );
     
   TH2D *hPartEtaPhi = (TH2D*) hPartPtEtaPhi->Project3D("ZY");			hPartEtaPhi->Scale(1.0/hPartEtaPhi->Integral());
-  hPartEtaPhi->SetTitle("Background Particles #eta-#phi;#eta;#phi");		hPartEtaPhi->GetZaxis()->SetRangeUser(0.00001,1);
+  hPartEtaPhi->SetTitle("Background Particles #eta-#phi;#eta;#phi");		hPartEtaPhi->GetZaxis()->SetRangeUser(0.000001,1);
   hPartEtaPhi->Draw("COLZ");			name = "plots/HTJP2/PartEtaPhi_" + BackgroundChargeBias + "_" + JetChargeBias + ".pdf";			  	     	    	c0->SaveAs( name, "PDF" );
   
   hChgVsNeuBG->GetZaxis()->SetRangeUser(0.00001,1);
