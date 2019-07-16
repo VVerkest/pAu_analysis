@@ -61,10 +61,6 @@ int main ( int argc, const char** argv ) {         // tracks and towers have eta
   TStarJetPicoReader Reader;                                int numEvents = nEvents;        // total events in HT: 152,007,032
   InitReader( Reader, Chain, numEvents );
   
-  //  CREATE JET SELECTOR
-  Selector etaSelector = SelectorAbsEtaMax( 1.0-R );    Selector ptMinSelector = SelectorPtMin(jetMinPt);  Selector etaPtSelector = etaSelector && ptMinSelector;
-  JetDefinition jet_def(antikt_algorithm, R);     //  JET DEFINITION
-  
   vector<PseudoJet> rawParticles, chgParticles, neuParticles, rawJets, chgBG, neuBG;
   TStarJetPicoEventHeader* header;    TStarJetPicoEvent* event;    TStarJetVectorContainer<TStarJetVector> * container;
   
@@ -83,16 +79,24 @@ int main ( int argc, const char** argv ) {         // tracks and towers have eta
     Vz = header->GetPrimaryVertexZ();
     if ( UseEvent( header, vzCut, Vz ) == false ) { continue; }   //  Skip events based on: Run#, vz cut, BBCEastSum;    only accept JP2 Trigger events
     
-     //  GATHERS ALL PARTICLES WITH    pT >= 0.2 GeV    and    |eta|<1.0
+    //  GATHERS ALL PARTICLES WITH    pT >= 0.2 GeV    and    |eta|<1.0
     if ( JetChargeBias == "allJets" ) { GatherParticles( container, rawParticles ); }
     else if ( JetChargeBias == "chgJets" ) { GatherCharged( container, rawParticles ); }
     else if ( JetChargeBias == "neuJets" ) { GatherNeutral( container, rawParticles ); }
     else { cerr<<"INCORRECT ARGUMENT FOR JetChargeBias:  CHOOSE FROM { allJets, chgJets, neuJets }"<<endl; break; }
     
     //   JET-FINDING
+    JetDefinition jet_def(antikt_algorithm, R);     //  JET DEFINITION
+
+    Selector etaSelector = SelectorAbsEtaMax( 1.0-R );        //  CREATE JET SELECTORS
+    Selector ptMinSelector = SelectorPtMin(jetMinPt);
+    Selector eastJetSelector = SelectorEtaMax( 0.0 );
+    // Selector etaPtSelector = etaSelector && ptMinSelector;
+    Selector etaPtSelector = etaSelector && ptMinSelector && eastJetSelector;		//  REQUIRE LEAD & SUB JETS BOTH TO BE IN THE GOLD-GOING ETA-RANGE
+    
     ClusterSequence jetCluster( rawParticles, jet_def );           //  CLUSTER ALL JETS > 2.0 GEV
     vector<PseudoJet> rawJets = sorted_by_pt( etaPtSelector( jetCluster.inclusive_jets() ) );     // EXTRACT SELECTED JETS
-
+    
     for ( int i=0; i<rawJets.size(); ++i ) { hAllJetsPtEtaPhi->Fill( rawJets[i].pt(), rawJets[i].eta(), rawJets[i].phi() ); }
     
     if ( rawJets.size()<2) { continue; }                                                       //  REQUIRE DIJET
