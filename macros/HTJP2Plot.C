@@ -207,7 +207,7 @@ void HTJP2Plot() {
   hAllEtaPhi->Draw("COLZ");			name = "plots/" + path + "AllEtaPhi_" + JetChargeBias + ".pdf";			  	  	       	c0->SaveAs( name, "PDF" );
     
   TH2D *hPartEtaPhi = (TH2D*) hPartPtEtaPhi->Project3D("ZY");			hPartEtaPhi->Scale(1.0/hPartEtaPhi->Integral());
-  title = BachgroundChargeString + "Background Particles #eta-#phi;#eta;#phi";		hPartEtaPhi->SetTitle( title );		hPartEtaPhi->GetZaxis()->SetRangeUser(0.000001,1);
+  title = BackgroundChargeString + "Background Particles #eta-#phi;#eta;#phi";		hPartEtaPhi->SetTitle( title );		hPartEtaPhi->GetZaxis()->SetRangeUser(0.000001,1);
   hPartEtaPhi->Draw("COLZ");			name = "plots/" + path + "PartEtaPhi_" + BackgroundChargeBias + "_" + JetChargeBias + ".pdf";			  	     	    	c0->SaveAs( name, "PDF" );
 
   if ( BackgroundChargeBias == "allBG" ) {
