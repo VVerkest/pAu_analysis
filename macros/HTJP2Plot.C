@@ -78,7 +78,7 @@ void HTJP2Plot() {
   TCanvas * c0 = new TCanvas( "c0" , "" ,700 ,500 );              // CANVAS
 
   name = JetChargeString + ": Lead Jet #eta by p_{T};#eta;";
-  TH2D *sLeadEta = new TH2D( "sLeadEta", name, 40,-1.0,1.0, 10,0.2, 1.4 );
+  TH2D *sLeadEta = new TH2D( "sLeadEta", name, 40,-1.0,1.0, 10,0.0, 2.0 );
   sLeadEta->SetStats(0);
   
   TLegend *leg0 = new TLegend(0.65, 0.65, 0.9, 0.9,NULL,"brNDC");    // LEGEND
@@ -113,7 +113,7 @@ void HTJP2Plot() {
 
 
   name = JetChargeString + ": Sub Jet #eta by p_{T};#eta;";
-  TH2D *sSubEta = new TH2D( "sSubEta", name, 40,-1.0,1.0, 10,0.2, 1.4 );
+  TH2D *sSubEta = new TH2D( "sSubEta", name, 40,-1.0,1.0, 10,0.0, 2.0 );
   sSubEta->SetStats(0);
   
   TLegend *leg1 = new TLegend(0.65, 0.65, 0.9, 0.9,NULL,"brNDC");    // LEGEND
