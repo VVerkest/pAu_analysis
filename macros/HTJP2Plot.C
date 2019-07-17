@@ -66,10 +66,14 @@ void HTJP2Plot() {
   hLeadPtVsRho->GetYaxis()->SetRangeUser(0.0,10.0);
   
   const int nPtBins = 4;
-  double ptBinLo[nPtBins] = { 10.0, 15.0, 20.0, 30.0 };
-  double ptBinHi[nPtBins] = { 15.0, 20.0, 30.0, 100.0 };
-  TString ptBinString[nPtBins] = { "10-15 GeV", "15-20 GeV",  "20-30 GeV", ">30 GeV" };
-  TString ptBinName[nPtBins] = { "_10_15", "_15_20", "_20_30", "_30" };
+  double LeadPtBinLo[nPtBins] = { 10.0, 15.0, 20.0, 30.0 };
+  double LeadPtBinHi[nPtBins] = { 15.0, 20.0, 30.0, 100.0 };
+  TString LeadPtBinString[nPtBins] = { "10-15 GeV", "15-20 GeV",  "20-30 GeV", ">30 GeV" };
+  TString LeadPtBinName[nPtBins] = { "_10_15", "_15_20", "_20_30", "_30" };
+  double SubPtBinLo[nPtBins] = { 0.0, 10.0, 15.0, 20.0 };
+  double SubPtBinHi[nPtBins] = { 10.0, 15.0, 20.0, 100.0 };
+  TString SubPtBinString[nPtBins] = { "<10 GeV", "10-15 GeV", "15-20 GeV", ">20 GeV" };
+  TString SubPtBinName[nPtBins] = { "_02_10","_10_15", "_15_20", "_20" };
   int color[nPtBins] = { 879, 856, 796, 896 };
   int marker[nPtBins] = { 33, 22, 21, 20 };
 
@@ -90,8 +94,8 @@ void HTJP2Plot() {
 
   sLeadEta->Draw();
   for ( int i=0; i<nPtBins; ++i ) {
-    name = "LeadEta" + ptBinName[i];      title = ptBinString[i];
-    hLeadPtEtaPhi->GetXaxis()->SetRangeUser(ptBinLo[i], ptBinHi[i]);
+    name = "LeadEta" + LeadPtBinName[i];      title = LeadPtBinString[i];
+    hLeadPtEtaPhi->GetXaxis()->SetRangeUser(LeadPtBinLo[i], LeadPtBinHi[i]);
     hLeadEta[i] = (TH1D*) hLeadPtEtaPhi->Project3D( "Y" );       // PROJECT
     hLeadEta[i]->SetNameTitle(name,title);
     hLeadEta[i]->SetStats(0);
@@ -125,8 +129,8 @@ void HTJP2Plot() {
 
   sSubEta->Draw();
   for ( int i=0; i<nPtBins; ++i ) {
-    name = "SubEta" + ptBinName[i];      title = ptBinString[i];
-    hSubPtEtaPhi->GetXaxis()->SetRangeUser(ptBinLo[i], ptBinHi[i]);
+    name = "SubEta" + SubPtBinName[i];      title = SubPtBinString[i];
+    hSubPtEtaPhi->GetXaxis()->SetRangeUser(SubPtBinLo[i], SubPtBinHi[i]);
     hSubEta[i] = (TH1D*) hSubPtEtaPhi->Project3D( "Y" );       // PROJECT
     hSubEta[i]->SetNameTitle(name,title);
     hSubEta[i]->SetStats(0);
@@ -161,8 +165,8 @@ void HTJP2Plot() {
 
   sLeadPtVsRho->Draw();
   for ( int i=0; i<nPtBins; ++i ) {
-    name = "LeadPtVsRho" + ptBinName[i];      title = ptBinString[i];
-    hLeadPtVsRho->GetYaxis()->SetRangeUser(ptBinLo[i], ptBinHi[i]);
+    name = "LeadPtVsRho" + LeadPtBinName[i];      title = LeadPtBinString[i];
+    hLeadPtVsRho->GetYaxis()->SetRangeUser(LeadPtBinLo[i], LeadPtBinHi[i]);
     hRho[i] = hLeadPtVsRho->ProjectionX( name );       // PROJECT
     hRho[i]->SetStats(0);
     hRho[i]->Scale( 1./hRho[i]->Integral() );                     // NORMALIZE
