@@ -188,9 +188,11 @@ void HTJP2Plot() {
   
 
   
-  hTowersPerEvent->Draw();				name = "plots/" + path + "TowersPerEvent_" + BackgroundChargeBias + "_" + JetChargeBias + ".pdf";			c0->SaveAs( name, "PDF" );
+  hTowersPerEvent->Draw();		name = "plots/" + path + "TowersPerEvent_" + JetChargeBias + ".pdf";
+  title = JetChargeString + ": " + hTowersPerEvent->GetTitle();		hTowersPerEvent->SetTitle( title );		c0->SaveAs( name, "PDF" );
 
-  hPrimaryPerEvent->Draw();				name = "plots/" + path + "PrimaryPerEvent_" + BackgroundChargeBias + "_" + JetChargeBias + ".pdf";			c0->SaveAs( name, "PDF" );
+  hPrimaryPerEvent->Draw();		name = "plots/" + path + "PrimaryPerEvent_" + JetChargeBias + ".pdf";
+  title = JetChargeString + ": " + hPrimaryPerEvent->GetTitle();		hPrimaryPerEvent->SetTitle( title );		c0->SaveAs( name, "PDF" );
 
   TH1D *hAllJetsPt = (TH1D*) hAllJetsPtEtaPhi->ProjectionX();		hAllJetsPt->Scale(1.0/hAllJetsPt->Integral());
   title = JetChargeString + ": Inclusive Jet p_{T};p_{T} (GeV)";			hAllJetsPt->SetTitle(title);
@@ -221,15 +223,15 @@ void HTJP2Plot() {
   }
   
   hnPrimaryVSnTowers->GetZaxis()->SetRangeUser(0.00001,1);
-  title = JetChargeString + ", " + BackgroundChargeString + ": " + hnPrimaryVSnTowers->GetTitle();			hnPrimaryVSnTowers->SetTitle( title );
-  hnPrimaryVSnTowers->Draw("COLZ");		name = "plots/" + path + "nPrimaryVSnTowers_" + BackgroundChargeBias + "_" + JetChargeBias + ".pdf";			c0->SaveAs( name, "PDF" );
+  title = JetChargeString + ": " + hnPrimaryVSnTowers->GetTitle();			hnPrimaryVSnTowers->SetTitle( title );
+  hnPrimaryVSnTowers->Draw("COLZ");		name = "plots/" + path + "nPrimaryVSnTowers_" + JetChargeBias + ".pdf";			c0->SaveAs( name, "PDF" );
 
   // hPrimaryVsBBC->GetZaxis()->SetRangeUser(0.00001,1);
   // hPrimaryVsBBC->Draw("COLZ");			name = "plots/" + path + "PrimaryVsBBC_" + BackgroundChargeBias + "_" + JetChargeBias + ".pdf";				c0->SaveAs( name, "PDF" );
 
   hPrimaryVsGlobal->GetZaxis()->SetRangeUser(0.00001,1);
-  title = JetChargeString + ", " + BackgroundChargeString + ": " + hPrimaryVsGlobal->GetTitle();			hPrimaryVsGlobal->SetTitle( title );
-  hPrimaryVsGlobal->Draw("COLZ");		name = "plots/" + path + "PrimaryVsGlobal_" + BackgroundChargeBias + "_" + JetChargeBias + ".pdf";			c0->SaveAs( name, "PDF" );
+  title = JetChargeString + ": " + hPrimaryVsGlobal->GetTitle();			hPrimaryVsGlobal->SetTitle( title );
+  hPrimaryVsGlobal->Draw("COLZ");		name = "plots/" + path + "PrimaryVsGlobal_" + JetChargeBias + ".pdf";			c0->SaveAs( name, "PDF" );
 
   hPrimaryVsRho->GetZaxis()->SetRangeUser(0.00001,1);
   title = JetChargeString + ", " + BackgroundChargeString + ": " + hPrimaryVsRho->GetTitle();			hPrimaryVsRho->SetTitle( title );
