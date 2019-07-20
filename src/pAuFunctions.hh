@@ -66,14 +66,12 @@ namespace pAuAnalysis {
   const double etaCut = 1.0;       // |eta|<=1
   const double partMinPt = 0.2;      //  particle Pt >= 0.2 GeV
   const double jetMinPt = 2.0;      //  Jet Pt >= 2.0 GeV
-  const double leadJetMinPt = 10.0;      //  Jet Pt >= 2.0 GeV
   const double qpi = 3.141592653589793238462643383279502884197/4;
 
   const double AREA = 4*(fastjet::pi - 2);   // (  2 in eta  ) X (  2*( pi-1 - 1 ) in phi  )
-
-
-  void BackGroundEstimation( std::vector<fastjet::PseudoJet> chgPart, std::vector<fastjet::PseudoJet> neuPart, fastjet::PseudoJet leadJet,
-			     TH3D *PartPtDEtaDPhi, TH3D *PartPtEtaPhi, TH3D *BG, double &chgSum, double &neuSum );
+  
+  void BackGroundEstimationAndPlots( std::vector<fastjet::PseudoJet> chgPart, std::vector<fastjet::PseudoJet> neuPart, fastjet::PseudoJet leadJet,
+				     TH3D *PartPtDEtaDPhi, TH3D *PartPtEtaPhi, TH3D *BG, double &chgSum, double &neuSum );
 
   int CountTowers( TList *selectedtowers );
 

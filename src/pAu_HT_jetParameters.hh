@@ -64,6 +64,9 @@ namespace pAuAnalysis {
   const int color[nChgBins] = { 807, 823, 874 };
   const int marker[nChgBins] = { 22, 23, 24 };
 
+  const double leadJetMinPt = 10.0;
+  const double leadJetMaxPt = 30.0;
+  
 }
 
 #endif
