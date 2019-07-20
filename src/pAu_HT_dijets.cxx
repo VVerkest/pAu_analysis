@@ -19,7 +19,7 @@ int main ( int argc, const char** argv ) {         // tracks and towers have eta
   
   vector<string> arguments( argv+1, argv+argc );
   if ( argc ==  6 ) {    inFile = arguments[0];    outFile = arguments[1];    nEvents = atoi(arguments[2].c_str());    BackgroundChargeBias = arguments[3];    JetChargeBias = arguments[4]; }
-  else if ( argc==1 ) { inFile="production_pAu200_2015/HT/pAu_2015_200_HT*.root"; outFile="out/pAuJets_HT.root"; nEvents=100000; BackgroundChargeBias="allBG"; JetChargeBias="allJets"; }
+  else if ( argc==1 ) { inFile="production_pAu200_2015/HT/pAu_2015_200_HT*.root"; outFile="out/pAuDijets_HT.root"; nEvents=100000; BackgroundChargeBias="allBG"; JetChargeBias="allJets"; }
   else { cerr<< "incorrect number of command line arguments"; return -1; }
 
   TH1::SetDefaultSumw2();  TH2::SetDefaultSumw2();  TH3::SetDefaultSumw2();
