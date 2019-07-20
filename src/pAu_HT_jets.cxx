@@ -5,6 +5,7 @@
 //BBCMB : 500008, 500018			VPDMB :  500904
 
 #include "pAuFunctions.hh"
+#include "pAu_HT_jetParameters.hh"
 
 using namespace std;
 using namespace fastjet;
