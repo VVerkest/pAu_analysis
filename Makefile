@@ -60,12 +60,13 @@ $(BDIR)/%  : $(ODIR)/%.o
 ###############################################################################
 ############################# Main Targets ####################################
 ###############################################################################
-all : $(BDIR)/pAu_analysis_MB $(BDIR)/pAu_analysis_HT $(BDIR)/pAu_HT_jets $(BDIR)/pAu_HT_jetTree $(BDIR)/pAu_HT_jetPlot $(BDIR)/test
+all : $(BDIR)/pAu_analysis_MB $(BDIR)/pAu_analysis_HT $(BDIR)/pAu_HT_jets $(BDIR)/pAu_HT_dijets $(BDIR)/pAu_HT_jetTree $(BDIR)/pAu_HT_jetPlot $(BDIR)/test
 
 $(ODIR)/pAuFunctions.o : $(SDIR)/pAuFunctions.cxx $(SDIR)/pAuFunctions.hh
 $(ODIR)/pAu_analysis_MB.o : $(SDIR)/pAu_analysis_MB.cxx
 $(ODIR)/pAu_analysis_HT.o : $(SDIR)/pAu_analysis_HT.cxx
-$(ODIR)/pAu_HT_jets.o : $(SDIR)/pAu_HT_jets.cxx
+$(ODIR)/pAu_HT_jets.o : $(SDIR)/pAu_HT_jets.cxx $(SDIR)/pAu_HT_jetParameters.hh
+$(ODIR)/pAu_HT_dijets.o : $(SDIR)/pAu_HT_dijets.cxx
 $(ODIR)/pAu_HT_jetTree.o : $(SDIR)/pAu_HT_jetTree.cxx
 $(ODIR)/pAu_HT_jetPlot.o : $(SDIR)/pAu_HT_jetPlot.cxx
 $(ODIR)/test.o : $(SDIR)/test.cxx
@@ -74,6 +75,7 @@ $(ODIR)/test.o : $(SDIR)/test.cxx
 $(BDIR)/pAu_analysis_MB :	$(ODIR)/pAu_analysis_MB.o	$(ODIR)/pAuFunctions.o
 $(BDIR)/pAu_analysis_HT :	$(ODIR)/pAu_analysis_HT.o	$(ODIR)/pAuFunctions.o
 $(BDIR)/pAu_HT_jets :	$(ODIR)/pAu_HT_jets.o	$(ODIR)/pAuFunctions.o
+$(BDIR)/pAu_HT_dijets :	$(ODIR)/pAu_HT_dijets.o	$(ODIR)/pAuFunctions.o
 $(BDIR)/pAu_HT_jetTree :	$(ODIR)/pAu_HT_jetTree.o	$(ODIR)/pAuFunctions.o
 $(BDIR)/pAu_HT_jetPlot :	$(ODIR)/pAu_HT_jetPlot.o
 $(BDIR)/test :	$(ODIR)/test.o	$(ODIR)/pAuFunctions.o
