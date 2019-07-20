@@ -108,7 +108,7 @@ int main ( int argc, const char** argv ) {         // tracks and towers have eta
     if ( BackgroundChargeBias == "allBG" || BackgroundChargeBias == "neuBG" ) {  GatherNeutralBG( rawJets[0], container, neuParticles);  }     //   BackgroundChargeBias (arg)
 
     double chgPtSum = 0;    double neuPtSum = 0;					//  BACKGROUND ESTIMATION 
-    BackGroundEstimation( chgParticles, neuParticles, rawJets[0], hPartPtDEtaDPhi, hPartPtEtaPhi, hBG, chgPtSum, neuPtSum );
+    BackGroundEstimationAndPlots( chgParticles, neuParticles, rawJets[0], hPartPtDEtaDPhi, hPartPtEtaPhi, hBG, chgPtSum, neuPtSum );
     chgRho = chgPtSum / AREA;		neuRho = neuPtSum / AREA;			rho = (chgPtSum+neuPtSum) / AREA;
 
     TList *SelectedTowers = Reader.GetListOfSelectedTowers();	nTowers = CountTowers( SelectedTowers );
