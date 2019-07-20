@@ -237,7 +237,7 @@ void HTJP2Plot() {
   title = JetChargeString + ", " + BackgroundChargeString + ": " + hPrimaryVsRho->GetTitle();			hPrimaryVsRho->SetTitle( title );
   hPrimaryVsRho->Draw("COLZ");			name = "plots/" + path + "PrimaryVsRho_" + BackgroundChargeBias + "_" + JetChargeBias + ".pdf";				c0->SaveAs( name, "PDF" );
 
-  hGlobalVsRho->GetZaxis()->SetRangeUser(0.00001,1);
+  hGlobalVsRho->GetZaxis()->SetRangeUser(0.00001,0.01);
   title = JetChargeString + ", " + BackgroundChargeString + ": " + hGlobalVsRho->GetTitle();			hGlobalVsRho->SetTitle( title );
   hGlobalVsRho->Draw("COLZ");			name = "plots/" + path + "GlobalVsRho_" + BackgroundChargeBias + "_" + JetChargeBias + ".pdf";				c0->SaveAs( name, "PDF" );
 
