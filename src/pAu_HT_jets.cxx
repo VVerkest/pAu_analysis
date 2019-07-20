@@ -13,7 +13,7 @@ using namespace pAuAnalysis;
 
 int main ( int argc, const char** argv ) {         // funcions and cuts specified in pAuFunctions.hh
 
-  int nEvents;		string inFile, outFile;
+  int nEvents;		string inFile, outFile;		TString name, title;
   
   vector<string> arguments( argv+1, argv+argc );
   if ( argc ==  4 ) {    inFile = arguments[0];    outFile = arguments[1];    nEvents = atoi(arguments[2].c_str()); }
@@ -21,28 +21,111 @@ int main ( int argc, const char** argv ) {         // funcions and cuts specifie
   else { cerr<< "incorrect number of command line arguments"; return -1; }
 
   TH1::SetDefaultSumw2();  TH2::SetDefaultSumw2();  TH3::SetDefaultSumw2();
-
-  TH3D *hAllJetsPtEtaPhi = new TH3D( "hAllJetsPtEtaPhi", "Inclusive Jets p_{T}, #eta, #phi;Jet p_{T} (GeV);Jet #eta;Jet #phi", 400,0.0,100.0, 40,-1.0,1.0, 120,0.0,2*pi  );
   TH1D *hRhoByEta[nPtBins][nEtaBins][nChgBins];
 
-  TString name, title;
-  double leadPt, leadEta, leadPhi, eastRho, midRho, westRho;
-
+  double eastRange = etaHi[0] - etaLo[0];			double eastArea = eastRange*2*(pi - 2);   // (  etaMax - etaMin  ) X (  2*( pi-1 - 1 ) in phi  )
+  double midRange = etaHi[1] - etaLo[1];			double midArea = midRange*2*(pi - 2);
+  double westRange = etaHi[2] - etaLo[2];			double westArea = westRange*2*(pi - 2);
+  
   for ( int p=0; p<3; ++p ) {
     for ( int e=0; e<3; ++e ) {
       for ( int c=0; c<3; ++c ) {
-	name = "hRho" + ptBinName[p] + etaBinName[e] + BackgroundChargeBias[c];			title = "";
-	hRhoByEta[p][e][c] = new TH1D( name, title, nEtaBins,0.0,3.0 );
-	hRhoByEta[p][e][c]->SetLineColor( color[c] );
-	hRhoByEta[p][e][c]->SetMarkerColor( color[c] );
-	hRhoByEta[p][e][c]->SetMarkerStyle( marker[c] );
+	name = "hRho" + ptBinName[p] + etaBinName[e] + BackgroundChargeBias[c];	title = "";		hRhoByEta[p][e][c] = new TH1D( name, title, nEtaBins,0.0,3.0 );
+	hRhoByEta[p][e][c]->SetLineColor( color[c] );	hRhoByEta[p][e][c]->SetMarkerColor( color[c] );	hRhoByEta[p][e][c]->SetMarkerStyle( marker[c] );
       }
     }
   }
 
+  JetDefinition jet_def(antikt_algorithm, R);     //  JET DEFINITION
 
-
+  vector<PseudoJet> rawParticles, chgParticles, neuParticles, rawJets;
+  TStarJetPicoEventHeader* header;    TStarJetPicoEvent* event;    TStarJetVectorContainer<TStarJetVector> * container;
   
+  TChain* Chain = new TChain( "JetTree" );          Chain->Add( inFile.c_str() );
+  TStarJetPicoReader Reader;                                int numEvents = nEvents;        // total events in HT: 152,007,032
+  InitReader( Reader, Chain, numEvents );
+
+  double leadPt, leadEta, leadPhi, eastRho, midRho, westRho;
+
+
+  // ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~  BEGIN EVENT LOOP!  ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~
+  while ( Reader.NextEvent() ) {
+
+    Reader.PrintStatus(10);
+
+    rawParticles.clear();        //  CLEAR VECTORS
+    
+    event = Reader.GetEvent();
+    header = event->GetHeader();
+    container = Reader.GetOutputContainer();
+    
+    Vz = header->GetPrimaryVertexZ();
+    if ( UseEvent( header, vzCut, Vz ) == false ) { continue; }   //  Skip events based on: Run#, vz cut, BBCEastSum;    only accept JP2 Trigger events
+
+    GatherParticles( container, rawParticles );
+    ClusterSequence jetCluster( rawParticles, jet_def );           //  CLUSTER ALL JETS
+
+    for ( int p=0; p<3; ++p ) {  // * * * * * * * * * * * * * * * * * * PT LOOP * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+      for ( int e=0; e<3; ++e ) {  // * * * * * * * * * * * * * * * * ETA LOOP * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+
+	rawJets.clear();
+	
+	Selector ptSelector = SelectorPtRange( ptLo[p], ptHi[p] );          //  JET pT RANGE
+	Selector etaSelector = SelectorEtaRange( etaLo[e], etaHi[e] ) && SelectorAbsEtaMax( 1.0-R );          //  JET eta RANGE
+	Selector etaPtSelector = etaSelector && ptSelector;
+	
+	vector<PseudoJet> rawJets = sorted_by_pt( etaPtSelector( jetCluster.inclusive_jets() ) );     // EXTRACT SELECTED JETS
+	
+	if ( rawJets.size()>0 ) { PseudoJet leadJet = rawJets[0]; }
+	else { continue; }
+	
+	for ( int c=0; c<3; ++c ) {	  //  BACKGROUND ESTIMATION 
+	  chgParticles.clear();		neuParticles.clear();
+
+	  if ( BackgroundChargeBias[c]=="allBG" || BackgroundChargeBias[c]=="chgBG" ) { GatherChargedBG( leadJet, container, chgParticles); }      //  Gather background particles 
+	  if ( BackgroundChargeBias[c]=="allBG" || BackgroundChargeBias[c]=="neuBG" ) { GatherNeutralBG( leadJet, container, neuParticles); }
+
+	  double eastSum = 0;	  double midSum = 0;	  double westSum = 0;	  
+	  for (int i=0; i<chgPart.size(); ++i) {
+	    if ( etaLo[0] < chgPart[i] < etaHi[0]  ) { eastSum+=chgPart[i].pt(); }
+	    else if ( etaLo[1] < chgPart[i] < etaHi[1]  ) { midSum+=chgPart[i].pt(); }
+	    else if ( etaLo[2] < chgPart[i] < etaHi[2]  ) { westSum+=chgPart[i].pt(); }
+	    else { cerr<<"particle |eta|>1"<<endl;        continue; }
+	  }
+	  for (int i=0; i<neuPart.size(); ++i) {
+	    if ( etaLo[0] < neuPart[i] < etaHi[0]  ) { eastSum+=neuPart[i].pt(); }
+	    else if ( etaLo[1] < neuPart[i] < etaHi[1]  ) { midSum+=neuPart[i].pt(); }
+	    else if ( etaLo[2] < neuPart[i] < etaHi[2]  ) { westSum+=neuPart[i].pt(); }
+	    else { cerr<<"particle |eta|>1"<<endl;        continue; }
+	  }
+
+	  eastRho = eastSum/eastArea;			midRho = midSum/midArea;			westRho = westSum/westArea;
+	  
+	  hRhoByEta[p][e][c]->AddBinContent( 0, eastRho );
+	  hRhoByEta[p][e][c]->AddBinContent( 1, midRho );
+	  hRhoByEta[p][e][c]->AddBinContent( 3, westRho );
+
+	}
+      }
+    }
+
+    
+
+
+
+  }  // ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~  END EVENT LOOP!  ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~
+
+  TFile *pAuFile = new TFile( outFile.c_str() ,"RECREATE");
+
+  for ( int p=0; p<3; ++p ) {	//  ~ ~ ~ ~ ~ ~ ~ ~ WRITE HISTOGRAMS ~ ~ ~ ~ ~ ~ ~ ~
+    for ( int e=0; e<3; ++e ) {
+      for ( int c=0; c<3; ++c ) {
+	hRhoByEta[p][e][c]->Write();
+      }
+    }
+  }
+
+  pAuFile->Close();
 
   return 0;
 }
