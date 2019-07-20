@@ -74,7 +74,7 @@ int main ( int argc, const char** argv ) {         // funcions and cuts specifie
 	Selector etaSelector = SelectorEtaRange( etaLo[e], etaHi[e] ) && SelectorAbsEtaMax( 1.0-R );          //  JET eta RANGE
 	Selector etaPtSelector = etaSelector && ptSelector;
 	
-	vector<PseudoJet> rawJets = sorted_by_pt( etaPtSelector( jetCluster.inclusive_jets() ) );     // EXTRACT SELECTED JETS
+	rawJets = sorted_by_pt( etaPtSelector( jetCluster.inclusive_jets() ) );     // EXTRACT SELECTED JETS
 	
 	if ( rawJets.size()>0 ) { leadJet = rawJets[0]; }
 	else { continue; }
@@ -82,7 +82,7 @@ int main ( int argc, const char** argv ) {         // funcions and cuts specifie
 	for ( int c=0; c<3; ++c ) {	  //  BACKGROUND ESTIMATION 
 	  chgParticles.clear();		neuParticles.clear();
 
-	  if ( BackgroundChargeBias[c]=="allBG" || BackgroundChargeBias[c]=="chgBG" ) { GatherChargedBG( leadJet, container, chgParticlesicles); }      //  Gather background particles 
+	  if ( BackgroundChargeBias[c]=="allBG" || BackgroundChargeBias[c]=="chgBG" ) { GatherChargedBG( leadJet, container, chgParticles); }      //  Gather background particles 
 	  if ( BackgroundChargeBias[c]=="allBG" || BackgroundChargeBias[c]=="neuBG" ) { GatherNeutralBG( leadJet, container, neuParticles); }
 
 	  double eastSum = 0;	  double midSum = 0;	  double westSum = 0;	  
