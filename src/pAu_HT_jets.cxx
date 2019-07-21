@@ -22,7 +22,7 @@ int main ( int argc, const char** argv ) {         // funcions and cuts specifie
 
   TH1::SetDefaultSumw2();  TH2::SetDefaultSumw2();  TH3::SetDefaultSumw2();
   TH3D *hBG = new TH3D("hBG","Background Particle p_{T} vs. #eta-#phi;Background Particle p_{T}(GeV);Particle #phi;Particle #eta", 80,0,20, 120,0,2*pi, 40,-1,1 );
-  TH1D *hRhoByEta[nPtBins][nEtaBins][nChgBins];
+  TH2D *hRhoByEta[nPtBins][nEtaBins][nChgBins];
 
   double eastArea = 1.4*(pi - 2);   // eta: [-1.0,-0.3]			(  etaMax - etaMin  ) X (  2*( pi-1 - 1 ) in phi  )
   double midArea = 1.2*(pi - 2);    //  eta: [-0.3,0.3]
@@ -31,7 +31,7 @@ int main ( int argc, const char** argv ) {         // funcions and cuts specifie
   for ( int p=0; p<3; ++p ) {
     for ( int e=0; e<3; ++e ) {
       for ( int c=0; c<3; ++c ) {
-	name = "hRho" + ptBinName[p] + etaBinName[e] + BackgroundChargeBias[c];	title = "";		hRhoByEta[p][e][c] = new TH1D( name, title, 3,-1.5,1.5 );
+	name = "hRho" + ptBinName[p] + etaBinName[e] + BackgroundChargeBias[c];	title = "";		hRhoByEta[p][e][c] = new TH2D( name, title, 3,-1.5,1.5, 60,0,15 );
 	hRhoByEta[p][e][c]->SetLineColor( color[c] );	hRhoByEta[p][e][c]->SetMarkerColor( color[c] );	hRhoByEta[p][e][c]->SetMarkerStyle( marker[c] );
       }
     }
