@@ -2,6 +2,7 @@
 void HTJP2jetPlot(){
 
   TString name;
+  TString inFile = "out/HTJP2jets/pAu_2015_200_HTJP2jets.root";
 
   const int nPtBins = 3;
   const double ptLo[nPtBins] = { 10.0, 15.0, 20.0 };
@@ -22,7 +23,7 @@ void HTJP2jetPlot(){
   const int marker[nChgBins] = { 22, 23, 24 };
 
   gStyle->SetOptStat(0);
-  TH2D *hRhoByEta[3][3][3];
+  TH2D *hRhoByEta[nPtBins][nEtaBins][nChgBins];
 
 
   for ( int p=0; p<3; ++p ) {
@@ -37,7 +38,7 @@ void HTJP2jetPlot(){
 
 
   TCanvas * c0 = new TCanvas( "c0" , "" ,0 ,23 ,1280 ,700 );
-  c0->Divide(3,3)
+  c0->Divide(3,3);
 
     for ( int p=0; p<3; ++p ) {
       for ( int e=0; e<3; ++e ) {
