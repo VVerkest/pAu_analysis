@@ -70,9 +70,10 @@ int main ( int argc, const char** argv ) {         // funcions and cuts specifie
 
 	rawJets.clear();
 	
-	Selector ptSelector = SelectorPtRange( ptLo[p], ptHi[p] );          //  JET pT RANGE
-	Selector etaSelector = SelectorEtaRange( etaLo[e], etaHi[e] ) && SelectorAbsEtaMax( 1.0-R );          //  JET eta RANGE
-	Selector etaPtSelector = etaSelector && ptSelector;
+	Selector ptRangeSelector = SelectorPtRange( ptLo[p], ptHi[p] );          //  JET pT RANGE
+	Selector etaRangeSelector = SelectorEtaRange( etaLo[e], etaHi[e] );          //  JET eta RANGE
+	Selector jetEtaSelector = SelectorAbsEtaMax( 1.0-R );
+	Selector etaPtSelector = etaRangeSelector && jetEtaSelector && ptRangeSelector;
 	
 	rawJets = sorted_by_pt( etaPtSelector( jetCluster.inclusive_jets() ) );     // EXTRACT SELECTED JETS
 	
@@ -102,9 +103,9 @@ int main ( int argc, const char** argv ) {         // funcions and cuts specifie
 
 	  eastRho = eastSum/eastArea;			midRho = midSum/midArea;			westRho = westSum/westArea;
 	  
-	  if ( eastRho != 0.0 ) { hRhoByEta[p][e][c]->Fill( 2, eastRho ); }
-	  if ( midRho != 0.0 ) { hRhoByEta[p][e][c]->Fill( 4, midRho ); }
-	  if ( westRho != 0.0 ) { hRhoByEta[p][e][c]->Fill( 6, westRho ); }
+	  if ( eastRho != 0.0 ) { hRhoByEta[p][e][c]->Fill(1, eastRho ); }
+	  if ( midRho != 0.0 ) { hRhoByEta[p][e][c]->Fill( 3, midRho ); }
+	  if ( westRho != 0.0 ) { hRhoByEta[p][e][c]->Fill( 5, westRho ); }
 
 
 	}
