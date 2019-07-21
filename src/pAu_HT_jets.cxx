@@ -30,7 +30,7 @@ int main ( int argc, const char** argv ) {         // funcions and cuts specifie
   for ( int p=0; p<3; ++p ) {
     for ( int e=0; e<3; ++e ) {
       for ( int c=0; c<3; ++c ) {
-	name = "hRho" + ptBinName[p] + etaBinName[e] + BackgroundChargeBias[c];	title = "";		hRhoByEta[p][e][c] = new TH1D( name, title, 7,1,6 );
+	name = "hRho" + ptBinName[p] + etaBinName[e] + BackgroundChargeBias[c];	title = "";		hRhoByEta[p][e][c] = new TH1D( name, title, 7,0,7 );
 	hRhoByEta[p][e][c]->SetLineColor( color[c] );	hRhoByEta[p][e][c]->SetMarkerColor( color[c] );	hRhoByEta[p][e][c]->SetMarkerStyle( marker[c] );
       }
     }
@@ -102,9 +102,9 @@ int main ( int argc, const char** argv ) {         // funcions and cuts specifie
 
 	  eastRho = eastSum/eastArea;			midRho = midSum/midArea;			westRho = westSum/westArea;
 	  
-	  if ( eastRho != 0.0 ) { hRhoByEta[p][e][c]->AddBinContent( 1, eastRho ); }
-	  if ( midRho != 0.0 ) { hRhoByEta[p][e][c]->AddBinContent( 3, midRho ); }
-	  if ( westRho != 0.0 ) { hRhoByEta[p][e][c]->AddBinContent( 5, westRho ); }
+	  if ( eastRho != 0.0 ) { hRhoByEta[p][e][c]->AddBinContent( 2, eastRho ); }
+	  if ( midRho != 0.0 ) { hRhoByEta[p][e][c]->AddBinContent( 4, midRho ); }
+	  if ( westRho != 0.0 ) { hRhoByEta[p][e][c]->AddBinContent( 6, westRho ); }
 
 
 	}
@@ -122,7 +122,7 @@ int main ( int argc, const char** argv ) {         // funcions and cuts specifie
   for ( int p=0; p<3; ++p ) {	//  ~ ~ ~ ~ ~ ~ ~ ~ WRITE HISTOGRAMS ~ ~ ~ ~ ~ ~ ~ ~
     for ( int e=0; e<3; ++e ) {
       for ( int c=0; c<3; ++c ) {
-	hRhoByEta[p][e][c]->Scale(1.0/hRhoByEta[p][e][c]->Integral());
+	// hRhoByEta[p][e][c]->Scale(1.0/hRhoByEta[p][e][c]->Integral());
 	hRhoByEta[p][e][c]->Write();
       }
     }
