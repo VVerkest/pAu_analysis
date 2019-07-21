@@ -104,9 +104,9 @@ int main ( int argc, const char** argv ) {         // funcions and cuts specifie
 
 	  eastRho = eastSum/eastArea;			midRho = midSum/midArea;			westRho = westSum/westArea;
 	  
-	  if ( eastRho != 0.0 ) { hRhoByEta[p][e][c]->Fill(1, eastRho ); }
-	  if ( midRho != 0.0 ) { hRhoByEta[p][e][c]->Fill( 3, midRho ); }
-	  if ( westRho != 0.0 ) { hRhoByEta[p][e][c]->Fill( 5, westRho ); }
+	  if ( eastRho != 0.0 ) { hRhoByEta[p][e][c]->Fill(-1.0, eastRho ); }
+	  if ( midRho != 0.0 ) { hRhoByEta[p][e][c]->Fill( 0.0, midRho ); }
+	  if ( westRho != 0.0 ) { hRhoByEta[p][e][c]->Fill( 1.0, westRho ); }
 
 
 	}
