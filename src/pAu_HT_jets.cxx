@@ -121,7 +121,7 @@ int main ( int argc, const char** argv ) {         // funcions and cuts specifie
   for ( int p=0; p<3; ++p ) {	//  ~ ~ ~ ~ ~ ~ ~ ~ WRITE HISTOGRAMS ~ ~ ~ ~ ~ ~ ~ ~
     for ( int e=0; e<3; ++e ) {
       for ( int c=0; c<3; ++c ) {
-	hRhoByEta[p][e][c]->Scale(1.0/hRhoByEta[p][e][c]->Integral());
+	// hRhoByEta[p][e][c]->Scale(1.0/hRhoByEta[p][e][c]->Integral());
 	hRhoByEta[p][e][c]->Write();
       }
     }
