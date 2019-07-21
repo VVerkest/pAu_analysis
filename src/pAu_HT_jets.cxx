@@ -101,9 +101,9 @@ int main ( int argc, const char** argv ) {         // funcions and cuts specifie
 
 	  eastRho = (double) eastSum/eastArea;			midRho = (double) midSum/midArea;			westRho = (double) westSum/westArea;
 	  
-	  hRhoByEta[p][e][c]->Fill( 1, eastRho );
-	  hRhoByEta[p][e][c]->Fill( 2, midRho );
-	  hRhoByEta[p][e][c]->Fill( 3, westRho );
+	  hRhoByEta[p][e][c]->Fill( 0.5000, eastRho );
+	  hRhoByEta[p][e][c]->Fill( 1.5000, midRho );
+	  hRhoByEta[p][e][c]->Fill( 2.5000, westRho );
 
 	}
       }
