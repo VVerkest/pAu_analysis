@@ -48,7 +48,7 @@ void HTJP2jetPlot(){
 	for ( int c=0; c<3; ++c ) {
 
 	  hRhoByEta[p][e][c]->Scale(1./hRhoByEta[p][e][c]->Integral());
-	  hRhoByEta[p][e][c]->ProjectionX()->Draw("SAME");
+	  hRhoByEta[p][e][c]->ProfileX("",1,-1,"S")->Draw("SAME");
 
 
 	}
