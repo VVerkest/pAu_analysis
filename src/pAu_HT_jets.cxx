@@ -87,15 +87,15 @@ int main ( int argc, const char** argv ) {         // funcions and cuts specifie
 
 	  double eastSum = 0;	  double midSum = 0;	  double westSum = 0;	  
 	  for (int i=0; i<chgParticles.size(); ++i) {
-	    if ( etaLo[0] < chgParticles[i] < etaHi[0]  ) { eastSum+=chgParticles[i].pt(); }
-	    else if ( etaLo[1] < chgParticles[i] < etaHi[1]  ) { midSum+=chgParticles[i].pt(); }
-	    else if ( etaLo[2] < chgParticles[i] < etaHi[2]  ) { westSum+=chgParticles[i].pt(); }
+	    if ( etaLo[0] < chgParticles[i].eta() < etaHi[0]  ) { eastSum+=chgParticles[i].pt(); }
+	    else if ( etaLo[1] < chgParticles[i].eta() < etaHi[1]  ) { midSum+=chgParticles[i].pt(); }
+	    else if ( etaLo[2] < chgParticles[i].eta() < etaHi[2]  ) { westSum+=chgParticles[i].pt(); }
 	    else { cerr<<"particle |eta|>1"<<endl;        continue; }
 	  }
 	  for (int i=0; i<neuParticles.size(); ++i) {
-	    if ( etaLo[0] < neuParticles[i] < etaHi[0]  ) { eastSum+=neuParticles[i].pt(); }
-	    else if ( etaLo[1] < neuParticles[i] < etaHi[1]  ) { midSum+=neuParticles[i].pt(); }
-	    else if ( etaLo[2] < neuParticles[i] < etaHi[2]  ) { westSum+=neuParticles[i].pt(); }
+	    if ( etaLo[0] < neuParticles[i].eta() < etaHi[0]  ) { eastSum+=neuParticles[i].pt(); }
+	    else if ( etaLo[1] < neuParticles[i].eta() < etaHi[1]  ) { midSum+=neuParticles[i].pt(); }
+	    else if ( etaLo[2] < neuParticles[i].eta() < etaHi[2]  ) { westSum+=neuParticles[i].pt(); }
 	    else { cerr<<"particle |eta|>1"<<endl;        continue; }
 	  }
 
