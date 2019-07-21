@@ -21,7 +21,7 @@ int main ( int argc, const char** argv ) {         // funcions and cuts specifie
   else { cerr<< "incorrect number of command line arguments"; return -1; }
 
   TH1::SetDefaultSumw2();  TH2::SetDefaultSumw2();  TH3::SetDefaultSumw2();
-  THD *hRhoByEta[nPtBins][nEtaBins][nChgBins];
+  TH1D *hRhoByEta[nPtBins][nEtaBins][nChgBins];
 
   double eastRange = etaHi[0] - etaLo[0];			double eastArea = eastRange*2*(pi - 2);   // (  etaMax - etaMin  ) X (  2*( pi-1 - 1 ) in phi  )
   double midRange = etaHi[1] - etaLo[1];			double midArea = midRange*2*(pi - 2);
