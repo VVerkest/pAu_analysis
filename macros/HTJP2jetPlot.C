@@ -22,7 +22,7 @@ void HTJP2jetPlot(){
   const int marker[nChgBins] = { 22, 23, 24 };
 
   gStyle->SetOptStat(0);
-  TH1D *hRhoByEta[nPtBins][nEtaBins][nChgBins];
+  TH2D *hRhoByEta[nPtBins][nEtaBins][nChgBins];
   TH2D *sRhoByEta = new TH2D("sRhoByEta","", 3,-1.0,1.0, 7,0.0,7.0);
 
   for ( int p=0; p<3; ++p ) {
@@ -30,7 +30,7 @@ void HTJP2jetPlot(){
       for ( int c=0; c<3; ++c ) {
 
 	TString name = "hRho" + ptBinName[p] + etaBinName[e] + BackgroundChargeBias[c];
-	hRhoByEta[p][e][c] = (TH1D*)inFile->Get(name);
+	hRhoByEta[p][e][c] = (TH2D*)inFile->Get(name);
       }
     }
   }
@@ -48,7 +48,7 @@ void HTJP2jetPlot(){
 	for ( int c=0; c<3; ++c ) {
 
 	  hRhoByEta[p][e][c]->Scale(1./hRhoByEta[p][e][c]->Integral());
-	  hRhoByEta[p][e][c]->Draw("SAME");
+	  hRhoByEta[p][e][c]->ProjectionX()->Draw("SAME");
 
 
 	}
