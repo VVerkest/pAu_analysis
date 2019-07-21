@@ -48,6 +48,9 @@ int main ( int argc, const char** argv ) {         // funcions and cuts specifie
 
   double Vz, leadPt, leadEta, leadPhi, eastRho, midRho, westRho;		PseudoJet leadJet;
 
+  cout<<etaLo[0]<<"-"<<etaHi[0]<<endl;
+  cout<<etaLo[1]<<"-"<<etaHi[1]<<endl;
+  cout<<etaLo[2]<<"-"<<etaHi[2]<<endl;
 
   // ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~  BEGIN EVENT LOOP!  ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~
   while ( Reader.NextEvent() ) {
@@ -93,7 +96,7 @@ int main ( int argc, const char** argv ) {         // funcions and cuts specifie
 	  for (int i=0; i<BGparticles.size(); ++i) {
 
 	    hBG->Fill( BGparticles[i].pt(), BGparticles[i].phi(), BGparticles[i].eta() );
-	    
+
 	    if ( etaLo[0] <= BGparticles[i].eta() <= etaHi[0]  ) { eastSum+=BGparticles[i].pt(); }
 	    else if ( etaLo[1] < BGparticles[i].eta() < etaHi[1]  ) { midSum+=BGparticles[i].pt(); }
 	    else if ( etaLo[2] <= BGparticles[i].eta() <= etaHi[2]  ) { westSum+=BGparticles[i].pt(); }
