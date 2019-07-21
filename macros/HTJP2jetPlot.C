@@ -1,8 +1,7 @@
 
 void HTJP2jetPlot(){
 
-  TString name;
-  TString inFile = "out/HTJP2jets/pAu_2015_200_HTJP2jets.root";
+  TFile* inFile = new TFile( "out/HTJP2jets/pAu_2015_200_HTJP2jets.root", "READ" );
 
   const int nPtBins = 3;
   const double ptLo[nPtBins] = { 10.0, 15.0, 20.0 };
