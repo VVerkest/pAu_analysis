@@ -21,6 +21,7 @@ int main ( int argc, const char** argv ) {         // funcions and cuts specifie
   else { cerr<< "incorrect number of command line arguments"; return -1; }
 
   TH1::SetDefaultSumw2();  TH2::SetDefaultSumw2();  TH3::SetDefaultSumw2();
+  TH3D *hBG = new TH3D("hBG","Background Particle p_{T} vs. #eta-#phi;Background Particle p_{T}(GeV);Particle #phi;Particle #eta", 80,0,20, 120,0,2*pi, 40,-1,1 );
   TH2D *hRhoByEta[nPtBins][nEtaBins][nChgBins];
 
   double eastArea = 1.4*(pi - 2);   // eta: [-1.0,-0.3]			(  etaMax - etaMin  ) X (  2*( pi-1 - 1 ) in phi  )
@@ -90,6 +91,9 @@ int main ( int argc, const char** argv ) {         // funcions and cuts specifie
 
 	  double eastSum = 0;	  double midSum = 0;	  double westSum = 0;
 	  for (int i=0; i<BGparticles.size(); ++i) {
+
+	    hBG->Fill( BGparticles[i].pt(), BGparticles[i].phi(), BGparticles[i].eta() );
+	    
 	    if ( etaLo[0] <= BGparticles[i].eta() <= etaHi[0]  ) { eastSum+=BGparticles[i].pt(); }
 	    else if ( etaLo[1] < BGparticles[i].eta() < etaHi[1]  ) { midSum+=BGparticles[i].pt(); }
 	    else if ( etaLo[2] <= BGparticles[i].eta() <= etaHi[2]  ) { westSum+=BGparticles[i].pt(); }
@@ -123,6 +127,8 @@ int main ( int argc, const char** argv ) {         // funcions and cuts specifie
       }
     }
   }
+  hBG->Write();
+  
 
   pAuFile->Close();
 
