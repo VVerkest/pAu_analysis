@@ -23,14 +23,14 @@ int main ( int argc, const char** argv ) {         // funcions and cuts specifie
   TH1::SetDefaultSumw2();  TH2::SetDefaultSumw2();  TH3::SetDefaultSumw2();
   TH2D *hRhoByEta[nPtBins][nEtaBins][nChgBins];
 
-  double eastRange = etaHi[0] - etaLo[0];			double eastArea = eastRange*2*(pi - 2);   // (  etaMax - etaMin  ) X (  2*( pi-1 - 1 ) in phi  )
-  double midRange = etaHi[1] - etaLo[1];			double midArea = midRange*2*(pi - 2);
-  double westRange = etaHi[2] - etaLo[2];			double westArea = westRange*2*(pi - 2);
+  double eastArea = 1.4*(pi - 2);   // eta: [-1.0,-0.3]			(  etaMax - etaMin  ) X (  2*( pi-1 - 1 ) in phi  )
+  double midArea = 1.2*(pi - 2);    //  eta: [-0.3,0.3]
+  double westArea = 1.4*(pi - 2);    //  eta: [0.3,1.0]
   
   for ( int p=0; p<3; ++p ) {
     for ( int e=0; e<3; ++e ) {
       for ( int c=0; c<3; ++c ) {
-	name = "hRho" + ptBinName[p] + etaBinName[e] + BackgroundChargeBias[c];	title = "";		hRhoByEta[p][e][c] = new TH2D( name, title, nEtaBins,0.0,3.0, 60,0.0,15.0 );
+	name = "hRho" + ptBinName[p] + etaBinName[e] + BackgroundChargeBias[c];	title = "";		hRhoByEta[p][e][c] = new TH2D( name, title, nEtaBins,0.0,3.0, 40,0.0,10.0 );
 	hRhoByEta[p][e][c]->SetLineColor( color[c] );	hRhoByEta[p][e][c]->SetMarkerColor( color[c] );	hRhoByEta[p][e][c]->SetMarkerStyle( marker[c] );
       }
     }
