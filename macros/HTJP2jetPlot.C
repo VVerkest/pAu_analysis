@@ -47,8 +47,9 @@ void HTJP2jetPlot(){
 	sRhoByEta->Draw();
 	for ( int c=0; c<3; ++c ) {
 
+	  TString name = "pRho" + ptBinName[p] + etaBinName[e] + BackgroundChargeBias[c];
 	  hRhoByEta[p][e][c]->Scale(1./hRhoByEta[p][e][c]->Integral());
-	  hRhoByEta[p][e][c]->ProfileX("",1,-1,"S")->Draw("SAME");
+	  hRhoByEta[p][e][c]->ProfileX(name,1,-1,"S")->Draw("SAME");
 
 
 	}
