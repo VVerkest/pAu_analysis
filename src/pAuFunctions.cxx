@@ -92,6 +92,25 @@ namespace pAuAnalysis {
   }
 
   
+  std::vector<fastjet::PseudoJet> GatherBackground ( fastjet::PseudoJet trigJet, TStarJetVectorContainer<TStarJetVector> * container , std::vector<fastjet::PseudoJet> & bgParticles ){
+    for ( int i=0; i < container->GetEntries() ; ++i ) {
+      TStarJetVector* sv = container->Get(i);
+      fastjet::PseudoJet current = fastjet::PseudoJet( *sv );
+
+      double absDeltaPhi = fabs( current.delta_phi_to( trigJet ) );
+      if ( absDeltaPhi < 1.0  ||  absDeltaPhi > 2.14159265 ) { continue; }       //  1 < delta phi < ( pi - 1 )
+      
+      if ( std::abs(current.eta()) > etaCut )      { continue; }  // removes particles with |eta|>1
+      if ( current.pt() < partMinPt )      { continue; }  // removes particles with pt<0.2GeV
+
+      current.set_user_index( sv->GetCharge() );
+
+      bgParticles.push_back(current);
+    }
+    return bgParticles;
+  }
+
+  
   std::vector<fastjet::PseudoJet> GatherChargedBG ( fastjet::PseudoJet trigJet, TStarJetVectorContainer<TStarJetVector> * container , std::vector<fastjet::PseudoJet> & chgParticles ){
     for ( int i=0; i < container->GetEntries() ; ++i ) {
       TStarJetVector* sv = container->Get(i);
