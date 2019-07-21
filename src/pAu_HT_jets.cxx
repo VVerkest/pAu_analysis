@@ -30,7 +30,7 @@ int main ( int argc, const char** argv ) {         // funcions and cuts specifie
   for ( int p=0; p<3; ++p ) {
     for ( int e=0; e<3; ++e ) {
       for ( int c=0; c<3; ++c ) {
-	name = "hRho" + ptBinName[p] + etaBinName[e] + BackgroundChargeBias[c];	title = "";		hRhoByEta[p][e][c] = new TH1D( name, title, nEtaBins,0.0,3.0 );
+	name = "hRho" + ptBinName[p] + etaBinName[e] + BackgroundChargeBias[c];	title = "";		hRhoByEta[p][e][c] = new TH1D( name, title, 5,1,6 );
 	hRhoByEta[p][e][c]->SetLineColor( color[c] );	hRhoByEta[p][e][c]->SetMarkerColor( color[c] );	hRhoByEta[p][e][c]->SetMarkerStyle( marker[c] );
       }
     }
@@ -103,8 +103,8 @@ int main ( int argc, const char** argv ) {         // funcions and cuts specifie
 	  eastRho = eastSum/eastArea;			midRho = midSum/midArea;			westRho = westSum/westArea;
 	  
 	  hRhoByEta[p][e][c]->AddBinContent( 1, eastRho );
-	  hRhoByEta[p][e][c]->AddBinContent( 2, midRho );
-	  hRhoByEta[p][e][c]->AddBinContent( 3, westRho );
+	  hRhoByEta[p][e][c]->AddBinContent( 3, midRho );
+	  hRhoByEta[p][e][c]->AddBinContent( 5, westRho );
 
 	}
       }
