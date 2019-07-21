@@ -29,8 +29,8 @@ void HTJP2jetPlot(){
     for ( int e=0; e<3; ++e ) {
       for ( int c=0; c<3; ++c ) {
 
-	name = "hRho" + ptBinName[p] + etaBinName[e] + BackgroundChargeBias[c];
-	hRhoByEta[p][e][c] = (TH2D*)inFile->Get(name.c_str());
+	TString name = "hRho" + ptBinName[p] + etaBinName[e] + BackgroundChargeBias[c];
+	hRhoByEta[p][e][c] = (TH2D*)inFile->Get(name);
       }
     }
   }
