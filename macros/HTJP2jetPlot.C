@@ -23,7 +23,7 @@ void HTJP2jetPlot(){
 
   gStyle->SetOptStat(0);
   TH2D *hRhoByEta[nPtBins][nEtaBins][nChgBins];
-  TH2D *sRhoByEta = new TH2D("sRhoByEta","", 3,-1.5,1.5, 10,0.0,0.6);
+  TH2D *sRhoByEta = new TH2D("sRhoByEta","", 3,-1.5,1.5, 10,0.25,0.4);
 
   for ( int p=0; p<3; ++p ) {
     for ( int e=0; e<3; ++e ) {
