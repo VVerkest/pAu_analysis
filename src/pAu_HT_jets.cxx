@@ -21,7 +21,7 @@ int main ( int argc, const char** argv ) {         // funcions and cuts specifie
   else { cerr<< "incorrect number of command line arguments"; return -1; }
 
   TH1::SetDefaultSumw2();  TH2::SetDefaultSumw2();  TH3::SetDefaultSumw2();
-  TH2D *hRhoByEta[nPtBins][nEtaBins][nChgBins];
+  TH1D *hRhoByEta[nPtBins][nEtaBins][nChgBins];
 
   double eastArea = 1.4*(pi - 2);   // eta: [-1.0,-0.3]			(  etaMax - etaMin  ) X (  2*( pi-1 - 1 ) in phi  )
   double midArea = 1.2*(pi - 2);    //  eta: [-0.3,0.3]
@@ -30,7 +30,7 @@ int main ( int argc, const char** argv ) {         // funcions and cuts specifie
   for ( int p=0; p<3; ++p ) {
     for ( int e=0; e<3; ++e ) {
       for ( int c=0; c<3; ++c ) {
-	name = "hRho" + ptBinName[p] + etaBinName[e] + BackgroundChargeBias[c];	title = "";		hRhoByEta[p][e][c] = new TH2D( name, title, nEtaBins,0.0,3.0, 40,0.0,10.0 );
+	name = "hRho" + ptBinName[p] + etaBinName[e] + BackgroundChargeBias[c];	title = "";		hRhoByEta[p][e][c] = new TH1D( name, title, nEtaBins,0.0,3.0 );
 	hRhoByEta[p][e][c]->SetLineColor( color[c] );	hRhoByEta[p][e][c]->SetMarkerColor( color[c] );	hRhoByEta[p][e][c]->SetMarkerStyle( marker[c] );
       }
     }
@@ -82,8 +82,8 @@ int main ( int argc, const char** argv ) {         // funcions and cuts specifie
 	for ( int c=0; c<3; ++c ) {	  //  BACKGROUND ESTIMATION 
 	  chgParticles.clear();		neuParticles.clear();
 
-	  if ( BackgroundChargeBias[c]=="allBG" || BackgroundChargeBias[c]=="chgBG" ) { GatherChargedBG( leadJet, container, chgParticles); }      //  Gather background particles 
-	  if ( BackgroundChargeBias[c]=="allBG" || BackgroundChargeBias[c]=="neuBG" ) { GatherNeutralBG( leadJet, container, neuParticles); }
+	  if ( BackgroundChargeBias[c]=="_allBG" || BackgroundChargeBias[c]=="_chgBG" ) { GatherChargedBG( leadJet, container, chgParticles); }      //  Gather background particles 
+	  if ( BackgroundChargeBias[c]=="_allBG" || BackgroundChargeBias[c]=="_neuBG" ) { GatherNeutralBG( leadJet, container, neuParticles); }
 
 	  double eastSum = 0;	  double midSum = 0;	  double westSum = 0;
 	  for (int i=0; i<chgParticles.size(); ++i) {
