@@ -102,9 +102,9 @@ int main ( int argc, const char** argv ) {         // funcions and cuts specifie
 
 	  eastRho = eastSum/eastArea;			midRho = midSum/midArea;			westRho = westSum/westArea;
 	  
-	  hRhoByEta[p][e][c]->Fill( 0.5000, eastRho );
-	  hRhoByEta[p][e][c]->Fill( 1.5000, midRho );
-	  hRhoByEta[p][e][c]->Fill( 2.5000, westRho );
+	  hRhoByEta[p][e][c]->AddBinContent( 1, eastRho );
+	  hRhoByEta[p][e][c]->AddBinContent( 2, midRho );
+	  hRhoByEta[p][e][c]->AddBinContent( 3, westRho );
 
 	}
       }
@@ -121,6 +121,7 @@ int main ( int argc, const char** argv ) {         // funcions and cuts specifie
   for ( int p=0; p<3; ++p ) {	//  ~ ~ ~ ~ ~ ~ ~ ~ WRITE HISTOGRAMS ~ ~ ~ ~ ~ ~ ~ ~
     for ( int e=0; e<3; ++e ) {
       for ( int c=0; c<3; ++c ) {
+	hRhoByEta[p][e][c]->Scale(1.0/hRhoByEta[p][e][c]->Integral());
 	hRhoByEta[p][e][c]->Write();
       }
     }
