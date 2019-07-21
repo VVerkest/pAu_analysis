@@ -36,7 +36,7 @@ void HTJP2jetPlot(){
   }
 
 
-  TCanvas * c0 = new TCanvas( "c0" , "" ,1280 ,700 );
+  TCanvas * c0 = new TCanvas( "c0" , "" );
   c0->Divide(3,3);
 
     for ( int p=0; p<3; ++p ) {
