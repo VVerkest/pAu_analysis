@@ -17,7 +17,7 @@ int main ( int argc, const char** argv ) {         // funcions and cuts specifie
   
   vector<string> arguments( argv+1, argv+argc );
   if ( argc ==  4 ) {    inFile = arguments[0];    outFile = arguments[1];    nEvents = atoi(arguments[2].c_str()); }
-  else if ( argc==1 ) { inFile="production_pAu200_2015/HT/pAu_2015_200_HT*.root"; outFile="out/pAuJets_HTJP2.root"; nEvents=100000; }
+  else if ( argc==1 ) { inFile="production_pAu200_2015/HT/pAu_2015_200_HT*.root"; outFile="out/pAuJets_HTJP2.root"; nEvents=10000; }
   else { cerr<< "incorrect number of command line arguments"; return -1; }
 
   TH1::SetDefaultSumw2();  TH2::SetDefaultSumw2();  TH3::SetDefaultSumw2();
@@ -31,7 +31,7 @@ int main ( int argc, const char** argv ) {         // funcions and cuts specifie
   for ( int p=0; p<3; ++p ) {
     for ( int e=0; e<3; ++e ) {
       for ( int c=0; c<3; ++c ) {
-	name = "hRho" + ptBinName[p] + etaBinName[e] + BackgroundChargeBias[c];	title = "";		hRhoByEta[p][e][c] = new TH2D( name, title, 8,-2,2, 60,0,15 );
+	name = "hRho" + ptBinName[p] + etaBinName[e] + BackgroundChargeBias[c];	title = "";		hRhoByEta[p][e][c] = new TH2D( name, title, 5,-1.0,1.0, 60,0,15 );
 	hRhoByEta[p][e][c]->SetLineColor( color[c] );	hRhoByEta[p][e][c]->SetMarkerColor( color[c] );	hRhoByEta[p][e][c]->SetMarkerStyle( marker[c] );
       }
     }
