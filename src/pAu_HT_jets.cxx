@@ -99,7 +99,7 @@ int main ( int argc, const char** argv ) {         // funcions and cuts specifie
 	    }
 	    else if ( etaLo[1] < BGparticles[i].eta() < etaHi[1]  ) { midSum+=BGparticles[i].pt(); }
 	    else if ( etaLo[2] <= BGparticles[i].eta() <= etaHi[2]  ) { westSum+=BGparticles[i].pt(); }
-	    else { cerr<<BGparticles[i].eta()<<endl;        continue; }
+	    else { cout<<BGparticles[i].eta()<<endl;        continue; }
 	  }
 
 	  eastRho = eastSum/eastArea;			midRho = midSum/midArea;			westRho = westSum/westArea;
