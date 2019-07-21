@@ -85,7 +85,7 @@ int main ( int argc, const char** argv ) {         // funcions and cuts specifie
 	  if ( BackgroundChargeBias[c]=="allBG" || BackgroundChargeBias[c]=="chgBG" ) { GatherChargedBG( leadJet, container, chgParticles); }      //  Gather background particles 
 	  if ( BackgroundChargeBias[c]=="allBG" || BackgroundChargeBias[c]=="neuBG" ) { GatherNeutralBG( leadJet, container, neuParticles); }
 
-	  double eastSum = 0;	  double midSum = 0;	  double westSum = 0;	  
+	  double eastSum = 0;	  double midSum = 0;	  double westSum = 0;
 	  for (int i=0; i<chgParticles.size(); ++i) {
 	    if ( etaLo[0] < chgParticles[i].eta() < etaHi[0]  ) { eastSum+=chgParticles[i].pt(); }
 	    else if ( etaLo[1] < chgParticles[i].eta() < etaHi[1]  ) { midSum+=chgParticles[i].pt(); }
@@ -99,7 +99,7 @@ int main ( int argc, const char** argv ) {         // funcions and cuts specifie
 	    else { cerr<<"particle |eta|>1"<<endl;        continue; }
 	  }
 
-	  eastRho = (double) eastSum/eastArea;			midRho = (double) midSum/midArea;			westRho = (double) westSum/westArea;
+	  eastRho = eastSum/eastArea;			midRho = midSum/midArea;			westRho = westSum/westArea;
 	  
 	  hRhoByEta[p][e][c]->Fill( 0.5000, eastRho );
 	  hRhoByEta[p][e][c]->Fill( 1.5000, midRho );
