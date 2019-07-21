@@ -83,20 +83,21 @@ int main ( int argc, const char** argv ) {         // funcions and cuts specifie
 	  chgParticles.clear();		neuParticles.clear();
 
 	  if ( BackgroundChargeBias[c]=="_allBG" || BackgroundChargeBias[c]=="_chgBG" ) { GatherChargedBG( leadJet, container, chgParticles); }      //  Gather background particles 
-	  if ( BackgroundChargeBias[c]=="_allBG" || BackgroundChargeBias[c]=="_neuBG" ) { GatherNeutralBG( leadJet, container, neuParticles); }
+	  else if ( BackgroundChargeBias[c]=="_allBG" || BackgroundChargeBias[c]=="_neuBG" ) { GatherNeutralBG( leadJet, container, neuParticles); }
+	  else { cerr<<"BOO"<<endl; }
 
 	  double eastSum = 0;	  double midSum = 0;	  double westSum = 0;
 	  for (int i=0; i<chgParticles.size(); ++i) {
-	    if ( etaLo[0] < chgParticles[i].eta() < etaHi[0]  ) { eastSum+=chgParticles[i].pt(); }
+	    if ( etaLo[0] <= chgParticles[i].eta() <= etaHi[0]  ) { eastSum+=chgParticles[i].pt(); }
 	    else if ( etaLo[1] < chgParticles[i].eta() < etaHi[1]  ) { midSum+=chgParticles[i].pt(); }
-	    else if ( etaLo[2] < chgParticles[i].eta() < etaHi[2]  ) { westSum+=chgParticles[i].pt(); }
-	    else { cerr<<"particle |eta|>1"<<endl;        continue; }
+	    else if ( etaLo[2] <= chgParticles[i].eta() <= etaHi[2]  ) { westSum+=chgParticles[i].pt(); }
+	    else { cerr<<chgParticles[i].eta()<<endl;        continue; }
 	  }
 	  for (int i=0; i<neuParticles.size(); ++i) {
-	    if ( etaLo[0] < neuParticles[i].eta() < etaHi[0]  ) { eastSum+=neuParticles[i].pt(); }
+	    if ( etaLo[0] <= neuParticles[i].eta() <= etaHi[0]  ) { eastSum+=neuParticles[i].pt(); }
 	    else if ( etaLo[1] < neuParticles[i].eta() < etaHi[1]  ) { midSum+=neuParticles[i].pt(); }
-	    else if ( etaLo[2] < neuParticles[i].eta() < etaHi[2]  ) { westSum+=neuParticles[i].pt(); }
-	    else { cerr<<"particle |eta|>1"<<endl;        continue; }
+	    else if ( etaLo[2] <= neuParticles[i].eta() <= etaHi[2]  ) { westSum+=neuParticles[i].pt(); }
+	    else { cerr<<neuParticles[i].eta()<<endl;        continue; }
 	  }
 
 	  eastRho = eastSum/eastArea;			midRho = midSum/midArea;			westRho = westSum/westArea;
