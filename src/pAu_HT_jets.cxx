@@ -99,7 +99,7 @@ int main ( int argc, const char** argv ) {         // funcions and cuts specifie
 	    else { cerr<<"particle |eta|>1"<<endl;        continue; }
 	  }
 
-	  eastRho = eastSum/eastArea;			midRho = midSum/midArea;			westRho = westSum/westArea;
+	  eastRho = (double) eastSum/eastArea;			midRho = (double) midSum/midArea;			westRho = (double) westSum/westArea;
 	  
 	  hRhoByEta[p][e][c]->AddBinContent( 1, eastRho );
 	  hRhoByEta[p][e][c]->AddBinContent( 2, midRho );
