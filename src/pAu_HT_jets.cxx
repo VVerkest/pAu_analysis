@@ -101,9 +101,11 @@ int main ( int argc, const char** argv ) {         // funcions and cuts specifie
 	  }
 
 	  eastRho = eastSum/eastArea;			midRho = midSum/midArea;			westRho = westSum/westArea;
-	  if ( eastRho == 0.0 ) { cout<<"caw caw\t"; }
-	  if ( midRho == 0.0 ) { cout<<"woot woot\t"; }
-	  if ( westRho == 0.0 ) { cout<<"braafffffppptt\t"; }
+	  
+	  if ( eastRho != 0.0 ) { cout<<"caw caw\t"; }
+	  if ( midRho != 0.0 ) { cout<<"woot woot\t"; }
+	  if ( westRho != 0.0 ) { cout<<"braafffffppptt\t"; }
+
 	  hRhoByEta[p][e][c]->AddBinContent( 1, eastRho );
 	  hRhoByEta[p][e][c]->AddBinContent( 3, midRho );
 	  hRhoByEta[p][e][c]->AddBinContent( 5, westRho );
