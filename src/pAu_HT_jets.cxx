@@ -31,7 +31,7 @@ int main ( int argc, const char** argv ) {         // funcions and cuts specifie
   for ( int p=0; p<3; ++p ) {
     for ( int e=0; e<3; ++e ) {
       for ( int c=0; c<3; ++c ) {
-	name = "hRho" + ptBinName[p] + etaBinName[e] + BackgroundChargeBias[c];	title = "";		hRhoByEta[p][e][c] = new TH2D( name, title, 3,-1.0,1.0, 60,0,15 );
+	name = "hRho" + ptBinName[p] + etaBinName[e] + BackgroundChargeBias[c];	title = "";		hRhoByEta[p][e][c] = new TH2D( name, title, 3,-1.5,1.5, 60,0,15 );
 	hRhoByEta[p][e][c]->SetLineColor( color[c] );	hRhoByEta[p][e][c]->SetMarkerColor( color[c] );	hRhoByEta[p][e][c]->SetMarkerStyle( marker[c] );
       }
     }
