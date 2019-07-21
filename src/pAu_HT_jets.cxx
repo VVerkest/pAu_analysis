@@ -93,7 +93,7 @@ int main ( int argc, const char** argv ) {         // funcions and cuts specifie
 
 	    hBG->Fill( BGparticles[i].pt(), BGparticles[i].phi(), BGparticles[i].eta() );
 
-	    if ( -1.0 <= BGparticles[i].eta() <= -0.3  ) {
+	    if ( etaLo[0] <= BGparticles[i].eta() <= etaHi[0]  ) {
 	      eastSum+=BGparticles[i].pt();
 	      blub+=1; cout<<blub<<endl;
 	    }
