@@ -93,12 +93,9 @@ int main ( int argc, const char** argv ) {         // funcions and cuts specifie
 
 	    hBG->Fill( BGparticles[i].pt(), BGparticles[i].phi(), BGparticles[i].eta() );
 
-	    if ( etaLo[0] <= BGparticles[i].eta() <= etaHi[0]  ) {
-	      eastSum+=BGparticles[i].pt();
-	      blub+=1; cout<<blub<<endl;
-	    }
-	    else if ( etaLo[1] < BGparticles[i].eta() < etaHi[1]  ) { midSum+=BGparticles[i].pt(); }
-	    else if ( etaLo[2] <= BGparticles[i].eta() <= etaHi[2]  ) { westSum+=BGparticles[i].pt(); }
+	    if ( BGparticles[i].eta() >=etaLo[0] && BGparticles[i].eta() <= etaHi[0]  ) { eastSum+=BGparticles[i].pt(); }
+	    else if ( BGparticles[i].eta() >=etaLo[1] && BGparticles[i].eta() <= etaHi[1]  ) { midSum+=BGparticles[i].pt(); }
+	    else if ( BGparticles[i].eta() >=etaLo[2] && BGparticles[i].eta() <= etaHi[2]  ) { westSum+=BGparticles[i].pt(); }
 	    else { cout<<BGparticles[i].eta()<<endl;        continue; }
 	  }
 
