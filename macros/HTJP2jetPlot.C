@@ -24,6 +24,7 @@ void HTJP2jetPlot(){
   gStyle->SetOptStat(0);
   TH2D *hRhoByEta[nPtBins][nEtaBins][nChgBins];
   TH2D *sRhoByEta = new TH2D("sRhoByEta","", 3,-1.5,1.5, 10,0.2,1.4);
+  sRhoByEta->LabelsOption("B");
   
   TH1D *pRhoByEta[nPtBins][nEtaBins][nChgBins];
 
@@ -63,8 +64,9 @@ void HTJP2jetPlot(){
 	gPad->SetTickx();
 	gPad->SetTicky();
 	gPad->SetGridy();
-	pRhoByEta[p][e][c]->SetLineColorAlpha(0,0.9999);
+	pRhoByEta[p][e][c]->SetLineColorAlpha(0,0);
 	pRhoByEta[p][e][c]->SetMarkerSize(2);
+	pRhoByEta[p][e][c]->LabelsOption("B");
 	pRhoByEta[p][e][c]->Draw("SAME");
 
 
