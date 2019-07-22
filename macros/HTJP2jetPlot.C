@@ -53,7 +53,7 @@ void HTJP2jetPlot(){
 	hRhoByEta[p][e][c]->GetXaxis()->SetTicks("+-");
 	hRhoByEta[p][e][c]->GetYaxis()->SetTicks("+-");
 	hRhoByEta[p][e][c]->SetMarkerSize(3);
-	hRhoByEta[p][e][c]->ProfileX(name)->Draw("SAME",1,-1,"S");
+	hRhoByEta[p][e][c]->ProfileX(name)->Draw(name,1,-1,"S SAME");
 
 
       }
