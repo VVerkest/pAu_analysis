@@ -56,7 +56,7 @@ void HTJP2jetPlot(){
 	hRhoByEta[p][e][c]->Scale(1./hRhoByEta[p][e][c]->GetEntries());
 	pRhoByEta[p][e][c] = (TH1D*) hRhoByEta[p][e][c]->ProfileX(name,1,-1,"S");
 
-	pRhoByEta[p][e][c]->SetMarkerSize(3);
+	pRhoByEta[p][e][c]->SetMarkerSize(2);
 	pRhoByEta[p][e][c]->Draw("SAME");
 
 

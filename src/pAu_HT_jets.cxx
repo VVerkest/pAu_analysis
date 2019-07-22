@@ -21,7 +21,7 @@ int main ( int argc, const char** argv ) {         // funcions and cuts specifie
   else { cerr<< "incorrect number of command line arguments"; return -1; }
 
   TH1::SetDefaultSumw2();  TH2::SetDefaultSumw2();  TH3::SetDefaultSumw2();
-  TH3D *hBG = new TH3D("hBG","Background Particle p_{T} vs. #eta-#phi;Background Particle p_{T}(GeV);Particle #phi;Particle #eta", 80,0,20, 120,0,2*pi, 40,-1,1 );
+  TH3D *hBG[nPtBins][nEtaBins][nChgBins];
   TH2D *hRhoByEta[nPtBins][nEtaBins][nChgBins];
 
   double eastArea = 1.4*(pi - 2);   // eta: [-1.0,-0.3]			(  etaMax - etaMin  ) X (  2*( pi-1 - 1 ) in phi  )
@@ -31,8 +31,12 @@ int main ( int argc, const char** argv ) {         // funcions and cuts specifie
   for ( int p=0; p<3; ++p ) {
     for ( int e=0; e<3; ++e ) {
       for ( int c=0; c<3; ++c ) {
-	name = "hRho" + ptBinName[p] + etaBinName[e] + BackgroundChargeBias[c];	title = "";		hRhoByEta[p][e][c] = new TH2D( name, title, 3,-1.5,1.5, 60,0,15 );
+	name = "hRho" + ptBinName[p] + etaBinName[e] + BackgroundChargeBias[c];	title = "";		hRhoByEta[p][e][c] = new TH2D( name, title, 3,-1.5,1.5, 100,0,25 );
 	hRhoByEta[p][e][c]->SetLineColor( color[c] );	hRhoByEta[p][e][c]->SetMarkerColor( color[c] );	hRhoByEta[p][e][c]->SetMarkerStyle( marker[c] );
+
+	name = "hBG" + ptBinName[p] + etaBinName[e] + BackgroundChargeBias[c];
+	title = ptBinString[p] + " " + etaBinString[e] + " " + BackgroundChargeBias[c] +" Background Particles;Background Particle p_{T}(GeV);Particle #phi;Particle #eta";
+	hBG = new TH3D(name, title, 80,0,20, 120,0,2*pi, 40,-1,1 );
       }
     }
   }
@@ -47,7 +51,6 @@ int main ( int argc, const char** argv ) {         // funcions and cuts specifie
   InitReader( Reader, Chain, numEvents );
 
   double Vz, leadPt, leadEta, leadPhi, eastRho, midRho, westRho;		PseudoJet leadJet;
-  int blub = 0;
   // ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~  BEGIN EVENT LOOP!  ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~
   while ( Reader.NextEvent() ) {
 
@@ -101,9 +104,9 @@ int main ( int argc, const char** argv ) {         // funcions and cuts specifie
 
 	  eastRho = eastSum/eastArea;			midRho = midSum/midArea;			westRho = westSum/westArea;
 	  
-	  if ( eastRho > 0.0000001 ) { hRhoByEta[p][e][c]->Fill(-1.0, eastRho ); }
-	  if ( midRho > 0.0000001 ) { hRhoByEta[p][e][c]->Fill( 0.0, midRho ); }
-	  if ( westRho > 0.0000001 ) { hRhoByEta[p][e][c]->Fill( 1.0, westRho ); }
+	  hRhoByEta[p][e][c]->Fill(-1.0, eastRho );
+	  hRhoByEta[p][e][c]->Fill( 0.0, midRho );
+	  hRhoByEta[p][e][c]->Fill( 1.0, westRho );
 
 
 	}
