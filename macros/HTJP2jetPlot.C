@@ -25,6 +25,7 @@ void HTJP2jetPlot(){
   TH2D *hRhoByEta[nPtBins][nEtaBins][nChgBins];
   TH2D *sRhoByEta = new TH2D("sRhoByEta","", 3,-1.5,1.5, 10,0.2,1.4);
   sRhoByEta->GetXaxis()->SetLabelSize(0);
+  sRhoByEta->GetYaxis()->SetLabelSize(0);
   
   TH1D *pRhoByEta[nPtBins][nEtaBins][nChgBins];
 
@@ -42,7 +43,7 @@ void HTJP2jetPlot(){
   TCanvas * c0 = new TCanvas( "c0" , "" ,0 ,23 ,1280 ,700 );
   c0->SetTopMargin(0.4);
   TPaveText *cTitle = new TPaveText(0.345843,.881306,0.655712,.980712,"NB");
-  cTitle->AddText("UnderlyingEvent");
+  cTitle->AddText("Underlying Event");
   cTitle->SetFillStyle(0);
   cTitle->SetLineWidth(0);
   cTitle->SetTextAlign(21);
@@ -65,8 +66,10 @@ void HTJP2jetPlot(){
 	gPad->SetTicky();
 	gPad->SetGridy();
 	pRhoByEta[p][e][c]->SetLineColorAlpha(0,0.000001);
+	pRhoByEta[p][e][c]->SetLineWidth(0);
 	pRhoByEta[p][e][c]->SetMarkerSize(2);
 	pRhoByEta[p][e][c]->GetXaxis()->SetLabelSize(0);
+	pRhoByEta[p][e][c]->GetXaxis()->SetLabelSize(2);
 	pRhoByEta[p][e][c]->Draw("SAME");
 
 
