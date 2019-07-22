@@ -94,7 +94,7 @@ int main ( int argc, const char** argv ) {         // funcions and cuts specifie
 	  double eastSum = 0;	  double midSum = 0;	  double westSum = 0;
 	  for (int i=0; i<BGparticles.size(); ++i) {
 
-	    hBG->Fill( BGparticles[i].pt(), BGparticles[i].phi(), BGparticles[i].eta() );
+	    hBG[p][e][c]->Fill( BGparticles[i].pt(), BGparticles[i].phi(), BGparticles[i].eta() );
 
 	    if ( BGparticles[i].eta() >=etaLo[0] && BGparticles[i].eta() <= etaHi[0]  ) { eastSum+=BGparticles[i].pt(); }
 	    else if ( BGparticles[i].eta() >=etaLo[1] && BGparticles[i].eta() <= etaHi[1]  ) { midSum+=BGparticles[i].pt(); }
@@ -126,10 +126,10 @@ int main ( int argc, const char** argv ) {         // funcions and cuts specifie
       for ( int c=0; c<3; ++c ) {
 	// hRhoByEta[p][e][c]->Scale(1.0/hRhoByEta[p][e][c]->Integral());
 	hRhoByEta[p][e][c]->Write();
+	hBG[p][e][c]->Write();
       }
     }
   }
-  hBG->Write();
   
 
   pAuFile->Close();
