@@ -19,7 +19,7 @@ void HTJP2jetPlot(){
   const TString BackgroundChargeBias[nChgBins] = { "_chgBG", "_neuBG", "_allBG" };
   const TString BackgroundChargeString[nChgBins] = { "Charged", "Neutral", "Chg+Neu" };
   const int color[nChgBins] = { 807, 823, 874 };
-  const int marker[nChgBins] = { 22, 23, 24 };
+  const int marker[nChgBins] = { 22, 23, 20 };
 
   gStyle->SetOptStat(0);
   TH2D *hRhoByEta[nPtBins][nEtaBins][nChgBins];
@@ -37,6 +37,7 @@ void HTJP2jetPlot(){
 
 
   TCanvas * c0 = new TCanvas( "c0" , "" ,0 ,23 ,1280 ,700 );
+  c0->SetTopMargin(0.1);
   c0->Divide(nEtaBins,nPtBins,0,0);
 
   for ( int p=0; p<3; ++p ) {
@@ -49,8 +50,10 @@ void HTJP2jetPlot(){
 
 	TString name = "pRho" + ptBinName[p] + etaBinName[e] + BackgroundChargeBias[c];
 	hRhoByEta[p][e][c]->Scale(1./hRhoByEta[p][e][c]->GetEntries());
+	hRhoByEta[p][e][c]->GetXaxis()->SetTicks("+-");
+	hRhoByEta[p][e][c]->GetYaxis()->SetTicks("+-");
 	hRhoByEta[p][e][c]->SetMarkerSize(3);
-	hRhoByEta[p][e][c]->ProfileX(name)->Draw("SAME");
+	hRhoByEta[p][e][c]->ProfileX(name)->Draw("SAME",1,-1,"S");
 
 
       }
