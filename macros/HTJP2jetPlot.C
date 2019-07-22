@@ -24,7 +24,9 @@ void HTJP2jetPlot(){
   gStyle->SetOptStat(0);
   TH2D *hRhoByEta[nPtBins][nEtaBins][nChgBins];
   TH2D *sRhoByEta = new TH2D("sRhoByEta","", 3,-1.5,1.5, 10,0.2,1.4);
-
+  sRhoByEta->GetXaxis()->SetTicks("+-");
+  sRhoByEta->GetYaxis()->SetTicks("+-");
+  
   TH1D *pRhoByEta[nPtBins][nEtaBins][nChgBins];
 
   for ( int p=0; p<3; ++p ) {
@@ -39,7 +41,7 @@ void HTJP2jetPlot(){
 
 
   TCanvas * c0 = new TCanvas( "c0" , "" ,0 ,23 ,1280 ,700 );
-  c0->SetTopMargin(0.3);
+  c0->SetTopMargin(0.35);
   c0->Divide(nEtaBins,nPtBins,0,0);
 
   for ( int p=0; p<3; ++p ) {
