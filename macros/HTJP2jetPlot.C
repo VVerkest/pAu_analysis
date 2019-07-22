@@ -50,7 +50,7 @@ void HTJP2jetPlot(){
 	TString name = "pRho" + ptBinName[p] + etaBinName[e] + BackgroundChargeBias[c];
 	// hRhoByEta[p][e][c]->Scale(1./hRhoByEta[p][e][c]->Integral());
 	hRhoByEta[p][e][c]->SetMarkerSize(2);
-	hRhoByEta[p][e][c]->ProfileX(name,1,-1,"S")->Draw("SAME");
+	hRhoByEta[p][e][c]->ProfileX(name)->Draw("SAME");
 
 
       }
