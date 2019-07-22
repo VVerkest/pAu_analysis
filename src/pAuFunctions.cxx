@@ -197,8 +197,8 @@ namespace pAuAnalysis {
     // Towers
     TStarJetPicoTowerCuts* towerCuts = reader.GetTowerCuts();
     towerCuts->SetMaxEtCut( MaxEtCut );
-    //towerCuts->AddBadTowers( "src/dummy_tower_list.txt" );
-    towerCuts->AddBadTowers( "/nfs/rhi/STAR/Data/P16id/resources/bad_towers_pAu2015.list" );
+    towerCuts->AddBadTowers( "src/dummy_tower_list.txt" );
+    //towerCuts->AddBadTowers( "/nfs/rhi/STAR/Data/P16id/resources/bad_towers_pAu2015.list" );
 
     std::cout << "Using these tower cuts:" << std::endl;
     std::cout << "  GetMaxEtCut = " << towerCuts->GetMaxEtCut() << std::endl;
@@ -217,7 +217,7 @@ namespace pAuAnalysis {
     else if (Header->GetRunId() == 16135031 || Header->GetRunId() == 16135032) { return false; }
     else if (!(Header->HasTriggerId(500401) || Header->HasTriggerId(500411))) {return false;}   //  ONLY SELECT JP2 TRIGGER EVENTS
     else if ( abs(vz) > vz_cut ) { return false; }
-    else if ( Header->GetBbcAdcSumEast() > 64000 ) { return false; }
+    // else if ( Header->GetBbcAdcSumEast() > 64000 ) { return false; }
     else return true;
   }
 
