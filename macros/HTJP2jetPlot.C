@@ -54,7 +54,8 @@ void HTJP2jetPlot(){
 	hRhoByEta[p][e][c]->Scale(1./hRhoByEta[p][e][c]->GetEntries());
 	pRhoByEta[p][e][c] = (TH1D*) hRhoByEta[p][e][c]->ProfileX(name);
 	gPad->SetTickx();
-	gPad->SetGridx();
+	gPad->SetTicky();
+	gPad->SetGridy();
 	pRhoByEta[p][e][c]->SetLineColorAlpha(0,0.9999);
 	pRhoByEta[p][e][c]->SetMarkerSize(2);
 	pRhoByEta[p][e][c]->Draw("SAME");
