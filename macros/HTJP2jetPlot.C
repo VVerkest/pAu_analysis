@@ -44,7 +44,7 @@ void HTJP2jetPlot(){
   cTitle->AddText("UnderlyingEvent");
   cTitle->SetFillStyle(0);
   cTitle->SetLineWidth(0);
-  cTitle->SetTextAlign(21);
+  cTitle->SetTextAlign(33);
   cTitle->Draw();
     
   c0->Divide(nEtaBins,nPtBins,0,0);
