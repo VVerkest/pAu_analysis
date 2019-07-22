@@ -99,10 +99,8 @@ int main ( int argc, const char** argv ) {         // tracks and towers have eta
     
     for ( int i=0; i<rawJets.size(); ++i ) { hAllJetsPtEtaPhi->Fill( rawJets[i].pt(), rawJets[i].eta(), rawJets[i].phi() ); }
     
-    // if ( rawJets.size()<2) { continue; }                                                       //  REQUIRE DIJET
-    // if ( fabs( fabs( rawJets[0].phi() - rawJets[1].phi() ) - pi ) > R || rawJets[0].pt()<10.0 || rawJets[1].pt()<2.0 ) { continue; }    // Require Lead>=10; Sublead>=2;  pi-R < |dphi| < pi+R
-
-    if ( fabs( fabs( rawJets[0].phi() - rawJets[1].phi() ) - pi ) > R || rawJets[0].pt()<10.0 ) { continue; }    // Require Lead>=10
+    if ( rawJets.size()<2) { continue; }                                                       //  REQUIRE DIJET
+    if ( fabs( fabs( rawJets[0].phi() - rawJets[1].phi() ) - pi ) > R || rawJets[0].pt()<10.0 || rawJets[1].pt()<2.0 ) { continue; }    // Require Lead>=10; Sublead>=2;  pi-R < |dphi| < pi+R
     
     for ( int i=0; i<rawParticles.size(); ++i ) { hAllPtEtaPhi->Fill( rawParticles[i].pt(), rawParticles[i].eta(), rawParticles[i].phi() ); }
     
