@@ -40,7 +40,7 @@ void HTJP2jetPlot(){
 
   TCanvas * c0 = new TCanvas( "c0" , "" ,0 ,23 ,1280 ,700 );
   c0->SetTopMargin(0.4);
-  TPaveText *cTitle = new TPaveText(0.3,.9,0.61,1,"NB");
+  TPaveText *cTitle = new TPaveText(0.345843,.881306,0.655712,.980712,"NB");
   cTitle->AddText("UnderlyingEvent");
   cTitle->SetFillStyle(0);
   cTitle->SetLineWidth(0);
