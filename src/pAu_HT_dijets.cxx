@@ -91,17 +91,19 @@ int main ( int argc, const char** argv ) {         // tracks and towers have eta
     Selector etaSelector = SelectorAbsEtaMax( 1.0-R );        //  CREATE JET SELECTORS
     Selector ptMinSelector = SelectorPtMin(jetMinPt);
     Selector eastJetSelector = SelectorEtaMax( 0.0 );
-    // Selector etaPtSelector = etaSelector && ptMinSelector;
-    Selector etaPtSelector = etaSelector && ptMinSelector && eastJetSelector;		//  REQUIRE LEAD & SUB JETS BOTH TO BE IN THE GOLD-GOING ETA-RANGE
+    Selector etaPtSelector = etaSelector && ptMinSelector;
+    // Selector etaPtSelector = etaSelector && ptMinSelector && eastJetSelector;		//  REQUIRE LEAD & SUB JETS BOTH TO BE IN THE GOLD-GOING ETA-RANGE
     
     ClusterSequence jetCluster( rawParticles, jet_def );           //  CLUSTER ALL JETS > 2.0 GEV
     vector<PseudoJet> rawJets = sorted_by_pt( etaPtSelector( jetCluster.inclusive_jets() ) );     // EXTRACT SELECTED JETS
     
     for ( int i=0; i<rawJets.size(); ++i ) { hAllJetsPtEtaPhi->Fill( rawJets[i].pt(), rawJets[i].eta(), rawJets[i].phi() ); }
     
-    if ( rawJets.size()<2) { continue; }                                                       //  REQUIRE DIJET
-    if ( fabs( fabs( rawJets[0].phi() - rawJets[1].phi() ) - pi ) > R || rawJets[0].pt()<10.0 || rawJets[1].pt()<2.0 ) { continue; }    // Require Lead>=10; Sublead>=2;  pi-R < |dphi| < pi+R
+    // if ( rawJets.size()<2) { continue; }                                                       //  REQUIRE DIJET
+    // if ( fabs( fabs( rawJets[0].phi() - rawJets[1].phi() ) - pi ) > R || rawJets[0].pt()<10.0 || rawJets[1].pt()<2.0 ) { continue; }    // Require Lead>=10; Sublead>=2;  pi-R < |dphi| < pi+R
 
+    if ( fabs( fabs( rawJets[0].phi() - rawJets[1].phi() ) - pi ) > R || rawJets[0].pt()<10.0 ) { continue; }    // Require Lead>=10
+    
     for ( int i=0; i<rawParticles.size(); ++i ) { hAllPtEtaPhi->Fill( rawParticles[i].pt(), rawParticles[i].eta(), rawParticles[i].phi() ); }
     
     if ( BackgroundChargeBias == "allBG" || BackgroundChargeBias == "chgBG" ) {  GatherChargedBG( rawJets[0], container, chgParticles);  }    //  Gather background particles based on
@@ -118,7 +120,7 @@ int main ( int argc, const char** argv ) {         // tracks and towers have eta
     
     for ( int i=0; i<rawJets.size(); ++i ) { hAllJetsPtRhoEta->Fill( rawJets[i].pt(), rho,rawJets[i].eta() ); }                      //  FILL HISTOGRAMS
     
-    hLeadPtEtaPhi->Fill(rawJets[0].pt(),rawJets[0].eta(),rawJets[0].phi());	hSubPtEtaPhi->Fill(rawJets[1].pt(),rawJets[1].eta(),rawJets[1].phi());
+    hLeadPtEtaPhi->Fill(rawJets[0].pt(),rawJets[0].eta(),rawJets[0].phi());	//hSubPtEtaPhi->Fill(rawJets[1].pt(),rawJets[1].eta(),rawJets[1].phi());
     hPrimaryVsRho->Fill( rho, nPrimary );							hGlobalVsRho->Fill(rho, nGlobal );						hPt_UE_BBCE->Fill(rawJets[0].pt(),rho,BbcEastRate);
     hTowersVsRho->Fill(rho,nTowers);	       						hLeadPtVsRho->Fill(rho,rawJets[0].pt());					hPt_UE_BBCsumE->Fill(rawJets[0].pt(),rho,BbcAdcSumEast);
     hTowersPerEvent->Fill( nTowers );						       	hPrimaryPerEvent->Fill( nPrimary );						hPt_UE_RefMult->Fill( rawJets[0].pt(), rho, refMult);
