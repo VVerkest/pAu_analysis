@@ -66,7 +66,7 @@ void HTJP2jetPlot(){
 	gPad->SetGridy();
 	pRhoByEta[p][e][c]->SetLineColorAlpha(0,0);
 	pRhoByEta[p][e][c]->SetMarkerSize(2);
-	pRhoByEta[p][e][c]->LabelsOption("B");
+	pRhoByEta[p][e][c]->GetXaxis()->LabelsOption("B");
 	pRhoByEta[p][e][c]->Draw("SAME");
 
 
