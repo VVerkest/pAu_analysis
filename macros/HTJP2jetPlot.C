@@ -24,6 +24,10 @@ void HTJP2jetPlot(){
   gStyle->SetOptStat(0);
   TH2D *hRhoByEta[nPtBins][nEtaBins][nChgBins];
   TH2D *sRhoByEta = new TH2D("sRhoByEta","", 3,-1.5,1.5, 10,0.4,1.6);
+  sRhoByEta->GetXaxis()->SetTicks("+-");
+  sRhoByEta->GetYaxis()->SetTicks("+-");
+
+  TH1D *pRhoByEta[nPtBins][nEtaBins][nChgBins];
 
   for ( int p=0; p<3; ++p ) {
     for ( int e=0; e<3; ++e ) {
@@ -47,13 +51,13 @@ void HTJP2jetPlot(){
       c0->cd(dir);
       sRhoByEta->Draw();
       for ( int c=0; c<3; ++c ) {
-
+	
 	TString name = "pRho" + ptBinName[p] + etaBinName[e] + BackgroundChargeBias[c];
 	hRhoByEta[p][e][c]->Scale(1./hRhoByEta[p][e][c]->GetEntries());
-	hRhoByEta[p][e][c]->GetXaxis()->SetTicks("+-");
-	hRhoByEta[p][e][c]->GetYaxis()->SetTicks("+-");
-	hRhoByEta[p][e][c]->SetMarkerSize(3);
-	hRhoByEta[p][e][c]->ProfileX(name)->Draw(name,1,-1,"S SAME");
+	pRhoByEta[p][e][c] = (TH1D*) hRhoByEta[p][e][c]->ProfileX(name,1,-1,"S");
+
+	pRhoByEta[p][e][c]->SetMarkerSize(3);
+	pRhoByEta[p][e][c]->Draw("SAME");
 
 
       }
