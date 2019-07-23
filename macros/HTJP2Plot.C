@@ -201,9 +201,12 @@ void HTJP2Plot() {
   hAllJetsPt->Draw();					name = "plots/" + path + "AllJetsPt_" + JetChargeBias + ".pdf";											c0->SaveAs( name, "PDF" );
 
   c0->SetLogy(0);		c0->SetLogz();
-  
+
+  hTowersVsBBCsumE->Draw("COLZ");
+  name = "plots/" + path + "TowersVsBBCsumE_" + JetChargeBias + ".pdf";			       	c0->SaveAs( name, "PDF" );
+
   TH2D *hAllJetsEtaPhi = (TH2D*) hAllJetsPtEtaPhi->Project3D("ZY");		hAllJetsEtaPhi->Scale(1.0/hAllJetsEtaPhi->Integral());
-  title = JetChargeString + ": Inclusive Jet #eta-#phi;#eta;#phi";			hAllJetsEtaPhi->SetTitle( title );			hAllJetsEtaPhi->GetZaxis()->SetRangeUser(0.0000001,0.01);
+  title = JetChargeString + ": Inclusive Jet #eta-#phi;#eta;#phi";			hAllJetsEtaPhi->SetTitle( title );			hAllJetsEtaPhi->GetZaxis()->SetRangeUser(0.000001,0.01);
   hAllJetsEtaPhi->Draw("COLZ");			name = "plots/" + path + "AllJetsEtaPhi_" + JetChargeBias + ".pdf";			       	c0->SaveAs( name, "PDF" );
   
   TH2D *hLeadEtaPhi = (TH2D*) hLeadPtEtaPhi->Project3D("ZY");			hLeadEtaPhi->Scale(1.0/hLeadEtaPhi->Integral());
