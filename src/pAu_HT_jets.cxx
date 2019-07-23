@@ -56,13 +56,14 @@ int main ( int argc, const char** argv ) {         // funcions and cuts specifie
   TStarJetPicoReader Reader;                                int numEvents = nEvents;        // total events in HT: 152,007,032
   InitReader( Reader, Chain, numEvents );
 
-  double Vz, leadPt, leadEta, leadPhi, eastRho, midRho, westRho;		PseudoJet leadJet;
+  int nTowers;
+  double Vz, leadPt, leadEta, leadPhi, eastRho, midRho, westRho, rho, ptSum;		PseudoJet leadJet;
   // ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~  BEGIN EVENT LOOP!  ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~
   while ( Reader.NextEvent() ) {
 
     Reader.PrintStatus(10);
 
-    rawParticles.clear();        //  CLEAR VECTORS
+    rawParticles.clear();            rawJets.clear();            //  CLEAR VECTORS
     
     event = Reader.GetEvent();
     header = event->GetHeader();
@@ -78,19 +79,27 @@ int main ( int argc, const char** argv ) {         // funcions and cuts specifie
 
     hPrimaryPerEvent->Fill( header->GetNOfPrimaryTracks() );
 
-    rawJets.clear();
-
     Selector jetEtaSelector = SelectorAbsEtaMax( 1.0-R );
     Selector ptMinSelector = SelectorPtMin(jetMinPt);
     Selector allJetSelector = jetEtaSelector && ptMinSelector;
 
     rawJets = sorted_by_pt( allJetSelector( jetCluster.inclusive_jets() ) );     // EXTRACT ALL JETS >2GeV
     for ( int i=0; i<rawJets.size(); ++i ) { hAllJetsPtEtaPhi->Fill( rawJets[i].pt(), rawJets[i].eta(), rawJets[i].phi() ); }
-	
+
+    if ( rawJets.size()>0 ) { leadJet = rawJets[0]; }
+    else { continue; }
+    GatherBackground( leadJet, container, BGparticles);
+
+    ptSum = 0;
+    for ( int i=0; i<BGparticles.size(); ++i ) { ptSum+= BGparticles[i].pt(); }
+    rho = ptSum / AREA;
+    
+    hLeadJetPtRhoEta->Fill( leadJet.pt(), rho, leadJet.eta() );
+    
     for ( int p=0; p<3; ++p ) {  // * * * * * * * * * * * * * * * * * * PT LOOP * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
       for ( int e=0; e<3; ++e ) {  // * * * * * * * * * * * * * * * * ETA LOOP * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
 
-	rawJets.clear();
+	BGparticles.clear();		rawJets.clear();			rho = 0;
 	
 	Selector ptRangeSelector = SelectorPtRange( ptLo[p], ptHi[p] );          //  JET pT RANGE
 	Selector etaRangeSelector = SelectorEtaRange( etaLo[e], etaHi[e] );          //  JET eta RANGE
@@ -127,10 +136,6 @@ int main ( int argc, const char** argv ) {         // funcions and cuts specifie
 	  hRhoByEta[p][e][c]->Fill( 1.0, westRho );
 
 	}
-
-
-	hLeadJetPtRhoEta->Fill( leadJet.pt(), rho, leadJet.eta() );
-	
       }
     }
 
@@ -155,7 +160,7 @@ int main ( int argc, const char** argv ) {         // funcions and cuts specifie
   hPrimaryPerEvent->Write();
   hTowersPerEvent->Write();
   hAllJetsPtEtaPhi->Write();
-  hAllJetsPtRhoEta->Write();
+  hLeadJetPtRhoEta->Write();
 
 
   pAuFile->Close();
