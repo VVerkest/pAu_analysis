@@ -9,7 +9,8 @@ set ExecPath = `pwd`
 set execute = './bin/pAu_HT_jets'
 set numevents = -1
 set base = /wsu/home/el/el98/el9852/physics/analysis/pAu_analysis/production_pAu200_2015/HT/pAu_2015_200_HT
-set outFile = HTJP2jets
+set outDir = HT
+set outFile = HTjets
 
 # Create the folder name for output
 #set outFile = stock
@@ -28,10 +29,10 @@ foreach input ( ${base}* )
 # Create the output file base name                                                                                                                                             
 set OutBase = `basename $input | sed 's/.root//g'`
 set uscore = "_"
-set OutBase = "$OutBase$uscore"
+set OutBase = "$OutBase$uscore$outFile"
     
 # Make the output names and path                                                                                                                                               
-set outLocation = out/${outFile}/
+set outLocation = out/${outDir}/
 set outName = ${OutBase}.root
 
 # Input files                                                                                                                                                                  
