@@ -36,7 +36,7 @@ void HTJP2Plot() {
   // TH2D *hPrimaryVsBBCE = (TH2D*) inFile->Get("hPrimaryVsBBCE");			hPrimaryVsBBCE->Scale(1.0/hPrimaryVsBBCE->Integral("WIDTH"));
   // TH2D *hGlobalVsBBCE = (TH2D*) inFile->Get("hGlobalVsBBCE");				hGlobalVsBBCE->Scale(1.0/hGlobalVsBBCE->Integral("WIDTH"));
   // TH2D *hPrimaryVsBBCsumE = (TH2D*) inFile->Get("hPrimaryVsBBCsumE");		hPrimaryVsBBCsumE->Scale(1.0/hPrimaryVsBBCsumE->Integral("WIDTH"));
-  // TH2D *hTowersVsBBCsumE = (TH2D*) inFile->Get("hTowersVsBBCsumE");		hTowersVsBBCsumE->Scale(1.0/hTowersVsBBCsumE->Integral("WIDTH"));
+  TH2D *hTowersVsBBCsumE = (TH2D*) inFile->Get("hTowersVsBBCsumE");		hTowersVsBBCsumE->Scale(1.0/hTowersVsBBCsumE->Integral("WIDTH"));
   TH2D *hPrimaryVsRho = (TH2D*) inFile->Get("hPrimaryVsRho");				hPrimaryVsRho->Scale(1.0/hPrimaryVsRho->Integral("WIDTH"));
   TH2D *hGlobalVsRho = (TH2D*) inFile->Get("hGlobalVsRho");				hGlobalVsRho->Scale(1.0/hGlobalVsRho->Integral("WIDTH"));
   TH2D *hTowersVsRho = (TH2D*) inFile->Get("hTowersVsRho");				hTowersVsRho->Scale(1.0/hTowersVsRho->Integral("WIDTH"));
@@ -59,6 +59,7 @@ void HTJP2Plot() {
   hPrimaryVsGlobal->GetXaxis()->SetRangeUser(0.0,2000.0);
   hPrimaryVsGlobal->GetYaxis()->SetRangeUser(0.0,80.0);
   hTowersVsRho->GetXaxis()->SetRangeUser(0.0,10.0);
+  hTowersVsRho->GetYaxis()->SetRangeUser(0.0,200.0);
   hChgVsNeuBG->GetXaxis()->SetRangeUser(0.0,10.0);
   hChgVsNeuBG->GetYaxis()->SetRangeUser(0.0,10.0);
   hGlobalVsRho->GetXaxis()->SetRangeUser(0.0,10.0);
