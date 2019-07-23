@@ -215,8 +215,14 @@ namespace pAuAnalysis {
   bool UseEvent( TStarJetPicoEventHeader* Header, double vz_cut, double vz ) {
     if (Header->GetRunId() >= 16142059 && Header->GetRunId() <= 16149001) { return false; }    //TEMPORARILY SKIPPING THESE RUNS
     else if (Header->GetRunId() == 16135031 || Header->GetRunId() == 16135032) { return false; }
-    else if (!(Header->HasTriggerId(500401) || Header->HasTriggerId(500411))) {return false;}   //  ONLY SELECT JP2 TRIGGER EVENTS
     else if ( abs(vz) > vz_cut ) { return false; }
+    
+    // for pAu, need to ask if the event has the trigger. The trigger IDs are:
+    // HT2*BBCMB : 500205, 500215		JP2 : 500401, 500411		BBCMB : 500008, 500018		VPDMB :  500904
+    
+    // else if (!(Header->HasTriggerId(500401) || Header->HasTriggerId(500411))) {return false;}   //  ONLY SELECT JP2 TRIGGER EVENTS
+    else if (!(Header->HasTriggerId(500205) || Header->HasTriggerId(500215))) {return false;}   //  ONLY SELECT HT TRIGGER EVENTS
+
     else if ( Header->GetBbcAdcSumEast() > 64000 ) { return false; }
     else return true;
   }
