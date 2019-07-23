@@ -18,10 +18,11 @@ void HTJP2Plot() {
   // TString JetChargeBias = "chgJets";				TString JetChargeString = "Charged Jets";
   // TString JetChargeBias = "neuJets";				TString JetChargeString = "Neutral Jets";
 
-  TString path = "HTjets/towersRemoved/";   // good/    allTowers/    towersRemoved/
+  TString path = "HTjets/good/";   // good/    allTowers/    towersRemoved/
 
   //fileName = "out/" + path + "pAu_2015_200_" + BackgroundChargeBias + "_" + JetChargeBias + ".root";
-  fileName = "out/HTJP2dijets/pAu_dijets_badTowersRemoved_allBBCEsum.root";
+  //fileName = "out/HTJP2dijets/pAu_dijets_badTowersRemoved_allBBCEsum.root";
+  fileName = "out/HTJP2dijets/pAu_dijets_good.root";
   TFile* inFile = new TFile( fileName, "READ" );
 
   TH1D *hTowersPerEvent = (TH1D*) inFile->Get("hTowersPerEvent");			hTowersPerEvent->Scale(1.0/hTowersPerEvent->Integral("WIDTH"));
@@ -155,7 +156,7 @@ void HTJP2Plot() {
   
   c0->SetLogy();
   
-  name = JetChargeString + ": " + BackgroundChargeString + " by Lead Jet p_{T};#rho (GeV);";
+  name = /*JetChargeString + ": " + BackgroundChargeString + " */ "Underlying Event by Lead Jet p_{T};#rho (GeV);";
   TH2D *sLeadPtVsRho = new TH2D( "sLeadPtVsRho", name, 50,0,15, 10,0.000001, 1.0 );
   sLeadPtVsRho->SetStats(0);
 
@@ -192,7 +193,8 @@ void HTJP2Plot() {
 
   
   hTowersPerEvent->Draw();		name = "plots/" + path + "TowersPerEvent_" + JetChargeBias + ".pdf";
-  title = JetChargeString + ": " + hTowersPerEvent->GetTitle();		hTowersPerEvent->SetTitle( title );		c0->SaveAs( name, "PDF" );
+  // title = JetChargeString + ": " + hTowersPerEvent->GetTitle();		hTowersPerEvent->SetTitle( title );
+  c0->SaveAs( name, "PDF" );
 
   hPrimaryPerEvent->Draw();		name = "plots/" + path + "PrimaryPerEvent_" + JetChargeBias + ".pdf";
   title = JetChargeString + ": " + hPrimaryPerEvent->GetTitle();		hPrimaryPerEvent->SetTitle( title );		c0->SaveAs( name, "PDF" );
@@ -248,7 +250,7 @@ void HTJP2Plot() {
   hGlobalVsRho->Draw("COLZ");			name = "plots/" + path + "GlobalVsRho_" + BackgroundChargeBias + "_" + JetChargeBias + ".pdf";				c0->SaveAs( name, "PDF" );
 
   hTowersVsRho->GetZaxis()->SetRangeUser(0.00001,1);
-  title = JetChargeString + ", " + BackgroundChargeString + ": " + hTowersVsRho->GetTitle();			hTowersVsRho->SetTitle( title );
+  // title = JetChargeString + ", " + BackgroundChargeString + ": " + hTowersVsRho->GetTitle();			hTowersVsRho->SetTitle( title );
   hTowersVsRho->Draw("COLZ");			name = "plots/" + path + "TowersVsRho_" + BackgroundChargeBias + "_" + JetChargeBias + ".pdf";				c0->SaveAs( name, "PDF" );
 
   scale = hLeadPtVsRho->Integral("WIDTH");			hLeadPtVsRho->Scale(1.0/scale);			hLeadPtVsRho->GetZaxis()->SetRangeUser(0.00001,1);
