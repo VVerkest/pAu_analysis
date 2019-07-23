@@ -18,10 +18,10 @@ void HTJP2Plot() {
   // TString JetChargeBias = "chgJets";				TString JetChargeString = "Charged Jets";
   // TString JetChargeBias = "neuJets";				TString JetChargeString = "Neutral Jets";
 
-  TString path = "HTjets/good/";   // good/    allTowers/    towersRemoved/
+  TString path = "HTjets/towersRemoved/";   // good/    allTowers/    towersRemoved/
 
   //fileName = "out/" + path + "pAu_2015_200_" + BackgroundChargeBias + "_" + JetChargeBias + ".root";
-  fileName = "out/HTJP2dijets/pAu_dijets_good.root";
+  fileName = "pAu_dijets_badTowersRemoved_allBBCEsum.root";
   TFile* inFile = new TFile( fileName, "READ" );
 
   TH1D *hTowersPerEvent = (TH1D*) inFile->Get("hTowersPerEvent");			hTowersPerEvent->Scale(1.0/hTowersPerEvent->Integral("WIDTH"));
