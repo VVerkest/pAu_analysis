@@ -217,7 +217,7 @@ namespace pAuAnalysis {
     else if (Header->GetRunId() == 16135031 || Header->GetRunId() == 16135032) { return false; }
     else if (!(Header->HasTriggerId(500401) || Header->HasTriggerId(500411))) {return false;}   //  ONLY SELECT JP2 TRIGGER EVENTS
     else if ( abs(vz) > vz_cut ) { return false; }
-    //else if ( Header->GetBbcAdcSumEast() > 64000 ) { return false; }
+    else if ( Header->GetBbcAdcSumEast() > 64000 ) { return false; }
     else return true;
   }
 
