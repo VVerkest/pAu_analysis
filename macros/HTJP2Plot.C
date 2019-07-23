@@ -66,6 +66,7 @@ void HTJP2Plot() {
   hnPrimaryVSnTowers->GetXaxis()->SetRangeUser(0.0,100.0);
   hnPrimaryVSnTowers->GetYaxis()->SetRangeUser(0.0,100.0);
   hLeadPtVsRho->GetYaxis()->SetRangeUser(0.0,10.0);
+  //hTowersVsBBCsumE->GetYaxis->
   
   const int nPtBins = 4;
   double LeadPtBinLo[nPtBins] = { 10.0, 15.0, 20.0, 30.0 };
