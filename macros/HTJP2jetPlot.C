@@ -1,7 +1,7 @@
 
 void HTJP2jetPlot(){
 
-  TFile* inFile = new TFile( "out/HTJP2jets/pAu_2015_200_HTJP2jets.root", "READ" );
+  TFile* inFile = new TFile( "out/HT/pAu_2015_HTjets.root", "READ" );
 
   const int nPtBins = 3;
   const double ptLo[nPtBins] = { 10.0, 15.0, 20.0 };

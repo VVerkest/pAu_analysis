@@ -41,7 +41,7 @@ int main ( int argc, const char** argv ) {         // funcions and cuts specifie
 	hRhoByEta[p][e][c]->SetLineColor( color[c] );	hRhoByEta[p][e][c]->SetMarkerColor( color[c] );	hRhoByEta[p][e][c]->SetMarkerStyle( marker[c] );
 
 	name = "hBG" + ptBinName[p] + etaBinName[e] + BackgroundChargeBias[c];
-	title = ptBinString[p] + " " + etaBinString[e] + " " + BackgroundChargeBias[c] +" Background Particles;Background Particle p_{T}(GeV);Particle #phi;Particle #eta";
+	title = ptBinString[p] + " " + etaBinString[e] + " " + BackgroundChargeString[c] +" Background Particles;Background Particle p_{T}(GeV);Particle #phi;Particle #eta";
 	hBG[p][e][c] = new TH3D(name, title, 80,0,20, 120,0,2*pi, 40,-1,1 );
       }
     }
