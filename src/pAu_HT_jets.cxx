@@ -24,11 +24,18 @@ int main ( int argc, const char** argv ) {         // funcions and cuts specifie
 
   TH1D *hPrimaryPerEvent = new TH1D("hPrimaryPerEvent","Primary Track Multiplicity (per event);# of Primary", 700,0,700 );
   TH1D *hTowersPerEvent = new TH1D("hTowersPerEvent","Tower Frequency;# of Towers", 140,0,700 );
+
+  TH2D *hTowersVsRho = new TH2D("hTowersVsRho","# of Towers vs. UE;#rho (GeV);# of Towers", 100,0,25, 140,0,700 );
+  
   TH3D *hAllJetsPtEtaPhi = new TH3D( "hAllJetsPtEtaPhi", "Inclusive Jets p_{T}, #eta, #phi;Jet p_{T} (GeV);Jet #eta;Jet #phi", 400,0.0,100.0, 40,-1.0,1.0, 120,0.0,2*pi  );
   TH3D *hLeadJetPtRhoEta = new TH3D( "hLeadJetPtRhoEta", "Lead Jet p_{T}, #rho, #eta;Jet p_{T} (GeV);#rho;Jet #eta", 400,0.0,100.0, 100,0,25, 40,-1.0,1.0 );  
+  TH3D *hLeadPtEtaPhi = new TH3D("hLeadPtEtaPhi","Lead Jet p_{T} vs. #eta vs. #phi;p_{T} (GeV);#eta;#phi", 280,0,70, 40,-1.0,1.0, 120,0,6.3);
+  TH3D *hPt_UE_BBCE = new TH3D("hPt_UE_BBCE","UE vs. BBC East Rate;Lead Jet p_{T} (GeV);Underlying Event (GeV);BBC East Rate", 500,0,125, 50,0,25, 140,0,7000000 );
+  TH3D *hPt_UE_BBCsumE = new TH3D("hPt_UE_BBCsumE","UE vs. BBC ADC East Sum;Lead Jet p_{T} (GeV);Underlying Event (GeV);BBC ADC East Sum", 500,0,125, 50,0,25, 160,0,80000 );
+
   
-  TH3D *hBG[nPtBins][nEtaBins][nChgBins];
   TH2D *hRhoByEta[nPtBins][nEtaBins][nChgBins];
+  TH3D *hBG[nPtBins][nEtaBins][nChgBins];
 
   double eastArea = 1.4*(pi - 2);   // eta: [-1.0,-0.3]			(  etaMax - etaMin  ) X (  2*( pi-1 - 1 ) in phi  )
   double midArea = 1.2*(pi - 2);    //  eta: [-0.3,0.3]
@@ -74,10 +81,10 @@ int main ( int argc, const char** argv ) {         // funcions and cuts specifie
 
     TList *SelectedTowers = Reader.GetListOfSelectedTowers();		nTowers = CountTowers( SelectedTowers );		hTowersPerEvent->Fill(nTowers);
     
+    hPrimaryPerEvent->Fill( header->GetNOfPrimaryTracks() );
+
     GatherParticles( container, rawParticles );
     ClusterSequence jetCluster( rawParticles, jet_def );           //  CLUSTER ALL JETS
-
-    hPrimaryPerEvent->Fill( header->GetNOfPrimaryTracks() );
 
     Selector jetEtaSelector = SelectorAbsEtaMax( 1.0-R );
     Selector ptMinSelector = SelectorPtMin(jetMinPt);
@@ -94,7 +101,11 @@ int main ( int argc, const char** argv ) {         // funcions and cuts specifie
     for ( int i=0; i<BGparticles.size(); ++i ) { ptSum+= BGparticles[i].pt(); }
     rho = ptSum / AREA;
     
+    hTowersVsRho->Fill( rho, nTowers );
     hLeadJetPtRhoEta->Fill( leadJet.pt(), rho, leadJet.eta() );
+    hLeadPtEtaPhi->Fill( leadJet.pt(), leadJet.eta(), leadJet.phi() );
+    hPt_UE_BBCE->Fill( leadJet.pt(), rho, header->GetBbcEastRate() );
+    hPt_UE_BBCsumE->Fill( leadJet.pt(), rho, header->GetBbcAdcSumEast() );
     
     for ( int p=0; p<3; ++p ) {  // * * * * * * * * * * * * * * * * * * PT LOOP * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
       for ( int e=0; e<3; ++e ) {  // * * * * * * * * * * * * * * * * ETA LOOP * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
@@ -159,8 +170,12 @@ int main ( int argc, const char** argv ) {         // funcions and cuts specifie
   
   hPrimaryPerEvent->Write();
   hTowersPerEvent->Write();
+  hTowersVsRho->Write();
   hAllJetsPtEtaPhi->Write();
+  hLeadPtEtaPhi->Write();
   hLeadJetPtRhoEta->Write();
+  hPt_UE_BBCE->Write();
+  hPt_UE_BBCsumE->Write();
 
 
   pAuFile->Close();
