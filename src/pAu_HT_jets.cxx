@@ -23,7 +23,7 @@ int main ( int argc, const char** argv ) {         // funcions and cuts specifie
   TH1::SetDefaultSumw2();  TH2::SetDefaultSumw2();  TH3::SetDefaultSumw2();
 
   TH1D *hPrimaryPerEvent = new TH1D("hPrimaryPerEvent","Primary Track Multiplicity (per event);# of Primary", 700,0,700 );
-  TH1D *hTowersPerEvent = new TH1D("hTowersPerEvent","Tower Frequency;# of Towers", 140,0,700 );
+  TH1D *hTowersPerEvent = new TH1D("hTowersPerEvent","Tower Multiplicty;# of Towers", 140,0,700 );
 
   TH2D *hTowersVsRho = new TH2D("hTowersVsRho","# of Towers vs. UE;#rho (GeV);# of Towers", 100,0,25, 140,0,700 );
   
