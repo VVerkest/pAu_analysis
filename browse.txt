@@ -29,3 +29,34 @@ h->Fill(trig);
 
 
 }
+
+
+
+
+
+
+
+
+gSystem->Load("/wsu/home/el/el98/el9852/physics/software/eventStructuredAu/libTStarJetPico.so");
+TChain* chain = new TChain( "JetTree" );
+chain->Add( "production_pAu200_2015/HT/pAu_2015_200_HT_1*.root" );
+//chain->Add( "/nfs/rhi/STAR/Data/ppHT2Run12/pp12Pico*.root" );
+TStarJetPicoReader reader;
+reader.SetInputChain( chain );
+TStarJetPicoTowerCuts* towerCuts = reader.GetTowerCuts();
+reader.Init(-1);
+TStarJetVectorContainer<TStarJetVector>* container;
+TStarJetVector* sv;
+TStarJetPicoEventHeader* header;
+TStarJetPicoEvent* event;
+
+TTree *jt = JetTree;
+
+TH1D *hTowerFrequency = new TH1D("hTowerFrequency","Tower Frequency", 4800,0,4800 );
+TH2D *hTowerEt = new TH2D("hTowerEt","Tower Energy;", 120, 0.0, 30.0, 4800,0,4800 );
+
+while (reader.NextEvent()) {
+
+event = reader.GetEvent();  header = event->GetHeader();  container = reader.GetOutputContainer();
+
+}
