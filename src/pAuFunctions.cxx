@@ -198,7 +198,8 @@ namespace pAuAnalysis {
     TStarJetPicoTowerCuts* towerCuts = reader.GetTowerCuts();
     towerCuts->SetMaxEtCut( MaxEtCut );
     //towerCuts->AddBadTowers( "src/dummy_tower_list.txt" );
-    towerCuts->AddBadTowers( "/nfs/rhi/STAR/Data/P16id/resources/bad_towers_pAu2015.list" );
+    //towerCuts->AddBadTowers( "/nfs/rhi/STAR/Data/P16id/resources/bad_towers_pAu2015.list" );
+    towerCuts->AddBadTowers( "src/bad_towers_pAu2015_HT2.list" );
 
     std::cout << "Using these tower cuts:" << std::endl;
     std::cout << "  GetMaxEtCut = " << towerCuts->GetMaxEtCut() << std::endl;
