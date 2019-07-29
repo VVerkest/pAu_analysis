@@ -93,6 +93,10 @@ int main ( int argc, const char** argv ) {         // funcions and cuts specifie
     rawJets = sorted_by_pt( allJetSelector( jetCluster.inclusive_jets() ) );     // EXTRACT ALL JETS >2GeV
     for ( int i=0; i<rawJets.size(); ++i ) { hAllJetsPtEtaPhi->Fill( rawJets[i].pt(), rawJets[i].eta(), rawJets[i].phi() ); }
 
+    Selector leadPtMinSelector = SelectorPtMin(leadJetMinPt);
+    Selector leadJetSelector = jetEtaSelector && leadPtMinSelector;
+    rawJets = sorted_by_pt( leadJetSelector( jetCluster.inclusive_jets() ) );     // EXTRACT ALL JETS >10GeV
+
     if ( rawJets.size()>0 ) { leadJet = rawJets[0]; }
     else { continue; }
     GatherBackground( leadJet, container, BGparticles);

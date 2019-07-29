@@ -65,7 +65,7 @@ namespace pAuAnalysis {
   const int marker[nChgBins] = { 22, 23, 20 };
 
   const double leadJetMinPt = 10.0;
-  const double leadJetMaxPt = 30.0;
+  //const double leadJetMaxPt = 30.0;
   
 }
 
