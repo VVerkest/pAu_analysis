@@ -9,6 +9,7 @@
 
 using namespace std;
 using namespace fastjet;
+using namespace jetreader;
 using namespace pAuAnalysis;
 
 int main ( int argc, const char** argv ) {         // funcions and cuts specified in pAuFunctions.hh
