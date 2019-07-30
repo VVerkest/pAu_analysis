@@ -63,7 +63,6 @@ $(BDIR)/%  : $(ODIR)/%.o
 all : $(BDIR)/pAu_analysis_MB $(BDIR)/pAu_analysis_HT $(BDIR)/pAu_HT_jets $(BDIR)/pAu_HT_dijets $(BDIR)/pAu_HT_jetTree $(BDIR)/pAu_HT_jetPlot $(BDIR)/test
 
 $(ODIR)/pAuFunctions.o : $(SDIR)/pAuFunctions.cxx $(SDIR)/pAuFunctions.hh
-$(ODIR)/bemc_helper.o : $(SDIR)/bemc_helper.cc $(SDIR)/bemc_helper.h
 $(ODIR)/pAu_analysis_MB.o : $(SDIR)/pAu_analysis_MB.cxx
 $(ODIR)/pAu_analysis_HT.o : $(SDIR)/pAu_analysis_HT.cxx
 $(ODIR)/pAu_HT_jets.o : $(SDIR)/pAu_HT_jets.cxx $(SDIR)/pAu_HT_jetParameters.hh $(SDIR)/bemc_helper.h
@@ -75,7 +74,7 @@ $(ODIR)/test.o : $(SDIR)/test.cxx
 #data analysis
 $(BDIR)/pAu_analysis_MB :	$(ODIR)/pAu_analysis_MB.o	$(ODIR)/pAuFunctions.o
 $(BDIR)/pAu_analysis_HT :	$(ODIR)/pAu_analysis_HT.o	$(ODIR)/pAuFunctions.o
-$(BDIR)/pAu_HT_jets :	$(ODIR)/pAu_HT_jets.o	$(ODIR)/pAuFunctions.o	$(ODIR)/bemc_helper.o
+$(BDIR)/pAu_HT_jets :	$(ODIR)/pAu_HT_jets.o	$(ODIR)/pAuFunctions.o
 $(BDIR)/pAu_HT_dijets :	$(ODIR)/pAu_HT_dijets.o	$(ODIR)/pAuFunctions.o
 $(BDIR)/pAu_HT_jetTree :	$(ODIR)/pAu_HT_jetTree.o	$(ODIR)/pAuFunctions.o
 $(BDIR)/pAu_HT_jetPlot :	$(ODIR)/pAu_HT_jetPlot.o
