@@ -42,6 +42,8 @@
 #include <iomanip>
 #include <cmath>
 
+#include "bemc_helper.h"
+
 #ifndef pAuFunctions_hh
 #define pAuFunctions_hh
 
