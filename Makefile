@@ -60,7 +60,7 @@ $(BDIR)/%  : $(ODIR)/%.o
 ###############################################################################
 ############################# Main Targets ####################################
 ###############################################################################
-all : $(BDIR)/pAu_analysis_MB $(BDIR)/pAu_analysis_HT $(BDIR)/pAu_HT_jets $(BDIR)/pAu_HT_dijets $(BDIR)/pAu_HT_jetTree $(BDIR)/pAu_HT_jetPlot $(BDIR)/test
+all : $(BDIR)/pAu_analysis_MB $(BDIR)/pAu_analysis_HT $(BDIR)/pAu_HT_jets $(BDIR)/pAu_HT_dijets $(BDIR)/pAu_HT_jetTree $(BDIR)/pAu_HT_jetPlot $(BDIR)/test $(BDIR)/bemc_helper
 
 $(ODIR)/pAuFunctions.o : $(SDIR)/pAuFunctions.cxx $(SDIR)/pAuFunctions.hh
 $(ODIR)/bemc_helper.o : $(SDIR)/bemc_helper.cc $(SDIR)/bemc_helper.h
