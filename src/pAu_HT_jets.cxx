@@ -112,7 +112,7 @@ int main ( int argc, const char** argv ) {         // funcions and cuts specifie
       trig = (TStarJetPicoTriggerInfo *)event->GetTrigObj(i);
       if ( trig->isBHT2() ) {
 	double trigTowId = trig->GetId();
-	for ( int j=0; j<header->GetNOfTowers(); ++j ) {
+	for ( int j=0; j<event->GetTowers()->GetEntries(); ++j ) {
 	  if ( event->GetTower(j)->GetId() == trigTowId ) {  trigTow+=1;    hTriggerEtEtaPhi->Fill( event->GetTower(j)->GetEt(), trig->GetEta(), trig->GetPhi() ); }
 	}
       }
