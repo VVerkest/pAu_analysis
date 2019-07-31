@@ -14,11 +14,11 @@ using namespace pAuAnalysis;
 
 int main ( int argc, const char** argv ) {         // funcions and cuts specified in pAuFunctions.hh
 
-  int nEvents;		string inFile, outFile;		TString name, title;
+  int number_of_events;		string inFile, outFile;		TString name, title;
   
   vector<string> arguments( argv+1, argv+argc );
-  if ( argc ==  4 ) {    inFile = arguments[0];    outFile = arguments[1];    nEvents = atoi(arguments[2].c_str()); }
-  else if ( argc==1 ) { inFile="production_pAu200_2015/HT/pAu_2015_200_HT*.root"; outFile="out/HT/pAuJets.root"; nEvents=100000; }
+  if ( argc ==  4 ) {    inFile = arguments[0];    outFile = arguments[1];    number_of_events = atoi(arguments[2].c_str()); }
+  else if ( argc==1 ) { inFile="production_pAu200_2015/HT/pAu_2015_200_HT*.root"; outFile="out/HT/pAuJets.root"; number_of_events=100000; }
   else { cerr<< "incorrect number of command line arguments"; return -1; }
 
   TH1::SetDefaultSumw2();  TH2::SetDefaultSumw2();  TH3::SetDefaultSumw2();
@@ -33,7 +33,7 @@ int main ( int argc, const char** argv ) {         // funcions and cuts specifie
   TH3D *hLeadPtEtaPhi = new TH3D("hLeadPtEtaPhi","Lead Jet p_{T} vs. #eta vs. #phi;p_{T} (GeV);#eta;#phi", 280,0,70, 40,-1.0,1.0, 120,0,6.3);
   TH3D *hPt_UE_BBCE = new TH3D("hPt_UE_BBCE","UE vs. BBC East Rate;Lead Jet p_{T} (GeV);Underlying Event (GeV);BBC East Rate", 500,0,125, 50,0,25, 140,0,7000000 );
   TH3D *hPt_UE_BBCsumE = new TH3D("hPt_UE_BBCsumE","UE vs. BBC ADC East Sum;Lead Jet p_{T} (GeV);Underlying Event (GeV);BBC ADC East Sum", 500,0,125, 50,0,25, 160,0,80000 );
-
+  TH3D *hTriggerEtEtaPhi = new TH3D( "hTriggerEtEtaPhi", "HT Triggers;Trigger E_{T} (GeV);Trigger #eta, Trigger #phi", 120,0.0,30.0, 40,-1.0,1.0, 120, -pi, pi );
   
   TH2D *hRhoByEta[nPtBins][nEtaBins][nChgBins];
   TH3D *hBG[nPtBins][nEtaBins][nChgBins];
@@ -59,12 +59,13 @@ int main ( int argc, const char** argv ) {         // funcions and cuts specifie
 
   vector<PseudoJet> rawParticles, chgParticles, BGparticles, neuParticles, rawJets;
   TStarJetPicoEventHeader* header;    TStarJetPicoEvent* event;    TStarJetVectorContainer<TStarJetVector> * container;
+  TStarJetPicoTriggerInfo *trig;
   
   TChain* Chain = new TChain( "JetTree" );          Chain->Add( inFile.c_str() );
-  TStarJetPicoReader Reader;                                int numEvents = nEvents;        // total events in HT: 152,007,032
+  TStarJetPicoReader Reader;                                int numEvents = number_of_events;        // total events in HT: 152,007,032
   InitReader( Reader, Chain, numEvents );
 
-  int nTowers;
+  int nTowers, nEvents;
   double Vz, leadPt, leadEta, leadPhi, eastRho, midRho, westRho, rho, ptSum;		PseudoJet leadJet;
   // ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~  BEGIN EVENT LOOP!  ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~
   while ( Reader.NextEvent() ) {
@@ -88,7 +89,7 @@ int main ( int argc, const char** argv ) {         // funcions and cuts specifie
     ClusterSequence jetCluster( rawParticles, jet_def );           //  CLUSTER ALL JETS
 
     Selector jetEtaSelector = SelectorAbsEtaMax( 1.0-R );
-    Selector ptMinSelector = SelectorPtMin(jetMinPt);
+    Selector ptMinSelector = SelectorPtMin( jetMinPt );
     Selector allJetSelector = jetEtaSelector && ptMinSelector;
 
     rawJets = sorted_by_pt( allJetSelector( jetCluster.inclusive_jets() ) );     // EXTRACT ALL JETS >2GeV
@@ -105,6 +106,18 @@ int main ( int argc, const char** argv ) {         // funcions and cuts specifie
     ptSum = 0;
     for ( int i=0; i<BGparticles.size(); ++i ) { ptSum+= BGparticles[i].pt(); }
     rho = ptSum / AREA;
+
+    int trigTow = 0;
+    for ( i=0; i<event->GetTrigObjs()->GetEntries(); ++i ) {
+      trig = (TStarJetPicoTriggerInfo *)event->GetTrigObj(i);
+      if ( trig->isBHT2() ) {
+	double trigTowId = trig->GetId();
+	for ( j=0; j<header->GetNOfTowers(); ++j ) {
+	  if ( event->GetTower(j)->GetId() == trigTowId ) {  trigTow+=1;    hTriggerEtEtaPhi->Fill( event->GetTower(j)->GetEt(), trig->GetEta(), trig->GetPhi() ); }
+	}
+      }
+    }
+    if ( trigTow==0 ) { cerr<<"UNABLE TO FIND TRIGGER TOWER!"<<endl; }
     
     hTowersVsRho->Fill( rho, nTowers );
     hLeadJetPtRhoEta->Fill( leadJet.pt(), rho, leadJet.eta() );
@@ -115,7 +128,7 @@ int main ( int argc, const char** argv ) {         // funcions and cuts specifie
     for ( int p=0; p<3; ++p ) {  // * * * * * * * * * * * * * * * * * * PT LOOP * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
       for ( int e=0; e<3; ++e ) {  // * * * * * * * * * * * * * * * * ETA LOOP * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
 
-	BGparticles.clear();		rawJets.clear();			rho = 0;
+	BGparticles.clear();		rawJets.clear();
 	
 	Selector ptRangeSelector = SelectorPtRange( ptLo[p], ptHi[p] );          //  JET pT RANGE
 	Selector etaRangeSelector = SelectorEtaRange( etaLo[e], etaHi[e] );          //  JET eta RANGE
@@ -155,10 +168,8 @@ int main ( int argc, const char** argv ) {         // funcions and cuts specifie
       }
     }
 
+    nEvents += 1;
     
-
-
-
   }  // ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~  END EVENT LOOP!  ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~
 
   TFile *pAuFile = new TFile( outFile.c_str() ,"RECREATE");
@@ -172,7 +183,7 @@ int main ( int argc, const char** argv ) {         // funcions and cuts specifie
       }
     }
   }
-  
+
   hPrimaryPerEvent->Write();
   hTowersPerEvent->Write();
   hTowersVsRho->Write();
@@ -181,7 +192,7 @@ int main ( int argc, const char** argv ) {         // funcions and cuts specifie
   hLeadJetPtRhoEta->Write();
   hPt_UE_BBCE->Write();
   hPt_UE_BBCsumE->Write();
-
+  hTriggerEtEtaPhi->Write();
 
   pAuFile->Close();
 

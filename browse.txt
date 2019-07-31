@@ -44,6 +44,9 @@ chain->Add( "production_pAu200_2015/HT/pAu_2015_200_HT_1*.root" );
 TStarJetPicoReader reader;
 reader.SetInputChain( chain );
 TStarJetPicoTowerCuts* towerCuts = reader.GetTowerCuts();
+towerCuts->AddBadTowers( "src/dummy_tower_list.txt" );
+//towerCuts->AddBadTowers( "/nfs/rhi/STAR/Data/P16id/resources/bad_towers_pAu2015.list" );
+
 reader.Init(-1);
 TStarJetVectorContainer<TStarJetVector>* container;
 TStarJetVector* sv;
