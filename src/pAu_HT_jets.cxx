@@ -119,7 +119,7 @@ int main ( int argc, const char** argv ) {         // funcions and cuts specifie
 	}
       }
     }
-    if ( trigTow==0 ) { cerr<<"UNABLE TO FIND TRIGGER TOWER!      TowerID: "<<trigTowId<<endl; }
+    if ( trigTow==0 ) { cerr<<"UNABLE TO FIND TRIGGER TOWER!      TowerID: "<<trig->GetId()<<endl; }
     
     hTowersVsRho->Fill( rho, nTowers );
     hLeadJetPtRhoEta->Fill( leadJet.pt(), rho, leadJet.eta() );
