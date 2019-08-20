@@ -215,7 +215,7 @@ int main ( int argc, const char** argv ) {         // funcions and cuts specifie
   hTriggerEtEtaPhi->Write();
 
   hTrigTowerDebug->Write();
-  hTriggerIdEtaPhi_wt->Write()
+  hTriggerIdEtaPhi_wt->Write();
   hTriggerTowerId->Write();
   hTrigEt_Id->Write();
 
