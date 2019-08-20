@@ -18,7 +18,7 @@ int main ( int argc, const char** argv ) {         // funcions and cuts specifie
   
   vector<string> arguments( argv+1, argv+argc );
   if ( argc ==  4 ) {    inFile = arguments[0];    outFile = arguments[1];    number_of_events = atoi(arguments[2].c_str()); }
-  else if ( argc==1 ) { inFile="production_pAu200_2015/HT/pAu_2015_200_HT*.root"; outFile="out/HT/pAuJets.root"; number_of_events=100000; }
+  else if ( argc==1 ) { inFile="production_pAu200_2015/HT/pAu_2015_200_HT*.root"; outFile="out/HT/pAuJets.root"; number_of_events=10000; }
   else { cerr<< "incorrect number of command line arguments"; return -1; }
 
   TH1::SetDefaultSumw2();  TH2::SetDefaultSumw2();  TH3::SetDefaultSumw2();
@@ -119,7 +119,7 @@ int main ( int argc, const char** argv ) {         // funcions and cuts specifie
 	}
       }
     }
-    //if ( trigTow==0 ) { cerr<<"UNABLE TO FIND TRIGGER TOWER!"<<endl; }
+    if ( trigTow==0 ) { cerr<<"UNABLE TO FIND TRIGGER TOWER!      TowerID: "<<trigTowId<<endl; }
     
     hTowersVsRho->Fill( rho, nTowers );
     hLeadJetPtRhoEta->Fill( leadJet.pt(), rho, leadJet.eta() );
