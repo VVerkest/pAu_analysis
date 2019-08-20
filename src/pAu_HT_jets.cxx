@@ -27,16 +27,19 @@ int main ( int argc, const char** argv ) {         // funcions and cuts specifie
 
   TH1D *hPrimaryPerEvent = new TH1D("hPrimaryPerEvent","Primary Track Multiplicity (per event);# of Primary", 700,0,700 );
   TH1D *hTowersPerEvent = new TH1D("hTowersPerEvent","Tower Multiplicty;# of Towers", 140,0,700 );
-  TH1D *hTriggerTowerId = new TH1D("hTriggerTowerId","HT Trigger Tower ID;Tower ID", 4801,0,4800);
+  TH1D *hTriggerTowerId = new TH1D("hTriggerTowerId","HT Trigger Tower ID;Tower ID", 4800,0,4800);
 
   TH2D *hTowersVsRho = new TH2D("hTowersVsRho","# of Towers vs. UE;#rho (GeV);# of Towers", 100,0,25, 140,0,700 );
+  TH2D *hTrigEt_Id = new TH2D("hTrigEt_Id","Trigger Tower E_{T} by ID;Tower ID;Tower E_{T} (GeV)",4800,0,4800,100,0,100);
+  TH2D *hTrigTowerDebug = new TH2D( "hTrigTowerDebug", ";Trigger Tower ID;Possible Trigger Towers", 4800,0,4800, 4800,0,4800 );
   
   TH3D *hAllJetsPtEtaPhi = new TH3D( "hAllJetsPtEtaPhi", "Inclusive Jets p_{T}, #eta, #phi;Jet p_{T} (GeV);Jet #eta;Jet #phi", 400,0.0,100.0, 40,-1.0,1.0, 120,0.0,2*pi  );
   TH3D *hLeadJetPtRhoEta = new TH3D( "hLeadJetPtRhoEta", "Lead Jet p_{T}, #rho, #eta;Jet p_{T} (GeV);#rho;Jet #eta", 400,0.0,100.0, 100,0,25, 40,-1.0,1.0 );  
   TH3D *hLeadPtEtaPhi = new TH3D("hLeadPtEtaPhi","Lead Jet p_{T} vs. #eta vs. #phi;p_{T} (GeV);#eta;#phi", 280,0,70, 40,-1.0,1.0, 120,0,6.3);
   TH3D *hPt_UE_BBCE = new TH3D("hPt_UE_BBCE","UE vs. BBC East Rate;Lead Jet p_{T} (GeV);Underlying Event (GeV);BBC East Rate", 500,0,125, 50,0,25, 140,0,7000000 );
   TH3D *hPt_UE_BBCsumE = new TH3D("hPt_UE_BBCsumE","UE vs. BBC ADC East Sum;Lead Jet p_{T} (GeV);Underlying Event (GeV);BBC ADC East Sum", 500,0,125, 50,0,25, 160,0,80000 );
-  TH3D *hTriggerEtEtaPhi = new TH3D( "hTriggerEtEtaPhi", "HT Triggers;Trigger E_{T} (GeV);Trigger #eta, Trigger #phi", 160,0.0,40.0, 40,-1.0,1.0, 120, -pi, pi );
+  TH3D *hTriggerEtEtaPhi = new TH3D( "hTriggerEtEtaPhi", "HT Triggers;Trigger E_{T} (GeV);Trigger #eta; Trigger #phi", 160,0.0,40.0, 40,-1.0,1.0, 120, -pi, pi );
+  TH3D *hTriggerIdEtaPhi_wt = new TH3D( "hTriggerIdEtaPhi_wt", "HT Triggers (weighted by E_{T});Trigger ID;Trigger #eta; Trigger #phi", 4800,0,4800, 40,-1.0,1.0, 120, -pi, pi );
   
   TH2D *hRhoByEta[nPtBins][nEtaBins][nChgBins];
   TH3D *hBG[nPtBins][nEtaBins][nChgBins];
@@ -117,11 +120,24 @@ int main ( int argc, const char** argv ) {         // funcions and cuts specifie
 	double trigTowId = trig->GetId();
 	hTriggerTowerId->Fill( trigTowId );
 	for ( int j=0; j<event->GetTowers()->GetEntries(); ++j ) {
-	  if ( event->GetTower(j)->GetId() == trigTowId ) {  trigTow+=1;    hTriggerEtEtaPhi->Fill( event->GetTower(j)->GetEt(), trig->GetEta(), trig->GetPhi() ); }
+	  if ( event->GetTower(j)->GetId() == trigTowId ) {
+	    trigTow+=1;
+	    hTriggerEtEtaPhi->Fill( event->GetTower(j)->GetEt(), trig->GetEta(), trig->GetPhi() );
+	    hTriggerIdEtaPhi_wt->Fill( trigTowId, trig->GetEta(), trig->GetPhi(), event->GetTower(j)->GetEt() );
+	    hTrigEt_Id->Fill( trigTowId, event->GetTower(j)->GetEt() );
+	  }
 	}
       }
     }
-    // if ( trigTow==0 ) { cerr<<"UNABLE TO FIND TRIGGER TOWER!      TowerID: "<<trig->GetId()<<endl; }
+    if ( trigTow==0 ) {
+      cerr<<"UNABLE TO FIND TRIGGER TOWER!      TowerID: "<<trig->GetId()<<endl;
+      cerr<<"Event Towers: ";
+      for ( int j=0; j<event->GetTowers()->GetEntries(); ++j ) {
+	cerr<<event->GetTower(j)->GetId()<<", ";
+	hTrigTowerDebug->Fill( trig->GetId(), event->GetTower(j)->GetId() );
+      }
+      cerr<<endl;
+    }
     
     hTowersVsRho->Fill( rho, nTowers );
     hLeadJetPtRhoEta->Fill( leadJet.pt(), rho, leadJet.eta() );
@@ -198,7 +214,10 @@ int main ( int argc, const char** argv ) {         // funcions and cuts specifie
   hPt_UE_BBCsumE->Write();
   hTriggerEtEtaPhi->Write();
 
+  hTrigTowerDebug->Write();
+  hTriggerIdEtaPhi_wt->Write()
   hTriggerTowerId->Write();
+  hTrigEt_Id->Write();
 
   pAuFile->Close();
 
