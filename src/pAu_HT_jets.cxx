@@ -25,6 +25,7 @@ int main ( int argc, const char** argv ) {         // funcions and cuts specifie
 
   TH1D *hPrimaryPerEvent = new TH1D("hPrimaryPerEvent","Primary Track Multiplicity (per event);# of Primary", 700,0,700 );
   TH1D *hTowersPerEvent = new TH1D("hTowersPerEvent","Tower Multiplicty;# of Towers", 140,0,700 );
+  TH1D *hTriggerTowerId = new TH1D("hTriggerTowerId","HT Trigger Tower ID;Tower ID", 4801,0,4800);
 
   TH2D *hTowersVsRho = new TH2D("hTowersVsRho","# of Towers vs. UE;#rho (GeV);# of Towers", 100,0,25, 140,0,700 );
   
@@ -112,12 +113,13 @@ int main ( int argc, const char** argv ) {         // funcions and cuts specifie
       trig = (TStarJetPicoTriggerInfo *)event->GetTrigObj(i);
       if ( trig->isBHT2() ) {
 	double trigTowId = trig->GetId();
+	hTriggerTowerId->Fill( trigTowId );
 	for ( int j=0; j<event->GetTowers()->GetEntries(); ++j ) {
 	  if ( event->GetTower(j)->GetId() == trigTowId ) {  trigTow+=1;    hTriggerEtEtaPhi->Fill( event->GetTower(j)->GetEt(), trig->GetEta(), trig->GetPhi() ); }
 	}
       }
     }
-    if ( trigTow==0 ) { cerr<<"UNABLE TO FIND TRIGGER TOWER!"<<endl; }
+    //if ( trigTow==0 ) { cerr<<"UNABLE TO FIND TRIGGER TOWER!"<<endl; }
     
     hTowersVsRho->Fill( rho, nTowers );
     hLeadJetPtRhoEta->Fill( leadJet.pt(), rho, leadJet.eta() );
@@ -193,6 +195,8 @@ int main ( int argc, const char** argv ) {         // funcions and cuts specifie
   hPt_UE_BBCE->Write();
   hPt_UE_BBCsumE->Write();
   hTriggerEtEtaPhi->Write();
+
+  hTriggerTowerId->Write();
 
   pAuFile->Close();
 
