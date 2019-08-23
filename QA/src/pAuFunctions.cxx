@@ -199,7 +199,7 @@ namespace pAuAnalysis {
     towerCuts->SetMaxEtCut( MaxEtCut );
     if ( badTowerOption == "allTowers" ) {  towerCuts->AddBadTowers( "src/dummy_tower_list.txt" );  }
     else if ( badTowerOption == "noBadTowers" ) {  towerCuts->AddBadTowers( "src/bad_towers_pAu2015_HT2.list" );  }
-    else { cerr<<"Incorrect command-line argument for 'bad_tower_option': "<<badTowerOption<<endl<<"Options:  {\"allTowers\",\"noBadTowers\"}"; }
+    else { std::cerr<<"Incorrect command-line argument for 'bad_tower_option': "<<badTowerOption<<endl<<"Options:  {\"allTowers\",\"noBadTowers\"}"; }
 
     std::cout << "Using these tower cuts:" << std::endl;
     std::cout << "  GetMaxEtCut = " << towerCuts->GetMaxEtCut() << std::endl;
@@ -217,7 +217,7 @@ namespace pAuAnalysis {
   bool UseEvent( TStarJetPicoEventHeader* Header, std::string triggerOption, double vz_cut, double vz ) {
 
     if ( !( triggerOption=="HT" || triggerOption=="none" ) ) {
-      cerr<<"Incorrect command-line argument for 'trigger_option': "<<triggerOption<<endl<<"Options:  {\"HT\",\"none\"}";
+      std::cerr<<"Incorrect command-line argument for 'trigger_option': "<<triggerOption<<std::endl<<"Options:  {\"HT\",\"none\"}";
       break;
     }
     
