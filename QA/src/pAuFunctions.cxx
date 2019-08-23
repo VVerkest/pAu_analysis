@@ -217,7 +217,7 @@ namespace pAuAnalysis {
 
     if ( !( triggerOption=="HT" || triggerOption=="none" ) ) {
       std::cerr<<"Incorrect command-line argument for 'trigger_option': "<<triggerOption<<std::endl<<"Options:  {\"HT\",\"none\"}";
-      break;
+      return false;
     }
     
     if (Header->GetRunId() >= 16142059 && Header->GetRunId() <= 16149001) { return false; }    //TEMPORARILY SKIPPING THESE RUNS
