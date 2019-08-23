@@ -27,8 +27,8 @@ int main ( int argc, const char** argv ) {         // funcions and cuts specifie
     trigger_option = arguments[4];
   }
   else if ( argc==1 ) {
-    inFile="../production_pAu200_2015/HT/pAu_2015_200_HT*.root";
-    outFile="out/pAuAQ.root";
+    inFile="production_pAu200_2015/HT/pAu_2015_200_HT*.root";
+    outFile="out/pAuQA.root";
     number_of_events=1000;
     bad_tower_option="noBadTowers";
     trigger_option="HT";
