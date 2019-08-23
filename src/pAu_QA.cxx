@@ -98,7 +98,7 @@ int main ( int argc, const char** argv ) {         // funcions and cuts specifie
     int nTowers = 0;
     for (int i=0; i<SelectedTowers->GetEntries(); ++i) {
       tow = (TStarJetPicoTower *) SelectedTowers->At(i);
-      if ( fabs(tow->GetEta())<=etaCut ) { continue; }
+      if ( fabs(tow->GetEta())>etaCut ) { continue; }
       nTowers+=1;
       hTowerFreq->Fill( tow->GetId() );
       hTowEt->Fill( tow->GetId(), tow->GetEt() );
