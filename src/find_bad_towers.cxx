@@ -174,12 +174,12 @@ int main () {
   
   //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~bad tower list~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~//
   //opening file "bad_towers_pAu2015.list"
-  fstream file("../lists/bad_towers_pAu2015.list", fstream::in | fstream::out | fstream::trunc);
+  fstream file("bad_towers_pAu2015_NEW.list", fstream::in | fstream::out | fstream::trunc);
   if (!file) {
     cerr << "Error in creating file!!!" << endl; exit(1);
   }
   else {
-    cout << "bad_towers_pAu2015.list created successfully." << endl;
+    cout << "bad_towers_pAu2015_NEW.list created successfully." << endl;
   }
   
   file << "#Bad (hot+dead+bad_status) towers from 2015 pAu BBCMB data. " << combined_bad_tows.size() << " total bad towers. (iam; july 2, 2019)" << endl;
@@ -197,7 +197,7 @@ int main () {
   //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~histograms~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~//
   //creating output file in which to deposit histograms                                                                                                        
   //argv[1] should be the desired location of the output file, argv[2] should be the desired name                                                              
-  TFile *fout = new TFile("QA/towerRemovalHistograms","RECREATE");
+  TFile *fout = new TFile("QA/towerRemovalHistograms.root","RECREATE");
   cout << "DEBUG: output file name is " << fout->GetName() << endl;
 
   //writing hists to file         
