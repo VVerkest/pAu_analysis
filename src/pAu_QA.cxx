@@ -12,7 +12,7 @@
 
 using namespace std;
 using namespace fastjet;
-using namespace pAuAnalysis;
+using namespace pAuQA;
 
 int main ( int argc, const char** argv ) {         // funcions and cuts specified in pAuFunctions.hh
 

@@ -1,9 +1,9 @@
-//  pAuFunctions.cxx
-//  Veronica Verkest       May 15, 2019
+//  pAuQAFunctions.cxx
+//  Veronica Verkest       August 23, 2019
 
-#include "pAuFunctions.hh"
+#include "pAuQAFunctions.hh"
 
-namespace pAuAnalysis {
+namespace pAuQA {
 
   void BackGroundEstimationAndPlots( std::vector<fastjet::PseudoJet> chgPart, std::vector<fastjet::PseudoJet> neuPart, fastjet::PseudoJet leadJet,
 				     TH3D *PartPtDEtaDPhi, TH3D *PartPtEtaPhi, TH3D *BG, double &chgSum, double &neuSum ) {

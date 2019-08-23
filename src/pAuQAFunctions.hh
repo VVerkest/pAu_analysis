@@ -42,10 +42,10 @@
 #include <iomanip>
 #include <cmath>
 
-#ifndef pAuFunctions_hh
-#define pAuFunctions_hh
+#ifndef pAuQAFunctions_hh
+#define pAuQAFunctions_hh
 
-namespace pAuAnalysis {
+namespace pAuQA {
 
   const int RefMultCut = 0;
   const int MinNFitPointsCut = 20;
