@@ -29,7 +29,7 @@ int main ( int argc, const char** argv ) {         // funcions and cuts specifie
   else if ( argc==1 ) {
     inFile="production_pAu200_2015/HT/pAu_2015_200_HT*.root";
     outFile="out/pAuQA.root";
-    number_of_events=1000;
+    number_of_events=1000000;
     bad_tower_option="noBadTowers";
     trigger_option="HT";
   }
@@ -74,24 +74,6 @@ int main ( int argc, const char** argv ) {         // funcions and cuts specifie
     Vz = header->GetPrimaryVertexZ();
     if ( UseEvent( header, trigger_option, vzCut, Vz ) == false ) { continue; }   //  Skip events based on: Run#, vz cut, BBCEastSum;    only accept HT Trigger events
 
-
-    TList *SelectedTowers = Reader.GetListOfSelectedTowers();
-
-    TStarJetPicoTower *tow;
-    int nTowers = 0;
-    for (int i=0; i<SelectedTowers->GetEntries(); ++i) {
-      tow = (TStarJetPicoTower *) SelectedTowers->At(i);
-      if ( fabs(tow->GetEta())<=etaCut ) { continue; }
-      nTowers+=1;
-      hTowerFreq->Fill( tow->GetId() );
-      hTowEt->Fill( tow->GetId(), tow->GetEt() );
-      hTowEtEtaPhi->Fill( tow->GetEt(), tow->GetEta(), tow->GetPhi() );
-    }
-    
-    hTowersPerEvent->Fill(nTowers);
-    hPrimaryPerEvent->Fill( header->GetNOfPrimaryTracks() );
-    hnPrimaryVSnTowers->Fill( nTowers, header->GetNOfPrimaryTracks() );
-
     GatherParticles( container, rawParticles );
     ClusterSequence jetCluster( rawParticles, jet_def );           //  CLUSTER ALL JETS
 
@@ -109,8 +91,24 @@ int main ( int argc, const char** argv ) {         // funcions and cuts specifie
     if ( rawJets.size()>0 ) { leadJet = rawJets[0]; }
     else { continue; }
 
-    hLeadPtEtaPhi->Fill( leadJet.pt(), leadJet.eta(), leadJet.phi() );
 
+    TList *SelectedTowers = Reader.GetListOfSelectedTowers();
+
+    TStarJetPicoTower *tow;
+    int nTowers = 0;
+    for (int i=0; i<SelectedTowers->GetEntries(); ++i) {
+      tow = (TStarJetPicoTower *) SelectedTowers->At(i);
+      if ( fabs(tow->GetEta())<=etaCut ) { continue; }
+      nTowers+=1;
+      hTowerFreq->Fill( tow->GetId() );
+      hTowEt->Fill( tow->GetId(), tow->GetEt() );
+      hTowEtEtaPhi->Fill( tow->GetEt(), tow->GetEta(), tow->GetPhi() );
+    }
+    
+    hTowersPerEvent->Fill(nTowers);
+    hPrimaryPerEvent->Fill( header->GetNOfPrimaryTracks() );
+    hnPrimaryVSnTowers->Fill( nTowers, header->GetNOfPrimaryTracks() );
+    hLeadPtEtaPhi->Fill( leadJet.pt(), leadJet.eta(), leadJet.phi() );
     
   }  // ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~  END EVENT LOOP!  ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~
 
@@ -127,5 +125,5 @@ int main ( int argc, const char** argv ) {         // funcions and cuts specifie
 
   pAuFile->Close();
 
-    return 0;
-  }
+  return 0;
+}
