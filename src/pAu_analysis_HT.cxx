@@ -70,30 +70,6 @@ int main ( int argc, const char** argv ) {
   double leadPt, leadEta, leadPhi, leadEt, leadNcons, subPt, subEta, subPhi, subEt, subNcons;
   int nJets;            vector<int> nCons;
   vector<double> jetPt, jetEta, jetPhi, jetEt;
-
-  // HTtree->Branch("EventID", &EventID);            HTtree->Branch("RunID", &RunID);          HTtree->Branch("Vx", &Vx);
-  // HTtree->Branch("Vy", &Vy);                             HTtree->Branch("Vz", &Vz);                     HTtree->Branch("nTowers", &nTowers);
-  // HTtree->Branch("nPrimary", &nPrimary);         HTtree->Branch("nGlobal", &nGlobal);     HTtree->Branch("nVertices", &nVertices);
-  // HTtree->Branch("refMult", &refMult);              HTtree->Branch("gRefMult", &gRefMult);
-  // HTtree->Branch("BbcCoincidenceRate", &BbcCoincidenceRate);                    HTtree->Branch("BbcEastRate", &BbcEastRate);
-  // HTtree->Branch("BbcWestRate", &BbcWestRate);                                           HTtree->Branch("vpdVz", &vpdVz);
-  
-  // HTtowers->Branch("EventID", &EventID);	  HTtowers->Branch("RunID", &RunID);  	  HTtowers->Branch("towEt", &towEt);
-  // HTtowers->Branch("towEta", &towEta);	          HTtowers->Branch("towPhi", &towPhi);	  HTtowers->Branch("towID", &towID);
-
-  // HTtracks->Branch("EventID", &EventID);	  HTtracks->Branch("RunID", &RunID);	  HTtracks->Branch("nHitsPoss", &nHitsPoss);
-  // HTtracks->Branch("nHitsFit", &nHitsFit);	  HTtracks->Branch("trPx", &trPx);   	  HTtracks->Branch("trPy", &trPy);
-  // HTtracks->Branch("trPz", &trPz);           	  HTtracks->Branch("trPt", &trPt);    	  HTtracks->Branch("trEta", &trEta);
-  // HTtracks->Branch("trPhi", &trPhi);        	  HTtracks->Branch("DCA", &DCA);
-
-  // HTjets->Branch("EventID", &EventID);            HTjets->Branch("RunID", &RunID);            HTjets->Branch("nJets", &nJets);
-  // HTjets->Branch("jetPt", &jetPt);                      HTjets->Branch("jetEta", &jetEta);              HTjets->Branch("jetPhi", &jetPhi);
-  // HTjets->Branch("jetEt", &jetEt);                      HTjets->Branch("nCons", &nCons);            // HTjets->Branch("", &);
-  
-  // HTdijets->Branch("EventID", &EventID);           HTdijets->Branch("RunID", &RunID);            HTdijets->Branch("leadPt", &leadPt);
-  // HTdijets->Branch("leadEta", &leadEta);            HTdijets->Branch("leadPhi", &leadPhi);         HTdijets->Branch("leadEt", &leadEt);
-  // HTdijets->Branch("leadNcons", &leadNcons);  HTdijets->Branch("subPt", &subPt);             HTdijets->Branch("subEta", &subEta);
-  // HTdijets->Branch("subPhi", &subPhi);              HTdijets->Branch("subEt", &subEt);             HTdijets->Branch("subNcons", &subNcons);
   
   //  CREATE JET SELECTOR
   Selector etaSelector = SelectorAbsEtaMax( 1.0-R );    Selector ptMinSelector = SelectorPtMin(jetMinPt);
