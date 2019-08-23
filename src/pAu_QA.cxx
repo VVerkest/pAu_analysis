@@ -37,12 +37,16 @@ int main ( int argc, const char** argv ) {         // funcions and cuts specifie
 
   TH1::SetDefaultSumw2();  TH2::SetDefaultSumw2();  TH3::SetDefaultSumw2();
 
+  TH1D *hTowerFreq = new TH1D("hTowerFreq","Tower Frequency by ID;Tower ID", 4800,0.5,4800.5);
+  TH1D *hTowerFreq_Eabove2 = new TH1D("hTowerFreq_Eabove2","Tower Frequency (above 2 GeV) by ID;Tower ID", 4800,0.5,4800.5);
+  TH1D *hTowerFreq_weighted = new TH1D("hTowerFreq_weighted","Tower Frequency by ID (weighted by tower E_{T});Tower ID", 4800,0.5,4800.5);
+  TH1D *hTowerFreq_weighted_Eabove2 = new TH1D("hTowerFreq_weighted_Eabove2","Tower Frequency by ID (weighted by tower E_{T}; above 2GeV);Tower ID", 4800,0.5,4800.5);
+
   TH1D *hPrimaryPerEvent = new TH1D("hPrimaryPerEvent","Primary Track Multiplicity (per event);# of Primary", 200,0,200 );
-  TH1D *hTowerFreq = new TH1D("hTowerFreq","Tower Frequency by ID;Tower ID", 4801,0,4801);
   TH1D *hTowersPerEvent = new TH1D("hTowersPerEvent","Tower Multiplicity;# of Towers", 700,0,700 );
 
   TH2D *hnPrimaryVSnTowers = new TH2D("hnPrimaryVSnTowers","# of Primary Tracks vs. # of Towers;# Towers;#Primary Tracks", 140,0,700, 40,0,200);
-  TH2D *hTowEt = new TH2D("hTowEt","Tower E_{T} by ID;Tower ID;E_{T} (GeV)", 4801,0,4801, 120,-10,50.0);
+  TH2D *hTowEt = new TH2D("hTowEt","Tower E_{T} by ID;Tower ID;E_{T} (GeV)", 4800,0.5,4800.5, 120,-10,50.0);
 
   TH3D *hTowEtEtaPhi = new TH3D("hTowEtEtaPhi","Tower E_{T} vs. #eta vs. #phi;Tower E_{T} (GeV);Tower #eta;Tower #phi", 60,0,30.0, 100,-1.0,1.0, 128,-pi,pi );
   TH3D *hAllJetsPtEtaPhi = new TH3D( "hAllJetsPtEtaPhi", "Inclusive Jets p_{T}, #eta, #phi;Jet p_{T} (GeV);Jet #eta;Jet #phi", 400,0.0,100.0, 40,-1.0,1.0, 120,0.0,2*pi  );
@@ -100,9 +104,17 @@ int main ( int argc, const char** argv ) {         // funcions and cuts specifie
       tow = (TStarJetPicoTower *) SelectedTowers->At(i);
       if ( fabs(tow->GetEta())>etaCut ) { continue; }
       nTowers+=1;
-      hTowerFreq->Fill( tow->GetId() );
       hTowEt->Fill( tow->GetId(), tow->GetEt() );
       hTowEtEtaPhi->Fill( tow->GetEt(), tow->GetEta(), tow->GetPhi() );
+
+      hTowerFreq->Fill( tow->GetId() );
+      hTowerFreq_weighted->Fill( tow->GetId(), tow->GetEt() );
+
+      if ( tow->GetEt() > 2.0 ) {
+	hTowerFreq_Eabove2->Fill( tow->GetId() );
+	hTowerFreq_weighted_Eabove2->Fill( tow->GetId(), tow->GetEt() );
+      }
+      
     }
     
     hTowersPerEvent->Fill(nTowers);
@@ -114,11 +126,15 @@ int main ( int argc, const char** argv ) {         // funcions and cuts specifie
 
   TFile *pAuFile = new TFile( outFile.c_str() ,"RECREATE");
 
+  hTowerFreq->Write();
+  hTowerFreq_Eabove2->Write();
+  hTowerFreq_weighted->Write();
+  hTowerFreq_weighted_Eabove2->Write();
+
   hAllJetsPtEtaPhi->Write();
   hLeadPtEtaPhi->Write();
   hnPrimaryVSnTowers->Write();
   hPrimaryPerEvent->Write();
-  hTowerFreq->Write();
   hTowersPerEvent->Write();
   hTowEt->Write();
   hTowEtEtaPhi->Write();
