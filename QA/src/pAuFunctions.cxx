@@ -199,11 +199,10 @@ namespace pAuAnalysis {
     towerCuts->SetMaxEtCut( MaxEtCut );
     if ( badTowerOption == "allTowers" ) {  towerCuts->AddBadTowers( "src/dummy_tower_list.txt" );  }
     else if ( badTowerOption == "noBadTowers" ) {  towerCuts->AddBadTowers( "src/bad_towers_pAu2015_HT2.list" );  }
-    else { std::cerr<<"Incorrect command-line argument for 'bad_tower_option': "<<badTowerOption<<endl<<"Options:  {\"allTowers\",\"noBadTowers\"}"; }
+    else { std::cerr<<"Incorrect command-line argument for 'bad_tower_option': "<<badTowerOption<<std::endl<<"Options:  {\"allTowers\",\"noBadTowers\"}"; }
 
     std::cout << "Using these tower cuts:" << std::endl;
     std::cout << "  GetMaxEtCut = " << towerCuts->GetMaxEtCut() << std::endl;
-    std::cout << "  BadTowerList = " << towerCuts->GetBadTowerList() << std::endl;
     // std::cout << "  Gety8PythiaCut = " << towerCuts->Gety8PythiaCut() << std::endl;
     
     // V0s: Turn off
