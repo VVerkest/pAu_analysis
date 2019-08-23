@@ -161,7 +161,7 @@ namespace pAuAnalysis {
   }
 
 
-  void InitReader( TStarJetPicoReader & reader, TChain* chain, int nEvents ) {
+  void InitReader( TStarJetPicoReader & reader, TChain* chain, string badTowerOption, int nEvents ) {
     
     // set the chain
     reader.SetInputChain( chain );
@@ -197,13 +197,14 @@ namespace pAuAnalysis {
     // Towers
     TStarJetPicoTowerCuts* towerCuts = reader.GetTowerCuts();
     towerCuts->SetMaxEtCut( MaxEtCut );
-    //towerCuts->AddBadTowers( "src/dummy_tower_list.txt" );
-    //towerCuts->AddBadTowers( "/nfs/rhi/STAR/Data/P16id/resources/bad_towers_pAu2015.list" );
-    towerCuts->AddBadTowers( "src/bad_towers_pAu2015_HT2.list" );
+    if ( badTowerOption == "allTowers" ) {  towerCuts->AddBadTowers( "src/dummy_tower_list.txt" );  }
+    else if ( badTowerOption == "noBadTowers" ) {  towerCuts->AddBadTowers( "src/bad_towers_pAu2015_HT2.list" );  }
+    else { cerr<<"Incorrect command-line argument for 'bad_tower_option': "<<badTowerOption<<endl<<"Options:  {\"allTowers\",\"noBadTowers\"}"; }
 
     std::cout << "Using these tower cuts:" << std::endl;
     std::cout << "  GetMaxEtCut = " << towerCuts->GetMaxEtCut() << std::endl;
-    std::cout << "  Gety8PythiaCut = " << towerCuts->Gety8PythiaCut() << std::endl;
+    std::cout << "  BadTowerList = " << towerCuts->GetBadTowerList() << std::endl;
+    // std::cout << "  Gety8PythiaCut = " << towerCuts->Gety8PythiaCut() << std::endl;
     
     // V0s: Turn off
     reader.SetProcessV0s(false);
