@@ -63,7 +63,7 @@ $(BDIR)/%  : $(ODIR)/%.o
 all : $(BDIR)/pAu_QA $(BDIR)/pAu_analysis_MB $(BDIR)/pAu_analysis_HT $(BDIR)/pAu_HT_jets $(BDIR)/pAu_HT_dijets $(BDIR)/pAu_HT_jetTree $(BDIR)/pAu_HT_jetPlot $(BDIR)/test
 
 $(ODIR)/pAuQAFunctions.o : $(SDIR)/pAuQAFunctions.cxx $(SDIR)/pAuQAFunctions.hh
-$(ODIR)/pAu_QA.o : $(SDIR)/pAu_QA.cxx $(SDIR)/pAuQAFunctions.cxx
+$(ODIR)/pAu_QA.o : $(SDIR)/pAu_QA.cxx
 $(ODIR)/pAuFunctions.o : $(SDIR)/pAuFunctions.cxx $(SDIR)/pAuFunctions.hh
 $(ODIR)/pAu_analysis_MB.o : $(SDIR)/pAu_analysis_MB.cxx
 $(ODIR)/pAu_analysis_HT.o : $(SDIR)/pAu_analysis_HT.cxx
