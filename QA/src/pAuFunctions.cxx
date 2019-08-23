@@ -161,7 +161,7 @@ namespace pAuAnalysis {
   }
 
 
-  void InitReader( TStarJetPicoReader & reader, TChain* chain, string badTowerOption, int nEvents ) {
+  void InitReader( TStarJetPicoReader & reader, TChain* chain, std::string badTowerOption, int nEvents ) {
     
     // set the chain
     reader.SetInputChain( chain );
@@ -214,7 +214,7 @@ namespace pAuAnalysis {
   }
 
 
-  bool UseEvent( TStarJetPicoEventHeader* Header, string triggerOption, double vz_cut, double vz ) {
+  bool UseEvent( TStarJetPicoEventHeader* Header, std::string triggerOption, double vz_cut, double vz ) {
 
     if ( !( triggerOption=="HT" || triggerOption=="none" ) ) {
       cerr<<"Incorrect command-line argument for 'trigger_option': "<<triggerOption<<endl<<"Options:  {\"HT\",\"none\"}";

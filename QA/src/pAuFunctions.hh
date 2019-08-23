@@ -90,9 +90,9 @@ namespace pAuAnalysis {
   void GetHeaderInfo( TStarJetPicoEventHeader* Header, int &Nglobal, int &Nvertices, int &ref_mult, int &Nprimary, double &BBC_CoincidenceRate,
 		      double &vpdVz, double &BBC_EastRate, double &BBC_WestRate, double &BBC_AdcSumEast );
 
-  void InitReader( TStarJetPicoReader & reader, TChain* chain, string badTowerOption, int nEvents );
+  void InitReader( TStarJetPicoReader & reader, TChain* chain, std::string badTowerOption, int nEvents );
   
-  bool UseEvent( TStarJetPicoEventHeader* Header, string triggerOption, double vz_cut, double vz );
+  bool UseEvent( TStarJetPicoEventHeader* Header, std::string triggerOption, double vz_cut, double vz );
 }
 
 #endif
