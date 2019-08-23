@@ -8,7 +8,7 @@
 //  [3]: bad_tower_option (string) {"allTowers","noBadTowers"}
 //  [4]: trigger_option (string) {"HT","none"}
 
-#include "pAuFunctions.hh"
+#include "pAuQAFunctions.hh"
 
 using namespace std;
 using namespace fastjet;

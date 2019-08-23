@@ -7,12 +7,12 @@
 
 set ExecPath = `pwd`
 set execute = './bin/pAu_QA'
-set numevents = -1
+set numevents = 100000
 set base = /wsu/home/el/el98/el9852/physics/analysis/pAu_analysis/production_pAu200_2015/HT/pAu_2015_200_HT
 set outFile = QA
 set towOpt = allTowers
 set trigOpt = HT
-set outDir = towOpt
+set outDir = ${towOpt}
     
 # Create the folder name for output
 #set outFile = stock
@@ -41,8 +41,8 @@ set outName = ${OutBase}.root
 set Files = ${input}
 
 # Logfiles. Thanks cshell for this "elegant" syntax to split err and out                                                                                                       
-set LogFile     = log/${outDir}/${OutBase}.log
-set ErrFile     = log/${outDir}/${OutBase}.err
+set LogFile     = log/${OutBase}.log
+set ErrFile     = log/${OutBase}.err
 
 echo "Logging output to " $LogFile
 echo "Logging errors to " $ErrFile
