@@ -42,8 +42,6 @@
 #include <iomanip>
 #include <cmath>
 
-#include "bemc_helper.h"
-
 #ifndef pAuFunctions_hh
 #define pAuFunctions_hh
 
@@ -94,8 +92,7 @@ namespace pAuAnalysis {
 
   void InitReader( TStarJetPicoReader & reader, TChain* chain, string badTowerOption, int nEvents );
   
-  bool UseEvent( TStarJetPicoEventHeader* Header, double vz_cut, double vz );
-
+  bool UseEvent( TStarJetPicoEventHeader* Header, string triggerOption, double vz_cut, double vz );
 }
 
 #endif
