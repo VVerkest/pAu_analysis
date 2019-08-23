@@ -74,7 +74,7 @@ $(ODIR)/pAu_HT_jetPlot.o : $(SDIR)/pAu_HT_jetPlot.cxx
 $(ODIR)/test.o : $(SDIR)/test.cxx
 
 #data analysis
-$(BDIR)/pAu_QA :	$(ODIR)/pAu_QA.o	$(ODIR)/pAuFunctions.o
+$(BDIR)/pAu_QA :	$(ODIR)/pAu_QA.o	$(ODIR)/pAuQAFunctions.o
 $(BDIR)/pAu_analysis_MB :	$(ODIR)/pAu_analysis_MB.o	$(ODIR)/pAuFunctions.o
 $(BDIR)/pAu_analysis_HT :	$(ODIR)/pAu_analysis_HT.o	$(ODIR)/pAuFunctions.o
 $(BDIR)/pAu_HT_jets :	$(ODIR)/pAu_HT_jets.o	$(ODIR)/pAuFunctions.o
