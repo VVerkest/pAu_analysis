@@ -123,6 +123,7 @@ int main ( int argc, const char** argv ) {         // funcions and cuts specifie
   hTowEt->Write();
   hTowEtEtaPhi->Write();
 
+  pAuFile->Write();
   pAuFile->Close();
 
   return 0;
