@@ -54,7 +54,7 @@ int main ( int argc, const char** argv ) {         // funcions and cuts specifie
 
   JetDefinition jet_def(antikt_algorithm, R);     //  JET DEFINITION
 
-  double Vz;  double leadJetMinPt = 10.0;
+  double Vz;
   
   PseudoJet leadJet;  vector<PseudoJet> rawParticles, rawJets;
   TStarJetPicoEventHeader* header;    TStarJetPicoEvent* event;    TStarJetVectorContainer<TStarJetVector> * container;
@@ -78,23 +78,6 @@ int main ( int argc, const char** argv ) {         // funcions and cuts specifie
     Vz = header->GetPrimaryVertexZ();
     if ( UseEvent( header, trigger_option, vzCut, Vz ) == false ) { continue; }   //  Skip events based on: Run#, vz cut, BBCEastSum;    only accept HT Trigger events
 
-    GatherParticles( container, rawParticles );
-    ClusterSequence jetCluster( rawParticles, jet_def );           //  CLUSTER ALL JETS
-
-    Selector jetEtaSelector = SelectorAbsEtaMax( 1.0-R );
-    Selector ptMinSelector = SelectorPtMin( jetMinPt );
-    Selector allJetSelector = jetEtaSelector && ptMinSelector;
-
-    rawJets = sorted_by_pt( allJetSelector( jetCluster.inclusive_jets() ) );     // EXTRACT ALL JETS >2GeV
-    for ( int i=0; i<rawJets.size(); ++i ) { hAllJetsPtEtaPhi->Fill( rawJets[i].pt(), rawJets[i].eta(), rawJets[i].phi() ); }
-
-    Selector leadPtMinSelector = SelectorPtMin( leadJetMinPt );
-    Selector leadJetSelector = jetEtaSelector && leadPtMinSelector;
-    rawJets = sorted_by_pt( leadJetSelector( jetCluster.inclusive_jets() ) );     // EXTRACT ALL JETS >10GeV
-
-    if ( rawJets.size()>0 ) { leadJet = rawJets[0]; }
-    else { continue; }
-
 
     TList *SelectedTowers = Reader.GetListOfSelectedTowers();
 
@@ -114,8 +97,28 @@ int main ( int argc, const char** argv ) {         // funcions and cuts specifie
 	hTowerFreq_Eabove2->Fill( tow->GetId() );
 	hTowerFreq_weighted_Eabove2->Fill( tow->GetId(), tow->GetEt() );
       }
-      
+ 
     }
+
+
+
+    
+    GatherParticles( container, rawParticles );
+    ClusterSequence jetCluster( rawParticles, jet_def );           //  CLUSTER ALL JETS
+
+    Selector jetEtaSelector = SelectorAbsEtaMax( 1.0-R );
+    Selector ptMinSelector = SelectorPtMin( jetMinPt );
+    Selector allJetSelector = jetEtaSelector && ptMinSelector;
+
+    rawJets = sorted_by_pt( allJetSelector( jetCluster.inclusive_jets() ) );     // EXTRACT ALL JETS >2GeV
+    for ( int i=0; i<rawJets.size(); ++i ) { hAllJetsPtEtaPhi->Fill( rawJets[i].pt(), rawJets[i].eta(), rawJets[i].phi() ); }
+
+    Selector leadPtMinSelector = SelectorPtMin( leadJetMinPt );
+    Selector leadJetSelector = jetEtaSelector && leadPtMinSelector;
+    rawJets = sorted_by_pt( leadJetSelector( jetCluster.inclusive_jets() ) );     // EXTRACT ALL JETS >10GeV
+
+    if ( rawJets.size()>0 ) { leadJet = rawJets[0]; }
+    else { continue; }
     
     hTowersPerEvent->Fill(nTowers);
     hPrimaryPerEvent->Fill( header->GetNOfPrimaryTracks() );
