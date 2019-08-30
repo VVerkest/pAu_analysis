@@ -166,8 +166,8 @@ namespace pAuQA {
     // set the chain
     reader.SetInputChain( chain );
     // apply hadronic correction - subtract 100% of charged track energy from towers
-    // reader.SetApplyFractionHadronicCorrection( false );
-    reader.SetFractionHadronicCorrection( 0.9999 );
+    reader.SetApplyFractionHadronicCorrection( false );
+    // reader.SetFractionHadronicCorrection( 0.9999 );
     reader.SetRejectTowerElectrons( kFALSE );
     
     // Event and track selection
@@ -197,7 +197,7 @@ namespace pAuQA {
     // Towers
     TStarJetPicoTowerCuts* towerCuts = reader.GetTowerCuts();
     towerCuts->SetMaxEtCut( 9999 );
-    towerCuts->SetMaxEtCut( MaxEtCut );
+    // towerCuts->SetMaxEtCut( MaxEtCut );
     if ( badTowerOption == "allTowers" ) {  towerCuts->AddBadTowers( "src/dummy_tower_list.txt" );  }
     else if ( badTowerOption == "noBadTowers" ) {  towerCuts->AddBadTowers( "src/bad_towers_pAu2015_NEW.list" );  }
     else { std::cerr<<"Incorrect command-line argument for 'bad_tower_option': "<<badTowerOption<<std::endl<<"Options:  {\"allTowers\",\"noBadTowers\"}"; }

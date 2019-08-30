@@ -42,6 +42,11 @@ int main ( int argc, const char** argv ) {         // funcions and cuts specifie
   TH1D *hTowerFreq_weighted = new TH1D("hTowerFreq_weighted","Tower Frequency by ID (weighted by tower E_{T});Tower ID", 4800,0.5,4800.5);
   TH1D *hTowerFreq_weighted_Eabove2 = new TH1D("hTowerFreq_weighted_Eabove2","Tower Frequency by ID (weighted by tower E_{T}; above 2GeV);Tower ID", 4800,0.5,4800.5);
 
+  TH1D *hTrigTowFreq = new TH1D("hTrigTowFreq","Trigger Tower Frequency by ID;Tower ID", 4800,0.5,4800.5);
+  TH1D *hTrigTowFreq_Eabove2 = new TH1D("hTrigTowFreq_Eabove2","Trigger Tower Frequency (above 2 GeV) by ID;Tower ID", 4800,0.5,4800.5);
+  TH1D *hTrigTowFreq_weighted = new TH1D("hTrigTowFreq_weighted","Trigger Tower Frequency by ID (weighted by tower E_{T});Tower ID", 4800,0.5,4800.5);
+  TH1D *hTrigTowFreq_weighted_Eabove2 = new TH1D("hTrigTowFreq_weighted_Eabove2","Trigger Tower Frequency by ID (weighted by tower E_{T}; above 2GeV);Tower ID", 4800,0.5,4800.5);
+
   TH1D *hTriggerTowerId = new TH1D("hTriggerTowerId","HT Trigger Tower ID;Tower ID", 4800,0.5,4800.5);
   TH2D *hTrigEt_Id = new TH2D("hTrigEt_Id","Trigger Tower E_{T} by ID;Tower ID;Tower E_{T} (GeV)",4800,0.5,4800.5,100,0,100);
   TH2D *hTrigTowerDebug = new TH2D( "hTrigTowerDebug", ";Trigger Tower ID;Possible Trigger Towers", 4800,0.5,4800.5, 4800,0.5,4800.5 );
@@ -113,12 +118,19 @@ int main ( int argc, const char** argv ) {         // funcions and cuts specifie
       if ( trig->isBHT2() ) {
 	double trigTowId = trig->GetId();
 	hTriggerTowerId->Fill( trigTowId );
-	for ( int j=0; j<event->GetTowers()->GetEntries(); ++j ) {
+	for ( int j=0; j<event->GetTowers()->GetEntries(); ++j ) {  // USE GetTowers TO FIND TOWER INFO ASSOCIATED WITH TRIGGER!
 	  if ( event->GetTower(j)->GetId() == trigTowId ) {
 	    trigTow+=1;
 	    hTriggerEtEtaPhi->Fill( event->GetTower(j)->GetEt(), trig->GetEta(), trig->GetPhi() );
 	    hTriggerIdEtaPhi_wt->Fill( trigTowId, trig->GetEta(), trig->GetPhi(), event->GetTower(j)->GetEt() );
 	    hTrigEt_Id->Fill( trigTowId, event->GetTower(j)->GetEt() );
+
+	    hTrigTowFreq->Fill( trigTowId );
+	    hTrigTowFreq_weighted->Fill( trigTowId, event->GetTower(j)->GetEt() );
+	    if ( event->GetTower(j)->GetEt() > 2.0 ) {
+	      hTrigTowFreq_Eabove2->Fill( trigTowId );
+	      hTrigTowFreq_weighted_Eabove2->Fill( trigTowId, event->GetTower(j)->GetEt() );
+	    }
 	  }
 	}
       }
@@ -165,6 +177,11 @@ int main ( int argc, const char** argv ) {         // funcions and cuts specifie
   hTowerFreq_Eabove2->Write();
   hTowerFreq_weighted->Write();
   hTowerFreq_weighted_Eabove2->Write();
+
+  hTrigTowFreq->Write();
+  hTrigTowFreq_Eabove2->Write();
+  hTrigTowFreq_weighted->Write();
+  hTrigTowFreq_weighted_Eabove2->Write();
 
   hTriggerTowerId->Write();
   hTrigEt_Id->Write();
