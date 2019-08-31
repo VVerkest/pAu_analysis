@@ -28,10 +28,11 @@ void compareTowerLists(){
   cout<<endl<<endl<<nBoth<<" shared towers:"<<endl;
 
   for ( int one=0; one<500; ++one ) {
-    if(both[one]!=0){cout<<both[one]; }
-    if(both[one+2]!=0){cout<<", ";}
+    if(both[one]!=0) {
+      if(both[one+1]=0){ cout<<both[one];}
+      else { cout<<both[one]<<", "; }
+    }
   }
-
 
   
   cout<<endl<<endl;
