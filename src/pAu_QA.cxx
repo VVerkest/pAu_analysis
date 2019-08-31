@@ -140,12 +140,12 @@ int main ( int argc, const char** argv ) {         // funcions and cuts specifie
 	}
       }
     }
-    if ( trigTow==0 && trig->GetId()<21 ) {
-      // cerr<<"UNABLE TO FIND TRIGGER TOWER!      TowerID: "<<trig->GetId()<<endl;
-      // cerr<<"Event Towers: ";
+    if ( trigTow==0 ) {
+      cerr<<"UNABLE TO FIND TRIGGER TOWER!      TowerID: "<<trig->GetId()<<endl;
+      cerr<<"Event Towers: ";
       for ( int j=0; j<event->GetTowers()->GetEntries(); ++j ) {
 	cerr<<event->GetTower(j)->GetId()<<", ";
-	hTrigTowerDebug->Fill( trig->GetId(), event->GetTower(j)->GetId() );
+	if ( trig->GetId()<21 ) { hTrigTowerDebug->Fill( trig->GetId(), event->GetTower(j)->GetId() ); }
       }
       cerr<<endl;
     }
