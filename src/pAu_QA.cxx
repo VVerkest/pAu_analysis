@@ -49,7 +49,7 @@ int main ( int argc, const char** argv ) {         // funcions and cuts specifie
 
   TH1D *hTriggerTowerId = new TH1D("hTriggerTowerId","HT Trigger Tower ID;Tower ID", 4800,0.5,4800.5);
   TH2D *hTrigEt_Id = new TH2D("hTrigEt_Id","Trigger Tower E_{T} by ID;Tower ID;Tower E_{T} (GeV)",4800,0.5,4800.5,100,0,100);
-  TH2D *hTrigTowerDebug = new TH2D( "hTrigTowerDebug", ";Trigger Tower ID;Possible Trigger Towers", 4800,0.5,4800.5, 4800,0.5,4800.5 );
+  TH2D *hTrigTowerDebug = new TH2D( "hTrigTowerDebug", ";Trigger Tower ID;Possible Trigger Towers", 20,0.5,20.5, 4800,0.5,4800.5 );
   TH3D *hTriggerEtEtaPhi = new TH3D( "hTriggerEtEtaPhi", "HT Triggers;Trigger E_{T} (GeV);Trigger #eta; Trigger #phi", 160,0.0,40.0, 40,-1.0,1.0, 120, -pi, pi );
   TH3D *hTriggerIdEtaPhi_wt = new TH3D( "hTriggerIdEtaPhi_wt", "HT Triggers (weighted by E_{T});Trigger ID;Trigger #eta; Trigger #phi", 4800,0.5,4800.5, 40,-1.0,1.0, 120, -pi, pi );
   
@@ -112,6 +112,11 @@ int main ( int argc, const char** argv ) {         // funcions and cuts specifie
     }
 
     
+    hTowersPerEvent->Fill(nTowers);
+    hPrimaryPerEvent->Fill( header->GetNOfPrimaryTracks() );
+    hnPrimaryVSnTowers->Fill( nTowers, header->GetNOfPrimaryTracks() );
+    
+    
     int trigTow = 0;
     for ( int i=0; i<event->GetTrigObjs()->GetEntries(); ++i ) {
       trig = (TStarJetPicoTriggerInfo *)event->GetTrigObj(i);
@@ -135,9 +140,9 @@ int main ( int argc, const char** argv ) {         // funcions and cuts specifie
 	}
       }
     }
-    if ( trigTow==0 ) {
-      cerr<<"UNABLE TO FIND TRIGGER TOWER!      TowerID: "<<trig->GetId()<<endl;
-      cerr<<"Event Towers: ";
+    if ( trigTow==0 && trig->GetId()<21 ) {
+      // cerr<<"UNABLE TO FIND TRIGGER TOWER!      TowerID: "<<trig->GetId()<<endl;
+      // cerr<<"Event Towers: ";
       for ( int j=0; j<event->GetTowers()->GetEntries(); ++j ) {
 	cerr<<event->GetTower(j)->GetId()<<", ";
 	hTrigTowerDebug->Fill( trig->GetId(), event->GetTower(j)->GetId() );
@@ -147,27 +152,23 @@ int main ( int argc, const char** argv ) {         // funcions and cuts specifie
 
 
     
-    GatherParticles( container, rawParticles );
-    ClusterSequence jetCluster( rawParticles, jet_def );           //  CLUSTER ALL JETS
+    // GatherParticles( container, rawParticles );
+    // ClusterSequence jetCluster( rawParticles, jet_def );           //  CLUSTER ALL JETS
 
-    Selector jetEtaSelector = SelectorAbsEtaMax( 1.0-R );
-    Selector ptMinSelector = SelectorPtMin( jetMinPt );
-    Selector allJetSelector = jetEtaSelector && ptMinSelector;
+    // Selector jetEtaSelector = SelectorAbsEtaMax( 1.0-R );
+    // Selector ptMinSelector = SelectorPtMin( jetMinPt );
+    // Selector allJetSelector = jetEtaSelector && ptMinSelector;
 
-    rawJets = sorted_by_pt( allJetSelector( jetCluster.inclusive_jets() ) );     // EXTRACT ALL JETS >2GeV
-    for ( int i=0; i<rawJets.size(); ++i ) { hAllJetsPtEtaPhi->Fill( rawJets[i].pt(), rawJets[i].eta(), rawJets[i].phi() ); }
+    // rawJets = sorted_by_pt( allJetSelector( jetCluster.inclusive_jets() ) );     // EXTRACT ALL JETS >2GeV
+    // for ( int i=0; i<rawJets.size(); ++i ) { hAllJetsPtEtaPhi->Fill( rawJets[i].pt(), rawJets[i].eta(), rawJets[i].phi() ); }
 
-    Selector leadPtMinSelector = SelectorPtMin( leadJetMinPt );
-    Selector leadJetSelector = jetEtaSelector && leadPtMinSelector;
-    rawJets = sorted_by_pt( leadJetSelector( jetCluster.inclusive_jets() ) );     // EXTRACT ALL JETS >10GeV
+    // Selector leadPtMinSelector = SelectorPtMin( leadJetMinPt );
+    // Selector leadJetSelector = jetEtaSelector && leadPtMinSelector;
+    // rawJets = sorted_by_pt( leadJetSelector( jetCluster.inclusive_jets() ) );     // EXTRACT ALL JETS >10GeV
 
-    if ( rawJets.size()>0 ) { leadJet = rawJets[0]; }
-    else { continue; }
-    
-    hTowersPerEvent->Fill(nTowers);
-    hPrimaryPerEvent->Fill( header->GetNOfPrimaryTracks() );
-    hnPrimaryVSnTowers->Fill( nTowers, header->GetNOfPrimaryTracks() );
-    hLeadPtEtaPhi->Fill( leadJet.pt(), leadJet.eta(), leadJet.phi() );
+    // if ( rawJets.size()>0 ) { leadJet = rawJets[0]; }
+    // else { continue; }
+        // hLeadPtEtaPhi->Fill( leadJet.pt(), leadJet.eta(), leadJet.phi() );
     
   }  // ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~  END EVENT LOOP!  ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~
 
