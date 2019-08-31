@@ -19,10 +19,10 @@ void compareTowerLists(){
       if ( triggers[one]==towers[two] ) {
 	both[nBoth]=towers[two];
 	nBoth += 1;
-	continue;
+	two=500;
       }
 
-    } 
+    }
   }
 
 
