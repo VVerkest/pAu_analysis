@@ -29,7 +29,7 @@ void compareTowerLists(){
 
   for ( int one=0; one<500; ++one ) {
     if(both[one]!=0) {
-      if(both[one+1]=0){ cout<<both[one];}
+      if(both[one+1]==0){ cout<<both[one]; }
       else { cout<<both[one]<<", "; }
     }
   }
