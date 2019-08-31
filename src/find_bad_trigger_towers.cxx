@@ -119,7 +119,7 @@ int main () {
 
   //this set contains towers from the status tables marked as bad status at any point in the run period we are using
   //[any tower that only has a bad status in the runs that we omit does not appear in this list]
-  set<int> bad_status_tows = {106, 139, 483, 562, 563, 564, 585, 603, 627, 680, 721, 722, 725, 916, 1023, 1154, 1158, 1204, 1221, 1237, 1283, 1301, 1388, 1434, 1440, 1563, 1564, 1567, 1602, 1612, 1654, 1753, 1762, 1776, 1952, 2092, 2415, 2569, 2697, 2929, 2969, 3005, 3186, 3360, 3436, 3498, 3504, 3682, 3702, 3739, 3834, 4006, 4047, 4104, 4177, 4331, 4496, 4500, 4659, 4712};
+  // set<int> bad_status_tows = {106, 139, 483, 562, 563, 564, 585, 603, 627, 680, 721, 722, 725, 916, 1023, 1154, 1158, 1204, 1221, 1237, 1283, 1301, 1388, 1434, 1440, 1563, 1564, 1567, 1602, 1612, 1654, 1753, 1762, 1776, 1952, 2092, 2415, 2569, 2697, 2929, 2969, 3005, 3186, 3360, 3436, 3498, 3504, 3682, 3702, 3739, 3834, 4006, 4047, 4104, 4177, 4331, 4496, 4500, 4659, 4712};
   
   set<int> bad_tows; //running list of the bad towers
   set<int>::iterator it;
@@ -145,13 +145,13 @@ int main () {
   cout << '\n';
 
   //now we merge the bad towers with the bad status towers:
-  set<int> combined_bad_tows;
-  merge(bad_tows.begin(), bad_tows.end(), bad_status_tows.begin(), bad_status_tows.end(),
-	inserter(combined_bad_tows, combined_bad_tows.begin()));
+  // set<int> combined_bad_tows;
+  // merge(bad_tows.begin(), bad_tows.end(), bad_status_tows.begin(), bad_status_tows.end(),
+  // 	inserter(combined_bad_tows, combined_bad_tows.begin()));
 
   //removes the bad towers from the histograms for visual aid
   for (unsigned i = 1; i <= nTows; ++ i) {
-    if (combined_bad_tows.find(i) == combined_bad_tows.end()) {//means this is a good tower
+    if (bad_tows.find(i) == bad_tows.end()) {//means this is a good tower
       hfreq_bad_removed->Fill(i,hfreq->GetBinContent(i));//skips bad towers and fills what is otherwise a copy of the first histogram
       hfreq_bad_removed->SetBinError(i,hfreq->GetBinError(i));//keeps the same errors, too
       henergy_bad_removed->Fill(i,henergy->GetBinContent(i));
@@ -182,12 +182,10 @@ int main () {
     cout << "bad_trigger_towers_pAu2015.list created successfully." << endl;
   }
   
-  file << "#Bad (hot+dead+bad_status) towers from 2015 pAu BBCMB data. " << combined_bad_tows.size() << " total bad towers. (iam; july 2, 2019)" << endl;
-  file << "#including " << bad_status_tows.size() << " bad towers from the status tables for the 2015 pAu data which were not caught by the 3-sigma removal procedure:" << endl
-       << "#563, 564, 585, 603, 627, 680, 721, 722, 725, 1023, 1154, 1221, 1301, 1563, 1564, 1602, 1776, 1952, 2697, 3504, 3682, 3702, 3834, 4104, 4496, 4500, 4659, 4712" << endl;
+  file << "#Bad (hot+dead) trigger towers from 2015 pAu BBCHT data. " << bad_tows.size() << " total bad towers. (iam; july 2, 2019)" << endl;
   //writing each bad tower ID to the file
-  for (it=combined_bad_tows.begin(); it!= --combined_bad_tows.end(); ++it) {file << *it << ", ";}
-  it = --combined_bad_tows.end(); //grabs the last element in the list separately, so we don't have a comma after the last element
+  for (it=bad_tows.begin(); it!= --bad_tows.end(); ++it) {file << *it << ", ";}
+  it = --bad_tows.end(); //grabs the last element in the list separately, so we don't have a comma after the last element
   file << *it; //writes that element
   
   file.close();
