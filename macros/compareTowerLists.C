@@ -17,7 +17,7 @@ void compareTowerLists(){
     for ( int two=0; two<500; ++two ) {
 
       if ( triggers[one]==towers[two] ) {
-	both[nBoth]=triggers[one];
+	both[nBoth]=towers[two];
 	nBoth += 1;
 	continue;
       }
