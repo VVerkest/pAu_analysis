@@ -176,9 +176,9 @@ namespace pAuQA {
     TStarJetPicoEventCuts* evCuts = reader.GetEventCuts();
     evCuts->SetVertexZCut ( VertexZCut );
     evCuts->SetRefMultCut( RefMultCut );
-    evCuts->SetMaxEventPtCut( MaxEventPtCut );
-    evCuts->SetMaxEventEtCut( MaxEventEtCut );
-    evCuts->SetMinEventEtCut( MinEventEtCut );
+    // evCuts->SetMaxEventPtCut( MaxEventPtCut );
+    // evCuts->SetMaxEventEtCut( MaxEventEtCut );
+    // evCuts->SetMinEventEtCut( MinEventEtCut );
     evCuts->SetVertexZDiffCut( VertexZDiffCut );
     
     // Tracks cuts
