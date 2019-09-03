@@ -49,7 +49,8 @@ int main ( int argc, const char** argv ) {         // funcions and cuts specifie
 
   TH1D *hTriggerTowerId = new TH1D("hTriggerTowerId","HT Trigger Tower ID;Tower ID", 4800,0.5,4800.5);
   TH2D *hTrigEt_Id = new TH2D("hTrigEt_Id","Trigger Tower E_{T} by ID;Tower ID;Tower E_{T} (GeV)",4800,0.5,4800.5,100,0,100);
-  TH2D *hTrigTowerDebug = new TH2D( "hTrigTowerDebug", ";Trigger Tower ID;Possible Trigger Towers", 20,0.5,20.5, 4800,0.5,4800.5 );
+  // TH2D *hTrigTowerDebug = new TH2D( "hTrigTowerDebug", ";Trigger Tower ID;Possible Trigger Towers", 20,0.5,20.5, 4800,0.5,4800.5 );
+  TH1D *hTrigTowerDebug = new TH1D( "hTrigTowerDebug", ";Trigger Tower ID", 4800,0.5,4800.5 );
   TH3D *hTriggerEtEtaPhi = new TH3D( "hTriggerEtEtaPhi", "HT Triggers;Trigger E_{T} (GeV);Trigger #eta; Trigger #phi", 160,0.0,40.0, 40,-1.0,1.0, 120, -pi, pi );
   TH3D *hTriggerIdEtaPhi_wt = new TH3D( "hTriggerIdEtaPhi_wt", "HT Triggers (weighted by E_{T});Trigger ID;Trigger #eta; Trigger #phi", 4800,0.5,4800.5, 40,-1.0,1.0, 120, -pi, pi );
   
@@ -123,6 +124,7 @@ int main ( int argc, const char** argv ) {         // funcions and cuts specifie
       if ( trig->isBHT2() ) {
 	double trigTowId = trig->GetId();
 	hTriggerTowerId->Fill( trigTowId );
+	if ( event->GetTowers()->GetEntries() == 0 ) { cerr<<"no towers! run/event:  "<<header->GetRunId()<<" / "<<header->GetEventId()<<endl;
 	for ( int j=0; j<event->GetTowers()->GetEntries(); ++j ) {  // USE GetTowers TO FIND TOWER INFO ASSOCIATED WITH TRIGGER!
 	  if ( event->GetTower(j)->GetId() == trigTowId ) {
 	    trigTow+=1;
@@ -141,13 +143,14 @@ int main ( int argc, const char** argv ) {         // funcions and cuts specifie
       }
     }
     if ( trigTow==0 ) {
-      cerr<<"UNABLE TO FIND TRIGGER TOWER!      TowerID: "<<trig->GetId()<<endl;
-      cerr<<"Event Towers: ";
-      for ( int j=0; j<event->GetTowers()->GetEntries(); ++j ) {
-	cerr<<event->GetTower(j)->GetId()<<", ";
-	if ( trig->GetId()<21 ) { hTrigTowerDebug->Fill( trig->GetId(), event->GetTower(j)->GetId() ); }
-      }
-      cerr<<endl;
+      hTrigTowerDebug->Fill( trig->GetId() );
+      // cerr<<"UNABLE TO FIND TRIGGER TOWER!      TowerID: "<<trig->GetId()<<endl;
+      // cerr<<"Event Towers: ";
+      // for ( int j=0; j<event->GetTowers()->GetEntries(); ++j ) {
+      // 	cerr<<event->GetTower(j)->GetId()<<", ";
+      // 	if ( trig->GetId()<21 ) { hTrigTowerDebug->Fill( trig->GetId(), event->GetTower(j)->GetId() ); }
+      // }
+      // cerr<<endl;
     }
 
 

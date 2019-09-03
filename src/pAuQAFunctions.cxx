@@ -176,9 +176,9 @@ namespace pAuQA {
     TStarJetPicoEventCuts* evCuts = reader.GetEventCuts();
     evCuts->SetVertexZCut ( VertexZCut );
     evCuts->SetRefMultCut( RefMultCut );
-    // evCuts->SetMaxEventPtCut( MaxEventPtCut );
-    // evCuts->SetMaxEventEtCut( MaxEventEtCut );
-    // evCuts->SetMinEventEtCut( MinEventEtCut );
+    evCuts->SetMaxEventPtCut( MaxEventPtCut );
+    evCuts->SetMaxEventEtCut( MaxEventEtCut );
+    evCuts->SetMinEventEtCut( MinEventEtCut );
     evCuts->SetVertexZDiffCut( VertexZDiffCut );
     
     // Tracks cuts
@@ -221,8 +221,9 @@ namespace pAuQA {
       return false;
     }
     
-    if (Header->GetRunId() >= 16142059 && Header->GetRunId() <= 16149001) { return false; }    //TEMPORARILY SKIPPING THESE RUNS
-    else if (Header->GetRunId() == 16135031 || Header->GetRunId() == 16135032) { return false; }
+    // if (Header->GetRunId() >= 16142059 && Header->GetRunId() <= 16149001) { return false; }    //TEMPORARILY SKIPPING THESE RUNS
+    // else if (Header->GetRunId() == 16135031 || Header->GetRunId() == 16135032) { return false; }
+    // else if ( Header->GetBbcAdcSumEast() > 64000 ) { return false; }
     else if ( abs(vz) > vz_cut ) { return false; }
     
     // for pAu, need to ask if the event has the trigger. The trigger IDs are:
@@ -231,7 +232,6 @@ namespace pAuQA {
     // else if (!(Header->HasTriggerId(500401) || Header->HasTriggerId(500411))) {return false;}   //  ONLY SELECT JP2 TRIGGER EVENTS
     else if ( triggerOption=="HT" && !(Header->HasTriggerId(500205) || Header->HasTriggerId(500215))) {return false;}   //  ONLY SELECT HT TRIGGER EVENTS
 
-    else if ( Header->GetBbcAdcSumEast() > 64000 ) { return false; }
     else return true;
   }
 
