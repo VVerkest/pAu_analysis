@@ -124,7 +124,7 @@ int main ( int argc, const char** argv ) {         // funcions and cuts specifie
       if ( trig->isBHT2() ) {
 	double trigTowId = trig->GetId();
 	hTriggerTowerId->Fill( trigTowId );
-	if ( event->GetTowers()->GetEntries() == 0 ) { cerr<<"no towers! run/event:  "<<header->GetRunId()<<" / "<<header->GetEventId()<<endl;
+	if ( event->GetTowers()->GetEntries() == 0 ) { cerr<<"no towers! run/event:  "<<header->GetRunId()<<" / "<<header->GetEventId()<<endl; }
 	for ( int j=0; j<event->GetTowers()->GetEntries(); ++j ) {  // USE GetTowers TO FIND TOWER INFO ASSOCIATED WITH TRIGGER!
 	  if ( event->GetTower(j)->GetId() == trigTowId ) {
 	    trigTow+=1;
