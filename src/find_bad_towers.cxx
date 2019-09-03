@@ -88,7 +88,8 @@ void remove_towers (set<int> & bad_tows, TH1D* h) {
 
 int main () {
 
-  string fin_name = "out/allTowers/pAu_QA_HT_allTowers.root";
+  // string fin_name = "out/allTowers/pAu_QA_HT_allTowers.root";
+  string fin_name = "out/allTowers/pAu_QA_HT_allTowers__AllRuns.root";
   TFile *fin = new TFile(fin_name.c_str(),"READ");
   cout << "DEBUG: input file name is " << fin->GetName() << endl;
 

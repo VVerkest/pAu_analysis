@@ -29,7 +29,7 @@ int main ( int argc, const char** argv ) {         // funcions and cuts specifie
   else if ( argc==1 ) {
     inFile="production_pAu200_2015/HT/pAu_2015_200_HT*.root";
     outFile="out/pAuQA.root";
-    number_of_events=1000000;
+    number_of_events=-1;
     bad_tower_option="noBadTowers";
     trigger_option="HT";
   }
@@ -155,23 +155,23 @@ int main ( int argc, const char** argv ) {         // funcions and cuts specifie
 
 
     
-    // GatherParticles( container, rawParticles );
-    // ClusterSequence jetCluster( rawParticles, jet_def );           //  CLUSTER ALL JETS
+    GatherParticles( container, rawParticles );
+    ClusterSequence jetCluster( rawParticles, jet_def );           //  CLUSTER ALL JETS
 
-    // Selector jetEtaSelector = SelectorAbsEtaMax( 1.0-R );
-    // Selector ptMinSelector = SelectorPtMin( jetMinPt );
-    // Selector allJetSelector = jetEtaSelector && ptMinSelector;
+    Selector jetEtaSelector = SelectorAbsEtaMax( 1.0-R );
+    Selector ptMinSelector = SelectorPtMin( jetMinPt );
+    Selector allJetSelector = jetEtaSelector && ptMinSelector;
 
-    // rawJets = sorted_by_pt( allJetSelector( jetCluster.inclusive_jets() ) );     // EXTRACT ALL JETS >2GeV
-    // for ( int i=0; i<rawJets.size(); ++i ) { hAllJetsPtEtaPhi->Fill( rawJets[i].pt(), rawJets[i].eta(), rawJets[i].phi() ); }
+    rawJets = sorted_by_pt( allJetSelector( jetCluster.inclusive_jets() ) );     // EXTRACT ALL JETS >2GeV
+    for ( int i=0; i<rawJets.size(); ++i ) { hAllJetsPtEtaPhi->Fill( rawJets[i].pt(), rawJets[i].eta(), rawJets[i].phi() ); }
 
-    // Selector leadPtMinSelector = SelectorPtMin( leadJetMinPt );
-    // Selector leadJetSelector = jetEtaSelector && leadPtMinSelector;
-    // rawJets = sorted_by_pt( leadJetSelector( jetCluster.inclusive_jets() ) );     // EXTRACT ALL JETS >10GeV
+    Selector leadPtMinSelector = SelectorPtMin( leadJetMinPt );
+    Selector leadJetSelector = jetEtaSelector && leadPtMinSelector;
+    rawJets = sorted_by_pt( leadJetSelector( jetCluster.inclusive_jets() ) );     // EXTRACT ALL JETS >10GeV
 
-    // if ( rawJets.size()>0 ) { leadJet = rawJets[0]; }
-    // else { continue; }
-        // hLeadPtEtaPhi->Fill( leadJet.pt(), leadJet.eta(), leadJet.phi() );
+    if ( rawJets.size()>0 ) { leadJet = rawJets[0]; }
+    else { continue; }
+    hLeadPtEtaPhi->Fill( leadJet.pt(), leadJet.eta(), leadJet.phi() );
     
   }  // ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~  END EVENT LOOP!  ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~
 
