@@ -29,7 +29,7 @@ int main ( int argc, const char** argv ) {         // funcions and cuts specifie
   else if ( argc==1 ) {
     inFile="production_pAu200_2015/HT/pAu_2015_200_HT*.root";
     outFile="out/pAuQA.root";
-    number_of_events=10000;
+    number_of_events=1000000;
     bad_tower_option="allTowers";
     trigger_option="HT";
   }
@@ -41,7 +41,7 @@ int main ( int argc, const char** argv ) {         // funcions and cuts specifie
   TH1D *hTowerFreq_Eabove2 = new TH1D("hTowerFreq_Eabove2","Tower Frequency (above 2 GeV) by ID;Tower ID", 4800,0.5,4800.5);
   TH1D *hTowerFreq_weighted = new TH1D("hTowerFreq_weighted","Tower Frequency by ID (weighted by tower E_{T});Tower ID", 4800,0.5,4800.5);
   TH1D *hTowerFreq_weighted_Eabove2 = new TH1D("hTowerFreq_weighted_Eabove2","Tower Frequency by ID (weighted by tower E_{T}; above 2GeV);Tower ID", 4800,0.5,4800.5);
-
+  
   TH1D *hTrigTowFreq = new TH1D("hTrigTowFreq","Trigger Tower Frequency by ID;Tower ID", 4800,0.5,4800.5);
   TH1D *hTrigTowFreq_Eabove2 = new TH1D("hTrigTowFreq_Eabove2","Trigger Tower Frequency (above 2 GeV) by ID;Tower ID", 4800,0.5,4800.5);
   TH1D *hTrigTowFreq_weighted = new TH1D("hTrigTowFreq_weighted","Trigger Tower Frequency by ID (weighted by tower E_{T});Tower ID", 4800,0.5,4800.5);
