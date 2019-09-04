@@ -94,6 +94,9 @@ namespace pAuQA {
   void InitReader( TStarJetPicoReader & reader, TChain* chain, std::string badTowerOption, int nEvents );
   
   bool UseEvent( TStarJetPicoEventHeader* Header, std::string triggerOption, double vz_cut, double vz );
+  
+  bool UseTriggerTower( int TriggerTowerId );
+  
 }
 
 #endif
