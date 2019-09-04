@@ -10,7 +10,7 @@ set execute = './bin/pAu_QA'
 set numevents = -1
 set base = /wsu/home/el/el98/el9852/physics/analysis/pAu_analysis/production_pAu200_2015/HT/pAu_2015_200_HT
 set outFile = QA
-set towOpt = allTowers
+set towOpt = noBadTowers
 set trigOpt = HT
 set outDir = ${towOpt}
     

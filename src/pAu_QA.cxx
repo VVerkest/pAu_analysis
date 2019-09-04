@@ -124,33 +124,39 @@ int main ( int argc, const char** argv ) {         // funcions and cuts specifie
       trig = (TStarJetPicoTriggerInfo *)event->GetTrigObj(i);
       if ( trig->isBHT2() ) {
 	double trigTowId = trig->GetId();
+	if ( TStarJetPicoTowerCuts::IsTowerOK( trigTowId ) ) {
 	hTriggerTowerId->Fill( trigTowId );
-	for ( int j=0; j<event->GetTowers()->GetEntries(); ++j ) {  // USE GetTowers TO FIND TOWER INFO ASSOCIATED WITH TRIGGER!
-	  if ( event->GetTower(j)->GetId() == trigTowId ) {
-	    trigTow+=1;
-	    hTriggerEtEtaPhi->Fill( event->GetTower(j)->GetEt(), trig->GetEta(), trig->GetPhi() );
-	    hTriggerIdEtaPhi_wt->Fill( trigTowId, trig->GetEta(), trig->GetPhi(), event->GetTower(j)->GetEt() );
-	    hTrigEt_Id->Fill( trigTowId, event->GetTower(j)->GetEt() );
+	hTriggerEtaPhi->Fill( trig->GetEta(), trig->GetPhi() );
+	}
 
-	    hTrigTowFreq->Fill( trigTowId );
-	    hTrigTowFreq_weighted->Fill( trigTowId, event->GetTower(j)->GetEt() );
-	    if ( event->GetTower(j)->GetEt() > 2.0 ) {
-	      hTrigTowFreq_Eabove2->Fill( trigTowId );
-	      hTrigTowFreq_weighted_Eabove2->Fill( trigTowId, event->GetTower(j)->GetEt() );
-	    }
-	  }
-	}
-	if ( trigTow==0 ) {
-	  hTrigTowerDebug->Fill( trig->GetId() );
-	  hTriggerEtaPhi->Fill( trig->GetEta(), trig->GetPhi() );
-	  // cerr<<"UNABLE TO FIND TRIGGER TOWER!      TowerID: "<<trig->GetId()<<endl;
-	  // cerr<<"Event Towers: ";
-	  // for ( int j=0; j<event->GetTowers()->GetEntries(); ++j ) {
-	  // 	cerr<<event->GetTower(j)->GetId()<<", ";
-	  // 	if ( trig->GetId()<21 ) { hTrigTowerDebug->Fill( trig->GetId(), event->GetTower(j)->GetId() ); }
-	  // }
-	  // cerr<<endl;
-	}
+	// for ( int j=0; j<event->GetTowers()->GetEntries(); ++j ) {  // USE GetTowers TO FIND TOWER INFO ASSOCIATED WITH TRIGGER!
+	//   if ( event->GetTower(j)->GetId() == trigTowId ) {
+	//     trigTow+=1;
+	//     hTriggerEtEtaPhi->Fill( event->GetTower(j)->GetEt(), trig->GetEta(), trig->GetPhi() );
+	//     hTriggerIdEtaPhi_wt->Fill( trigTowId, trig->GetEta(), trig->GetPhi(), event->GetTower(j)->GetEt() );
+	//     hTrigEt_Id->Fill( trigTowId, event->GetTower(j)->GetEt() );
+
+	//     hTrigTowFreq->Fill( trigTowId );
+	//     hTrigTowFreq_weighted->Fill( trigTowId, event->GetTower(j)->GetEt() );
+	//     if ( event->GetTower(j)->GetEt() > 2.0 ) {
+	//       hTrigTowFreq_Eabove2->Fill( trigTowId );
+	//       hTrigTowFreq_weighted_Eabove2->Fill( trigTowId, event->GetTower(j)->GetEt() );
+	//     }
+	//   }
+	// }
+	
+	// if ( trigTow==0 ) {
+	//   hTrigTowerDebug->Fill( trig->GetId() );
+	//   hTriggerEtaPhi->Fill( trig->GetEta(), trig->GetPhi() );
+	//   // cerr<<"UNABLE TO FIND TRIGGER TOWER!      TowerID: "<<trig->GetId()<<endl;
+	//   // cerr<<"Event Towers: ";
+	//   // for ( int j=0; j<event->GetTowers()->GetEntries(); ++j ) {
+	//   // 	cerr<<event->GetTower(j)->GetId()<<", ";
+	//   // 	if ( trig->GetId()<21 ) { hTrigTowerDebug->Fill( trig->GetId(), event->GetTower(j)->GetId() ); }
+	//   // }
+	//   // cerr<<endl;
+	// }
+	
       }
     }
 
