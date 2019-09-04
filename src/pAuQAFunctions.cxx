@@ -166,7 +166,7 @@ namespace pAuQA {
     // set the chain
     reader.SetInputChain( chain );
     // apply hadronic correction - subtract 100% of charged track energy from towers
-    reader.SetApplyFractionHadronicCorrection( true );
+    reader.SetApplyFractionHadronicCorrection( false );
     // reader.SetFractionHadronicCorrection( 0.9999 );
     reader.SetRejectTowerElectrons( kFALSE );
     
@@ -196,8 +196,8 @@ namespace pAuQA {
     
     // Towers
     TStarJetPicoTowerCuts* towerCuts = reader.GetTowerCuts();
-    // towerCuts->SetMaxEtCut( 9999 );
-    towerCuts->SetMaxEtCut( MaxEtCut );
+    towerCuts->SetMaxEtCut( 9999 );
+    // towerCuts->SetMaxEtCut( MaxEtCut );
     if ( badTowerOption == "allTowers" ) {  towerCuts->AddBadTowers( "src/dummy_tower_list.txt" );  }
     else if ( badTowerOption == "noBadTowers" ) {  towerCuts->AddBadTowers( "src/bad_towers_pAu2015_NEW.list" );  }
     else { std::cerr<<"Incorrect command-line argument for 'bad_tower_option': "<<badTowerOption<<std::endl<<"Options:  {\"allTowers\",\"noBadTowers\"}"; }
@@ -221,9 +221,9 @@ namespace pAuQA {
       return false;
     }
     
-    // if (Header->GetRunId() >= 16142059 && Header->GetRunId() <= 16149001) { return false; }    //TEMPORARILY SKIPPING THESE RUNS
-    // else if (Header->GetRunId() == 16135031 || Header->GetRunId() == 16135032) { return false; }
-    // else if ( Header->GetBbcAdcSumEast() > 64000 ) { return false; }
+    if (Header->GetRunId() >= 16142059 && Header->GetRunId() <= 16149001) { return false; }    //TEMPORARILY SKIPPING THESE RUNS
+    else if (Header->GetRunId() == 16135031 || Header->GetRunId() == 16135032) { return false; }
+    else if ( Header->GetBbcAdcSumEast() > 64000 ) { return false; }
     else if ( abs(vz) > vz_cut ) { return false; }
     
     // for pAu, need to ask if the event has the trigger. The trigger IDs are:

@@ -29,8 +29,8 @@ int main ( int argc, const char** argv ) {         // funcions and cuts specifie
   else if ( argc==1 ) {
     inFile="production_pAu200_2015/HT/pAu_2015_200_HT*.root";
     outFile="out/pAuQA.root";
-    number_of_events=-1;
-    bad_tower_option="noBadTowers";
+    number_of_events=10;
+    bad_tower_option="allTowers";
     trigger_option="HT";
   }
   else { cerr<< "incorrect number of command line arguments"; return -1; }
@@ -52,6 +52,7 @@ int main ( int argc, const char** argv ) {         // funcions and cuts specifie
   // TH2D *hTrigTowerDebug = new TH2D( "hTrigTowerDebug", ";Trigger Tower ID;Possible Trigger Towers", 20,0.5,20.5, 4800,0.5,4800.5 );
   TH1D *hTrigTowerDebug = new TH1D( "hTrigTowerDebug", ";Trigger Tower ID", 4800,0.5,4800.5 );
   TH3D *hTriggerEtEtaPhi = new TH3D( "hTriggerEtEtaPhi", "HT Triggers;Trigger E_{T} (GeV);Trigger #eta; Trigger #phi", 160,0.0,40.0, 40,-1.0,1.0, 120, -pi, pi );
+  TH2D *hTriggerEtaPhi = new TH3D( "hTriggerEtaPhi", "HT Triggers;Trigger #eta; Trigger #phi", 40,-1.0,1.0, 120, -pi, pi );
   TH3D *hTriggerIdEtaPhi_wt = new TH3D( "hTriggerIdEtaPhi_wt", "HT Triggers (weighted by E_{T});Trigger ID;Trigger #eta; Trigger #phi", 4800,0.5,4800.5, 40,-1.0,1.0, 120, -pi, pi );
   
   TH1D *hPrimaryPerEvent = new TH1D("hPrimaryPerEvent","Primary Track Multiplicity (per event);# of Primary", 200,0,200 );
@@ -124,7 +125,6 @@ int main ( int argc, const char** argv ) {         // funcions and cuts specifie
       if ( trig->isBHT2() ) {
 	double trigTowId = trig->GetId();
 	hTriggerTowerId->Fill( trigTowId );
-	if ( event->GetTowers()->GetEntries() == 0 ) { cerr<<"no towers! run/event:  "<<header->GetRunId()<<" / "<<header->GetEventId()<<endl; }
 	for ( int j=0; j<event->GetTowers()->GetEntries(); ++j ) {  // USE GetTowers TO FIND TOWER INFO ASSOCIATED WITH TRIGGER!
 	  if ( event->GetTower(j)->GetId() == trigTowId ) {
 	    trigTow+=1;
@@ -140,17 +140,18 @@ int main ( int argc, const char** argv ) {         // funcions and cuts specifie
 	    }
 	  }
 	}
+	if ( trigTow==0 ) {
+	  hTrigTowerDebug->Fill( trig->GetId() );
+	  hTriggerEtaPhi->Fill( trig->GetEta(), trig->GetPhi() );
+	  // cerr<<"UNABLE TO FIND TRIGGER TOWER!      TowerID: "<<trig->GetId()<<endl;
+	  // cerr<<"Event Towers: ";
+	  // for ( int j=0; j<event->GetTowers()->GetEntries(); ++j ) {
+	  // 	cerr<<event->GetTower(j)->GetId()<<", ";
+	  // 	if ( trig->GetId()<21 ) { hTrigTowerDebug->Fill( trig->GetId(), event->GetTower(j)->GetId() ); }
+	  // }
+	  // cerr<<endl;
+	}
       }
-    }
-    if ( trigTow==0 ) {
-      hTrigTowerDebug->Fill( trig->GetId() );
-      // cerr<<"UNABLE TO FIND TRIGGER TOWER!      TowerID: "<<trig->GetId()<<endl;
-      // cerr<<"Event Towers: ";
-      // for ( int j=0; j<event->GetTowers()->GetEntries(); ++j ) {
-      // 	cerr<<event->GetTower(j)->GetId()<<", ";
-      // 	if ( trig->GetId()<21 ) { hTrigTowerDebug->Fill( trig->GetId(), event->GetTower(j)->GetId() ); }
-      // }
-      // cerr<<endl;
     }
 
 
@@ -190,6 +191,7 @@ int main ( int argc, const char** argv ) {         // funcions and cuts specifie
   hTriggerTowerId->Write();
   hTrigEt_Id->Write();
   hTrigTowerDebug->Write();
+  hTriggerEtaPhi->Write();
   hTriggerEtEtaPhi->Write();
   hTriggerIdEtaPhi_wt->Write();
   
