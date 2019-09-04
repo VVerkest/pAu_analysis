@@ -196,10 +196,16 @@ namespace pAuQA {
     
     // Towers
     TStarJetPicoTowerCuts* towerCuts = reader.GetTowerCuts();
-    towerCuts->SetMaxEtCut( 9999 );
-    // towerCuts->SetMaxEtCut( MaxEtCut );
-    if ( badTowerOption == "allTowers" ) {  towerCuts->AddBadTowers( "src/dummy_tower_list.txt" );  }
-    else if ( badTowerOption == "noBadTowers" ) {  towerCuts->AddBadTowers( "src/bad_towers_pAu2015_NEW.list" );  }
+    // towerCuts->SetMaxEtCut( 9999 );
+    towerCuts->SetMaxEtCut( MaxEtCut );
+    if ( badTowerOption == "allTowers" ) {
+      towerCuts->AddBadTowers( "src/dummy_tower_list.txt" );
+      std::cout << " Bad Tower List : " <<  "src/dummy_tower_list.txt" << std::endl;
+    }
+    else if ( badTowerOption == "noBadTowers" ) {
+      towerCuts->AddBadTowers( "src/bad_towers_pAu2015_NEW.list" );
+      std::cout << " Bad Tower List : " << "src/bad_towers_pAu2015_NEW.list" << std::endl;
+    }
     else { std::cerr<<"Incorrect command-line argument for 'bad_tower_option': "<<badTowerOption<<std::endl<<"Options:  {\"allTowers\",\"noBadTowers\"}"; }
 
     std::cout << "Using these tower cuts:" << std::endl;

@@ -28,9 +28,9 @@ int main ( int argc, const char** argv ) {         // funcions and cuts specifie
   }
   else if ( argc==1 ) {
     inFile="production_pAu200_2015/HT/pAu_2015_200_HT*.root";
-    outFile="out/pAuQA.root";
+    outFile="out/pAuQA_TowerRemoval.root";
     number_of_events=1000000;
-    bad_tower_option="allTowers";
+    bad_tower_option="noBadTowers";
     trigger_option="HT";
   }
   else { cerr<< "incorrect number of command line arguments"; return -1; }
