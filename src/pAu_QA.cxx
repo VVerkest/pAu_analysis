@@ -29,7 +29,7 @@ int main ( int argc, const char** argv ) {         // funcions and cuts specifie
   else if ( argc==1 ) {
     inFile="production_pAu200_2015/HT/pAu_2015_200_HT*.root";
     outFile="out/pAuQA.root";
-    number_of_events=10;
+    number_of_events=10000;
     bad_tower_option="allTowers";
     trigger_option="HT";
   }
