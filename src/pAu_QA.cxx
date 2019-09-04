@@ -76,6 +76,7 @@ int main ( int argc, const char** argv ) {         // funcions and cuts specifie
   TChain* Chain = new TChain( "JetTree" );          Chain->Add( inFile.c_str() );
   TStarJetPicoReader Reader;                                int numEvents = number_of_events;        // total events in HT: 152,007,032
   InitReader( Reader, Chain, bad_tower_option, numEvents );
+  TStarJetPicoTowerCuts* towCuts = reader.GetTowerCuts();
 
   // ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~  BEGIN EVENT LOOP!  ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~
   while ( Reader.NextEvent() ) {
@@ -124,7 +125,7 @@ int main ( int argc, const char** argv ) {         // funcions and cuts specifie
       trig = (TStarJetPicoTriggerInfo *)event->GetTrigObj(i);
       if ( trig->isBHT2() ) {
 	double trigTowId = trig->GetId();
-	if ( TStarJetPicoTowerCuts::IsTowerOK( trigTowId ) == false ) { continue; }
+	if ( !towCuts->IsTowerOK( trigTowId ) ) { continue; }
 	else {
 	hTriggerTowerId->Fill( trigTowId );
 	hTriggerEtaPhi->Fill( trig->GetEta(), trig->GetPhi() );
