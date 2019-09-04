@@ -124,7 +124,7 @@ int main ( int argc, const char** argv ) {         // funcions and cuts specifie
     for ( int i=0; i<event->GetTrigObjs()->GetEntries(); ++i ) {
       trig = (TStarJetPicoTriggerInfo *)event->GetTrigObj(i);
       if ( trig->isBHT2() ) {
-	double trigTowId = trig->GetId();
+	int trigTowId = trig->GetId();
 	if ( !towCuts->IsTowerOK( trigTowId ) ) { continue; }
 	else {
 	hTriggerTowerId->Fill( trigTowId );
