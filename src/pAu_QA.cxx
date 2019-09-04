@@ -52,7 +52,7 @@ int main ( int argc, const char** argv ) {         // funcions and cuts specifie
   // TH2D *hTrigTowerDebug = new TH2D( "hTrigTowerDebug", ";Trigger Tower ID;Possible Trigger Towers", 20,0.5,20.5, 4800,0.5,4800.5 );
   TH1D *hTrigTowerDebug = new TH1D( "hTrigTowerDebug", ";Trigger Tower ID", 4800,0.5,4800.5 );
   TH3D *hTriggerEtEtaPhi = new TH3D( "hTriggerEtEtaPhi", "HT Triggers;Trigger E_{T} (GeV);Trigger #eta; Trigger #phi", 160,0.0,40.0, 40,-1.0,1.0, 120, -pi, pi );
-  TH2D *hTriggerEtaPhi = new TH3D( "hTriggerEtaPhi", "HT Triggers;Trigger #eta; Trigger #phi", 40,-1.0,1.0, 120, -pi, pi );
+  TH2D *hTriggerEtaPhi = new TH2D( "hTriggerEtaPhi", "HT Triggers;Trigger #eta; Trigger #phi", 40,-1.0,1.0, 120, -pi, pi );
   TH3D *hTriggerIdEtaPhi_wt = new TH3D( "hTriggerIdEtaPhi_wt", "HT Triggers (weighted by E_{T});Trigger ID;Trigger #eta; Trigger #phi", 4800,0.5,4800.5, 40,-1.0,1.0, 120, -pi, pi );
   
   TH1D *hPrimaryPerEvent = new TH1D("hPrimaryPerEvent","Primary Track Multiplicity (per event);# of Primary", 200,0,200 );
