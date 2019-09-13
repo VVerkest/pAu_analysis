@@ -145,10 +145,10 @@ int main ( int argc, const char** argv ) {         // funcions and cuts specifie
 
     TStarJetPicoPrimaryTrack *trk;
     for (int i=0; i<SelectedTracks->GetEntries(); ++i) {
-      trk = (TStarJetPicoTrack *) SelectedTracks->At(i);
+      trk = (TStarJetPicoPrimaryTrack *) SelectedTracks->At(i);
       if ( fabs(trk->GetEta())>etaCut ) { continue; }
       if ( trk->GetPt() > 6.0 ) {
-	hTrackEtEtaBBCsumE->Fill( trk->GetPt(), trk->GetEta(), header->GetBbcAdcSumEast() );
+	hTrackPtEtaBBCsumE->Fill( trk->GetPt(), trk->GetEta(), header->GetBbcAdcSumEast() );
       }
     }
 
