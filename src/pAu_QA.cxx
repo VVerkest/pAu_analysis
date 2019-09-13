@@ -58,7 +58,7 @@ int main ( int argc, const char** argv ) {         // funcions and cuts specifie
 
   TH3D *hTrackPtEtaBBCsumE = new TH3D("hTrackPtEtaBBCsumE", "Accepted Tracks;p_{T} (GeV);#eta;BBC ADC East Sum", 80,-10.0,40.0, 40,-1.0,1.0, 140,0,70000 );
   TH3D *hTowerEtEtaBBCsumE = new TH3D("hTowerEtEtaBBCsumE", "Accepted Towers;E_{T} (GeV);#eta;BBC ADC East Sum", 80,-10.0,40.0, 40,-1.0,1.0, 140,0,70000 );
-  TH3D *hTriggerEtEtaBBCsumE = new TH3D("hTriggerEtEtaBBCsumE", "HT Triggers;E_{T} (GeV);#eta;BBC ADC East Sum", 80,-10.0,40.0, 40,-1.0,1.0, 140,0,70000 );
+  TH2D *hTriggerEtaBBCsumE = new TH2D("hTriggerEtaBBCsumE", "HT Triggers;#eta;BBC ADC East Sum", 40,-1.0,1.0, 140,0,70000 );
   
   JetDefinition jet_def(antikt_algorithm, R);     //  JET DEFINITION
 
@@ -99,7 +99,7 @@ int main ( int argc, const char** argv ) {         // funcions and cuts specifie
 	  trigTow+=1;
 
 	  if ( trig->GetEt() > 6.0 ) {
-	    hTriggerEtEtaBBCsumE->Fill( trig->GetEt(),  trig->GetEta(), header->GetBbcAdcSumEast() );
+	    hTriggerEtaBBCsumE->Fill( trig->GetEta(), header->GetBbcAdcSumEast() );
 	  }
 	}
 	
@@ -195,7 +195,7 @@ int main ( int argc, const char** argv ) {         // funcions and cuts specifie
 
   hTrackPtEtaBBCsumE->Write();
   hTowerEtEtaBBCsumE->Write();
-  hTriggerEtEtaBBCsumE->Write();
+  hTriggerEtaBBCsumE->Write();
   
   pAuFile->Write();
   pAuFile->Close();
