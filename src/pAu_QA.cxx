@@ -94,13 +94,13 @@ int main ( int argc, const char** argv ) {         // funcions and cuts specifie
 	if ( !UseTriggerTower( trigTowId) ) { continue; }
 	else {
 	  hTriggerTowerId->Fill( trigTowId );
-	  hTrigEt_Id->Fill( trigTowId, trig->GetEt() );
-	  hTriggerEtEtaPhi->Fill( trig->GetEt(),  trig->GetEta(), trig->GetPhi() );
+	  //hTrigEt_Id->Fill( trigTowId, trig->GetEt() );
+	  hTriggerEtEtaPhi->Fill( /*trig->GetEt()*/ 0,  trig->GetEta(), trig->GetPhi() );
 	  trigTow+=1;
 
-	  if ( trig->GetEt() > 6.0 ) {
-	    hTriggerEtaBBCsumE->Fill( trig->GetEta(), header->GetBbcAdcSumEast() );
-	  }
+	  // if ( trig->GetEt() > 6.0 ) {
+	  hTriggerEtaBBCsumE->Fill( trig->GetEta(), header->GetBbcAdcSumEast() );
+	  // }
 	}
 	
       }
