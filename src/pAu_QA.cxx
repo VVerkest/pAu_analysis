@@ -98,7 +98,7 @@ int main ( int argc, const char** argv ) {         // funcions and cuts specifie
 	  hTriggerEtEtaPhi->Fill( trig->GetEt(),  trig->GetEta(), trig->GetPhi() );
 	  trigTow+=1;
 
-	  if ( trigTow->GetEt() > 6.0 ) {
+	  if ( trig->GetEt() > 6.0 ) {
 	    hTriggerEtEtaBBCsumE->Fill( trig->GetEt(),  trig->GetEta(), header->GetBbcAdcSumEast() );
 	  }
 	}
