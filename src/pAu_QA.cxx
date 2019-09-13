@@ -57,6 +57,9 @@ int main ( int argc, const char** argv ) {         // funcions and cuts specifie
   TH3D *hLeadPtEtaPhi = new TH3D("hLeadPtEtaPhi","Lead Jet p_{T} vs. #eta vs. #phi;p_{T} (GeV);#eta;#phi", 280,0,70, 40,-1.0,1.0, 120,0,6.3);
 
   TH3D *hTrackPtEtaBBCsumE = new TH3D("hTrackPtEtaBBCsumE", "Accepted Tracks;p_{T} (GeV);#eta;BBC ADC East Sum", 80,-10.0,40.0, 40,-1.0,1.0, 140,0,70000 );
+  TH3D *hTowerEtEtaBBCsumE = new TH3D("hTowerEtEtaBBCsumE", "Accepted Towers;E_{T} (GeV);#eta;BBC ADC East Sum", 80,-10.0,40.0, 40,-1.0,1.0, 140,0,70000 );
+  TH3D *hTriggerEtEtaBBCsumE = new TH3D("hTriggerEtEtaBBCsumE", "HT Triggers;E_{T} (GeV);#eta;BBC ADC East Sum", 80,-10.0,40.0, 40,-1.0,1.0, 140,0,70000 );
+  
   JetDefinition jet_def(antikt_algorithm, R);     //  JET DEFINITION
 
   double Vz;
@@ -82,7 +85,29 @@ int main ( int argc, const char** argv ) {         // funcions and cuts specifie
     
     Vz = header->GetPrimaryVertexZ();
     if ( UseEvent( header, trigger_option, vzCut, Vz ) == false ) { continue; }   //  Skip events based on: Run#, vz cut, BBCEastSum;    only accept HT Trigger events
+    
+    int trigTow = 0;
+    for ( int i=0; i<event->GetTrigObjs()->GetEntries(); ++i ) {
+      trig = (TStarJetPicoTriggerInfo *)event->GetTrigObj(i);
+      if ( trig->isBHT2() ) {
+	int trigTowId = trig->GetId();
+	if ( !UseTriggerTower( trigTowId) ) { continue; }
+	else {
+	  hTriggerTowerId->Fill( trigTowId );
+	  hTrigEt_Id->Fill( trigTowId, trig->GetEt() );
+	  hTriggerEtEtaPhi->Fill( trig->GetEt(),  trig->GetEta(), trig->GetPhi() );
+	  trigTow+=1;
 
+	  if ( trigTow->GetEt() > 6.0 ) {
+	    hTriggerEtEtaBBCsumE->Fill( trig->GetEt(),  trig->GetEta(), header->GetBbcAdcSumEast() );
+	  }
+	}
+	
+      }
+    }
+    if ( trigTow==0 ) { continue; }
+
+    
 
     TList *SelectedTowers = Reader.GetListOfSelectedTowers();
 
@@ -102,6 +127,11 @@ int main ( int argc, const char** argv ) {         // funcions and cuts specifie
 	hTowerFreq_Eabove2->Fill( tow->GetId() );
 	hTowerFreq_weighted_Eabove2->Fill( tow->GetId(), tow->GetEt() );
       }
+
+      if ( tow->GetEt() > 6.0 ) {
+	hTowerEtEtaBBCsumE->Fill( tow->GetEt(), tow->GetEta(), header->GetBbcAdcSumEast() );
+      }
+      
     }
 
     
@@ -109,6 +139,16 @@ int main ( int argc, const char** argv ) {         // funcions and cuts specifie
     hPrimaryPerEvent->Fill( header->GetNOfPrimaryTracks() );
     hnPrimaryVSnTowers->Fill( nTowers, header->GetNOfPrimaryTracks() );
 
+
+    
+    TList *SelectedTracks = Reader.GetListOfSelectedTracks();
+
+    TStarJetPicoPrimaryTrack *trk;
+    for (int i=0; i<SelectedTracks->GetEntries(); ++i) {
+      trk = (TStarJetPicoTrack *) SelectedTracks->At(i);
+      if ( fabs(trk->GetEta())>etaCut ) { continue; }
+      if ( trk->GetPt() > 6.0 ) {
+	hTrackEtEtaBBCsumE->Fill( trk->GetPt(), trk->GetEta(), header->GetBbcAdcSumEast() );
       }
     }
 
@@ -153,6 +193,10 @@ int main ( int argc, const char** argv ) {         // funcions and cuts specifie
   hTowEt->Write();
   hTowEtEtaPhi->Write();
 
+  hTrackPtEtaBBCsumE->Write();
+  hTowerEtEtaBBCsumE->Write();
+  hTriggerEtEtaBBCsumE->Write();
+  
   pAuFile->Write();
   pAuFile->Close();
 
