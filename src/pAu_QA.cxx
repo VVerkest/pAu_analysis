@@ -95,7 +95,7 @@ int main ( int argc, const char** argv ) {         // funcions and cuts specifie
 	else {
 	  hTriggerTowerId->Fill( trigTowId );
 	  //hTrigEt_Id->Fill( trigTowId, trig->GetEt() );
-	  hTriggerEtEtaPhi->Fill( /*trig->GetEt()*/ 0,  trig->GetEta(), trig->GetPhi() );
+	  hTriggerEtEtaPhi->Fill( 0.0,  trig->GetEta(), trig->GetPhi() );
 	  trigTow+=1;
 
 	  // if ( trig->GetEt() > 6.0 ) {
