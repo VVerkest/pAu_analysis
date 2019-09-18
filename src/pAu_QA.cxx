@@ -89,21 +89,32 @@ int main ( int argc, const char** argv ) {         // funcions and cuts specifie
     int trigTow = 0;
     for ( int i=0; i<event->GetTrigObjs()->GetEntries(); ++i ) {
       trig = (TStarJetPicoTriggerInfo *)event->GetTrigObj(i);
+      
       if ( trig->isBHT2() ) {
+	
 	int trigTowId = trig->GetId();
+
 	if ( !UseTriggerTower( trigTowId) ) { continue; }
 	else {
-	  hTriggerTowerId->Fill( trigTowId );
-	  //hTrigEt_Id->Fill( trigTowId, trig->GetEt() );
-	  hTriggerEtEtaPhi->Fill( 0.0,  trig->GetEta(), trig->GetPhi() );
-	  trigTow+=1;
+	  for ( int j=0; j<event->GetTowers()->GetEntries(); ++j ) {  // USE GetTowers TO FIND TOWER INFO ASSOCIATED WITH TRIGGER!
+	    if ( event->GetTower(j)->GetId() == trigTowId ) {
+	      trigTow+=1;
 
-	  // if ( trig->GetEt() > 6.0 ) {
-	  hTriggerEtaBBCsumE->Fill( trig->GetEta(), header->GetBbcAdcSumEast() );
-	  // }
+	      	  
+	      hTriggerTowerId->Fill( trigTowId );
+	      hTrigEt_Id->Fill( trigTowId, trig->GetEt() );
+	      hTriggerEtEtaPhi->Fill( 0.0,  trig->GetEta(), trig->GetPhi() );
+	      trigTow+=1;
+
+	      if ( trig->GetEt() > 6.0 ) {
+		hTriggerEtaBBCsumE->Fill( trig->GetEta(), header->GetBbcAdcSumEast() );
+	      }
+	      
+	    }
+	  }
 	}
-	
       }
+      
     }
     if ( trigTow==0 ) { continue; }
 
