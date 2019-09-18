@@ -102,12 +102,12 @@ int main ( int argc, const char** argv ) {         // funcions and cuts specifie
 
 	      	  
 	      hTriggerTowerId->Fill( trigTowId );
-	      hTrigEt_Id->Fill( trigTowId, trig->GetEt() );
-	      hTriggerEtEtaPhi->Fill( 0.0,  trig->GetEta(), trig->GetPhi() );
+	      hTrigEt_Id->Fill( trigTowId, event->GetTower(j)->GetEt() );
+	      hTriggerEtEtaPhi->Fill( 0.0,  event->GetTower(j)->GetEta(), event->GetTower(j)->GetPhi() );
 	      trigTow+=1;
 
-	      if ( trig->GetEt() > 6.0 ) {
-		hTriggerEtaBBCsumE->Fill( trig->GetEta(), header->GetBbcAdcSumEast() );
+	      if ( event->GetTower(j)->GetEt() > 6.0 ) {
+		hTriggerEtaBBCsumE->Fill( event->GetTower(j)->GetEta(), header->GetBbcAdcSumEast() );
 	      }
 	      
 	    }
