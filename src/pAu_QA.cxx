@@ -97,7 +97,7 @@ int main ( int argc, const char** argv ) {         // funcions and cuts specifie
 	if ( !UseTriggerTower( trigTowId) ) { continue; }
 	else {
 	  for ( int j=0; j<event->GetTowers()->GetEntries(); ++j ) {  // USE GetTowers TO FIND TOWER INFO ASSOCIATED WITH TRIGGER!
-	    if ( event->GetTower(j)->GetId() == trigTowId ) {
+	    if ( event->GetTower(j)->GetId() == trigTowId && event->GetTower(j)->GetEt()>=5.40 ) {
 	      trigTow+=1;
 
 	      	  
