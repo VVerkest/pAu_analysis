@@ -135,31 +135,6 @@ int main ( int argc, const char** argv ) {         // funcions and cuts specifie
     for ( int i=0; i<BGparticles.size(); ++i ) { ptSum+= BGparticles[i].pt(); }
     rho = ptSum / AREA;
 
-    int trigTow = 0;
-    for ( int i=0; i<event->GetTrigObjs()->GetEntries(); ++i ) {
-      trig = (TStarJetPicoTriggerInfo *)event->GetTrigObj(i);
-      if ( trig->isBHT2() ) {
-	double trigTowId = trig->GetId();
-	hTriggerTowerId->Fill( trigTowId );
-	for ( int j=0; j<event->GetTowers()->GetEntries(); ++j ) {
-	  if ( event->GetTower(j)->GetId() == trigTowId ) {
-	    trigTow+=1;
-	    hTriggerEtEtaPhi->Fill( event->GetTower(j)->GetEt(), trig->GetEta(), trig->GetPhi() );
-	    hTriggerIdEtaPhi_wt->Fill( trigTowId, trig->GetEta(), trig->GetPhi(), event->GetTower(j)->GetEt() );
-	    hTrigEt_Id->Fill( trigTowId, event->GetTower(j)->GetEt() );
-	  }
-	}
-      }
-    }
-    if ( trigTow==0 ) {
-      cerr<<"UNABLE TO FIND TRIGGER TOWER!      TowerID: "<<trig->GetId()<<endl;
-      cerr<<"Event Towers: ";
-      for ( int j=0; j<event->GetTowers()->GetEntries(); ++j ) {
-	cerr<<event->GetTower(j)->GetId()<<", ";
-	hTrigTowerDebug->Fill( trig->GetId(), event->GetTower(j)->GetId() );
-      }
-      cerr<<endl;
-    }
     
     hTowersVsRho->Fill( rho, nTowers );
     hLeadJetPtRhoEta->Fill( leadJet.pt(), rho, leadJet.eta() );
