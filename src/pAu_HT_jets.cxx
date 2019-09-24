@@ -87,6 +87,28 @@ int main ( int argc, const char** argv ) {         // funcions and cuts specifie
     Vz = header->GetPrimaryVertexZ();
     if ( UseEvent( header, vzCut, Vz ) == false ) { continue; }   //  Skip events based on: Run#, vz cut, BBCEastSum;    only accept HT Trigger events
 
+    
+    int trigTow = 0;
+    for ( int i=0; i<event->GetTrigObjs()->GetEntries(); ++i ) {
+      trig = (TStarJetPicoTriggerInfo *)event->GetTrigObj(i);
+      
+      if ( trig->isBHT2() ) {
+	
+	int trigTowId = trig->GetId();
+
+	if ( !UseTriggerTower( trigTowId) ) { continue; }
+	else {
+	  for ( int j=0; j<event->GetTowers()->GetEntries(); ++j ) {  // USE GetTowers TO FIND TOWER INFO ASSOCIATED WITH TRIGGER!
+	    if ( event->GetTower(j)->GetId() == trigTowId && event->GetTower(j)->GetEt()>=5.40  && event->GetTower(j)->GetEt()<30.00 ) {
+	      trigTow+=1;
+	    }
+	  }
+	}
+      }
+    }
+    if ( trigTow==0 ) { continue; }
+
+    
     TList *SelectedTowers = Reader.GetListOfSelectedTowers();		nTowers = CountTowers( SelectedTowers );		hTowersPerEvent->Fill(nTowers);
     
     hPrimaryPerEvent->Fill( header->GetNOfPrimaryTracks() );
