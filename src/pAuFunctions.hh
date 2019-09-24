@@ -96,6 +96,8 @@ namespace pAuAnalysis {
 
   bool UseEvent( TStarJetPicoEventHeader* Header, double vz_cut, double vz );
 
+  bool UseTriggerTower( int TriggerTowerId );
+
 }
 
 #endif
