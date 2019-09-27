@@ -37,15 +37,17 @@ int main ( int argc, const char** argv ) {         // funcions and cuts specifie
 
   JetDefinition jet_def(antikt_algorithm, R);     //  JET DEFINITION
 
-  double Vz;
+  double Vz, chgRho, neuRho, rho, eastRho, midRho, westRho;
+
+  int nTowers;
   int nEvents =0;
   
-  PseudoJet leadJet;  vector<PseudoJet> rawParticles, rawJets, chgParticles, neuParticles;
+  PseudoJet leadJet;  vector<PseudoJet> rawParticles, rawJets, chgParticles, neuParticles, BGparticles;
   TStarJetPicoEventHeader* header;    TStarJetPicoEvent* event;    TStarJetVectorContainer<TStarJetVector> * container;
   
   TChain* Chain = new TChain( "JetTree" );          Chain->Add( inFile.c_str() );
   TStarJetPicoReader Reader;                                int numEvents = number_of_events;        // total events in HT: 152,007,032
-  InitReader( Reader, Chain, bad_tower_option, numEvents );
+  InitReader( Reader, Chain, numEvents );
 
   // ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~  BEGIN EVENT LOOP!  ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~
   while ( Reader.NextEvent() ) {
@@ -53,6 +55,7 @@ int main ( int argc, const char** argv ) {         // funcions and cuts specifie
     Reader.PrintStatus(10);
 
     rawParticles.clear();            chgParticles.clear();            neuParticles.clear();            rawJets.clear();            //  CLEAR VECTORS
+    nTowers = 0;
     
     event = Reader.GetEvent();
     header = event->GetHeader();
@@ -142,12 +145,6 @@ int main ( int argc, const char** argv ) {         // funcions and cuts specifie
     }
 
     nEvents += 1;
-
-
-
-
-
-
 
 
     

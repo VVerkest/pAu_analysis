@@ -57,7 +57,10 @@ namespace pAuAnalysis {
   const double etaHi[nEtaBins] = { -0.3, 0.3, 1.0 };
   const TString etaBinName[nEtaBins] = { "_eastEta", "_midEta", "_westEta" };
   const TString etaBinString[nEtaBins] = { "-1.0<#eta_{jet}<-0.3", "-0.3<#eta_{jet}<0.3", "0.3<#eta_{jet}<1.0" };
-
+  const double eastArea = 2*(0.7)*(fastjet::pi - 2);   // (  0.7 in eta  ) X (  2*( pi-1 - 1 ) in phi  )
+  const double midArea = 2*(0.6)*(fastjet::pi - 2);   // (  0.6 in eta  ) X (  2*( pi-1 - 1 ) in phi  )
+  const double westArea = 2*(0.7)*(fastjet::pi - 2);   // (  0.7 in eta  ) X (  2*( pi-1 - 1 ) in phi  )
+  
   const int nChgBins = 3;
   const TString BackgroundChargeBias[nChgBins] = { "_chgBG", "_neuBG", "_allBG" };
   const TString BackgroundChargeString[nChgBins] = { "Charged", "Neutral", "Chg+Neu" };
