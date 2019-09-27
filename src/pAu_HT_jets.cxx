@@ -79,7 +79,7 @@ int main ( int argc, const char** argv ) {         // funcions and cuts specifie
     container = Reader.GetOutputContainer();
     
     Vz = header->GetPrimaryVertexZ();
-    if ( UseEvent( header, event, trigger_option, vzCut, Vz ) == false ) { continue; }   //  Skip events based on: Run#, vz cut, BBCEastSum;    only accept HT Trigger events
+    if ( UseEvent( header, event, vzCut, Vz ) == false ) { continue; }   //  Skip events based on: Run#, vz cut, BBCEastSum;    only accept HT Trigger events
 
 
     TList *SelectedTowers = Reader.GetListOfSelectedTowers();		nTowers = CountTowers( SelectedTowers );		hTowersPerEvent->Fill(nTowers);
