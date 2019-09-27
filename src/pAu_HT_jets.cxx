@@ -35,6 +35,23 @@ int main ( int argc, const char** argv ) {         // funcions and cuts specifie
   TH3D *hPartPtDEtaDPhi = new TH3D("hPartPtDEtaDPhi","Background Particle p_{T} vs. #Delta#eta vs. #Delta#phi;Particle p_{T} (GeV);#Delta#eta;#Delta#phi", 120,0,30, 80,-2.0,2.0, 120,-pi,pi );
   TH3D *hPartPtEtaPhi = new TH3D("hPartPtEtaPhi","Lead Jet p_{T} vs. #eta vs. #phi;Lead Jet p_{T} (GeV);Particle #eta;Particle #phi", 120,0,30, 40,-1.0,1.0, 120,0,2*pi );
 
+  TH3D *hBackground[nPtBins][nEtaBins][nChgBins];
+  TH2D *hRhoByEta[nPtBins][nEtaBins][nChgBins];
+
+  for ( int p=0; p<3; ++p ) {
+    for ( int e=0; e<3; ++e ) {
+      for ( int c=0; c<3; ++c ) {
+	name = "hRho" + ptBinName[p] + etaBinName[e] + BackgroundChargeBias[c];	title = "";		hRhoByEta[p][e][c] = new TH2D( name, title, 3,-1.5,1.5, 100,0,25 );
+	hRhoByEta[p][e][c]->SetLineColor( color[c] );	hRhoByEta[p][e][c]->SetMarkerColor( color[c] );	hRhoByEta[p][e][c]->SetMarkerStyle( marker[c] );
+
+	name = "hBG" + ptBinName[p] + etaBinName[e] + BackgroundChargeBias[c];
+	title = ptBinString[p] + " " + etaBinString[e] + " " + BackgroundChargeBias[c] +" Background Particles;Background Particle p_{T}(GeV);Particle #phi;Particle #eta";
+	hBackground[p][e][c] = new TH3D(name, title, 80,0,20, 120,0,2*pi, 40,-1,1 );
+      }
+    }
+  }
+
+  
   JetDefinition jet_def(antikt_algorithm, R);     //  JET DEFINITION
 
   double Vz, chgRho, neuRho, rho, eastRho, midRho, westRho;
@@ -126,7 +143,7 @@ int main ( int argc, const char** argv ) {         // funcions and cuts specifie
 	  double eastSum = 0;	  double midSum = 0;	  double westSum = 0;
 	  for (int i=0; i<BGparticles.size(); ++i) {
 
-	    hBG[p][e][c]->Fill( BGparticles[i].pt(), BGparticles[i].phi(), BGparticles[i].eta() );
+	    hBackground[p][e][c]->Fill( BGparticles[i].pt(), BGparticles[i].phi(), BGparticles[i].eta() );
 
 	    if ( BGparticles[i].eta() >=etaLo[0] && BGparticles[i].eta() <= etaHi[0]  ) { eastSum+=BGparticles[i].pt(); }
 	    else if ( BGparticles[i].eta() >=etaLo[1] && BGparticles[i].eta() <= etaHi[1]  ) { midSum+=BGparticles[i].pt(); }
@@ -173,7 +190,7 @@ int main ( int argc, const char** argv ) {         // funcions and cuts specifie
       for ( int c=0; c<3; ++c ) {
 	// hRhoByEta[p][e][c]->Scale(1.0/hRhoByEta[p][e][c]->Integral());
 	hRhoByEta[p][e][c]->Write();
-	hBG[p][e][c]->Write();
+	hBackground[p][e][c]->Write();
       }
     }
   }
