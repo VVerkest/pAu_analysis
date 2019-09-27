@@ -93,9 +93,6 @@ int main ( int argc, const char** argv ) {         // funcions and cuts specifie
     Selector ptMinSelector = SelectorPtMin( jetMinPt );
     Selector allJetSelector = jetEtaSelector && ptMinSelector;
 
-    rawJets = sorted_by_pt( allJetSelector( jetCluster.inclusive_jets() ) );     // EXTRACT ALL JETS >2GeV
-    for ( int i=0; i<rawJets.size(); ++i ) { hAllJetsPtEtaPhi->Fill( rawJets[i].pt(), rawJets[i].eta(), rawJets[i].phi() ); }
-
     Selector leadPtMinSelector = SelectorPtMin(leadJetMinPt);
     Selector leadJetSelector = jetEtaSelector && leadPtMinSelector;
     rawJets = sorted_by_pt( leadJetSelector( jetCluster.inclusive_jets() ) );     // EXTRACT ALL JETS >10GeV
@@ -116,7 +113,8 @@ int main ( int argc, const char** argv ) {         // funcions and cuts specifie
     hPt_UE_BBCE->Fill( leadJet.pt(), rho, header->GetBbcEastRate() );
     hPt_UE_BBCsumE->Fill( leadJet.pt(), rho, header->GetBbcAdcSumEast() );
 
-
+    rawJets = sorted_by_pt( allJetSelector( jetCluster.inclusive_jets() ) );     // EXTRACT ALL JETS >2GeV
+    for ( int i=0; i<rawJets.size(); ++i ) { hAllJetsPtEtaPhi->Fill( rawJets[i].pt(), rawJets[i].eta(), rawJets[i].phi() ); }
     
     for ( int p=0; p<3; ++p ) {  // * * * * * * * * * * * * * * * * * * PT LOOP * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
       for ( int e=0; e<3; ++e ) {  // * * * * * * * * * * * * * * * * ETA LOOP * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
