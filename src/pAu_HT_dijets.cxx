@@ -130,7 +130,7 @@ int main ( int argc, const char** argv ) {         // funcions and cuts specifie
     for ( int e=0; e<3; ++e ) {
       if ( etaLo[e] <= leadJet.eta() <= etaHi[e] ) { eval = e; }
     }
-    if ( pval==99 || eval=99 ) { cerr<<"UNABLE TO FIND PT OR ETA RANGE FOR LEAD JET"<<endl; }
+    if ( pval==99 || eval==99 ) { cerr<<"UNABLE TO FIND PT OR ETA RANGE FOR LEAD JET"<<endl; }
     
     rawJets = sorted_by_pt( allJetSelector( jetCluster.inclusive_jets() ) );     // EXTRACT ALL JETS >2GeV
     for ( int i=0; i<rawJets.size(); ++i ) { hAllJetsPtEtaPhi->Fill( rawJets[i].pt(), rawJets[i].eta(), rawJets[i].phi() ); }
