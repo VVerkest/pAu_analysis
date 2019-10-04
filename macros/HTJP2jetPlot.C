@@ -57,7 +57,6 @@ void HTJP2jetPlot(){
 
       int dir = 1+e+(3*p);
       c0->cd(dir);
-      sRhoByEta->Draw();
       for ( int c=0; c<3; ++c ) {
 	
 	TString name = "pRho" + ptBinName[p] + etaBinName[e] + BackgroundChargeBias[c];
@@ -72,8 +71,8 @@ void HTJP2jetPlot(){
 	pRhoByEta[p][e][c]->SetMarkerStyle( marker[c] );
 	pRhoByEta[p][e][c]->GetXaxis()->SetLabelSize(0);
 	pRhoByEta[p][e][c]->GetYaxis()->SetLabelSize(0.06);
-	pRhoByEta[p][e][c]->Draw("SAME");
-
+	pRhoByEta[p][e][c]->Draw();
+	sRhoByEta->Draw("SAME");
 
       }
     }
