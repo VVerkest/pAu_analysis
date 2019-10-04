@@ -143,7 +143,7 @@ int main ( int argc, const char** argv ) {         // funcions and cuts specifie
     Selector recoPtMinSelector = SelectorPtMin( leadJet.pt()/2 );          //  JET pT RANGE    { 10-15, 15-20, 20-30 }
     Selector etaRangeSelector = SelectorEtaRange( etaLo[eval], etaHi[eval] );          //  JET eta RANGE
 
-    Selector recoJetSelector = recoPtMinSelector && etaRangeSelector && jetEtaSelector
+    Selector recoJetSelector = recoPtMinSelector && etaRangeSelector && jetEtaSelector;
     
     recoCandidates = sorted_by_pt( recoJetSelector( jetCluster.inclusive_jets() ) );     // EXTRACT SELECTED JETS
 
