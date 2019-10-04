@@ -19,7 +19,7 @@ void HTJP2jetPlot(){
   const TString BackgroundChargeBias[nChgBins] = { "_chgBG", "_neuBG", "_allBG" };
   const TString BackgroundChargeString[nChgBins] = { "Charged", "Neutral", "Chg+Neu" };
   const int color[nChgBins] = { 807, 823, 874 };
-  const int marker[nChgBins] = { 24, 25, 27 };
+  const int marker[nChgBins] = { 29, 20, 20 };
 
   gStyle->SetOptStat(0);
   TH2D *hRhoByEta[nPtBins][nEtaBins][nChgBins];
