@@ -120,15 +120,16 @@ int main ( int argc, const char** argv ) {         // funcions and cuts specifie
     hPt_UE_BBCsumE->Fill( leadJet.pt(), rho, header->GetBbcAdcSumEast() );
 
     Selector ptMaxSelector = SelectorPtMax( 30.0 );
-    rawJets = sorted_by_pt( ptMaxSelector( jetCluster.inclusive_jets() ) );     // EXTRACT ALL JETS IN 10-30 GeV RANGE
+    leadJetSelector = leadPtMinSelector && ptMaxSelector && jetEtaSelector;
+    rawJets = sorted_by_pt( leadJetSelector( jetCluster.inclusive_jets() ) );     // EXTRACT ALL JETS IN 10-30 GeV RANGE
     if ( rawJets.size()>0 ) { leadJet = rawJets[0]; }
     else { continue; }
     
     for ( int p=0; p<3; ++p ) {
-      if ( ptLo[p] <= leadJet.pt() <= ptHi[p] ) { pval = p; }
+      if ( leadJet.pt() >= ptLo[p]  &&  leadJet.pt() <= ptHi[p] ) { pval = p; }
     }
     for ( int e=0; e<3; ++e ) {
-      if ( etaLo[e] <= leadJet.eta() <= etaHi[e] ) { eval = e; }
+      if ( leadJet.eta() >= etaLo[e]  &&  leadJet.eta() <= etaHi[e] ) { eval = e; }
     }
     if ( pval==99 || eval==99 ) { cerr<<"UNABLE TO FIND PT OR ETA RANGE FOR LEAD JET"<<endl; }
     
@@ -141,9 +142,10 @@ int main ( int argc, const char** argv ) {         // funcions and cuts specifie
     //   REQUIRE RECOIL JET TO HAVE AT LEAST HALF OF LEAD PT AND BE IN THE SAME ETA RANGE!
     Selector recoPtMinSelector = SelectorPtMin( leadJet.pt()/2 );          //  JET pT RANGE    { 10-15, 15-20, 20-30 }
     Selector etaRangeSelector = SelectorEtaRange( etaLo[eval], etaHi[eval] );          //  JET eta RANGE
-    Selector etaPtSelector = etaRangeSelector && jetEtaSelector && recoPtMinSelector;
-	
-    recoCandidates = sorted_by_pt( etaPtSelector( jetCluster.inclusive_jets() ) );     // EXTRACT SELECTED JETS
+
+    Selector recoJetSelector = recoPtMinSelector && etaRangeSelector && jetEtaSelector
+    
+    recoCandidates = sorted_by_pt( recoJetSelector( jetCluster.inclusive_jets() ) );     // EXTRACT SELECTED JETS
 
     bool hasReco = false;
     
