@@ -3,15 +3,14 @@
 # used to submit sequential jobs on the grid
 
 # first make sure program is updated and exists
- make bin/pAu_HT_dijets || exit
+ make bin/pAu_HT_jets || exit
 
 set ExecPath = `pwd`
 set execute = './bin/pAu_HT_dijets'
 set numevents = -1
 set base = /wsu/home/el/el98/el9852/physics/analysis/pAu_analysis/production_pAu200_2015/HT/pAu_2015_200_HT
-set BackgroundChargeBias = allBG
-set JetChargeBias = allJets
-set outFile = HTJP2dijets
+set outDir = HTdijets
+set outFile = HTdijets
 
 # Create the folder name for output
 #set outFile = stock
@@ -30,28 +29,28 @@ foreach input ( ${base}* )
 # Create the output file base name                                                                                                                                             
 set OutBase = `basename $input | sed 's/.root//g'`
 set uscore = "_"
-set OutBase = "$OutBase$uscore$BackgroundChargeBias$uscore$JetChargeBias"
+set OutBase = "$OutBase$uscore$outFile"
     
 # Make the output names and path                                                                                                                                               
-set outLocation = out/${outFile}/
+set outLocation = out/${outDir}/
 set outName = ${OutBase}.root
 
 # Input files                                                                                                                                                                  
 set Files = ${input}
 
 # Logfiles. Thanks cshell for this "elegant" syntax to split err and out                                                                                                       
-set LogFile     = log/${outFile}/${OutBase}.log
-set ErrFile     = log/${outFile}/${OutBase}.err
+set LogFile     = log/${outDir}/${OutBase}.log
+set ErrFile     = log/${outDir}/${OutBase}.err
 
 echo "Logging output to " $LogFile
 echo "Logging errors to " $ErrFile
     
-set arg = "$Files $outLocation$outName $numevents $BackgroundChargeBias $JetChargeBias"
+set arg = "$Files $outLocation$outName $numevents"
 
 echo "now submitting this script: "
 echo qsub -V -l mem=4GB -o $LogFile -e $ErrFile -N $1 -- ${ExecPath}/submit/qwrap.sh ${ExecPath} $execute $arg
     
 
-qsub -V -q wsuq -l mem=4GB -o $LogFile -e $ErrFile -N pAu_analysis -- ${ExecPath}/submit/qwrap.sh ${ExecPath} $execute $arg
+qsub -V -q erhiq -l mem=4GB -o $LogFile -e $ErrFile -N pAu_analysis -- ${ExecPath}/submit/qwrap.sh ${ExecPath} $execute $arg
 
 end
