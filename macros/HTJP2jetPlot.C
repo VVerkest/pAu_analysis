@@ -23,7 +23,7 @@ void HTJP2jetPlot(){
 
   gStyle->SetOptStat(0);
   TH2D *hRhoByEta[nPtBins][nEtaBins][nChgBins];
-  TH2D *sRhoByEta = new TH2D("sRhoByEta","", 3,-1.5,1.5, 10,0.2,1.4);
+  TH2D *sRhoByEta = new TH2D("sRhoByEta","", 3,-1.5,1.5, 10,0.2,1.2);
   sRhoByEta->GetXaxis()->SetLabelSize(0);
   sRhoByEta->GetYaxis()->SetLabelSize(0.06);
   sRhoByEta->GetYaxis()->SetNdivisions(12);
@@ -72,7 +72,7 @@ void HTJP2jetPlot(){
 	pRhoByEta[p][e][c]->SetMarkerStyle( marker[c] );
 	pRhoByEta[p][e][c]->GetXaxis()->SetLabelSize(0);
 	pRhoByEta[p][e][c]->GetYaxis()->SetLabelSize(0.06);
-	pRhoByEta[p][e][c]->GetYaxis()->SetNdivisions(12);
+	pRhoByEta[p][e][c]->GetYaxis()->SetNdivisions(10);
 	pRhoByEta[p][e][c]->Draw("SAME");
 
 
