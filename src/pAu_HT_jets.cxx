@@ -20,11 +20,11 @@ int main ( int argc, const char** argv ) {         // funcions and cuts specifie
 
   TH1::SetDefaultSumw2();  TH2::SetDefaultSumw2();  TH3::SetDefaultSumw2();
 
-  TH1D *hPrimaryPerEvent = new TH1D("hPrimaryPerEvent","Primary Track Multiplicity (per event);# of Primary", 700,0,700 );
-  TH1D *hTowersPerEvent = new TH1D("hTowersPerEvent","Tower Multiplicty;# of Towers", 140,0,700 );
+  TH1D *hPrimaryPerEvent = new TH1D("hPrimaryPerEvent","Primary Track Multiplicity (per event);# of Primary", 200,0,200 );
+  TH1D *hTowersPerEvent = new TH1D("hTowersPerEvent","Tower Multiplicty;# of Towers", 200,0,200 );
   TH1D *hTriggerTowerId = new TH1D("hTriggerTowerId","HT Trigger Tower ID;Tower ID", 4800,0,4800);
 
-  TH2D *hTowersVsRho = new TH2D("hTowersVsRho","# of Towers vs. UE;#rho (GeV);# of Towers", 100,0,25, 140,0,700 );
+  TH2D *hTowersVsRho = new TH2D("hTowersVsRho","# of Towers vs. UE;#rho (GeV);# of Towers", 100,0,25, 200,0,200 );
   
   TH3D *hAllJetsPtEtaPhi = new TH3D( "hAllJetsPtEtaPhi", "Inclusive Jets p_{T}, #eta, #phi;Jet p_{T} (GeV);Jet #eta;Jet #phi", 400,0.0,100.0, 40,-1.0,1.0, 120,0.0,2*pi  );
   TH3D *hLeadJetPtRhoEta = new TH3D( "hLeadJetPtRhoEta", "Lead Jet p_{T}, #rho, #eta;Jet p_{T} (GeV);#rho;Jet #eta", 400,0.0,100.0, 100,0,25, 40,-1.0,1.0 );  
@@ -82,10 +82,7 @@ int main ( int argc, const char** argv ) {         // funcions and cuts specifie
     if ( UseEvent( header, event, vzCut, Vz ) == false ) { continue; }   //  Skip events based on: Run#, vz cut, BBCEastSum;    only accept HT Trigger events
 
 
-    TList *SelectedTowers = Reader.GetListOfSelectedTowers();		nTowers = CountTowers( SelectedTowers );		hTowersPerEvent->Fill(nTowers);
     
-    hPrimaryPerEvent->Fill( header->GetNOfPrimaryTracks() );
-
     GatherParticles( container, rawParticles );
     ClusterSequence jetCluster( rawParticles, jet_def );           //  CLUSTER ALL JETS
 
@@ -99,6 +96,12 @@ int main ( int argc, const char** argv ) {         // funcions and cuts specifie
 
     if ( rawJets.size()>0 ) { leadJet = rawJets[0]; }
     else { continue; }
+
+
+    
+    TList *SelectedTowers = Reader.GetListOfSelectedTowers();		nTowers = CountTowers( SelectedTowers );		hTowersPerEvent->Fill(nTowers);
+    
+    hPrimaryPerEvent->Fill( header->GetNOfPrimaryTracks() );
 
     GatherChargedBG( leadJet, container, chgParticles);
     GatherNeutralBG( leadJet, container, neuParticles);
@@ -160,16 +163,22 @@ int main ( int argc, const char** argv ) {         // funcions and cuts specifie
     }
 
     nEvents += 1;
-
-
-    
   }  // ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~  END EVENT LOOP!  ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~
 
   
   TFile *pAuFile = new TFile( outFile.c_str() ,"RECREATE");
 
-  
   //  ~ ~ ~ ~ ~ ~ ~ ~ WRITE HISTOGRAMS ~ ~ ~ ~ ~ ~ ~ ~
+  for ( int p=0; p<3; ++p ) {
+    for ( int e=0; e<3; ++e ) {
+      for ( int c=0; c<3; ++c ) {
+	// hRhoByEta[p][e][c]->Scale(1.0/hRhoByEta[p][e][c]->Integral());
+	hRhoByEta[p][e][c]->Write();
+	hBackground[p][e][c]->Write();
+      }
+    }
+  }
+
   hPrimaryPerEvent->Write();
   hTowersPerEvent->Write();
   hTriggerTowerId->Write();
@@ -182,17 +191,6 @@ int main ( int argc, const char** argv ) {         // funcions and cuts specifie
   hPartPtDEtaDPhi->Write();
   hPartPtEtaPhi->Write();
   hBG->Write();
-  
-  for ( int p=0; p<3; ++p ) {
-    for ( int e=0; e<3; ++e ) {
-      for ( int c=0; c<3; ++c ) {
-	// hRhoByEta[p][e][c]->Scale(1.0/hRhoByEta[p][e][c]->Integral());
-	hRhoByEta[p][e][c]->Write();
-	hBackground[p][e][c]->Write();
-      }
-    }
-  }
-
 
   pAuFile->Close();
 
