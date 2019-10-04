@@ -69,7 +69,7 @@ int main ( int argc, const char** argv ) {         // funcions and cuts specifie
   TStarJetPicoReader Reader;                                int numEvents = number_of_events;        // total events in HT: 152,007,032
   InitReader( Reader, Chain, numEvents );
 
-  int pbin, ebin;
+  int pval, eval;
 
   // ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~  BEGIN EVENT LOOP!  ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~
   while ( Reader.NextEvent() ) {
@@ -186,9 +186,9 @@ int main ( int argc, const char** argv ) {         // funcions and cuts specifie
 
       eastRho = eastSum/eastArea;			midRho = midSum/midArea;			westRho = westSum/westArea;
 	  
-      hRhoByEta[p][e][c]->Fill(-1.0, eastRho );
-      hRhoByEta[p][e][c]->Fill( 0.0, midRho );
-      hRhoByEta[p][e][c]->Fill( 1.0, westRho );
+      hRhoByEta[pval][eval][c]->Fill(-1.0, eastRho );
+      hRhoByEta[pval][eval][c]->Fill( 0.0, midRho );
+      hRhoByEta[pval][eval][c]->Fill( 1.0, westRho );
 
     } // ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ 
 
