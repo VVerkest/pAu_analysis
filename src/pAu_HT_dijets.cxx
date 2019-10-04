@@ -125,10 +125,10 @@ int main ( int argc, const char** argv ) {         // funcions and cuts specifie
     else { continue; }
     
     for ( int p=0; p<3; ++p ) {
-      if ( ptLo[p] <= leadJet.pt() <= ptHi[p] ) { pval = p }
+      if ( ptLo[p] <= leadJet.pt() <= ptHi[p] ) { pval = p; }
     }
     for ( int e=0; e<3; ++e ) {
-      if ( etaLo[e] <= leadJet.eta() <= etaHi[e] ) { eval = e }
+      if ( etaLo[e] <= leadJet.eta() <= etaHi[e] ) { eval = e; }
     }
     if ( pval==99 || eval=99 ) { cerr<<"UNABLE TO FIND PT OR ETA RANGE FOR LEAD JET"<<endl; }
     
@@ -140,7 +140,7 @@ int main ( int argc, const char** argv ) {         // funcions and cuts specifie
 
     //   REQUIRE RECOIL JET TO HAVE AT LEAST HALF OF LEAD PT AND BE IN THE SAME ETA RANGE!
     Selector recoPtMinSelector = SelectorPtMin( leadJet.pt()/2 );          //  JET pT RANGE    { 10-15, 15-20, 20-30 }
-    Selector etaRangeSelector = SelectorEtaRange( etaLo[e], etaHi[e] );          //  JET eta RANGE
+    Selector etaRangeSelector = SelectorEtaRange( etaLo[eval], etaHi[eval] );          //  JET eta RANGE
     Selector etaPtSelector = etaRangeSelector && jetEtaSelector && recoPtMinSelector;
 	
     recoCandidates = sorted_by_pt( etaPtSelector( jetCluster.inclusive_jets() ) );     // EXTRACT SELECTED JETS
@@ -176,7 +176,7 @@ int main ( int argc, const char** argv ) {         // funcions and cuts specifie
       double eastSum = 0;	  double midSum = 0;	  double westSum = 0;
       for (int i=0; i<BGparticles.size(); ++i) {
 
-	hBackground[p][e][c]->Fill( BGparticles[i].pt(), BGparticles[i].phi(), BGparticles[i].eta() );
+	hBackground[pval][eval][c]->Fill( BGparticles[i].pt(), BGparticles[i].phi(), BGparticles[i].eta() );
 
 	if ( BGparticles[i].eta() >=etaLo[0] && BGparticles[i].eta() <= etaHi[0]  ) { eastSum+=BGparticles[i].pt(); }
 	else if ( BGparticles[i].eta() >=etaLo[1] && BGparticles[i].eta() <= etaHi[1]  ) { midSum+=BGparticles[i].pt(); }
