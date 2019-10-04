@@ -26,6 +26,7 @@ void HTJP2jetPlot(){
   TH2D *sRhoByEta = new TH2D("sRhoByEta","", 3,-1.5,1.5, 10,0.2,1.4);
   sRhoByEta->GetXaxis()->SetLabelSize(0);
   sRhoByEta->GetYaxis()->SetLabelSize(0.06);
+  sRhoByEta->GetYaxis()->SetNdivisions(12);
   
   TH1D *pRhoByEta[nPtBins][nEtaBins][nChgBins];
 
