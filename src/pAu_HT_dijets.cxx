@@ -149,7 +149,7 @@ int main ( int argc, const char** argv ) {         // funcions and cuts specifie
     
     if ( recoCandidates.size()>0 ) {
 
-      for ( int i=0; i<recoCandidates.size() ) {
+      for ( int i=0; i<recoCandidates.size(); ++i ) {
 	double deltaPhi_abs = fabs( recoCandidates[i].phi() - leadJet.phi() );
 	if ( fabs( deltaPhi_abs - pi ) <= R ) {
 	  recoJet = recoCandidates[i];
