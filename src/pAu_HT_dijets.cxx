@@ -22,7 +22,6 @@ int main ( int argc, const char** argv ) {         // funcions and cuts specifie
 
   TH1D *hPrimaryPerEvent = new TH1D("hPrimaryPerEvent","Primary Track Multiplicity (per event);# of Primary", 200,0,200 );
   TH1D *hTowersPerEvent = new TH1D("hTowersPerEvent","Tower Multiplicty;# of Towers", 200,0,200 );
-  TH1D *hTriggerTowerId = new TH1D("hTriggerTowerId","HT Trigger Tower ID;Tower ID", 4800,0,4800);
   TH1D *hRecoAbsDeltaPhi = new TH1D("hRecoAbsDeltaPhi","|#phi_{lead} - #phi_{reco}|;|#Delta#phi|", 120,0.0,2*pi );
   
   TH2D *hTowersVsRho = new TH2D("hTowersVsRho","# of Towers vs. UE;#rho (GeV);# of Towers", 100,0,25, 200,0,200 );
@@ -140,7 +139,7 @@ int main ( int argc, const char** argv ) {         // funcions and cuts specifie
     BGparticles.clear();		recoCandidates.clear();
 
     //   REQUIRE RECOIL JET TO HAVE AT LEAST HALF OF LEAD PT AND BE IN THE SAME ETA RANGE!
-    Selector recoPtMinSelector = SelectorPtMin( leadJet.pt()/2 );          //  JET pT RANGE    { 10-15, 15-20, 20-30 }
+    Selector recoPtRangeSelector = SelectorPtRange( leadJet.pt()/2, ptHi[pval] );          //  JET pT RANGE    { 10-15, 15-20, 20-30 }
     Selector etaRangeSelector = SelectorEtaRange( etaLo[eval], etaHi[eval] );          //  JET eta RANGE
 
     Selector recoJetSelector = recoPtMinSelector && etaRangeSelector && jetEtaSelector;
@@ -215,7 +214,6 @@ int main ( int argc, const char** argv ) {         // funcions and cuts specifie
   hRecoAbsDeltaPhi->Write();
   hPrimaryPerEvent->Write();
   hTowersPerEvent->Write();
-  hTriggerTowerId->Write();
   hTowersVsRho->Write();
   hAllJetsPtEtaPhi->Write();
   hLeadJetPtRhoEta->Write();
