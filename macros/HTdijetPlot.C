@@ -1,7 +1,7 @@
 
-void HTJP2jetPlot(){
+void HTdijetPlot(){
 
-  TFile* inFile = new TFile( "out/HT/pAu_2015_HTjets.root", "READ" );
+  TFile* inFile = new TFile( "out/HTdijets/pAu_2015_HTdijets.root", "READ" );
 
   const int nPtBins = 3;
   const double ptLo[nPtBins] = { 10.0, 15.0, 20.0 };
@@ -80,9 +80,11 @@ void HTJP2jetPlot(){
     }
   }
 
+  c0->SaveAs("plots/dijet9plot.pdf","PDF");
+  
 }
 
-
+/*
 
 void CanvasPartition(TCanvas *C,const Int_t Nx = 2,const Int_t Ny = 2, Float_t lMargin = 0.15, Float_t rMargin = 0.05, Float_t bMargin = 0.15, Float_t tMargin = 0.05) {
   if (!C) return;
@@ -161,3 +163,4 @@ void CanvasPartition(TCanvas *C,const Int_t Nx = 2,const Int_t Ny = 2, Float_t l
     }
   }
 }
+*/
