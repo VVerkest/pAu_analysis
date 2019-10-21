@@ -40,7 +40,8 @@ void HTdijet9Plot(){
     }
   }
 
-
+  const double error[3][3][3];
+  
   TCanvas * c0 = new TCanvas( "c0" , "" ,0 ,23 ,1280 ,700 );
   c0->SetTopMargin(0.4);
   TPaveText *cTitle = new TPaveText(0.345843,.881306,0.655712,.980712,"NB");
@@ -59,11 +60,13 @@ void HTdijet9Plot(){
       c0->cd(dir);
       sRhoByEta->Draw();
       for ( int c=0; c<3; ++c ) {
+
+	error[p][e][c] = hRhoByEta[p][e][c]->GetMeanError(2);
 	
 	TString name = "pRho" + ptBinName[p] + etaBinName[e] + BackgroundChargeBias[c];
 	hRhoByEta[p][e][c]->Scale(1./hRhoByEta[p][e][c]->GetEntries());
 	pRhoByEta[p][e][c] = (TH1D*) hRhoByEta[p][e][c]->ProfileX(name);
-	pRhoByEta[p][e][c]->SetError( hRhoByEta[p][e][c]->GetMeanError(2) );
+	pRhoByEta[p][e][c]->SetError( error[p][e][c] );
 	gPad->SetTickx();
 	gPad->SetTicky();
 	gPad->SetGridy();
