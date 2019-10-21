@@ -189,7 +189,7 @@ void HTdijetPlot() {
     hRho[i]->Scale( 1./hRho[i]->Integral() );                     // NORMALIZE
     hRho[i]->SetLineColor( color[i] );    hRho[i]->SetMarkerStyle( marker[i] );    hRho[i]->SetMarkerColor( color[i] );
     hRho[i]->Draw("SAME");                                                    // DRAW
-    Ndj = ""; avg = "";    Ndj += hRho[i]->GetEntries();
+    Ndj = ""; avg = "";    Ndj += (int) hRho[i]->GetEntries();
     avg += hRho[i]->GetMean(1);                                           // 1 denotes x-axis
     avg = avg(0,6);
     leg2->AddEntry( name, title, "lpf" );                            // ADD TO LEGEND
