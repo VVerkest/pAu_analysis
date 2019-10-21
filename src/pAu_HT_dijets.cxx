@@ -23,6 +23,7 @@ int main ( int argc, const char** argv ) {         // funcions and cuts specifie
   TH1D *hPrimaryPerEvent = new TH1D("hPrimaryPerEvent","Primary Track Multiplicity (per event);# of Primary", 200,0,200 );
   TH1D *hTowersPerEvent = new TH1D("hTowersPerEvent","Tower Multiplicty;# of Towers", 200,0,200 );
   TH1D *hRecoAbsDeltaPhi = new TH1D("hRecoAbsDeltaPhi","|#phi_{lead} - #phi_{reco}|;|#Delta#phi|", 120,0.0,2*pi );
+  TH1D *hRho = new TH1D("hRho","Underlying Event;#rho (GeV)",120,0,30);
   
   TH2D *hTowersVsRho = new TH2D("hTowersVsRho","# of Towers vs. UE;#rho (GeV);# of Towers", 100,0,25, 200,0,200 );
   TH2D *hRecoVsLeadPt = new TH2D("hRecoVsLeadPt","Recoil Jet p_{T} vs. Lead Jet p_{T};Lead Jet p_{T} (GeV);Reco Jet p_{T} (GeV)", 400,0.0,100.0, 400,0.0,100.0 );
@@ -191,6 +192,8 @@ int main ( int argc, const char** argv ) {         // funcions and cuts specifie
       hRhoByEta[pval][eval][c]->Fill( 0.0, midRho );
       hRhoByEta[pval][eval][c]->Fill( 1.0, westRho );
 
+      hRho->Fill( (eastSum + midSum + westSum)/AREA );
+
     } // ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ 
 
   }  // ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~  END EVENT LOOP!  ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~
@@ -223,6 +226,7 @@ int main ( int argc, const char** argv ) {         // funcions and cuts specifie
   hPartPtDEtaDPhi->Write();
   hPartPtEtaPhi->Write();
   hBG->Write();
+  hRho->Write();
 
   pAuFile->Close();
 

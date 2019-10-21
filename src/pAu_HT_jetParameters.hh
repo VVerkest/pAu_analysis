@@ -60,6 +60,7 @@ namespace pAuAnalysis {
   const double eastArea = 2*(0.7)*(fastjet::pi - 2);   // (  0.7 in eta  ) X (  2*( pi-1 - 1 ) in phi  )
   const double midArea = 2*(0.6)*(fastjet::pi - 2);   // (  0.6 in eta  ) X (  2*( pi-1 - 1 ) in phi  )
   const double westArea = 2*(0.7)*(fastjet::pi - 2);   // (  0.7 in eta  ) X (  2*( pi-1 - 1 ) in phi  )
+  const double AREA = 4*(fastjet::pi - 2);
   
   const int nChgBins = 3;
   const TString BackgroundChargeBias[nChgBins] = { "_chgBG", "_neuBG", "_allBG" };
