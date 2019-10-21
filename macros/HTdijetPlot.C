@@ -119,7 +119,7 @@ void HTdijetPlot() {
     hLeadEta[i]->Scale( 1./hLeadEta[i]->Integral("WIDTH") );                     // NORMALIZE
     hLeadEta[i]->SetLineColor( color[i] );    hLeadEta[i]->SetMarkerStyle( marker[i] );    hLeadEta[i]->SetMarkerColor( color[i] );
     hLeadEta[i]->Draw("SAME");                                                    // DRAW
-    Ndj = ""; avg = "";    Ndj += hLeadEta[i]->GetEntries();
+    Ndj = ""; avg = "";    Ndj += (int) hLeadEta[i]->GetEntries();
     avg += hLeadEta[i]->GetMean(1);                                           // 1 denotes x-axis
     avg = avg(0,6);
     leg0->AddEntry( name, title, "lpf" );                            // ADD TO LEGEND
