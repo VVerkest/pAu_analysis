@@ -80,7 +80,7 @@ void HTdijet9Plot(){
     }
   }
 
-  c0->SaveAs("plots/dijet9plot.pdf","PDF");
+  c0->SaveAs("plots/HTdijets/dijet9plot.pdf","PDF");
   
 }
 
