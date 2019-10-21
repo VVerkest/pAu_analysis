@@ -1,5 +1,5 @@
 
-void HTdijetPlot(){
+void HTdijet9Plot(){
 
   TFile* inFile = new TFile( "out/HTdijets/pAu_2015_HTdijets.root", "READ" );
 
