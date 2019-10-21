@@ -8,7 +8,7 @@ void HTdijetPlot() {
   // const int acn = 3;
   // TString BackgroundChargeBias[acn] = { "allBG", "chgBG", "neuBG" };
   // TString JetChargeBias[acn] = { "allJets", "chgJets", "neuJets" };
-  TString fileName, name, title, Ndj, avg;			double scale;
+  TString fileName, name, title, Ndj, avg, sigma;			double scale;
 
   // TString BackgroundChargeBias = "allBG";		TString BackgroundChargeString = "All Background";			//  [  "allBG",  "chgBG",  "neuBG"  ]
   // TString BackgroundChargeBias = "chgBG";		TString BackgroundChargeString = "Charged Background";
@@ -173,12 +173,13 @@ void HTdijetPlot() {
   TH2D *sLeadPtVsRho = new TH2D( "sLeadPtVsRho", name, 50,0,15, 10,0.000001, 1.0 );
   sLeadPtVsRho->SetStats(0);
 
-  TLegend *leg2 = new TLegend(0.65, 0.65, 0.9, 0.9,NULL,"brNDC");    // LEGEND
+  TLegend *leg2 = new TLegend(0.6, 0.65, 0.9, 0.9,NULL,"brNDC");    // LEGEND
   leg2->SetBorderSize(1);   leg2->SetLineColor(1);   leg2->SetLineStyle(1);   leg2->SetLineWidth(1);   leg2->SetFillColor(0);   leg2->SetFillStyle(1001);
-  leg2->SetNColumns(3);
+  leg2->SetNColumns(4);
   leg2->AddEntry((TObject*)0,"#bf{p_{T}^{Lead} (GeV)}", "");
   leg2->AddEntry((TObject*)0,"#bf{# of Dijets}", "");
   leg2->AddEntry((TObject*)0,"#bf{<#rho> (GeV)}", "");
+  leg2->AddEntry((TObject*)0,"#bf{<#sigma> (GeV)}", "");
 
   sLeadPtVsRho->Draw();
   for ( int i=0; i<nPtBins; ++i ) {
@@ -189,11 +190,16 @@ void HTdijetPlot() {
     hRho[i]->Scale( 1./hRho[i]->Integral() );                     // NORMALIZE
     hRho[i]->SetLineColor( color[i] );    hRho[i]->SetMarkerStyle( marker[i] );    hRho[i]->SetMarkerColor( color[i] );
     hRho[i]->Draw("SAME");                                                    // DRAW
-    Ndj = ""; avg = "";    Ndj += (int) hRho[i]->GetEntries();
+    Ndj = ""; avg = ""; sigma="";
+    Ndj += (int) hRho[i]->GetEntries();
     avg += hRho[i]->GetMean(1);                                           // 1 denotes x-axis
     avg = avg(0,6);
+    sigma += hRho[i]->GetStdDev(1);
+    sigma = sigma(0,5);
     leg2->AddEntry( name, title, "lpf" );                            // ADD TO LEGEND
-    leg2->AddEntry((TObject*)0,Ndj, "");    leg2->AddEntry((TObject*)0,avg, "");
+    leg2->AddEntry((TObject*)0,Ndj, "");
+    leg2->AddEntry((TObject*)0,avg, "");
+    leg2->AddEntry((TObject*)0,sigma, "");
   }
 
   leg2->Draw();  c0->Modified();  c0->cd();  c0->SetSelected(c0);
