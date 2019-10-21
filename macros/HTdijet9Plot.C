@@ -63,6 +63,7 @@ void HTdijet9Plot(){
 	TString name = "pRho" + ptBinName[p] + etaBinName[e] + BackgroundChargeBias[c];
 	hRhoByEta[p][e][c]->Scale(1./hRhoByEta[p][e][c]->GetEntries());
 	pRhoByEta[p][e][c] = (TH1D*) hRhoByEta[p][e][c]->ProfileX(name);
+	pRhoByEta[p][e][c]->SetError( hRhoByEta[p][e][c]->GetYaxis()->GetError() );
 	gPad->SetTickx();
 	gPad->SetTicky();
 	gPad->SetGridy();
