@@ -91,34 +91,27 @@ int main ( int argc, const char** argv ) {         // funcions and cuts specifie
     GatherParticles( container, rawParticles );
     ClusterSequence jetCluster( rawParticles, jet_def );           //  CLUSTER ALL JETS
 
+    // Selector jetEtaSelector = SelectorAbsEtaMax( 1.0-R );
+    // Selector ptMinSelector = SelectorPtMin( jetMinPt );
+    // Selector allJetSelector = jetEtaSelector && ptMinSelector;
+
+    // Selector leadPtMinSelector = SelectorPtMin(leadJetMinPt);
+    // Selector leadJetSelector = jetEtaSelector && leadPtMinSelector;
+    // rawJets = sorted_by_pt( leadJetSelector( jetCluster.inclusive_jets() ) );     // EXTRACT ALL JETS >10GeV
+
+    // if ( rawJets.size()>0 ) { leadJet = rawJets[0];       nEvents += 1; }
+    // else { continue; }
+    
+    // GatherChargedBG( leadJet, container, chgParticles);
+    // GatherNeutralBG( leadJet, container, neuParticles);
+    
+    // double chgPtSum = 0;    double neuPtSum = 0;					//  BACKGROUND ESTIMATION 
+    // BackGroundEstimationAndPlots( chgParticles, neuParticles, leadJet, hPartPtDEtaDPhi, hPartPtEtaPhi, hBG, chgPtSum, neuPtSum );
+    // chgRho = chgPtSum / AREA;		neuRho = neuPtSum / AREA;			rho = (chgPtSum+neuPtSum) / AREA;
+
     Selector jetEtaSelector = SelectorAbsEtaMax( 1.0-R );
     Selector ptMinSelector = SelectorPtMin( jetMinPt );
-    Selector allJetSelector = jetEtaSelector && ptMinSelector;
-
-    Selector leadPtMinSelector = SelectorPtMin(leadJetMinPt);
-    Selector leadJetSelector = jetEtaSelector && leadPtMinSelector;
-    rawJets = sorted_by_pt( leadJetSelector( jetCluster.inclusive_jets() ) );     // EXTRACT ALL JETS >10GeV
-
-    if ( rawJets.size()>0 ) { leadJet = rawJets[0];       nEvents += 1; }
-    else { continue; }
     
-    TList *SelectedTowers = Reader.GetListOfSelectedTowers();		nTowers = CountTowers( SelectedTowers );		hTowersPerEvent->Fill(nTowers);
-    
-    hPrimaryPerEvent->Fill( header->GetNOfPrimaryTracks() );
-
-    GatherChargedBG( leadJet, container, chgParticles);
-    GatherNeutralBG( leadJet, container, neuParticles);
-    
-    double chgPtSum = 0;    double neuPtSum = 0;					//  BACKGROUND ESTIMATION 
-    BackGroundEstimationAndPlots( chgParticles, neuParticles, leadJet, hPartPtDEtaDPhi, hPartPtEtaPhi, hBG, chgPtSum, neuPtSum );
-    chgRho = chgPtSum / AREA;		neuRho = neuPtSum / AREA;			rho = (chgPtSum+neuPtSum) / AREA;
-
-    hTowersVsRho->Fill( rho, nTowers );
-    hLeadJetPtRhoEta->Fill( leadJet.pt(), rho, leadJet.eta() );
-    hLeadPtEtaPhi->Fill( leadJet.pt(), leadJet.eta(), leadJet.phi() );
-    hPt_UE_BBCE->Fill( leadJet.pt(), rho, header->GetBbcEastRate() );
-    hPt_UE_BBCsumE->Fill( leadJet.pt(), rho, header->GetBbcAdcSumEast() );
-
     Selector ptMaxSelector = SelectorPtMax( 30.0 );
     leadJetSelector = leadPtMinSelector && ptMaxSelector && jetEtaSelector;
     rawJets = sorted_by_pt( leadJetSelector( jetCluster.inclusive_jets() ) );     // EXTRACT ALL JETS IN 10-30 GeV RANGE
@@ -191,8 +184,18 @@ int main ( int argc, const char** argv ) {         // funcions and cuts specifie
       hRhoByEta[pval][eval][c]->Fill(-1.0, eastRho );
       hRhoByEta[pval][eval][c]->Fill( 0.0, midRho );
       hRhoByEta[pval][eval][c]->Fill( 1.0, westRho );
+      rho = (eastSum + midSum + westSum)/AREA;
 
-      hRho->Fill( (eastSum + midSum + westSum)/AREA );
+      TList *SelectedTowers = Reader.GetListOfSelectedTowers();		nTowers = CountTowers( SelectedTowers );		hTowersPerEvent->Fill(nTowers);
+      hRho->Fill( rho );
+      hTowersVsRho->Fill( rho, nTowers );
+      hLeadJetPtRhoEta->Fill( leadJet.pt(), rho, leadJet.eta() );
+      hLeadPtEtaPhi->Fill( leadJet.pt(), leadJet.eta(), leadJet.phi() );
+      hPt_UE_BBCE->Fill( leadJet.pt(), rho, header->GetBbcEastRate() );
+      hPt_UE_BBCsumE->Fill( leadJet.pt(), rho, header->GetBbcAdcSumEast() );    
+      hPrimaryPerEvent->Fill( header->GetNOfPrimaryTracks() );
+
+
 
     } // ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ 
 
