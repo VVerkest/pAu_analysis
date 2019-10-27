@@ -82,18 +82,30 @@ void HTdijetPlot() {
   // TH3D *hVertex = (TH3D*) inFile->Get("hVertex");
   // TH3D *hSubPtEtaPhi = (TH3D*) inFile->Get("hSubPtEtaPhi");
   
-  const int nPtBins = 4;
-  double LeadPtBinLo[nPtBins] = { 10.0, 15.0, 20.0, 30.0 };
-  double LeadPtBinHi[nPtBins] = { 15.0, 20.0, 30.0, 100.0 };
-  TString LeadPtBinString[nPtBins] = { "10-15 GeV", "15-20 GeV",  "20-30 GeV", ">30 GeV" };
-  TString LeadPtBinName[nPtBins] = { "_10_15", "_15_20", "_20_30", "_30" };
-  double SubPtBinLo[nPtBins] = { 0.0, 10.0, 15.0, 20.0 };
-  double SubPtBinHi[nPtBins] = { 10.0, 15.0, 20.0, 100.0 };
-  TString SubPtBinString[nPtBins] = { "<10 GeV", "10-15 GeV", "15-20 GeV", ">20 GeV" };
-  TString SubPtBinName[nPtBins] = { "_02_10","_10_15", "_15_20", "_20" };
-  int color[nPtBins] = { 879, 856, 796, 896 };
-  int marker[nPtBins] = { 33, 22, 21, 20 };
+  // const int nPtBins = 4;
+  // double LeadPtBinLo[nPtBins] = { 10.0, 15.0, 20.0, 30.0 };
+  // double LeadPtBinHi[nPtBins] = { 15.0, 20.0, 30.0, 100.0 };
+  // TString LeadPtBinString[nPtBins] = { "10-15 GeV", "15-20 GeV",  "20-30 GeV", ">30 GeV" };
+  // TString LeadPtBinName[nPtBins] = { "_10_15", "_15_20", "_20_30", "_30" };
+  // double SubPtBinLo[nPtBins] = { 0.0, 10.0, 15.0, 20.0 };
+  // double SubPtBinHi[nPtBins] = { 10.0, 15.0, 20.0, 100.0 };
+  // TString SubPtBinString[nPtBins] = { "<10 GeV", "10-15 GeV", "15-20 GeV", ">20 GeV" };
+  // TString SubPtBinName[nPtBins] = { "_02_10","_10_15", "_15_20", "_20" };
+  // int color[nPtBins] = { 879, 856, 796, 896 };
+  // int marker[nPtBins] = { 33, 22, 21, 20 };
 
+  const int nPtBins = 3;;
+  double LeadPtBinLo[nPtBins] = { 10.0, 15.0, 20.0 };
+  double LeadPtBinHi[nPtBins] = { 15.0, 20.0, 30.0 };
+  TString LeadPtBinString[nPtBins] = { "10-15 GeV", "15-20 GeV",  "20-30 GeV" };
+  TString LeadPtBinName[nPtBins] = { "_10_15", "_15_20", "_20_30" };
+  double SubPtBinLo[nPtBins] = { 5, 7.5, 10.0 };
+  double SubPtBinHi[nPtBins] = { 7.5, 10.0, 30.0 };
+  TString SubPtBinString[nPtBins] = { "5-7.5 GeV", "7.5-10 GeV", "10-30 GeV" };
+  TString SubPtBinName[nPtBins] = { "_05_075","_075_10", "_10_30" };
+  int color[nPtBins] = { 879, 856, 896 };
+  int marker[nPtBins] = { 33, 21, 20 };
+  
   TH1D *hRho[nPtBins];		TH1D *hLeadEta[nPtBins];		TH1D *hSubEta[nPtBins];
 
   TCanvas * c0 = new TCanvas( "c0" , "" ,700 ,500 );              // CANVAS
