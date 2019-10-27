@@ -91,8 +91,8 @@ int main ( int argc, const char** argv ) {         // funcions and cuts specifie
     GatherParticles( container, rawParticles );
     ClusterSequence jetCluster( rawParticles, jet_def );           //  CLUSTER ALL JETS
 
-    // Selector jetEtaSelector = SelectorAbsEtaMax( 1.0-R );
-    // Selector ptMinSelector = SelectorPtMin( jetMinPt );
+    Selector jetEtaSelector = SelectorAbsEtaMax( 1.0-R );
+    Selector ptMinSelector = SelectorPtMin( jetMinPt );
     Selector allJetSelector = jetEtaSelector && ptMinSelector;
 
     Selector leadPtMinSelector = SelectorPtMin(leadJetMinPt);
@@ -108,9 +108,6 @@ int main ( int argc, const char** argv ) {         // funcions and cuts specifie
     // double chgPtSum = 0;    double neuPtSum = 0;					//  BACKGROUND ESTIMATION 
     // BackGroundEstimationAndPlots( chgParticles, neuParticles, leadJet, hPartPtDEtaDPhi, hPartPtEtaPhi, hBG, chgPtSum, neuPtSum );
     // chgRho = chgPtSum / AREA;		neuRho = neuPtSum / AREA;			rho = (chgPtSum+neuPtSum) / AREA;
-
-    Selector jetEtaSelector = SelectorAbsEtaMax( 1.0-R );
-    Selector ptMinSelector = SelectorPtMin( jetMinPt );
     
     Selector ptMaxSelector = SelectorPtMax( 30.0 );
     leadJetSelector = leadPtMinSelector && ptMaxSelector && jetEtaSelector;
