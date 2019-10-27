@@ -189,7 +189,7 @@ void HTmonojetPlot() {
   leg2->SetBorderSize(1);   leg2->SetLineColor(1);   leg2->SetLineStyle(1);   leg2->SetLineWidth(1);   leg2->SetFillColor(0);   leg2->SetFillStyle(1001);
   leg2->SetNColumns(4);
   leg2->AddEntry((TObject*)0,"#bf{p_{T}^{Lead} (GeV)}", "");
-  leg2->AddEntry((TObject*)0,"#bf{# of Dijets}", "");
+  leg2->AddEntry((TObject*)0,"#bf{# of Jets}", "");
   leg2->AddEntry((TObject*)0,"#bf{<#rho> (GeV)}", "");
   leg2->AddEntry((TObject*)0,"#bf{<#sigma> (GeV)}", "");
 
