@@ -70,7 +70,7 @@ void HTmonojet9Plot(){
 	gPad->SetTicky();
 	gPad->SetGridy();
 	// pRhoByEta[p][e][c]->SetLineColorAlpha(0,0.000001);
-	//pRhoByEta[p][e][c]->SetLineWidth(0);
+	pRhoByEta[p][e][c]->SetLineWidth(0);
 	pRhoByEta[p][e][c]->SetMarkerSize(2);
 	pRhoByEta[p][e][c]->SetMarkerStyle( marker[c] );
 	pRhoByEta[p][e][c]->GetXaxis()->SetLabelSize(0);
