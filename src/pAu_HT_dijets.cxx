@@ -91,8 +91,8 @@ int main ( int argc, const char** argv ) {         // funcions and cuts specifie
     GatherParticles( container, rawParticles );
     ClusterSequence jetCluster( rawParticles, jet_def );           //  CLUSTER ALL JETS
 
-    Selector jetEtaSelector = SelectorAbsEtaMax( 1.0-R );
-    Selector ptMinSelector = SelectorPtMin( jetMinPt );
+    // Selector jetEtaSelector = SelectorAbsEtaMax( 1.0-R );
+    // Selector ptMinSelector = SelectorPtMin( jetMinPt );
     Selector allJetSelector = jetEtaSelector && ptMinSelector;
 
     Selector leadPtMinSelector = SelectorPtMin(leadJetMinPt);
