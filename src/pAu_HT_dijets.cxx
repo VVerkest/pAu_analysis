@@ -126,33 +126,33 @@ int main ( int argc, const char** argv ) {         // funcions and cuts specifie
     //  DIJET BACKGROUND INFORMATION ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ 
     BGparticles.clear();		recoCandidates.clear();
 
-    //   REQUIRE RECOIL JET TO HAVE AT LEAST HALF OF LEAD PT AND BE IN THE SAME ETA RANGE!
-    Selector recoPtRangeSelector = SelectorPtRange( leadJet.pt()/2, ptHi[pval] );          //  JET pT RANGE    { 10-15, 15-20, 20-30 }
-    Selector etaRangeSelector = SelectorEtaRange( etaLo[eval], etaHi[eval] );          //  JET eta RANGE
+    // //   REQUIRE RECOIL JET TO HAVE AT LEAST HALF OF LEAD PT AND BE IN THE SAME ETA RANGE!
+    // Selector recoPtRangeSelector = SelectorPtRange( leadJet.pt()/2, ptHi[pval] );          //  JET pT RANGE    { 10-15, 15-20, 20-30 }
+    // Selector etaRangeSelector = SelectorEtaRange( etaLo[eval], etaHi[eval] );          //  JET eta RANGE
 
-    Selector recoJetSelector = recoPtRangeSelector && etaRangeSelector && jetEtaSelector;
+    // Selector recoJetSelector = recoPtRangeSelector && etaRangeSelector && jetEtaSelector;
     
-    recoCandidates = sorted_by_pt( recoJetSelector( jetCluster.inclusive_jets() ) );     // EXTRACT SELECTED JETS
+    // recoCandidates = sorted_by_pt( recoJetSelector( jetCluster.inclusive_jets() ) );     // EXTRACT SELECTED JETS
 
-    bool hasReco = false;
+    // bool hasReco = false;
     
-    if ( recoCandidates.size()>0 ) {
+    // if ( recoCandidates.size()>0 ) {
 
-      for ( int i=0; i<recoCandidates.size(); ++i ) {
-    	double deltaPhi_abs = fabs( recoCandidates[i].phi() - leadJet.phi() );
-    	if ( fabs( deltaPhi_abs - pi ) <= R ) {
-    	  recoJet = recoCandidates[i];
-    	  hRecoVsLeadPt->Fill( leadJet.pt(), recoJet.pt() );
-    	  hRecoAbsDeltaPhi->Fill( deltaPhi_abs );
-    	  hRecoVsLeadEta->Fill( leadJet.eta(), recoJet.eta() );
-    	  hasReco = true;
-    	}
-    	if ( hasReco == true ) { continue; }  // exit loop with highest-pt jet in recoil range
-      }
+    //   for ( int i=0; i<recoCandidates.size(); ++i ) {
+    // 	double deltaPhi_abs = fabs( recoCandidates[i].phi() - leadJet.phi() );
+    // 	if ( fabs( deltaPhi_abs - pi ) <= R ) {
+    // 	  recoJet = recoCandidates[i];
+    // 	  hRecoVsLeadPt->Fill( leadJet.pt(), recoJet.pt() );
+    // 	  hRecoAbsDeltaPhi->Fill( deltaPhi_abs );
+    // 	  hRecoVsLeadEta->Fill( leadJet.eta(), recoJet.eta() );
+    // 	  hasReco = true;
+    // 	}
+    // 	if ( hasReco == true ) { continue; }  // exit loop with highest-pt jet in recoil range
+    //   }
 	
-    }
-    else { continue; }
-    if ( hasReco == false ) { continue; }
+    // }
+    // else { continue; }
+    // if ( hasReco == false ) { continue; }
 	
     for ( int c=0; c<3; ++c ) {	  //  BACKGROUND ESTIMATION (lead and reco jet must be in same eta-range)
       BGparticles.clear();
