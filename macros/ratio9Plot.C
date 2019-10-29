@@ -72,8 +72,9 @@ void ratio9Plot(){
       sRhoRatio->Draw();
       for ( int c=0; c<3; ++c ) {
 	
-	TString name = "pRho" + ptBinName[p] + etaBinName[e] + BackgroundChargeBias[c];
+	TString name = "DijetRho" + ptBinName[p] + etaBinName[e] + BackgroundChargeBias[c];
 	pdijetRho[p][e][c] = (TH1D*) dijetRhoByEta[p][e][c]->ProfileX(name,1,-1,"i");
+	TString name = "MonojetRho" + ptBinName[p] + etaBinName[e] + BackgroundChargeBias[c];
 	pmonojetRho[p][e][c] = (TH1D*) monojetRhoByEta[p][e][c]->ProfileX(name,1,-1,"i");
 	pRhoRatio[p][e][c]->Divide( pdijetRho[p][e][c], pmonojetRho[p][e][c] );
 	
