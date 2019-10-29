@@ -25,6 +25,8 @@ void ratio9Plot(){
   const int marker[nChgBins] = { 20, 20, 21 };
 
   gStyle->SetOptStat(0);
+  TH1D *pdijetRho[nPtBins][nEtaBins][nChgBins];
+  TH1D *pmonojetRho[nPtBins][nEtaBins][nChgBins];
   TH1D *pRhoRatio[nPtBins][nEtaBins][nChgBins];
   TH2D *sRhoRatio = new TH2D("sRhoRatio","", 3,-1.5,1.5, 10,0.0,4.0);
   sRhoRatio->GetXaxis()->SetLabelSize(0);
@@ -40,15 +42,12 @@ void ratio9Plot(){
       for ( int c=0; c<3; ++c ) {
 
 	TString name = "hRho" + ptBinName[p] + etaBinName[e] + BackgroundChargeBias[c];
-	// dijetRhoByEta[p][e][c] = (TH2D*)dijetFile->Get(name);
+	dijetRhoByEta[p][e][c] = (TH2D*)dijetFile->Get(name);
 	monojetRhoByEta[p][e][c] = (TH2D*)monojetFile->Get(name);
-	hRhoRatio[p][e][c] = (TH2D*)dijetFile->Get(name);
 	
-	// dijetRhoByEta[p][e][c]->Scale(1./dijetRhoByEta[p][e][c]->GetEntries());
+	dijetRhoByEta[p][e][c]->Scale(1./dijetRhoByEta[p][e][c]->GetEntries());
 	hRhoRatio[p][e][c]->Scale(1./hRhoRatio[p][e][c]->GetEntries());
 
-	// hRhoRatio[p][e][c] = (TH2D*) dijetRhoByEta[p][e][c]->Clone();
-	hRhoRatio[p][e][c]->Divide( monojetRhoByEta[p][e][c] );
       }
     }
   }
@@ -74,7 +73,10 @@ void ratio9Plot(){
       for ( int c=0; c<3; ++c ) {
 	
 	TString name = "pRho" + ptBinName[p] + etaBinName[e] + BackgroundChargeBias[c];
-	pRhoRatio[p][e][c] = (TH1D*) hRhoRatio[p][e][c]->ProfileX(name,1,-1,"i");
+	pdijetRho[p][e][c] = (TH1D*) dijetRhoByEta[p][e][c]->ProfileX(name,1,-1,"i");
+	pmonojetRho[p][e][c] = (TH1D*) monojetRhoByEta[p][e][c]->ProfileX(name,1,-1,"i");
+	pRhoRatio[p][e][c]->Divide( pdijetRho[p][e][c], pmonojetRho[p][e][c] );
+	
 	//pRhoRatio[p][e][c]->SetError( (const Double_t) stdev );
 	gPad->SetTickx();
 	gPad->SetTicky();
