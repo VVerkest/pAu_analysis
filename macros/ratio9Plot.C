@@ -26,7 +26,7 @@ void ratio9Plot(){
 
   gStyle->SetOptStat(0);
   TH1D *pRhoRatio[nPtBins][nEtaBins][nChgBins];
-  TH2D *sRhoRatio = new TH2D("sRhoRatio","", 3,-1.5,1.5, 10,0.0,3.0);
+  TH2D *sRhoRatio = new TH2D("sRhoRatio","", 3,-1.5,1.5, 10,0.0,4.0);
   sRhoRatio->GetXaxis()->SetLabelSize(0);
   sRhoRatio->GetYaxis()->SetLabelSize(0.06);
   sRhoRatio->GetYaxis()->SetNdivisions(12);
@@ -55,7 +55,7 @@ void ratio9Plot(){
 
   double stdev;
   TCanvas * c0 = new TCanvas( "c0" , "" ,0 ,23 ,1280 ,700 );
-  c0->SetTopMargin(0.4);
+  c0->SetTopMargin(0.45);
   TPaveText *cTitle = new TPaveText(0.345843,.881306,0.655712,.980712,"NB");
   cTitle->AddText("#rho_{dijet}/#rho_{jet}");
   cTitle->SetFillStyle(0);
