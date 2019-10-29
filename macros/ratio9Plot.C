@@ -40,13 +40,14 @@ void ratio9Plot(){
       for ( int c=0; c<3; ++c ) {
 
 	TString name = "hRho" + ptBinName[p] + etaBinName[e] + BackgroundChargeBias[c];
-	dijetRhoByEta[p][e][c] = (TH2D*)dijetFile->Get(name);
+	// dijetRhoByEta[p][e][c] = (TH2D*)dijetFile->Get(name);
 	monojetRhoByEta[p][e][c] = (TH2D*)monojetFile->Get(name);
+	hRhoRatio[p][e][c] = (TH2D*)dijetFile->Get(name);
+	
+	// dijetRhoByEta[p][e][c]->Scale(1./dijetRhoByEta[p][e][c]->GetEntries());
+	hRhoRatio[p][e][c]->Scale(1./hRhoRatio[p][e][c]->GetEntries());
 
-	dijetRhoByEta[p][e][c]->Scale(1./dijetRhoByEta[p][e][c]->GetEntries());
-	monojetRhoByEta[p][e][c]->Scale(1./monojetRhoByEta[p][e][c]->GetEntries());
-
-	hRhoRatio[p][e][c] = (TH2D*) dijetRhoByEta[p][e][c]->Clone();
+	// hRhoRatio[p][e][c] = (TH2D*) dijetRhoByEta[p][e][c]->Clone();
 	hRhoRatio[p][e][c]->Divide( monojetRhoByEta[p][e][c] );
       }
     }
