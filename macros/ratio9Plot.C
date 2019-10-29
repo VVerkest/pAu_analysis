@@ -68,8 +68,8 @@ void ratio9Plot(){
 	
 	TString name = "pRho" + ptBinName[p] + etaBinName[e] + BackgroundChargeBias[c];
 	for ( int i=1; 1<4; ++i ) {
-	  dijetRhoByEta[p][e][c]->SetRange(i,i);
-	  monojetRhoByEta[p][e][c]->SetRange(i,i);
+	  dijetRhoByEta[p][e][c]->GetXaxis()->SetRange(i,i);
+	  monojetRhoByEta[p][e][c]->GetXaxis()->SetRange(i,i);
 	  ratio = ( dijetRhoByEta[p][e][c]->GetMean(2) )/( monojetRhoByEta[p][e][c]->GetMean(2) );
 	  hRhoRatio[p][e][c]->Fill( i, ratio );
 	}
