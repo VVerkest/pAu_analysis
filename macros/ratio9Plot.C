@@ -55,7 +55,7 @@ void ratio9Plot(){
 
   double stdev;
   TCanvas * c0 = new TCanvas( "c0" , "" ,0 ,23 ,1280 ,700 );
-  c0->SetTopMargin(0.45);
+  c0->SetTopMargin(0.5);
   TPaveText *cTitle = new TPaveText(0.345843,.881306,0.655712,.980712,"NB");
   cTitle->AddText("#rho_{dijet}/#rho_{jet}");
   cTitle->SetFillStyle(0);
@@ -74,19 +74,19 @@ void ratio9Plot(){
       for ( int c=0; c<3; ++c ) {
 	
 	TString name = "pRho" + ptBinName[p] + etaBinName[e] + BackgroundChargeBias[c];
-	// pRhoRatio[p][e][c] = (TH1D*) hRhoRatio[p][e][c]->ProfileX(name,1,-1,"i");
+	pRhoRatio[p][e][c] = (TH1D*) hRhoRatio[p][e][c]->ProfileX(name,1,-1,"i");
 	//pRhoRatio[p][e][c]->SetError( (const Double_t) stdev );
 	gPad->SetTickx();
 	gPad->SetTicky();
 	gPad->SetGridy();
-	// hRhoRatio[p][e][c]->SetLineColorAlpha(0,0.000001);
-	//hRhoRatio[p][e][c]->SetLineWidth(0);
-	hRhoRatio[p][e][c]->SetMarkerSize(2);
-	hRhoRatio[p][e][c]->SetMarkerStyle( marker[c] );
-	hRhoRatio[p][e][c]->GetXaxis()->SetLabelSize(0);
-	hRhoRatio[p][e][c]->GetYaxis()->SetLabelSize(0.06);
-	//hRhoRatio[p][e][c]->GetYaxis()->SetNdivisions(10);
-	hRhoRatio[p][e][c]->Draw("SAME");
+	// pRhoRatio[p][e][c]->SetLineColorAlpha(0,0.000001);
+	//pRhoRatio[p][e][c]->SetLineWidth(0);
+	pRhoRatio[p][e][c]->SetMarkerSize(2);
+	pRhoRatio[p][e][c]->SetMarkerStyle( marker[c] );
+	pRhoRatio[p][e][c]->GetXaxis()->SetLabelSize(0);
+	pRhoRatio[p][e][c]->GetYaxis()->SetLabelSize(0.06);
+	//pRhoRatio[p][e][c]->GetYaxis()->SetNdivisions(10);
+	pRhoRatio[p][e][c]->Draw("SAME");
 
 
       }
