@@ -66,10 +66,20 @@ void ratio9Plot(){
 
   for ( int p=0; p<3; ++p ) {
     for ( int e=0; e<3; ++e ) {
+      for ( int c=0; c<3; ++c ) {
 
-      int dir = 1+e+(3*p);
-      c0->cd(dir);
-      sRhoRatio->Draw();
+	int dir = 1+e+(3*p);
+	c0->cd(dir);
+	sRhoRatio->Draw();
+
+      	int i = e+1;
+	
+	dijetRhoByEta[p][e][c]->GetXaxis()->SetRange(i,i);
+	monojetRhoByEta[p][e][c]->GetXaxis()->SetRange(i,i);
+	ratio = ( dijetRhoByEta[p][e][c]->GetMean(2) )/( monojetRhoByEta[p][e][c]->GetMean(2) );
+	hRhoRatio[p][c]->Fill( i, ratio );
+	cout << i << "        " << ratio << endl;
+      }
     }
   }
 
@@ -80,13 +90,13 @@ void ratio9Plot(){
 
 	TString name = "pRho" + ptBinName[p] + etaBinName[e] + BackgroundChargeBias[c];
 
-	int i = e+1;
+	// int i = e+1;
 	
-	dijetRhoByEta[p][e][c]->GetXaxis()->SetRange(i,i);
-	monojetRhoByEta[p][e][c]->GetXaxis()->SetRange(i,i);
-	ratio = ( dijetRhoByEta[p][e][c]->GetMean(2) )/( monojetRhoByEta[p][e][c]->GetMean(2) );
-	hRhoRatio[p][c]->Fill( i, ratio );
-	cout << i << "        " << ratio << endl;
+	// dijetRhoByEta[p][e][c]->GetXaxis()->SetRange(i,i);
+	// monojetRhoByEta[p][e][c]->GetXaxis()->SetRange(i,i);
+	// ratio = ( dijetRhoByEta[p][e][c]->GetMean(2) )/( monojetRhoByEta[p][e][c]->GetMean(2) );
+	// hRhoRatio[p][c]->Fill( i, ratio );
+	// cout << i << "        " << ratio << endl;
 
 	//hRhoRatio[p][c]->SetError( (const Double_t) stdev );
 	gPad->SetTickx();
