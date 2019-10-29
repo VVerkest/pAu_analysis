@@ -81,18 +81,18 @@ void ratio9Plot(){
 	ratio = ( dijetRhoByEta[p][e][c]->GetMean(2) )/( monojetRhoByEta[p][e][c]->GetMean(2) );
 	hRhoRatio[p][c]->Fill( i, ratio );
 
-	//hRhoRatio[p][e][c]->SetError( (const Double_t) stdev );
+	//hRhoRatio[p][c]->SetError( (const Double_t) stdev );
 	gPad->SetTickx();
 	gPad->SetTicky();
 	gPad->SetGridy();
-	// hRhoRatio[p][e][c]->SetLineColorAlpha(0,0.000001);
-	//hRhoRatio[p][e][c]->SetLineWidth(0);
-	hRhoRatio[p][e][c]->SetMarkerSize(2);
-	hRhoRatio[p][e][c]->SetMarkerStyle( marker[c] );
-	hRhoRatio[p][e][c]->GetXaxis()->SetLabelSize(0);
-	hRhoRatio[p][e][c]->GetYaxis()->SetLabelSize(0.06);
-	//hRhoRatio[p][e][c]->GetYaxis()->SetNdivisions(10);
-	hRhoRatio[p][e][c]->Draw("SAME");
+	// hRhoRatio[p][c]->SetLineColorAlpha(0,0.000001);
+	//hRhoRatio[p][c]->SetLineWidth(0);
+	hRhoRatio[p][c]->SetMarkerSize(2);
+	hRhoRatio[p][c]->SetMarkerStyle( marker[c] );
+	hRhoRatio[p][c]->GetXaxis()->SetLabelSize(0);
+	hRhoRatio[p][c]->GetYaxis()->SetLabelSize(0.06);
+	//hRhoRatio[p][c]->GetYaxis()->SetNdivisions(10);
+	hRhoRatio[p][c]->Draw("SAME");
 
 
       }
