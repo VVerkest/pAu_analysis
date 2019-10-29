@@ -99,6 +99,10 @@ void ratio9Plot(){
 	hRhoRatio[p][c]->GetXaxis()->SetLabelSize(0);
 	hRhoRatio[p][c]->GetYaxis()->SetLabelSize(0.06);
 	//hRhoRatio[p][c]->GetYaxis()->SetNdivisions(10);
+
+	int dir = 1+e+(3*p);
+	c0->cd(dir);
+
 	hRhoRatio[p][c]->Draw("SAME");
 
 
