@@ -116,7 +116,7 @@ void ratio9Plot(){
 	int dir = 1+e+(3*p);
 	c0->cd(dir);
 
-	hRhoRatio[p][c]->Draw("SAME");
+	hRhoRatio[p][c]->Draw("PSAME");
 
 
       }
