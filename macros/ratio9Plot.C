@@ -31,10 +31,10 @@ void ratio9Plot(){
   sRhoRatio->GetYaxis()->SetLabelSize(0.06);
   sRhoRatio->GetYaxis()->SetNdivisions(12);
   
-  TH1D *dijetRhoByEta[nPtBins][nEtaBins][nChgBins];
-  TH1D *monojetRhoByEta[nPtBins][nEtaBins][nChgBins];
+  TH2D *dijetRhoByEta[nPtBins][nEtaBins][nChgBins];
+  TH2D *monojetRhoByEta[nPtBins][nEtaBins][nChgBins];
   TH1D *hRhoRatio[nPtBins][nEtaBins][nChgBins];
-
+  
   for ( int p=0; p<3; ++p ) {
     for ( int e=0; e<3; ++e ) {
       for ( int c=0; c<3; ++c ) {
@@ -70,8 +70,6 @@ void ratio9Plot(){
       c0->cd(dir);
       sRhoRatio->Draw();
       for ( int c=0; c<3; ++c ) {
-
-	stdev = hRhoByEta[p][e][c]->GetMeanError(2);
 	
 	TString name = "pRho" + ptBinName[p] + etaBinName[e] + BackgroundChargeBias[c];
 	pRhoRatio[p][e][c] = (TH1D*) hRhoRatio[p][e][c]->ProfileX(name,1,-1,"i");
