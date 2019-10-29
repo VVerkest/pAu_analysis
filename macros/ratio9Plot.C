@@ -73,23 +73,23 @@ void ratio9Plot(){
       for ( int c=0; c<3; ++c ) {
 	
 	TString name = "DijetRho" + ptBinName[p] + etaBinName[e] + BackgroundChargeBias[c];
-	pRhoRatio[p][e][c] = (TH1D*) dijetRhoByEta[p][e][c]->ProfileX(name,1,-1,"i");
+	pdijetRho[p][e][c] = (TH1D*) dijetRhoByEta[p][e][c]->ProfileX(name,1,-1,"i");
 	name = "MonojetRho" + ptBinName[p] + etaBinName[e] + BackgroundChargeBias[c];
 	pmonojetRho[p][e][c] = (TH1D*) monojetRhoByEta[p][e][c]->ProfileX(name,1,-1,"i");
-	//pRhoRatio[p][e][c]->Divide( pmonojetRho[p][e][c] );
+	pRhoRatio[p][e][c]->Divide( pdijetRho[p][e][c], pmonojetRho[p][e][c] );
 	
-	//pRhoRatio[p][e][c]->SetError( (const Double_t) stdev );
-	gPad->SetTickx();
-	gPad->SetTicky();
-	gPad->SetGridy();
-	// pRhoRatio[p][e][c]->SetLineColorAlpha(0,0.000001);
-	//pRhoRatio[p][e][c]->SetLineWidth(0);
-	pRhoRatio[p][e][c]->SetMarkerSize(2);
-	pRhoRatio[p][e][c]->SetMarkerStyle( marker[c] );
-	pRhoRatio[p][e][c]->GetXaxis()->SetLabelSize(0);
-	pRhoRatio[p][e][c]->GetYaxis()->SetLabelSize(0.06);
-	//pRhoRatio[p][e][c]->GetYaxis()->SetNdivisions(10);
-	pRhoRatio[p][e][c]->Draw("SAME");
+	// //pRhoRatio[p][e][c]->SetError( (const Double_t) stdev );
+	// gPad->SetTickx();
+	// gPad->SetTicky();
+	// gPad->SetGridy();
+	// // pRhoRatio[p][e][c]->SetLineColorAlpha(0,0.000001);
+	// //pRhoRatio[p][e][c]->SetLineWidth(0);
+	// pRhoRatio[p][e][c]->SetMarkerSize(2);
+	// pRhoRatio[p][e][c]->SetMarkerStyle( marker[c] );
+	// pRhoRatio[p][e][c]->GetXaxis()->SetLabelSize(0);
+	// pRhoRatio[p][e][c]->GetYaxis()->SetLabelSize(0.06);
+	// //pRhoRatio[p][e][c]->GetYaxis()->SetNdivisions(10);
+	// pRhoRatio[p][e][c]->Draw("SAME");
 
 
       }
