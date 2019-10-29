@@ -55,7 +55,7 @@ void ratio9Plot(){
 
   double ratio;
   TCanvas * c0 = new TCanvas( "c0" , "" ,0 ,23 ,1280 ,700 );
-  c0->SetTopMargin(0.55);
+  c0->SetTopMargin(0.6);
   TPaveText *cTitle = new TPaveText(0.345843,.881306,0.655712,.980712,"NB");
   cTitle->AddText("#rho_{dijet}/#rho_{jet}");
   cTitle->SetFillStyle(0);
@@ -123,7 +123,7 @@ void ratio9Plot(){
     }
   }
 
-  c0->SaveAs("plots/HTdijets/dijet9plot.pdf","PDF");
+  c0->SaveAs("plots/HTdijets/ratio9plot.pdf","PDF");
   
 }
 
