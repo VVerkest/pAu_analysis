@@ -54,7 +54,7 @@ void ratio9Plot(){
 
   double ratio;
   TCanvas * c0 = new TCanvas( "c0" , "" ,0 ,23 ,1280 ,700 );
-  c0->SetTopMargin(0.45);
+  c0->SetTopMargin(0.55);
   TPaveText *cTitle = new TPaveText(0.345843,.881306,0.655712,.980712,"NB");
   cTitle->AddText("#rho_{dijet}/#rho_{jet}");
   cTitle->SetFillStyle(0);
@@ -106,6 +106,7 @@ void ratio9Plot(){
 	//hRhoRatio[p][c]->SetLineWidth(0);
 	hRhoRatio[p][c]->SetMarkerSize(2);
 	hRhoRatio[p][c]->SetMarkerStyle( marker[c] );
+	hRhoRatio[p][c]->SetMarkerColor( color[c] );
 	hRhoRatio[p][c]->GetXaxis()->SetLabelSize(0);
 	hRhoRatio[p][c]->GetYaxis()->SetLabelSize(0.06);
 	//hRhoRatio[p][c]->GetYaxis()->SetNdivisions(10);
@@ -113,10 +114,10 @@ void ratio9Plot(){
 	int dir = 1+e+(3*p);
 	c0->cd(dir);
 
-	hRhoRatio[p][c]->Draw("SAME");
 
 
       }
+	hRhoRatio[p][c]->Draw("SAME");
     }
   }
 
