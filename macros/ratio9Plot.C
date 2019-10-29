@@ -40,20 +40,13 @@ void ratio9Plot(){
       for ( int c=0; c<3; ++c ) {
 
 	TString name = "hRho" + ptBinName[p] + etaBinName[e] + BackgroundChargeBias[c];
-	// dijetRhoByEta[p][e][c] = (TH2D*)dijetFile->Get(name);
+	dijetRhoByEta[p][e][c] = (TH2D*)dijetFile->Get(name);
 	monojetRhoByEta[p][e][c] = (TH2D*)monojetFile->Get(name);
-	hRhoRatio[p][e][c] = (TH2D*)dijetFile->Get(name);
-	
-	// dijetRhoByEta[p][e][c]->Scale(1./dijetRhoByEta[p][e][c]->GetEntries());
-	hRhoRatio[p][e][c]->Scale(1./hRhoRatio[p][e][c]->GetEntries());
-
-	// hRhoRatio[p][e][c] = (TH2D*) dijetRhoByEta[p][e][c]->Clone();
-	hRhoRatio[p][e][c]->Divide( monojetRhoByEta[p][e][c] );
       }
     }
   }
 
-  double stdev;
+  double ratio;
   TCanvas * c0 = new TCanvas( "c0" , "" ,0 ,23 ,1280 ,700 );
   c0->SetTopMargin(0.45);
   TPaveText *cTitle = new TPaveText(0.345843,.881306,0.655712,.980712,"NB");
@@ -74,19 +67,24 @@ void ratio9Plot(){
       for ( int c=0; c<3; ++c ) {
 	
 	TString name = "pRho" + ptBinName[p] + etaBinName[e] + BackgroundChargeBias[c];
-	pRhoRatio[p][e][c] = (TH1D*) hRhoRatio[p][e][c]->ProfileX(name,1,-1,"i");
-	//pRhoRatio[p][e][c]->SetError( (const Double_t) stdev );
+	for ( int i=1; 1<4; ++i ) {
+	  dijetRhoByEta[p][e][c]->SetRange(i,i);
+	  monojetRhoByEta[p][e][c]->SetRange(i,i);
+	  ratio = ( dijetRhoByEta[p][e][c]->GetMean(2) )/( monojetRhoByEta[p][e][c]->GetMean(2) );
+	  hRhoRatio[p][e][c]->Fill( i, ratio );
+	}
+	//hRhoRatio[p][e][c]->SetError( (const Double_t) stdev );
 	gPad->SetTickx();
 	gPad->SetTicky();
 	gPad->SetGridy();
-	// pRhoRatio[p][e][c]->SetLineColorAlpha(0,0.000001);
-	//pRhoRatio[p][e][c]->SetLineWidth(0);
-	pRhoRatio[p][e][c]->SetMarkerSize(2);
-	pRhoRatio[p][e][c]->SetMarkerStyle( marker[c] );
-	pRhoRatio[p][e][c]->GetXaxis()->SetLabelSize(0);
-	pRhoRatio[p][e][c]->GetYaxis()->SetLabelSize(0.06);
-	//pRhoRatio[p][e][c]->GetYaxis()->SetNdivisions(10);
-	pRhoRatio[p][e][c]->Draw("SAME");
+	// hRhoRatio[p][e][c]->SetLineColorAlpha(0,0.000001);
+	//hRhoRatio[p][e][c]->SetLineWidth(0);
+	hRhoRatio[p][e][c]->SetMarkerSize(2);
+	hRhoRatio[p][e][c]->SetMarkerStyle( marker[c] );
+	hRhoRatio[p][e][c]->GetXaxis()->SetLabelSize(0);
+	hRhoRatio[p][e][c]->GetYaxis()->SetLabelSize(0.06);
+	//hRhoRatio[p][e][c]->GetYaxis()->SetNdivisions(10);
+	hRhoRatio[p][e][c]->Draw("SAME");
 
 
       }
