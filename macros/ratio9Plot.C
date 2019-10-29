@@ -76,7 +76,7 @@ void ratio9Plot(){
 	pRhoRatio[p][e][c] = (TH1D*) dijetRhoByEta[p][e][c]->ProfileX(name,1,-1,"i");
 	name = "MonojetRho" + ptBinName[p] + etaBinName[e] + BackgroundChargeBias[c];
 	pmonojetRho[p][e][c] = (TH1D*) monojetRhoByEta[p][e][c]->ProfileX(name,1,-1,"i");
-	pRhoRatio[p][e][c]->Divide( name );
+	//pRhoRatio[p][e][c]->Divide( pmonojetRho[p][e][c] );
 	
 	//pRhoRatio[p][e][c]->SetError( (const Double_t) stdev );
 	gPad->SetTickx();
