@@ -46,7 +46,7 @@ void ratio9Plot(){
 	dijetRhoByEta[p][e][c]->Scale(1./dijetRhoByEta[p][e][c]->GetEntries());
 	monojetRhoByEta[p][e][c]->Scale(1./monojetRhoByEta[p][e][c]->GetEntries());
 
-	hRhoRatio[p][e][c0->Divide( dijetRhoByEta[p][e][c], monojetRhoByEta[p][e][c] );
+	hRhoRatio[p][e][c]->Divide( dijetRhoByEta[p][e][c], monojetRhoByEta[p][e][c] );
       }
     }
   }
