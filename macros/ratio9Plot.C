@@ -42,6 +42,8 @@ void ratio9Plot(){
 	TString name = "hRho" + ptBinName[p] + etaBinName[e] + BackgroundChargeBias[c];
 	dijetRhoByEta[p][e][c] = (TH2D*)dijetFile->Get(name);
 	monojetRhoByEta[p][e][c] = (TH2D*)monojetFile->Get(name);
+	name = "hRhoRatio" + ptBinName[p] + etaBinName[e] + BackgroundChargeBias[c];
+	hRhoRatio[p][e][c] = new TH2D(name,"", 3,-1.5,1.5, 10,0.0,4.0);
       }
     }
   }
