@@ -35,7 +35,7 @@ void ratio9Plot(){
   
   TH2D *dijetRhoByEta[nPtBins][nEtaBins][nChgBins];
   TH2D *monojetRhoByEta[nPtBins][nEtaBins][nChgBins];
-  TH2D *hRhoRatio[nPtBins][nChgBins];
+  TH2D *hRhoRatio[nPtBins][nEtaBins][nChgBins];
   
   for ( int p=0; p<3; ++p ) {
     for ( int c=0; c<3; ++c ) {
