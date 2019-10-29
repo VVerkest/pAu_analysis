@@ -24,6 +24,8 @@ void ratio9Plot(){
   const int color[nChgBins] = { 807, 823, 874 };
   const int marker[nChgBins] = { 20, 20, 21 };
 
+  TString name;
+  
   gStyle->SetOptStat(0);
   TH1D *pRhoRatio[nPtBins][nEtaBins][nChgBins];
   TH2D *sRhoRatio = new TH2D("sRhoRatio","", 3,-1.5,1.5, 10,0.0,4.0);
@@ -36,14 +38,16 @@ void ratio9Plot(){
   TH2D *hRhoRatio[nPtBins][nEtaBins][nChgBins];
   
   for ( int p=0; p<3; ++p ) {
-    for ( int e=0; e<3; ++e ) {
-      for ( int c=0; c<3; ++c ) {
+    for ( int c=0; c<3; ++c ) {
+      
+      name = "hRhoRatio" + ptBinName[p] + BackgroundChargeBias[c];
+      hRhoRatio[p][c] = new TH2D(name,"", 3,-1.5,1.5, 10,0.0,4.0);
 
-	TString name = "hRho" + ptBinName[p] + etaBinName[e] + BackgroundChargeBias[c];
+      for ( int e=0; e<3; ++e ) {
+
+	name = "hRho" + ptBinName[p] + etaBinName[e] + BackgroundChargeBias[c];
 	dijetRhoByEta[p][e][c] = (TH2D*)dijetFile->Get(name);
 	monojetRhoByEta[p][e][c] = (TH2D*)monojetFile->Get(name);
-	name = "hRhoRatio" + ptBinName[p] + etaBinName[e] + BackgroundChargeBias[c];
-	hRhoRatio[p][e][c] = new TH2D(name,"", 3,-1.5,1.5, 10,0.0,4.0);
       }
     }
   }
@@ -69,12 +73,14 @@ void ratio9Plot(){
       for ( int c=0; c<3; ++c ) {
 	
 	TString name = "pRho" + ptBinName[p] + etaBinName[e] + BackgroundChargeBias[c];
-	for ( int i=1; 1<4; ++i ) {
-	  dijetRhoByEta[p][e][c]->GetXaxis()->SetRange(i,i);
-	  monojetRhoByEta[p][e][c]->GetXaxis()->SetRange(i,i);
-	  ratio = ( dijetRhoByEta[p][e][c]->GetMean(2) )/( monojetRhoByEta[p][e][c]->GetMean(2) );
-	  hRhoRatio[p][e][c]->Fill( i, ratio );
-	}
+
+	int i = e+1;
+	
+	dijetRhoByEta[p][e][c]->GetXaxis()->SetRange(i,i);
+	monojetRhoByEta[p][e][c]->GetXaxis()->SetRange(i,i);
+	ratio = ( dijetRhoByEta[p][e][c]->GetMean(2) )/( monojetRhoByEta[p][e][c]->GetMean(2) );
+	hRhoRatio[p][c]->Fill( i, ratio );
+
 	//hRhoRatio[p][e][c]->SetError( (const Double_t) stdev );
 	gPad->SetTickx();
 	gPad->SetTicky();
