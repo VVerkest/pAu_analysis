@@ -86,6 +86,7 @@ void ratio9Plot(){
 	monojetRhoByEta[p][e][c]->GetXaxis()->SetRange(i,i);
 	ratio = ( dijetRhoByEta[p][e][c]->GetMean(2) )/( monojetRhoByEta[p][e][c]->GetMean(2) );
 	hRhoRatio[p][c]->Fill( i, ratio );
+	cout << i << "        " << ratio << endl;
 
 	//hRhoRatio[p][c]->SetError( (const Double_t) stdev );
 	gPad->SetTickx();
