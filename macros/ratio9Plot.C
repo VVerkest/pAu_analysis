@@ -70,8 +70,14 @@ void ratio9Plot(){
       int dir = 1+e+(3*p);
       c0->cd(dir);
       sRhoRatio->Draw();
-      for ( int c=0; c<3; ++c ) {
-	
+    }
+  }
+
+
+  for ( int c=0; c<3; ++c ) {
+    for ( int p=0; p<3; ++p ) {
+      for ( int e=0; e<3; ++e ) {
+
 	TString name = "pRho" + ptBinName[p] + etaBinName[e] + BackgroundChargeBias[c];
 
 	int i = e+1;
