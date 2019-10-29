@@ -35,7 +35,7 @@ void ratio9Plot(){
   
   TH2D *dijetRhoByEta[nPtBins][nEtaBins][nChgBins];
   TH2D *monojetRhoByEta[nPtBins][nEtaBins][nChgBins];
-  TH2D *hRhoRatio[nPtBins][nChgBins];
+  TH1D *hRhoRatio[nPtBins][nChgBins];
   
   for ( int p=0; p<3; ++p ) {
     for ( int c=0; c<3; ++c ) {
@@ -47,7 +47,7 @@ void ratio9Plot(){
 	monojetRhoByEta[p][e][c] = (TH2D*)monojetFile->Get(name);
       
 	name = "hRhoRatio" + ptBinName[p] + etaBinName[e] + BackgroundChargeBias[c];
-	hRhoRatio[p][c] = new TH2D(name,"", 3,-1.5,1.5, 10,0.0,4.0);
+	hRhoRatio[p][c] = new TH1D(name,"", 3,-1.5,1.5);
 
       }
     }
@@ -78,7 +78,7 @@ void ratio9Plot(){
 	  dijetRhoByEta[p][e][c]->GetXaxis()->SetRange(i,i);
 	  monojetRhoByEta[p][e][c]->GetXaxis()->SetRange(i,i);
 	  ratio = ( dijetRhoByEta[p][e][c]->GetMean(2) )/( monojetRhoByEta[p][e][c]->GetMean(2) );
-	  hRhoRatio[p][c]->Fill( i, ratio );
+	  hRhoRatio[p][c]->SetBinContent( i, ratio );
 	  cout << i << "        " << ratio << endl;
 	}
       }
