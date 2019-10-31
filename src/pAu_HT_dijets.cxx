@@ -85,8 +85,6 @@ int main ( int argc, const char** argv ) {         // funcions and cuts specifie
     
     Vz = header->GetPrimaryVertexZ();
     if ( UseEvent( header, event, vzCut, Vz ) == false ) { continue; }   //  Skip events based on: Run#, vz cut, BBCEastSum;    only accept HT Trigger events
-
-
     
     GatherParticles( container, rawParticles );
     ClusterSequence jetCluster( rawParticles, jet_def );           //  CLUSTER ALL JETS
@@ -97,18 +95,7 @@ int main ( int argc, const char** argv ) {         // funcions and cuts specifie
 
     Selector leadPtMinSelector = SelectorPtMin(leadJetMinPt);
     Selector leadJetSelector = jetEtaSelector && leadPtMinSelector;
-    // rawJets = sorted_by_pt( leadJetSelector( jetCluster.inclusive_jets() ) );     // EXTRACT ALL JETS >10GeV
 
-    // if ( rawJets.size()>0 ) { leadJet = rawJets[0];       nEvents += 1; }
-    // else { continue; }
-    
-    // GatherChargedBG( leadJet, container, chgParticles);
-    // GatherNeutralBG( leadJet, container, neuParticles);
-    
-    // double chgPtSum = 0;    double neuPtSum = 0;					//  BACKGROUND ESTIMATION 
-    // BackGroundEstimationAndPlots( chgParticles, neuParticles, leadJet, hPartPtDEtaDPhi, hPartPtEtaPhi, hBG, chgPtSum, neuPtSum );
-    // chgRho = chgPtSum / AREA;		neuRho = neuPtSum / AREA;			rho = (chgPtSum+neuPtSum) / AREA;
-    
     Selector ptMaxSelector = SelectorPtMax( 30.0 );
     leadJetSelector = leadPtMinSelector && ptMaxSelector && jetEtaSelector;
     rawJets = sorted_by_pt( leadJetSelector( jetCluster.inclusive_jets() ) );     // EXTRACT ALL JETS IN 10-30 GeV RANGE
@@ -156,42 +143,63 @@ int main ( int argc, const char** argv ) {         // funcions and cuts specifie
 	
     for ( int c=0; c<3; ++c ) {	  //  BACKGROUND ESTIMATION (lead and reco jet must be in same eta-range)
       BGparticles.clear();
-
-      if ( BackgroundChargeBias[c]=="_chgBG" ) { GatherChargedBG( leadJet, container, BGparticles); }      //  Gather background particles 
-      else if ( BackgroundChargeBias[c]=="_neuBG" ) { GatherNeutralBG( leadJet, container, BGparticles); }
-      else if ( BackgroundChargeBias[c]=="_allBG" ) { GatherBackground( leadJet, container, BGparticles); }
-      else { cerr<<"BOO"<<endl; }
-
       double eastSum = 0;	  double midSum = 0;	  double westSum = 0;
-      for (int i=0; i<BGparticles.size(); ++i) {
 
-	hBackground[pval][eval][c]->Fill( BGparticles[i].pt(), BGparticles[i].phi(), BGparticles[i].eta() );
-
-	if ( BGparticles[i].eta() >=etaLo[0] && BGparticles[i].eta() <= etaHi[0]  ) { eastSum+=BGparticles[i].pt(); }
-	else if ( BGparticles[i].eta() >=etaLo[1] && BGparticles[i].eta() <= etaHi[1]  ) { midSum+=BGparticles[i].pt(); }
-	else if ( BGparticles[i].eta() >=etaLo[2] && BGparticles[i].eta() <= etaHi[2]  ) { westSum+=BGparticles[i].pt(); }
-	else { cout<<BGparticles[i].eta()<<endl;        continue; }
-      }
-
-      eastRho = eastSum/eastArea;			midRho = midSum/midArea;			westRho = westSum/westArea;
+      if ( BackgroundChargeBias[c]=="_chgBG" ) {      //  Gather background particles 
+	GatherChargedBG( leadJet, container, BGparticles);
+	for (int i=0; i<BGparticles.size(); ++i) {
 	  
-      hRhoByEta[pval][eval][c]->Fill(-1.0, eastRho );
-      hRhoByEta[pval][eval][c]->Fill( 0.0, midRho );
-      hRhoByEta[pval][eval][c]->Fill( 1.0, westRho );
-      rho = (eastSum + midSum + westSum)/AREA;
+	  if ( BGparticles[i].eta() >=etaLo[0] && BGparticles[i].eta() <= etaHi[0]  ) { eastSum+=BGparticles[i].pt(); }
+	  else if ( BGparticles[i].eta() >=etaLo[1] && BGparticles[i].eta() <= etaHi[1]  ) { midSum+=BGparticles[i].pt(); }
+	  else if ( BGparticles[i].eta() >=etaLo[2] && BGparticles[i].eta() <= etaHi[2]  ) { westSum+=BGparticles[i].pt(); }
+	  else { cout<<BGparticles[i].eta()<<endl;        continue; }
+	  
+	}
+      }
+      else if ( BackgroundChargeBias[c]=="_neuBG" ) {
+	GatherNeutralBG( leadJet, container, BGparticles);
+	for (int i=0; i<BGparticles.size(); ++i) {
+	  
+	  if ( BGparticles[i].eta() >=etaLo[0] && BGparticles[i].eta() <= etaHi[0]  ) { eastSum+=BGparticles[i].pt(); }
+	  else if ( BGparticles[i].eta() >=etaLo[1] && BGparticles[i].eta() <= etaHi[1]  ) { midSum+=BGparticles[i].pt(); }
+	  else if ( BGparticles[i].eta() >=etaLo[2] && BGparticles[i].eta() <= etaHi[2]  ) { westSum+=BGparticles[i].pt(); }
+	  else { cout<<BGparticles[i].eta()<<endl;        continue; }
+	  
+	}
+      }
+      else if ( BackgroundChargeBias[c]=="_allBG" ) {
+	GatherBackground( leadJet, container, BGparticles);
+	for (int i=0; i<BGparticles.size(); ++i) {
 
-      TList *SelectedTowers = Reader.GetListOfSelectedTowers();		nTowers = CountTowers( SelectedTowers );		hTowersPerEvent->Fill(nTowers);
-      hRho->Fill( rho );
-      hTowersVsRho->Fill( rho, nTowers );
-      hLeadJetPtRhoEta->Fill( leadJet.pt(), rho, leadJet.eta() );
-      hLeadPtEtaPhi->Fill( leadJet.pt(), leadJet.eta(), leadJet.phi() );
-      hPt_UE_BBCE->Fill( leadJet.pt(), rho, header->GetBbcEastRate() );
-      hPt_UE_BBCsumE->Fill( leadJet.pt(), rho, header->GetBbcAdcSumEast() );    
-      hPrimaryPerEvent->Fill( header->GetNOfPrimaryTracks() );
-
-
+	  hBackground[pval][eval][c]->Fill( BGparticles[i].pt(), BGparticles[i].phi(), BGparticles[i].eta() );
+	  
+	  if ( BGparticles[i].eta() >=etaLo[0] && BGparticles[i].eta() <= etaHi[0]  ) { eastSum+=BGparticles[i].pt(); }
+	  else if ( BGparticles[i].eta() >=etaLo[1] && BGparticles[i].eta() <= etaHi[1]  ) { midSum+=BGparticles[i].pt(); }
+	  else if ( BGparticles[i].eta() >=etaLo[2] && BGparticles[i].eta() <= etaHi[2]  ) { westSum+=BGparticles[i].pt(); }
+	  else { cout<<BGparticles[i].eta()<<endl;        continue; }
+	  
+	}
+      }
+      else { cerr<<"Error in background estimation"<<endl; }
 
     } // ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ 
+
+      
+    eastRho = eastSum/eastArea;			midRho = midSum/midArea;			westRho = westSum/westArea;
+	  
+    hRhoByEta[pval][eval][c]->Fill(-1.0, eastRho );
+    hRhoByEta[pval][eval][c]->Fill( 0.0, midRho );
+    hRhoByEta[pval][eval][c]->Fill( 1.0, westRho );
+    rho = (eastSum + midSum + westSum)/AREA;
+
+    TList *SelectedTowers = Reader.GetListOfSelectedTowers();		nTowers = CountTowers( SelectedTowers );		hTowersPerEvent->Fill(nTowers);
+    hRho->Fill( rho );
+    hTowersVsRho->Fill( rho, nTowers );
+    hLeadJetPtRhoEta->Fill( leadJet.pt(), rho, leadJet.eta() );
+    hLeadPtEtaPhi->Fill( leadJet.pt(), leadJet.eta(), leadJet.phi() );
+    hPt_UE_BBCE->Fill( leadJet.pt(), rho, header->GetBbcEastRate() );
+    hPt_UE_BBCsumE->Fill( leadJet.pt(), rho, header->GetBbcAdcSumEast() );    
+    hPrimaryPerEvent->Fill( header->GetNOfPrimaryTracks() );
 
     rawJets = sorted_by_pt( allJetSelector( jetCluster.inclusive_jets() ) );     // EXTRACT ALL JETS >2GeV
     for ( int i=0; i<rawJets.size(); ++i ) { hAllJetsPtEtaPhi->Fill( rawJets[i].pt(), rawJets[i].eta(), rawJets[i].phi() ); }
