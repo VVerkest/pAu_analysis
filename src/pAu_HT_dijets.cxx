@@ -121,25 +121,25 @@ int main ( int argc, const char** argv ) {         // funcions and cuts specifie
     
     recoCandidates = sorted_by_pt( recoJetSelector( jetCluster.inclusive_jets() ) );     // EXTRACT SELECTED JETS
 
-    // bool hasReco = false;
+    bool hasReco = false;
     
-    // if ( recoCandidates.size()>0 ) {
+    if ( recoCandidates.size()>0 ) {
 
-    //   for ( int i=0; i<recoCandidates.size(); ++i ) {
-    // 	double deltaPhi_abs = fabs( recoCandidates[i].phi() - leadJet.phi() );
-    // 	if ( fabs( deltaPhi_abs - pi ) <= R ) {
-    // 	  recoJet = recoCandidates[i];
-    // 	  hRecoVsLeadPt->Fill( leadJet.pt(), recoJet.pt() );
-    // 	  hRecoAbsDeltaPhi->Fill( deltaPhi_abs );
-    // 	  hRecoVsLeadEta->Fill( leadJet.eta(), recoJet.eta() );
-    // 	  hasReco = true;
-    // 	}
-    // 	if ( hasReco == true ) { continue; }  // exit loop with highest-pt jet in recoil range
-    //   }
+      for ( int i=0; i<recoCandidates.size(); ++i ) {
+    	double deltaPhi_abs = fabs( recoCandidates[i].phi() - leadJet.phi() );
+    	if ( fabs( deltaPhi_abs - pi ) <= R ) {
+    	  recoJet = recoCandidates[i];
+    	  hRecoVsLeadPt->Fill( leadJet.pt(), recoJet.pt() );
+    	  hRecoAbsDeltaPhi->Fill( deltaPhi_abs );
+    	  hRecoVsLeadEta->Fill( leadJet.eta(), recoJet.eta() );
+    	  hasReco = true;
+    	}
+    	if ( hasReco == true ) { continue; }  // exit loop with highest-pt jet in recoil range
+      }
 
-    // }
-    // else { continue; }
-    // if ( hasReco == false ) { continue; }
+    }
+    else { continue; }
+    if ( hasReco == false ) { continue; }
 
     double eastSum[nChgBins], midSum[nChgBins], westSum[nChgBins], nMidJets[nChgBins], nEastJets[nChgBins], nWestJets[nChgBins];
     
