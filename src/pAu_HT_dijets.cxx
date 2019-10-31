@@ -155,7 +155,7 @@ int main ( int argc, const char** argv ) {         // funcions and cuts specifie
 	  hBackground[pval][eval][c]->Fill( BGparticles[i].pt(), BGparticles[i].phi(), BGparticles[i].eta() );
 
 	  if ( BGparticles[i].eta() >=etaLo[0] && BGparticles[i].eta() <= etaHi[0]  ) { eastSum[c]+=BGparticles[i].pt();          ++nEastJets[c]; }
-	  else if ( BGparticles[i].eta() >=etaLo[1] && BGparticles[i].eta() <= etaHi[1]  ) { midSum[c]+=BGparticles[i].pt();           ++MidJets[c]; }
+	  else if ( BGparticles[i].eta() >=etaLo[1] && BGparticles[i].eta() <= etaHi[1]  ) { midSum[c]+=BGparticles[i].pt();           ++nMidJets[c]; }
 	  else if ( BGparticles[i].eta() >=etaLo[2] && BGparticles[i].eta() <= etaHi[2]  ) { westSum[c]+=BGparticles[i].pt();           ++nWeststJets[c]; }
 	  else { cout<<BGparticles[i].eta()<<endl;        continue; }
 	  
@@ -168,7 +168,7 @@ int main ( int argc, const char** argv ) {         // funcions and cuts specifie
 	  hBackground[pval][eval][c]->Fill( BGparticles[i].pt(), BGparticles[i].phi(), BGparticles[i].eta() );
 
 	  if ( BGparticles[i].eta() >=etaLo[0] && BGparticles[i].eta() <= etaHi[0]  ) { eastSum[c]+=BGparticles[i].pt();          ++nEastJets[c]; }
-	  else if ( BGparticles[i].eta() >=etaLo[1] && BGparticles[i].eta() <= etaHi[1]  ) { midSum[c]+=BGparticles[i].pt();           ++MidJets[c]; }
+	  else if ( BGparticles[i].eta() >=etaLo[1] && BGparticles[i].eta() <= etaHi[1]  ) { midSum[c]+=BGparticles[i].pt();           ++nMidJets[c]; }
 	  else if ( BGparticles[i].eta() >=etaLo[2] && BGparticles[i].eta() <= etaHi[2]  ) { westSum[c]+=BGparticles[i].pt();           ++nWeststJets[c]; }
 	  else { cout<<BGparticles[i].eta()<<endl;        continue; }
 	  
@@ -181,7 +181,7 @@ int main ( int argc, const char** argv ) {         // funcions and cuts specifie
 	  hBackground[pval][eval][c]->Fill( BGparticles[i].pt(), BGparticles[i].phi(), BGparticles[i].eta() );
 	  
 	  if ( BGparticles[i].eta() >=etaLo[0] && BGparticles[i].eta() <= etaHi[0]  ) { eastSum[c]+=BGparticles[i].pt();          ++nEastJets[c]; }
-	  else if ( BGparticles[i].eta() >=etaLo[1] && BGparticles[i].eta() <= etaHi[1]  ) { midSum[c]+=BGparticles[i].pt();           ++MidJets[c]; }
+	  else if ( BGparticles[i].eta() >=etaLo[1] && BGparticles[i].eta() <= etaHi[1]  ) { midSum[c]+=BGparticles[i].pt();           ++nMidJets[c]; }
 	  else if ( BGparticles[i].eta() >=etaLo[2] && BGparticles[i].eta() <= etaHi[2]  ) { westSum[c]+=BGparticles[i].pt();           ++nWeststJets[c]; }
 	  else { cout<<BGparticles[i].eta()<<endl;        continue; }
 	  
@@ -191,7 +191,7 @@ int main ( int argc, const char** argv ) {         // funcions and cuts specifie
       else { cerr<<"Error in background estimation"<<endl; }
 
       rho = 0;
-      for ( int c=0; c<bChgBins; ++c ) {
+      for ( int c=0; c<nChgBins; ++c ) {
 	eastRho[c] = eastSum[c]/eastArea;
 	midRho[c] = midSum[c]/midArea;
 	westRho[c] = westSum[c]/westArea;
