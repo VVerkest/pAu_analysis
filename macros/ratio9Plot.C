@@ -28,14 +28,14 @@ void ratio9Plot(){
   
   gStyle->SetOptStat(0);
   TH1D *pRhoRatio[nPtBins][nEtaBins][nChgBins];
-  TH2D *sRhoRatio = new TH2D("sRhoRatio","", 3,-1.5,1.5, 10,0.86,0.98);
+  TH2D *sRhoRatio = new TH2D("sRhoRatio","", 3,-1.5,1.5, 10,0.85,1.1);
   sRhoRatio->GetXaxis()->SetLabelSize(0);
   sRhoRatio->GetYaxis()->SetLabelSize(0.06);
   sRhoRatio->GetYaxis()->SetNdivisions(12);
   
   TH2D *dijetRhoByEta[nPtBins][nEtaBins][nChgBins];
   TH2D *monojetRhoByEta[nPtBins][nEtaBins][nChgBins];
-  TH1D *hRhoRatio[nPtBins][nChgBins];
+  TH1D *hRhoRatio[nPtBins][nEtaBins][nChgBins];
   
   for ( int p=0; p<3; ++p ) {
     for ( int c=0; c<3; ++c ) {
@@ -47,7 +47,7 @@ void ratio9Plot(){
 	monojetRhoByEta[p][e][c] = (TH2D*)monojetFile->Get(name);
       
 	name = "hRhoRatio" + ptBinName[p] + etaBinName[e] + BackgroundChargeBias[c];
-	hRhoRatio[p][c] = new TH1D(name,"", 3,-1.5,1.5);
+	hRhoRatio[p][e][c] = new TH1D(name,"", 3,-1.5,1.5);
 
       }
     }
@@ -78,7 +78,7 @@ void ratio9Plot(){
 	  dijetRhoByEta[p][e][c]->GetXaxis()->SetRange(i,i);
 	  monojetRhoByEta[p][e][c]->GetXaxis()->SetRange(i,i);
 	  ratio = ( dijetRhoByEta[p][e][c]->GetMean(2) )/( monojetRhoByEta[p][e][c]->GetMean(2) );
-	  hRhoRatio[p][c]->SetBinContent( i, ratio );
+	  hRhoRatio[p][e][c]->SetBinContent( i, ratio );
 	  // cout << i << "        " << ratio << endl;
 	}
       }
@@ -97,26 +97,26 @@ void ratio9Plot(){
 	// dijetRhoByEta[p][e][c]->GetXaxis()->SetRange(i,i);
 	// monojetRhoByEta[p][e][c]->GetXaxis()->SetRange(i,i);
 	// ratio = ( dijetRhoByEta[p][e][c]->GetMean(2) )/( monojetRhoByEta[p][e][c]->GetMean(2) );
-	// hRhoRatio[p][c]->Fill( i, ratio );
+	// hRhoRatio[p][e][c]->Fill( i, ratio );
 	// cout << i << "        " << ratio << endl;
 
-	//hRhoRatio[p][c]->SetError( (const Double_t) stdev );
+	//hRhoRatio[p][e][c]->SetError( (const Double_t) stdev );
 	gPad->SetTickx();
 	gPad->SetTicky();
 	gPad->SetGridy();
-	// hRhoRatio[p][c]->SetLineColorAlpha(0,0.000001);
-	//hRhoRatio[p][c]->SetLineWidth(0);
-	hRhoRatio[p][c]->SetMarkerSize(2);
-	hRhoRatio[p][c]->SetMarkerStyle( marker[c] );
-	hRhoRatio[p][c]->SetMarkerColor( color[c] );
-	hRhoRatio[p][c]->GetXaxis()->SetLabelSize(0);
-	hRhoRatio[p][c]->GetYaxis()->SetLabelSize(0.06);
-	//hRhoRatio[p][c]->GetYaxis()->SetNdivisions(10);
+	// hRhoRatio[p][e][c]->SetLineColorAlpha(0,0.000001);
+	//hRhoRatio[p][e][c]->SetLineWidth(0);
+	hRhoRatio[p][e][c]->SetMarkerSize(2);
+	hRhoRatio[p][e][c]->SetMarkerStyle( marker[c] );
+	hRhoRatio[p][e][c]->SetMarkerColor( color[c] );
+	hRhoRatio[p][e][c]->GetXaxis()->SetLabelSize(0);
+	hRhoRatio[p][e][c]->GetYaxis()->SetLabelSize(0.06);
+	//hRhoRatio[p][e][c]->GetYaxis()->SetNdivisions(10);
 
 	int dir = 1+e+(3*p);
 	c0->cd(dir);
 
-	hRhoRatio[p][c]->Draw("PSAME");
+	hRhoRatio[p][e][c]->Draw("PSAME");
 
 
       }
