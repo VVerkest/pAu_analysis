@@ -135,7 +135,7 @@ void HTdijetPlot() {
     totalInt = hLeadEta[i]->Integral();
     midInt = hLeadEta[i]->Integral( 14, 26 );
     hLeadEta[i]->GetXaxis()->SetRangeUser( -0.3, 0.3 );
-    hLeadEta[i]->Scale( minInt/totalInt );
+    hLeadEta[i]->Scale( midInt/totalInt );
     hLeadEta[i]->GetXaxis()->SetRangeUser( 1, -1 );
     hLeadEta[i]->Scale( 1./hLeadEta[i]->Integral("WIDTH") );                     // NORMALIZE
     hLeadEta[i]->SetLineColor( color[i] );    hLeadEta[i]->SetMarkerStyle( marker[i] );    hLeadEta[i]->SetMarkerColor( color[i] );
