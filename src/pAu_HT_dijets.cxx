@@ -57,7 +57,7 @@ int main ( int argc, const char** argv ) {         // funcions and cuts specifie
   
   JetDefinition jet_def(antikt_algorithm, R);     //  JET DEFINITION
 
-  double Vz, chgRho, neuRho, rho, eastRho, midRho, westRho;
+  double Vz, chgRho, neuRho, rho, eastRho[nChgBins], midRho[nChgBins], westRho[nChgBins];
 
   int nTowers;
   int nEvents =0;
@@ -136,61 +136,74 @@ int main ( int argc, const char** argv ) {         // funcions and cuts specifie
     	}
     	if ( hasReco == true ) { continue; }  // exit loop with highest-pt jet in recoil range
       }
-	
+
     }
     else { continue; }
     if ( hasReco == false ) { continue; }
-	
+
+    double eastSum[nChgBins], midSum[nChgBins], westSum[nChgBins], nMidJets[nChgBins], nEastJets[nChgBins], nWestJets[nChgBins];
+    
     for ( int c=0; c<3; ++c ) {	  //  BACKGROUND ESTIMATION (lead and reco jet must be in same eta-range)
       BGparticles.clear();
-      double eastSum = 0;	  double midSum = 0;	  double westSum = 0;
-
+      eastSum[c] = 0;	   	   midSum[c] = 0;	   	   westSum[c] = 0;
+      eastRho[c] = 0;	   	   midRho[c] = 0;	   	   westRho[c] = 0;
+      nMidJets[c] = 0;	   	   nEastJets[c] = 0;	   	   nWestJets[c] = 0;
+      
       if ( BackgroundChargeBias[c]=="_chgBG" ) {      //  Gather background particles 
 	GatherChargedBG( leadJet, container, BGparticles);
 	for (int i=0; i<BGparticles.size(); ++i) {
-	  
-	  if ( BGparticles[i].eta() >=etaLo[0] && BGparticles[i].eta() <= etaHi[0]  ) { eastSum+=BGparticles[i].pt(); }
-	  else if ( BGparticles[i].eta() >=etaLo[1] && BGparticles[i].eta() <= etaHi[1]  ) { midSum+=BGparticles[i].pt(); }
-	  else if ( BGparticles[i].eta() >=etaLo[2] && BGparticles[i].eta() <= etaHi[2]  ) { westSum+=BGparticles[i].pt(); }
+	  hBackground[pval][eval][c]->Fill( BGparticles[i].pt(), BGparticles[i].phi(), BGparticles[i].eta() );
+
+	  if ( BGparticles[i].eta() >=etaLo[0] && BGparticles[i].eta() <= etaHi[0]  ) { eastSum[c]+=BGparticles[i].pt();          ++nEastJets[c]; }
+	  else if ( BGparticles[i].eta() >=etaLo[1] && BGparticles[i].eta() <= etaHi[1]  ) { midSum[c]+=BGparticles[i].pt();           ++MidJets[c]; }
+	  else if ( BGparticles[i].eta() >=etaLo[2] && BGparticles[i].eta() <= etaHi[2]  ) { westSum[c]+=BGparticles[i].pt();           ++nWeststJets[c]; }
 	  else { cout<<BGparticles[i].eta()<<endl;        continue; }
 	  
 	}
+	
       }
       else if ( BackgroundChargeBias[c]=="_neuBG" ) {
 	GatherNeutralBG( leadJet, container, BGparticles);
 	for (int i=0; i<BGparticles.size(); ++i) {
-	  
-	  if ( BGparticles[i].eta() >=etaLo[0] && BGparticles[i].eta() <= etaHi[0]  ) { eastSum+=BGparticles[i].pt(); }
-	  else if ( BGparticles[i].eta() >=etaLo[1] && BGparticles[i].eta() <= etaHi[1]  ) { midSum+=BGparticles[i].pt(); }
-	  else if ( BGparticles[i].eta() >=etaLo[2] && BGparticles[i].eta() <= etaHi[2]  ) { westSum+=BGparticles[i].pt(); }
+	  hBackground[pval][eval][c]->Fill( BGparticles[i].pt(), BGparticles[i].phi(), BGparticles[i].eta() );
+
+	  if ( BGparticles[i].eta() >=etaLo[0] && BGparticles[i].eta() <= etaHi[0]  ) { eastSum[c]+=BGparticles[i].pt();          ++nEastJets[c]; }
+	  else if ( BGparticles[i].eta() >=etaLo[1] && BGparticles[i].eta() <= etaHi[1]  ) { midSum[c]+=BGparticles[i].pt();           ++MidJets[c]; }
+	  else if ( BGparticles[i].eta() >=etaLo[2] && BGparticles[i].eta() <= etaHi[2]  ) { westSum[c]+=BGparticles[i].pt();           ++nWeststJets[c]; }
 	  else { cout<<BGparticles[i].eta()<<endl;        continue; }
 	  
 	}
+	
       }
       else if ( BackgroundChargeBias[c]=="_allBG" ) {
 	GatherBackground( leadJet, container, BGparticles);
 	for (int i=0; i<BGparticles.size(); ++i) {
-
 	  hBackground[pval][eval][c]->Fill( BGparticles[i].pt(), BGparticles[i].phi(), BGparticles[i].eta() );
 	  
-	  if ( BGparticles[i].eta() >=etaLo[0] && BGparticles[i].eta() <= etaHi[0]  ) { eastSum+=BGparticles[i].pt(); }
-	  else if ( BGparticles[i].eta() >=etaLo[1] && BGparticles[i].eta() <= etaHi[1]  ) { midSum+=BGparticles[i].pt(); }
-	  else if ( BGparticles[i].eta() >=etaLo[2] && BGparticles[i].eta() <= etaHi[2]  ) { westSum+=BGparticles[i].pt(); }
+	  if ( BGparticles[i].eta() >=etaLo[0] && BGparticles[i].eta() <= etaHi[0]  ) { eastSum[c]+=BGparticles[i].pt();          ++nEastJets[c]; }
+	  else if ( BGparticles[i].eta() >=etaLo[1] && BGparticles[i].eta() <= etaHi[1]  ) { midSum[c]+=BGparticles[i].pt();           ++MidJets[c]; }
+	  else if ( BGparticles[i].eta() >=etaLo[2] && BGparticles[i].eta() <= etaHi[2]  ) { westSum[c]+=BGparticles[i].pt();           ++nWeststJets[c]; }
 	  else { cout<<BGparticles[i].eta()<<endl;        continue; }
 	  
 	}
+	
       }
       else { cerr<<"Error in background estimation"<<endl; }
 
+      rho = 0;
+      for ( int c=0; c<bChgBins; ++c ) {
+	eastRho[c] = eastSum[c]/eastArea;
+	midRho[c] = midSum[c]/midArea;
+	westRho[c] = westSum[c]/westArea;
+	  
+	hRhoByEta[pval][eval][c]->Fill(-1.0, eastRho[c] );
+	hRhoByEta[pval][eval][c]->Fill( 0.0, midRho[c] );
+	hRhoByEta[pval][eval][c]->Fill( 1.0, westRho[c] );
+	rho += (eastSum[c] + midSum[c] + westSum[c])/AREA;
+      }
+
     } // ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ 
 
-      
-    eastRho = eastSum/eastArea;			midRho = midSum/midArea;			westRho = westSum/westArea;
-	  
-    hRhoByEta[pval][eval][c]->Fill(-1.0, eastRho );
-    hRhoByEta[pval][eval][c]->Fill( 0.0, midRho );
-    hRhoByEta[pval][eval][c]->Fill( 1.0, westRho );
-    rho = (eastSum + midSum + westSum)/AREA;
 
     TList *SelectedTowers = Reader.GetListOfSelectedTowers();		nTowers = CountTowers( SelectedTowers );		hTowersPerEvent->Fill(nTowers);
     hRho->Fill( rho );
@@ -214,7 +227,6 @@ int main ( int argc, const char** argv ) {         // funcions and cuts specifie
   for ( int p=0; p<3; ++p ) {
     for ( int e=0; e<3; ++e ) {
       for ( int c=0; c<3; ++c ) {
-	// hRhoByEta[p][e][c]->Scale(1.0/hRhoByEta[p][e][c]->Integral());
 	hRhoByEta[p][e][c]->Write();
 	hBackground[p][e][c]->Write();
       }
