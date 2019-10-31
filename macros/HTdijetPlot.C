@@ -137,7 +137,7 @@ void HTdijetPlot() {
     double binCont;
     for ( int j=14; j<27; ++j ){
       binCont = hLeadEta[i]->GetBinContent( j );
-      hLeadEta[i]->SetBinContent( binCont*(midInt/totalInt) );
+      hLeadEta[i]->SetBinContent( j, binCont*(midInt/totalInt) );
     }
     
     hLeadEta[i]->Scale( 1./hLeadEta[i]->Integral("WIDTH") );                     // NORMALIZE
