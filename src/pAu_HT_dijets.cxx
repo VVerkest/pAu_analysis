@@ -156,7 +156,7 @@ int main ( int argc, const char** argv ) {         // funcions and cuts specifie
 
 	  if ( BGparticles[i].eta() >=etaLo[0] && BGparticles[i].eta() <= etaHi[0]  ) { eastSum[c]+=BGparticles[i].pt();          ++nEastJets[c]; }
 	  else if ( BGparticles[i].eta() >=etaLo[1] && BGparticles[i].eta() <= etaHi[1]  ) { midSum[c]+=BGparticles[i].pt();           ++nMidJets[c]; }
-	  else if ( BGparticles[i].eta() >=etaLo[2] && BGparticles[i].eta() <= etaHi[2]  ) { westSum[c]+=BGparticles[i].pt();           ++nWeststJets[c]; }
+	  else if ( BGparticles[i].eta() >=etaLo[2] && BGparticles[i].eta() <= etaHi[2]  ) { westSum[c]+=BGparticles[i].pt();           ++nWestJets[c]; }
 	  else { cout<<BGparticles[i].eta()<<endl;        continue; }
 	  
 	}
@@ -169,7 +169,7 @@ int main ( int argc, const char** argv ) {         // funcions and cuts specifie
 
 	  if ( BGparticles[i].eta() >=etaLo[0] && BGparticles[i].eta() <= etaHi[0]  ) { eastSum[c]+=BGparticles[i].pt();          ++nEastJets[c]; }
 	  else if ( BGparticles[i].eta() >=etaLo[1] && BGparticles[i].eta() <= etaHi[1]  ) { midSum[c]+=BGparticles[i].pt();           ++nMidJets[c]; }
-	  else if ( BGparticles[i].eta() >=etaLo[2] && BGparticles[i].eta() <= etaHi[2]  ) { westSum[c]+=BGparticles[i].pt();           ++nWeststJets[c]; }
+	  else if ( BGparticles[i].eta() >=etaLo[2] && BGparticles[i].eta() <= etaHi[2]  ) { westSum[c]+=BGparticles[i].pt();           ++nWestJets[c]; }
 	  else { cout<<BGparticles[i].eta()<<endl;        continue; }
 	  
 	}
@@ -182,7 +182,7 @@ int main ( int argc, const char** argv ) {         // funcions and cuts specifie
 	  
 	  if ( BGparticles[i].eta() >=etaLo[0] && BGparticles[i].eta() <= etaHi[0]  ) { eastSum[c]+=BGparticles[i].pt();          ++nEastJets[c]; }
 	  else if ( BGparticles[i].eta() >=etaLo[1] && BGparticles[i].eta() <= etaHi[1]  ) { midSum[c]+=BGparticles[i].pt();           ++nMidJets[c]; }
-	  else if ( BGparticles[i].eta() >=etaLo[2] && BGparticles[i].eta() <= etaHi[2]  ) { westSum[c]+=BGparticles[i].pt();           ++nWeststJets[c]; }
+	  else if ( BGparticles[i].eta() >=etaLo[2] && BGparticles[i].eta() <= etaHi[2]  ) { westSum[c]+=BGparticles[i].pt();           ++nWestJets[c]; }
 	  else { cout<<BGparticles[i].eta()<<endl;        continue; }
 	  
 	}
