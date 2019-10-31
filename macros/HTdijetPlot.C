@@ -134,9 +134,12 @@ void HTdijetPlot() {
     //  scale -.3<eta<.3 by it's integral divided by the histogram integral
     totalInt = hLeadEta[i]->Integral();
     midInt = hLeadEta[i]->Integral( 14, 26 );
-    hLeadEta[i]->GetXaxis()->SetRangeUser( -0.3, 0.3 );
-    hLeadEta[i]->Scale( midInt/totalInt );
-    hLeadEta[i]->GetXaxis()->SetRangeUser( 1, -1 );
+    double binCont;
+    for ( int j=14; j<27; ++j ){
+      binCont = hLeadEta[i]->GetBinContent( j );
+      hLeadEta[i]->SetBinContent( binCont*(midInt/totalInt) );
+    }
+    
     hLeadEta[i]->Scale( 1./hLeadEta[i]->Integral("WIDTH") );                     // NORMALIZE
     hLeadEta[i]->SetLineColor( color[i] );    hLeadEta[i]->SetMarkerStyle( marker[i] );    hLeadEta[i]->SetMarkerColor( color[i] );
     hLeadEta[i]->Draw("SAME");                                                    // DRAW
