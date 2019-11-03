@@ -133,7 +133,7 @@ int main ( int argc, const char** argv ) {         // funcions and cuts specifie
     
     recoCandidates = sorted_by_pt( recoJetSelector( jetCluster.inclusive_jets() ) );     // EXTRACT SELECTED JETS
 
-    if ( bool monojet == false; ) {
+    if ( monojet == false ) {
     
       bool hasReco = false;
     
