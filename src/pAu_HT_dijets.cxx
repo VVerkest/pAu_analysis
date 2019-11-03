@@ -18,12 +18,21 @@ int main ( int argc, const char** argv ) {         // funcions and cuts specifie
   else if ( argc==1 ) { inFile="production_pAu200_2015/HT/pAu_2015_200_HT*.root"; outFile="out/HT/pAuJets.root"; number_of_events=-1; }
   else { cerr<< "incorrect number of command line arguments"; return -1; }
 
+  bool monojet = true;
+  // Sort by Event Activity per Dave's definitions (https://drupal.star.bnl.gov/STAR/system/files/QM2019_Stewart_10.pdf)
+  double BBCEmin = 0;        double BBCEmax = 100000;
+  bool HiEA = true;		if ( HiEA==true ){ BBCEmin = 38000;    BBCEmax = 100000; }
+  bool MidEA = false;	if ( MidEA==true ){ BBCEmin = 16000;    BBCEmax = 38000; }
+  bool LoEA = false;		if ( LoEA==true ){ BBCEmin = 8000;    BBCEmax = 16000; }
+  
   TH1::SetDefaultSumw2();  TH2::SetDefaultSumw2();  TH3::SetDefaultSumw2();
 
   TH1D *hPrimaryPerEvent = new TH1D("hPrimaryPerEvent","Primary Track Multiplicity (per event);# of Primary", 200,0,200 );
   TH1D *hTowersPerEvent = new TH1D("hTowersPerEvent","Tower Multiplicty;# of Towers", 200,0,200 );
   TH1D *hRecoAbsDeltaPhi = new TH1D("hRecoAbsDeltaPhi","|#phi_{lead} - #phi_{reco}|;|#Delta#phi|", 120,0.0,2*pi );
   TH1D *hRho = new TH1D("hRho","Underlying Event;#rho (GeV)",120,0,30);
+  TH1D *hLeadPhi = new TH1D("hLeadPhi","Lead Jet #phi;#phi_{lead}",12,0,2*pi);
+  TH1D *hRecoPhi = new TH1D("hRecoPhi","Reco Jet #phi;#phi_{lead}",12,0,2*pi);
   
   TH2D *hTowersVsRho = new TH2D("hTowersVsRho","# of Towers vs. UE;#rho (GeV);# of Towers", 100,0,25, 200,0,200 );
   TH2D *hRecoVsLeadPt = new TH2D("hRecoVsLeadPt","Recoil Jet p_{T} vs. Lead Jet p_{T};Lead Jet p_{T} (GeV);Reco Jet p_{T} (GeV)", 400,0.0,100.0, 400,0.0,100.0 );
@@ -85,6 +94,9 @@ int main ( int argc, const char** argv ) {         // funcions and cuts specifie
     
     Vz = header->GetPrimaryVertexZ();
     if ( UseEvent( header, event, vzCut, Vz ) == false ) { continue; }   //  Skip events based on: Run#, vz cut, BBCEastSum;    only accept HT Trigger events
+
+    double EA = header->GetBbcAdcSumEast();         // make selections on event activity
+    if ( EA<BBCEmin || EA>BBCEmax ) { continue; }
     
     GatherParticles( container, rawParticles );
     ClusterSequence jetCluster( rawParticles, jet_def );           //  CLUSTER ALL JETS
@@ -121,25 +133,31 @@ int main ( int argc, const char** argv ) {         // funcions and cuts specifie
     
     recoCandidates = sorted_by_pt( recoJetSelector( jetCluster.inclusive_jets() ) );     // EXTRACT SELECTED JETS
 
-    // bool hasReco = false;
+    if ( bool monojet == false; ) {
     
-    // if ( recoCandidates.size()>0 ) {
+      bool hasReco = false;
+    
+      if ( recoCandidates.size()>0 ) {
 
-    //   for ( int i=0; i<recoCandidates.size(); ++i ) {
-    // 	double deltaPhi_abs = fabs( recoCandidates[i].phi() - leadJet.phi() );
-    // 	if ( fabs( deltaPhi_abs - pi ) <= R ) {
-    // 	  recoJet = recoCandidates[i];
-    // 	  hRecoVsLeadPt->Fill( leadJet.pt(), recoJet.pt() );
-    // 	  hRecoAbsDeltaPhi->Fill( deltaPhi_abs );
-    // 	  hRecoVsLeadEta->Fill( leadJet.eta(), recoJet.eta() );
-    // 	  hasReco = true;
-    // 	}
-    // 	if ( hasReco == true ) { continue; }  // exit loop with highest-pt jet in recoil range
-    //   }
+	for ( int i=0; i<recoCandidates.size(); ++i ) {
+	  double deltaPhi_abs = fabs( recoCandidates[i].phi() - leadJet.phi() );
+	  if ( fabs( deltaPhi_abs - pi ) <= R ) {
+	    recoJet = recoCandidates[i];
+	    hRecoVsLeadPt->Fill( leadJet.pt(), recoJet.pt() );
+	    hRecoAbsDeltaPhi->Fill( deltaPhi_abs );
+	    hRecoVsLeadEta->Fill( leadJet.eta(), recoJet.eta() );
+	    hRecoPhi->Fill( recoJet.phi() );
 
-    // }
-    // else { continue; }
-    // if ( hasReco == false ) { continue; }
+	    hasReco = true;
+	  }
+	  if ( hasReco == true ) { continue; }  // exit loop with highest-pt jet in recoil range
+	}
+
+      }
+      else { continue; }
+      if ( hasReco == false ) { continue; }
+
+    }
 
     double eastSum[nChgBins], midSum[nChgBins], westSum[nChgBins], nMidJets[nChgBins], nEastJets[nChgBins], nWestJets[nChgBins];
     
@@ -214,6 +232,7 @@ int main ( int argc, const char** argv ) {         // funcions and cuts specifie
     hPt_UE_BBCE->Fill( leadJet.pt(), rho, header->GetBbcEastRate() );
     hPt_UE_BBCsumE->Fill( leadJet.pt(), rho, header->GetBbcAdcSumEast() );    
     hPrimaryPerEvent->Fill( header->GetNOfPrimaryTracks() );
+    hLeadPhi->Fill( leadJet.phi() );
 
     rawJets = sorted_by_pt( allJetSelector( jetCluster.inclusive_jets() ) );     // EXTRACT ALL JETS >2GeV
     for ( int i=0; i<rawJets.size(); ++i ) { hAllJetsPtEtaPhi->Fill( rawJets[i].pt(), rawJets[i].eta(), rawJets[i].phi() ); }
@@ -249,6 +268,8 @@ int main ( int argc, const char** argv ) {         // funcions and cuts specifie
   hPartPtEtaPhi->Write();
   hBG->Write();
   hRho->Write();
+  hLeadPhi->Write();
+  hRecoPhi->Write();
 
   pAuFile->Close();
 
