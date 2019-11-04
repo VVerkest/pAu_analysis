@@ -1,9 +1,9 @@
 
 void HTmonojet9Plot(){
 
-  TFile* inFile = new TFile( "out/HTdijets/MidEA/pAu_2015_HTmonojet.root", "READ" );
-  TString saveName = "plots/HTmonojet/MidEAmonojet9plot.pdf";
-  TString title = "Mid EA Jet Underlying Event";
+  TFile* inFile = new TFile( "out/HTdijets/LoEA/pAu_2015_HTmonojet.root", "READ" );
+  TString saveName = "plots/HTmonojet/LoEAmonojet9plot.pdf";
+  TString title = "Lo EA Jet Underlying Event";
   
   const int nPtBins = 3;
   const double ptLo[nPtBins] = { 10.0, 15.0, 20.0 };

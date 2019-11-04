@@ -1,9 +1,9 @@
 
 void HTdijet9Plot(){
 
-  TFile* inFile = new TFile( "out/HTdijets/MidEA/pAu_2015_HTdijets.root", "READ" );
-  TString saveName = "plots/HTdijets/MidEAdijet9plot.pdf";
-  TString title = "Mid EA Dijet Underlying Event";
+  TFile* inFile = new TFile( "out/HTdijets/LoEA/pAu_2015_HTdijets.root", "READ" );
+  TString saveName = "plots/HTdijets/LoEAdijet9plot.pdf";
+  TString title = "Lo EA Dijet Underlying Event";
   
   const int nPtBins = 3;
   const double ptLo[nPtBins] = { 10.0, 15.0, 20.0 };
