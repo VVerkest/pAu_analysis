@@ -5,10 +5,10 @@ void ratio9Plot(){
   
   gStyle->SetErrorX(0.0001);
 
-  TFile* File1 = new TFile( "out/HTdijets/LoEA/pAu_2015_HTdijets.root", "READ" );
-  TFile* File2 = new TFile( "out/HTdijets/LoEA/pAu_2015_HTjets.root", "READ" );
-  TString ratioTitle = "Low EA #rho_{dijet}/#rho_{jet}";
-  TString saveName = "plots/HTdijets/ratio9plot__LoEA.pdf";
+  TFile* File1 = new TFile( "out/HTdijets/HiEA/pAu_2015_HTdijets.root", "READ" );
+  TFile* File2 = new TFile( "out/HTdijets/HiEA/pAu_2015_HTjets.root", "READ" );
+  TString ratioTitle = "High EA #rho_{dijet}/#rho_{jet}";
+  TString saveName = "plots/HTdijets/ratio9plot__HiEA.pdf";
 
   // TFile* File1 = new TFile( "out/HTdijets/LoEA/pAu_2015_HTjets.root", "READ" );
   // TFile* File2 = new TFile( "out/HTdijets/HiEA/pAu_2015_HTjets.root", "READ" );
@@ -34,7 +34,7 @@ void ratio9Plot(){
   const int marker[nChgBins] = { 20, 20, 21 };
 
   TString name;
-
+  
   gStyle->SetOptStat(0);
   TH1D *pRhoRatio[nPtBins][nEtaBins][nChgBins];
   TH2D *sRhoRatio = new TH2D("sRhoRatio","", 3,-1.5,1.5, 10,0.7,1.3);
