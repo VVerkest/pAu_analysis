@@ -1,8 +1,9 @@
 
 void HTmonojet9Plot(){
 
-  TFile* inFile = new TFile( "out/HTdijets/pAu_2015_HTmonojet.root", "READ" );
-
+  TFile* inFile = new TFile( "out/HTdijets/HiEA/pAu_2015_HTmonojet.root", "READ" );
+  TString saveName = "plots/HTmonojet/HiEAmonojet9plot.pdf";
+  
   const int nPtBins = 3;
   const double ptLo[nPtBins] = { 10.0, 15.0, 20.0 };
   const double ptHi[nPtBins] = { 15.0, 20.0, 30.0 };
@@ -83,7 +84,7 @@ void HTmonojet9Plot(){
     }
   }
 
-  c0->SaveAs("plots/HTmonojet/monojet9plot.pdf","PDF");
+  c0->SaveAs( saveName,"PDF");
   
 }
 
