@@ -30,7 +30,7 @@ void ratio9Plot(){
   
   gStyle->SetOptStat(0);
   TH1D *pRhoRatio[nPtBins][nEtaBins][nChgBins];
-  TH2D *sRhoRatio = new TH2D("sRhoRatio","", 3,-1.5,1.5, 10,0.8,2.15);
+  TH2D *sRhoRatio = new TH2D("sRhoRatio","", 3,-1.5,1.5, 10,0.7,1.2);
   sRhoRatio->GetXaxis()->SetLabelSize(0);
   sRhoRatio->GetYaxis()->SetLabelSize(0.06);
   sRhoRatio->GetYaxis()->SetNdivisions(12);
@@ -82,7 +82,7 @@ void ratio9Plot(){
 	  file2RhoByEta[p][e][c]->GetXaxis()->SetRange(i,i);
 	  ratio = ( file1RhoByEta[p][e][c]->GetMean(2) )/( file2RhoByEta[p][e][c]->GetMean(2) );
 	  hRhoRatio[p][e][c]->SetBinContent( i, ratio );
-	  cout << i << "        " << ratio << endl;
+	  //cout << i << "        " << ratio << endl;
 	}
       }
     }
