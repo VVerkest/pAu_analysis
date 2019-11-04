@@ -3,10 +3,10 @@ void ratio9Plot(){
 
   TH1::SetDefaultSumw2();  TH2::SetDefaultSumw2();  TH3::SetDefaultSumw2();
   
-  TFile* File1 = new TFile( "out/HTdijets/pAu_2015_HTdijets.root", "READ" );
-  TFile* File2 = new TFile( "out/HTdijets/pAu_2015_HTmonojet.root", "READ" );
-  TString ratioTitle = "#rho_{dijet}/#rho_{jet}";
-  TString saveName = "plots/HTdijets/ratio9plot.pdf";
+  TFile* File1 = new TFile( "out/HTdijets/HiEA/pAu_2015_HTdijets.root", "READ" );
+  TFile* File2 = new TFile( "out/HTdijets/HiEA/pAu_2015_HTmonojet.root", "READ" );
+  TString ratioTitle = "High EA #rho_{dijet}/#rho_{jet}";
+  TString saveName = "plots/HTdijets/ratio9plot__HiLoEA_dijet.pdf";
   
   const int nPtBins = 3;
   const double ptLo[nPtBins] = { 10.0, 15.0, 20.0 };
@@ -30,7 +30,7 @@ void ratio9Plot(){
   
   gStyle->SetOptStat(0);
   TH1D *pRhoRatio[nPtBins][nEtaBins][nChgBins];
-  TH2D *sRhoRatio = new TH2D("sRhoRatio","", 3,-1.5,1.5, 10,0.75,2.25);
+  TH2D *sRhoRatio = new TH2D("sRhoRatio","", 3,-1.5,1.5, 10,0.8,2.15);
   sRhoRatio->GetXaxis()->SetLabelSize(0);
   sRhoRatio->GetYaxis()->SetLabelSize(0.06);
   sRhoRatio->GetYaxis()->SetNdivisions(12);
