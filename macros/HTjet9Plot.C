@@ -1,9 +1,13 @@
 
 void HTjet9Plot(){
 
-  TFile* inFile = new TFile( "out/HTdijets/MidEA/pAu_2015_HTmonojet.root", "READ" );
-  TString saveName = "plots/HTmonojet/MidEAmonojet9plot.pdf";
-  TString title = "Mid EA Jet Underlying Event";
+  TH1::SetDefaultSumw2();  TH2::SetDefaultSumw2();  TH3::SetDefaultSumw2();
+
+  gStyle->SetErrorX(0.0001);
+  
+  TFile* inFile = new TFile( "out/HTdijets/HiEA/pAu_2015_HTjets.root", "READ" );
+  TString saveName = "plots/HTjets/HiEAjet9plot.pdf";
+  TString title = "High EA Jet Underlying Event";
   
   const int nPtBins = 3;
   const double ptLo[nPtBins] = { 10.0, 15.0, 20.0 };
@@ -72,7 +76,7 @@ void HTjet9Plot(){
 	gPad->SetTicky();
 	gPad->SetGridy();
 	// pRhoByEta[p][e][c]->SetLineColorAlpha(0,0.000001);
-	pRhoByEta[p][e][c]->SetLineWidth(0);
+	//pRhoByEta[p][e][c]->SetLineWidth(0);
 	pRhoByEta[p][e][c]->SetMarkerSize(2);
 	pRhoByEta[p][e][c]->SetMarkerStyle( marker[c] );
 	pRhoByEta[p][e][c]->GetXaxis()->SetLabelSize(0);
@@ -91,7 +95,7 @@ void HTjet9Plot(){
 
 /*
 
-void CanvasPartition(TCanvas *C,const Int_t Nx = 2,const Int_t Ny = 2, Float_t lMargin = 0.15, Float_t rMargin = 0.05, Float_t bMargin = 0.15, Float_t tMargin = 0.05) {
+  void CanvasPartition(TCanvas *C,const Int_t Nx = 2,const Int_t Ny = 2, Float_t lMargin = 0.15, Float_t rMargin = 0.05, Float_t bMargin = 0.15, Float_t tMargin = 0.05) {
   if (!C) return;
 
   // Setup Pad layout:
@@ -106,66 +110,66 @@ void CanvasPartition(TCanvas *C,const Int_t Nx = 2,const Int_t Ny = 2, Float_t l
 
   for (Int_t i=0;i<Nx;i++) {
 
-    if (i==0) {
-      hposl = 0.0;
-      hposr = lMargin + hStep;
-      hfactor = hposr-hposl;
-      hmarl = lMargin / hfactor;
-      hmarr = 0.0;
-    } else if (i == Nx-1) {
-      hposl = hposr + hSpacing;
-      hposr = hposl + hStep + rMargin;
-      hfactor = hposr-hposl;
-      hmarl = 0.0;
-      hmarr = rMargin / (hposr-hposl);
-    } else {
-      hposl = hposr + hSpacing;
-      hposr = hposl + hStep;
-      hfactor = hposr-hposl;
-      hmarl = 0.0;
-      hmarr = 0.0;
-    }
-
-    for (Int_t j=0;j<Ny;j++) {
-
-      if (j==0) {
-	vposd = 0.0;
-	vposu = bMargin + vStep;
-	vfactor = vposu-vposd;
-	vmard = bMargin / vfactor;
-	vmaru = 0.0;
-      } else if (j == Ny-1) {
-	vposd = vposu + vSpacing;
-	vposu = vposd + vStep + tMargin;
-	vfactor = vposu-vposd;
-	vmard = 0.0;
-	vmaru = tMargin / (vposu-vposd);
-      } else {
-	vposd = vposu + vSpacing;
-	vposu = vposd + vStep;
-	vfactor = vposu-vposd;
-	vmard = 0.0;
-	vmaru = 0.0;
-      }
-
-      C->cd(0);
-
-      char name[16];
-      sprintf(name,"pad_%i_%i",i,j);
-      TPad *pad = (TPad*) gROOT->FindObject(name);
-      if (pad) delete pad;
-      pad = new TPad(name,"",hposl,vposd,hposr,vposu);
-      pad->SetLeftMargin(hmarl);
-      pad->SetRightMargin(hmarr);
-      pad->SetBottomMargin(vmard);
-      pad->SetTopMargin(vmaru);
-
-      pad->SetFrameBorderMode(0);
-      pad->SetBorderMode(0);
-      pad->SetBorderSize(0);
-
-      pad->Draw();
-    }
+  if (i==0) {
+  hposl = 0.0;
+  hposr = lMargin + hStep;
+  hfactor = hposr-hposl;
+  hmarl = lMargin / hfactor;
+  hmarr = 0.0;
+  } else if (i == Nx-1) {
+  hposl = hposr + hSpacing;
+  hposr = hposl + hStep + rMargin;
+  hfactor = hposr-hposl;
+  hmarl = 0.0;
+  hmarr = rMargin / (hposr-hposl);
+  } else {
+  hposl = hposr + hSpacing;
+  hposr = hposl + hStep;
+  hfactor = hposr-hposl;
+  hmarl = 0.0;
+  hmarr = 0.0;
   }
-}
+
+  for (Int_t j=0;j<Ny;j++) {
+
+  if (j==0) {
+  vposd = 0.0;
+  vposu = bMargin + vStep;
+  vfactor = vposu-vposd;
+  vmard = bMargin / vfactor;
+  vmaru = 0.0;
+  } else if (j == Ny-1) {
+  vposd = vposu + vSpacing;
+  vposu = vposd + vStep + tMargin;
+  vfactor = vposu-vposd;
+  vmard = 0.0;
+  vmaru = tMargin / (vposu-vposd);
+  } else {
+  vposd = vposu + vSpacing;
+  vposu = vposd + vStep;
+  vfactor = vposu-vposd;
+  vmard = 0.0;
+  vmaru = 0.0;
+  }
+
+  C->cd(0);
+
+  char name[16];
+  sprintf(name,"pad_%i_%i",i,j);
+  TPad *pad = (TPad*) gROOT->FindObject(name);
+  if (pad) delete pad;
+  pad = new TPad(name,"",hposl,vposd,hposr,vposu);
+  pad->SetLeftMargin(hmarl);
+  pad->SetRightMargin(hmarr);
+  pad->SetBottomMargin(vmard);
+  pad->SetTopMargin(vmaru);
+
+  pad->SetFrameBorderMode(0);
+  pad->SetBorderMode(0);
+  pad->SetBorderSize(0);
+
+  pad->Draw();
+  }
+  }
+  }
 */

@@ -3,6 +3,8 @@ void ratio9Plot(){
 
   TH1::SetDefaultSumw2();  TH2::SetDefaultSumw2();  TH3::SetDefaultSumw2();
   
+  gStyle->SetErrorX(0.0001);
+
   TFile* File1 = new TFile( "out/HTdijets/LoEA/pAu_2015_HTdijets.root", "READ" );
   TFile* File2 = new TFile( "out/HTdijets/LoEA/pAu_2015_HTmonojet.root", "READ" );
   TString ratioTitle = "Low EA #rho_{dijet}/#rho_{jet}";
@@ -62,7 +64,7 @@ void ratio9Plot(){
   // cTitle->AddText("#rho_{dijet}/#rho_{jet}");
   cTitle->AddText( ratioTitle );
   cTitle->SetFillStyle(0);
-  cTitle->SetLineWidth(0);
+  //cTitle->SetLineWidth(0);
   cTitle->SetTextAlign(21);
   cTitle->Draw();
     
