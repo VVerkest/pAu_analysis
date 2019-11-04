@@ -47,40 +47,6 @@ void HTdijetPlot() {
 
   TH2D *hLeadPtVsRho = (TH2D*)hPt_UE_BBCE->Project3D("XY");
   hLeadPtVsRho->GetYaxis()->SetRangeUser(0.0,10.0);
-
-  // hPrimaryVsRho->GetXaxis()->SetRangeUser(0.0,10.0);
-  // hPrimaryVsRho->GetYaxis()->SetRangeUser(0.0,125.0);
-  // hPrimaryVsGlobal->GetXaxis()->SetRangeUser(0.0,2000.0);
-  // hPrimaryVsGlobal->GetYaxis()->SetRangeUser(0.0,80.0);
-  // hChgVsNeuBG->GetXaxis()->SetRangeUser(0.0,10.0);
-  // hChgVsNeuBG->GetYaxis()->SetRangeUser(0.0,10.0);
-  // hGlobalVsRho->GetXaxis()->SetRangeUser(0.0,10.0);
-  // hnPrimaryVSnTowers->GetXaxis()->SetRangeUser(0.0,100.0);
-  // hnPrimaryVSnTowers->GetYaxis()->SetRangeUser(0.0,100.0);
-  //hTowersVsBBCsumE->GetYaxis->
-  
-  // TH2D *hChgVsNeuBG = (TH2D*) inFile->Get("hChgVsNeuBG");				hChgVsNeuBG->Scale(1.0/hChgVsNeuBG->Integral("WIDTH"));
-  // TH2D *hTowersPerRun = (TH2D*) inFile->Get("hTowersPerRun");	       		hTowersPerRun->Scale(1.0/hTowersPerRun->Integral("WIDTH"));
-  // TH2D *hPrimaryPerRun = (TH2D*) inFile->Get("hPrimaryPerRun");		       	hPrimaryPerRun->Scale(1.0/hPrimaryPerRun->Integral("WIDTH"));
-  // TH2D *hnPrimaryVSnTowers = (TH2D*) inFile->Get("hnPrimaryVSnTowers");	hnPrimaryVSnTowers->Scale(1.0/hnPrimaryVSnTowers->Integral("WIDTH"));
-  // TH2D *hPrimaryVsBBC = (TH2D*) inFile->Get("hPrimaryVsBBC");				hPrimaryVsBBC->Scale(1.0/hPrimaryVsBBC->Integral("WIDTH"));
-  // TH2D *hPrimaryVsGlobal = (TH2D*) inFile->Get("hPrimaryVsGlobal");		       	hPrimaryVsGlobal->Scale(1.0/hPrimaryVsGlobal->Integral("WIDTH"));
-  // TH2D *hGlobalVsBBC = (TH2D*) inFile->Get("hGlobalVsBBC");				hGlobalVsBBC->Scale(1.0/hGlobalVsBBC->Integral("WIDTH"));
-  // TH2D *hPrimaryVsBBCE = (TH2D*) inFile->Get("hPrimaryVsBBCE");			hPrimaryVsBBCE->Scale(1.0/hPrimaryVsBBCE->Integral("WIDTH"));
-  // TH2D *hGlobalVsBBCE = (TH2D*) inFile->Get("hGlobalVsBBCE");				hGlobalVsBBCE->Scale(1.0/hGlobalVsBBCE->Integral("WIDTH"));
-  // TH2D *hPrimaryVsBBCsumE = (TH2D*) inFile->Get("hPrimaryVsBBCsumE");		hPrimaryVsBBCsumE->Scale(1.0/hPrimaryVsBBCsumE->Integral("WIDTH"));
-  // TH2D *hTowersVsBBCsumE = (TH2D*) inFile->Get("hTowersVsBBCsumE");		hTowersVsBBCsumE->Scale(1.0/hTowersVsBBCsumE->Integral("WIDTH"));
-  // TH2D *hPrimaryVsRho = (TH2D*) inFile->Get("hPrimaryVsRho");				hPrimaryVsRho->Scale(1.0/hPrimaryVsRho->Integral("WIDTH"));
-  // TH2D *hGlobalVsRho = (TH2D*) inFile->Get("hGlobalVsRho");				hGlobalVsRho->Scale(1.0/hGlobalVsRho->Integral("WIDTH"));
-  // TH2D *hLeadPtVsRho = (TH2D*) inFile->Get("hLeadPtVsRho");
-  // TH3D *hBG = (TH3D*) inFile->Get("hBG");
-  // TH3D *hPt_UE_RefMult = (TH3D*) inFile->Get("hPt_UE_RefMult");
-  // TH3D *hAllJetsPtRhoEta = (TH3D*) inFile->Get("hAllJetsPtRhoEta");
-  // TH3D *hPartPtEtaPhi = (TH3D*) inFile->Get("hPartPtEtaPhi");
-  // TH3D *hAllPtEtaPhi = (TH3D*) inFile->Get("hAllPtEtaPhi");
-  // TH3D *hPartPtDEtaDPhi = (TH3D*) inFile->Get("hPartPtDEtaDPhi");
-  // TH3D *hVertex = (TH3D*) inFile->Get("hVertex");
-  // TH3D *hSubPtEtaPhi = (TH3D*) inFile->Get("hSubPtEtaPhi");
   
   // const int nPtBins = 4;
   // double LeadPtBinLo[nPtBins] = { 10.0, 15.0, 20.0, 30.0 };
@@ -94,7 +60,7 @@ void HTdijetPlot() {
   // int color[nPtBins] = { 879, 856, 796, 896 };
   // int marker[nPtBins] = { 33, 22, 21, 20 };
 
-  const int nPtBins = 3;;
+  const int nPtBins = 3;
   double LeadPtBinLo[nPtBins] = { 10.0, 15.0, 20.0 };
   double LeadPtBinHi[nPtBins] = { 15.0, 20.0, 30.0 };
   TString LeadPtBinString[nPtBins] = { "10-15 GeV", "15-20 GeV",  "20-30 GeV" };
@@ -129,17 +95,9 @@ void HTdijetPlot() {
     hLeadEta[i]->SetNameTitle(name,title);
     hLeadEta[i]->SetStats(0);
 
-    double totalInt, midInt;
-    
-    //  scale -.3<eta<.3 by it's integral divided by the histogram integral
-    totalInt = hLeadEta[i]->Integral();
-    midInt = hLeadEta[i]->Integral( 15, 26 );
-    double binCont;
-    for ( int j=15; j<27; ++j ){
-      binCont = hLeadEta[i]->GetBinContent( j );
-      // hLeadEta[i]->SetBinContent( j, binCont*(midInt/totalInt) );
-      hLeadEta[i]->SetBinContent( j, binCont/2 );
-    }
+    for (int j=1;j<15;++j){double val=hLeadEta[i]->GetBinContent(j); hLeadEta[i]->SetBinContent(j,val/0.3);}
+    for (int j=15;j<27;++j){double val=hLeadEta[i]->GetBinContent(j); hLeadEta[i]->SetBinContent(j,val/0.6);}
+    for (int j=27;j<40;++j){double val=hLeadEta[i]->GetBinContent(j); hLeadEta[i]->SetBinContent(j,val/0.3);}    
     
     hLeadEta[i]->Scale( 1./hLeadEta[i]->Integral("WIDTH") );                     // NORMALIZE
     hLeadEta[i]->SetLineColor( color[i] );    hLeadEta[i]->SetMarkerStyle( marker[i] );    hLeadEta[i]->SetMarkerColor( color[i] );
@@ -190,7 +148,6 @@ void HTdijetPlot() {
   // name = "plots/" + path + "SubEtaDist.pdf";
   // c0->SaveAs( name , "PDF");
   
-  // hSubPtEtaPhi->GetXaxis()->SetRangeUser(0.0,100.0);
   
   c0->SetLogy();
   
