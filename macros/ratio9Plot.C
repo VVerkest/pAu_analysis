@@ -12,7 +12,7 @@ void ratio9Plot(){
 
   TFile* File1 = new TFile( "out/HTdijets/LoEA/pAu_2015_HTjets.root", "READ" );
   TFile* File2 = new TFile( "out/HTdijets/HiEA/pAu_2015_HTjets.root", "READ" );
-  TString ratioTitle = "#rho_{jet}^{lo EA} #div #rho_{jet}^{hi EA}";
+  TString ratioTitle = "#rho_{jet}^{lo EA} / #rho_{jet}^{hi EA}";
   TString saveName = "plots/HTdijets/ratio9plot__jetLoHiEA.pdf";
   
   const int nPtBins = 3;
