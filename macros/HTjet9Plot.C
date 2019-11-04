@@ -6,7 +6,7 @@ void HTjet9Plot(){
   gStyle->SetErrorX(0.0001);
   
   TFile* inFile = new TFile( "out/HTdijets/LoEA/pAu_2015_HTjets.root", "READ" );
-  TString saveName = "plots/HTjets/LoEAjet9plot.pdf";
+  TString saveName = "plots/HTdijets/LoEAjet9plot.pdf";
   TString title = "Low EA Jet Underlying Event";
   
   const int nPtBins = 3;
