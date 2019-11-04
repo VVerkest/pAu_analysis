@@ -1,7 +1,7 @@
 //  HTmonojetPlot.C
 //  Veronica Verkest		July 14, 2019
 
-void HTmonojetPlot() {
+void HTjetPlot() {
 
   TH1::SetDefaultSumw2();  TH2::SetDefaultSumw2();  TH3::SetDefaultSumw2();
 

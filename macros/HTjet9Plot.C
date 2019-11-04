@@ -1,5 +1,5 @@
 
-void HTmonojet9Plot(){
+void HTjet9Plot(){
 
   TFile* inFile = new TFile( "out/HTdijets/MidEA/pAu_2015_HTmonojet.root", "READ" );
   TString saveName = "plots/HTmonojet/MidEAmonojet9plot.pdf";
