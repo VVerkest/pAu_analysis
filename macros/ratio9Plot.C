@@ -44,8 +44,8 @@ void ratio9Plot(){
       for ( int e=0; e<3; ++e ) {
 
 	name = "hRho" + ptBinName[p] + etaBinName[e] + BackgroundChargeBias[c];
-	file1RhoByEta[p][e][c] = (TH2D*)dijetFile->Get(name);
-	file2RhoByEta[p][e][c] = (TH2D*)monojetFile->Get(name);
+	file1RhoByEta[p][e][c] = (TH2D*)File1->Get(name);
+	file2RhoByEta[p][e][c] = (TH2D*)File2->Get(name);
       
 	name = "hRhoRatio" + ptBinName[p] + etaBinName[e] + BackgroundChargeBias[c];
 	hRhoRatio[p][e][c] = new TH1D(name,"", 3,-1.5,1.5);
