@@ -5,15 +5,15 @@ void ratio9Plot(){
   
   gStyle->SetErrorX(0.0001);
 
-  // TFile* File1 = new TFile( "out/HTdijets/LoEA/pAu_2015_HTdijets.root", "READ" );
-  // TFile* File2 = new TFile( "out/HTdijets/LoEA/pAu_2015_HTjets.root", "READ" );
-  // TString ratioTitle = "Low EA #rho_{dijet}/#rho_{jet}";
-  // TString saveName = "plots/HTdijets/ratio9plot__LoEA.pdf";
+  TFile* File1 = new TFile( "out/HTdijets/LoEA/pAu_2015_HTdijets.root", "READ" );
+  TFile* File2 = new TFile( "out/HTdijets/LoEA/pAu_2015_HTjets.root", "READ" );
+  TString ratioTitle = "Low EA #rho_{dijet}/#rho_{jet}";
+  TString saveName = "plots/HTdijets/ratio9plot__LoEA.pdf";
 
-  TFile* File1 = new TFile( "out/HTdijets/LoEA/pAu_2015_HTjets.root", "READ" );
-  TFile* File2 = new TFile( "out/HTdijets/HiEA/pAu_2015_HTjets.root", "READ" );
-  TString ratioTitle = "#rho_{jet}^{lo EA} / #rho_{jet}^{hi EA}";
-  TString saveName = "plots/HTdijets/ratio9plot__jetLoHiEA.pdf";
+  // TFile* File1 = new TFile( "out/HTdijets/LoEA/pAu_2015_HTjets.root", "READ" );
+  // TFile* File2 = new TFile( "out/HTdijets/HiEA/pAu_2015_HTjets.root", "READ" );
+  // TString ratioTitle = "#rho_{jet}^{lo EA} / #rho_{jet}^{hi EA}";
+  // TString saveName = "plots/HTdijets/ratio9plot__jetLoHiEA.pdf";
   
   const int nPtBins = 3;
   const double ptLo[nPtBins] = { 10.0, 15.0, 20.0 };
