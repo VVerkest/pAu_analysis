@@ -79,6 +79,7 @@ void HTdijet9Plot(){
 	// pRhoByEta[p][e][c]->SetLineWidth(0);
 	pRhoByEta[p][e][c]->SetMarkerSize(2);
 	pRhoByEta[p][e][c]->SetMarkerStyle( marker[c] );
+	pRhoRatio[p][e][c]->SetLineColor( color[c] );
 	pRhoByEta[p][e][c]->GetXaxis()->SetLabelSize(0);
 	pRhoByEta[p][e][c]->GetYaxis()->SetLabelSize(0.06);
 	pRhoByEta[p][e][c]->GetYaxis()->SetNdivisions(10);

@@ -124,6 +124,7 @@ void ratio9Plot(){
 	hRhoRatio[p][e][c]->SetMarkerSize(2);
 	hRhoRatio[p][e][c]->SetMarkerStyle( marker[c] );
 	hRhoRatio[p][e][c]->SetMarkerColor( color[c] );
+	hRhoRatio[p][e][c]->SetLineColor( color[c] );
 	hRhoRatio[p][e][c]->GetXaxis()->SetLabelSize(0);
 	hRhoRatio[p][e][c]->GetYaxis()->SetLabelSize(0.06);
 	//hRhoRatio[p][e][c]->GetYaxis()->SetNdivisions(10);
