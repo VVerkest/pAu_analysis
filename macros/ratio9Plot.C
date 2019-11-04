@@ -12,7 +12,7 @@ void ratio9Plot(){
 
   TFile* File1 = new TFile( "out/HTdijets/LoEA/pAu_2015_HTjets.root", "READ" );
   TFile* File2 = new TFile( "out/HTdijets/HiEA/pAu_2015_HTjets.root", "READ" );
-  TString ratioTitle = "#rho_{jet}^{lo EA}/#rho_{jet}^{hi EA}";
+  TString ratioTitle = "#rho_{jet}^{lo EA} #div #rho_{jet}^{hi EA}";
   TString saveName = "plots/HTdijets/ratio9plot__jetLoHiEA.pdf";
   
   const int nPtBins = 3;
@@ -37,7 +37,7 @@ void ratio9Plot(){
   
   gStyle->SetOptStat(0);
   TH1D *pRhoRatio[nPtBins][nEtaBins][nChgBins];
-  TH2D *sRhoRatio = new TH2D("sRhoRatio","", 3,-1.5,1.5, 10,0,1.0);
+  TH2D *sRhoRatio = new TH2D("sRhoRatio","", 3,-1.5,1.5, 10,0.4,1.0);
   sRhoRatio->GetXaxis()->SetLabelSize(0);
   sRhoRatio->GetYaxis()->SetLabelSize(0.06);
   sRhoRatio->GetYaxis()->SetNdivisions(12);
