@@ -30,7 +30,7 @@ void ratio9Plot(){
   
   gStyle->SetOptStat(0);
   TH1D *pRhoRatio[nPtBins][nEtaBins][nChgBins];
-  TH2D *sRhoRatio = new TH2D("sRhoRatio","", 3,-1.5,1.5, 10,1.2,2.2);
+  TH2D *sRhoRatio = new TH2D("sRhoRatio","", 3,-1.5,1.5, 10,1.15,2.15);
   sRhoRatio->GetXaxis()->SetLabelSize(0);
   sRhoRatio->GetYaxis()->SetLabelSize(0.06);
   sRhoRatio->GetYaxis()->SetNdivisions(12);
