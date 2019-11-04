@@ -93,7 +93,8 @@ void ratio9Plot(){
 	  var2 = (file2RhoByEta[p][e][c]->GetMeanError(2))*(file2RhoByEta[p][e][c]->GetMeanError(2));
 	  error = sqrt( var1 + var2 );
 	  hRhoRatio[p][e][c]->SetBinError( i, ratio );
-	  //cout << i << "        " << ratio << endl;
+	  cout << i << "        " << ratio << endl;
+	  cout << i << "        " << error << endl;
 	}
       }
     }
