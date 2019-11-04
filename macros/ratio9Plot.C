@@ -3,10 +3,10 @@ void ratio9Plot(){
 
   TH1::SetDefaultSumw2();  TH2::SetDefaultSumw2();  TH3::SetDefaultSumw2();
   
-  TFile* File1 = new TFile( "out/HTdijets/HiEA/pAu_2015_HTdijet.root", "READ" );
-  TFile* File2 = new TFile( "out/HTdijets/LoEA/pAu_2015_HTdijet.root", "READ" );
-  TString ratioTitle = "#rho_{dijet}^{hi EA}/#rho_{dijet}^{lo EA}";
-  TString saveName = "plots/HTdijets/ratio9plot__HiLoEA_dijet.pdf";
+  TFile* File1 = new TFile( "out/HTdijets/pAu_2015_HTdijets.root", "READ" );
+  TFile* File2 = new TFile( "out/HTdijets/pAu_2015_HTmonojet.root", "READ" );
+  TString ratioTitle = "#rho_{dijet}/#rho_{jet}";
+  TString saveName = "plots/HTdijets/ratio9plot.pdf";
   
   const int nPtBins = 3;
   const double ptLo[nPtBins] = { 10.0, 15.0, 20.0 };
