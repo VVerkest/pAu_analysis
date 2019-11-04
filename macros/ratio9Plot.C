@@ -34,7 +34,7 @@ void ratio9Plot(){
   const int marker[nChgBins] = { 20, 20, 21 };
 
   TString name;
-  
+
   gStyle->SetOptStat(0);
   TH1D *pRhoRatio[nPtBins][nEtaBins][nChgBins];
   TH2D *sRhoRatio = new TH2D("sRhoRatio","", 3,-1.5,1.5, 10,0.7,1.3);
