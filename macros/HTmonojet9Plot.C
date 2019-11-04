@@ -3,6 +3,7 @@ void HTmonojet9Plot(){
 
   TFile* inFile = new TFile( "out/HTdijets/HiEA/pAu_2015_HTmonojet.root", "READ" );
   TString saveName = "plots/HTmonojet/HiEAmonojet9plot.pdf";
+  TString title = "Hi EA Jet Underlying Event";
   
   const int nPtBins = 3;
   const double ptLo[nPtBins] = { 10.0, 15.0, 20.0 };
@@ -24,7 +25,7 @@ void HTmonojet9Plot(){
 
   gStyle->SetOptStat(0);
   TH2D *hRhoByEta[nPtBins][nEtaBins][nChgBins];
-  TH2D *sRhoByEta = new TH2D("sRhoByEta","", 3,-1.5,1.5, 10,0.2,1.2);
+  TH2D *sRhoByEta = new TH2D("sRhoByEta","", 3,-1.5,1.5, 10,0.2,1.5);
   sRhoByEta->GetXaxis()->SetLabelSize(0);
   sRhoByEta->GetYaxis()->SetLabelSize(0.06);
   sRhoByEta->GetYaxis()->SetNdivisions(12);
@@ -45,7 +46,7 @@ void HTmonojet9Plot(){
   TCanvas * c0 = new TCanvas( "c0" , "" ,0 ,23 ,1280 ,700 );
   c0->SetTopMargin(0.4);
   TPaveText *cTitle = new TPaveText(0.345843,.881306,0.655712,.980712,"NB");
-  cTitle->AddText("Underlying Event");
+  cTitle->AddText( title );
   cTitle->SetFillStyle(0);
   cTitle->SetLineWidth(0);
   cTitle->SetTextAlign(21);
