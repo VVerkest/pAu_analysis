@@ -18,7 +18,7 @@ int main ( int argc, const char** argv ) {         // funcions and cuts specifie
   else if ( argc==1 ) { inFile="production_pAu200_2015/HT/pAu_2015_200_HT*.root"; outFile="out/HT/pAuJets.root"; number_of_events=-1; }
   else { cerr<< "incorrect number of command line arguments"; return -1; }
 
-  bool monojet = false;
+  bool dijet = false;
   // Sort by Event Activity per Dave's definitions (https://drupal.star.bnl.gov/STAR/system/files/QM2019_Stewart_10.pdf)
   double BBCEmin = 0;        double BBCEmax = 100000;
   bool HiEA = false;		if ( HiEA==true ){ BBCEmin = 38000;    BBCEmax = 100000; }
@@ -49,8 +49,14 @@ int main ( int argc, const char** argv ) {         // funcions and cuts specifie
 
   TH3D *hBackground[nPtBins][nEtaBins][nChgBins];
   TH2D *hRhoByEta[nPtBins][nEtaBins][nChgBins];
+  TH1D *hBbcAdcEastSum[nEtaBins];
 
   for ( int p=0; p<3; ++p ) {
+
+    name = "hBBCEsum" + etaBinName[p];
+    title = "BBC ADC East Sum: " + etaBinString[p];
+    hBbcAdcEastSum[p] = new TH1D( name, title, 160,0,80000 );
+    
     for ( int e=0; e<3; ++e ) {
       for ( int c=0; c<3; ++c ) {
 	name = "hRho" + ptBinName[p] + etaBinName[e] + BackgroundChargeBias[c];	title = "";		hRhoByEta[p][e][c] = new TH2D( name, title, 3,-1.5,1.5, 100,0,25 );
@@ -133,7 +139,7 @@ int main ( int argc, const char** argv ) {         // funcions and cuts specifie
     
     recoCandidates = sorted_by_pt( recoJetSelector( jetCluster.inclusive_jets() ) );     // EXTRACT SELECTED JETS
 
-    if ( monojet == false ) {
+    if ( dijet == true ) {
     
       bool hasReco = false;
     
@@ -158,7 +164,7 @@ int main ( int argc, const char** argv ) {         // funcions and cuts specifie
       if ( hasReco == false ) { continue; }
 
     }
-
+    
     double eastSum[nChgBins], midSum[nChgBins], westSum[nChgBins], nMidJets[nChgBins], nEastJets[nChgBins], nWestJets[nChgBins];
     
     for ( int c=0; c<3; ++c ) {	  //  BACKGROUND ESTIMATION (lead and reco jet must be in same eta-range)
@@ -233,6 +239,7 @@ int main ( int argc, const char** argv ) {         // funcions and cuts specifie
     hPt_UE_BBCsumE->Fill( leadJet.pt(), rho, header->GetBbcAdcSumEast() );    
     hPrimaryPerEvent->Fill( header->GetNOfPrimaryTracks() );
     hLeadPhi->Fill( leadJet.phi() );
+    hBbcAdcEastSum[e]->Fill( GetBbcAdcSumEast() );
 
     rawJets = sorted_by_pt( allJetSelector( jetCluster.inclusive_jets() ) );     // EXTRACT ALL JETS >2GeV
     for ( int i=0; i<rawJets.size(); ++i ) { hAllJetsPtEtaPhi->Fill( rawJets[i].pt(), rawJets[i].eta(), rawJets[i].phi() ); }
@@ -245,6 +252,7 @@ int main ( int argc, const char** argv ) {         // funcions and cuts specifie
 
   //  ~ ~ ~ ~ ~ ~ ~ ~ WRITE HISTOGRAMS ~ ~ ~ ~ ~ ~ ~ ~
   for ( int p=0; p<3; ++p ) {
+    hBbcAdcEastSum[p]->Write();
     for ( int e=0; e<3; ++e ) {
       for ( int c=0; c<3; ++c ) {
 	hRhoByEta[p][e][c]->Write();
