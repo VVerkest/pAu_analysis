@@ -4,7 +4,7 @@ void ratio9Plot(){
   TH1::SetDefaultSumw2();  TH2::SetDefaultSumw2();  TH3::SetDefaultSumw2();
   
   TFile* File1 = new TFile( "out/HTdijets/HiEA/pAu_2015_HTmonojet.root", "READ" );
-  TFile* File2 = new TFile( "out/HTdijets/HiEA/pAu_2015_HTmonojet.root", "READ" );
+  TFile* File2 = new TFile( "out/HTdijets/LoEA/pAu_2015_HTmonojet.root", "READ" );
   TString ratioTitle = "#rho_{jet}^{hi EA}/#rho_{jet}^{lo EA}";
   TString saveName = "plots/HTdijets/ratio9plot__HiEA_jet.pdf";
   
