@@ -6,7 +6,8 @@ void ratio9Plot(){
   TFile* File1 = new TFile( "out/HTdijets/HiEA/pAu_2015_HTmonojet.root", "READ" );
   TFile* File2 = new TFile( "out/HTdijets/HiEA/pAu_2015_HTmonojet.root", "READ" );
   TString ratioTitle = "#rho_{jet}^{hi EA}/#rho_{jet}^{lo EA}";
-
+  TString saveName = "plots/HTdijets/ratio9plot__HiEA_jet.pdf";
+  
   const int nPtBins = 3;
   const double ptLo[nPtBins] = { 10.0, 15.0, 20.0 };
   const double ptHi[nPtBins] = { 15.0, 20.0, 30.0 };
@@ -81,7 +82,7 @@ void ratio9Plot(){
 	  file2RhoByEta[p][e][c]->GetXaxis()->SetRange(i,i);
 	  ratio = ( file1RhoByEta[p][e][c]->GetMean(2) )/( file2RhoByEta[p][e][c]->GetMean(2) );
 	  hRhoRatio[p][e][c]->SetBinContent( i, ratio );
-	  // cout << i << "        " << ratio << endl;
+	  cout << i << "        " << ratio << endl;
 	}
       }
     }
@@ -125,7 +126,7 @@ void ratio9Plot(){
     }
   }
 
-  c0->SaveAs("plots/HTdijets/ratio9plot.pdf","PDF");
+  c0->SaveAs(saveName,"PDF");
   
 }
 
