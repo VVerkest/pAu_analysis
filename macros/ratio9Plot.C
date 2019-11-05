@@ -62,7 +62,7 @@ void ratio9Plot(){
     }
   }
 
-  double ratio, error, var1, var2;
+  double ratio, error, re1, re2;
   TCanvas * c0 = new TCanvas( "c0" , "" ,0 ,23 ,1280 ,700 );
   c0->SetTopMargin(0.6);
   TPaveText *cTitle = new TPaveText(0.345843,.881306,0.655712,.980712,"NB");
@@ -89,9 +89,9 @@ void ratio9Plot(){
 	  file2RhoByEta[p][e][c]->GetXaxis()->SetRange(i,i);
 	  ratio = ( file1RhoByEta[p][e][c]->GetMean(2) )/( file2RhoByEta[p][e][c]->GetMean(2) );
 	  hRhoRatio[p][e][c]->SetBinContent( i, ratio );
-	  var1 = (file1RhoByEta[p][e][c]->GetMeanError(2))*(file1RhoByEta[p][e][c]->GetMeanError(2));
-	  var2 = (file2RhoByEta[p][e][c]->GetMeanError(2))*(file2RhoByEta[p][e][c]->GetMeanError(2));
-	  error = sqrt( var1 + var2 );
+	  re1 = (file1RhoByEta[p][e][c]->GetMeanError(2))/(file1RhoByEta[p][e][c]->GetMean(2));
+	  re2 = (file2RhoByEta[p][e][c]->GetMeanError(2))/(file2RhoByEta[p][e][c]->GetMean(2));
+	  error = ratio*sqrt( (var1^2) + (var2^2) );
 	  hRhoRatio[p][e][c]->SetBinError( i, error );
 	  // cout << i << "        " << ratio << endl;
 	  // cout << i << "        " << error << endl;
