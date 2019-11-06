@@ -20,8 +20,8 @@ void EAratioPlots(){
   const int c = 3;
   const TString BackgroundChargeBias[c] = { "_chgBG", "_neuBG", "_allBG" };
   
-  const EA = 2;
-  const DJ = 2;
+  const int EA = 2;
+  const int DJ = 2;
   
   TFile* File[EA][DJ];
   TString activity[EA] = {"LoEA", "HiEA"};
@@ -36,6 +36,7 @@ void EAratioPlots(){
   sRhoByEta->GetXaxis()->SetLabelSize(0);
   sRhoByEta->GetYaxis()->SetLabelSize(0.06);
   sRhoByEta->GetYaxis()->SetNdivisions(12);
+  TH2D *hRhoByEta[nPtBins][nEtaBins][EA][DJ];
   TH1D *pRhoByEta[nPtBins][nEtaBins][EA][DJ];
 
 
@@ -60,14 +61,14 @@ void EAratioPlots(){
 	for ( int e=0; e<3; ++e ) {
 	
 	  TString name = "hRho" + ptBinName[p] + etaBinName[e] + BackgroundChargeBias[c];
-	  hRhoByEta[p][e][c] = (TH2D*)inFile->Get(name);
-	  hRhoByEta[p][e][c]->Scale(1./hRhoByEta[p][e][c]->GetEntries());
-	  hRhoByEta[p][e][c]->SetMarkerStyle( marker[ea][dj] );
-	  hRhoByEta[p][e][c]->SetMarkerColor( color[dj] );
-	  hRhoByEta[p][e][c]->SetLineColor( color[dj] );
+	  hRhoByEta[p][e][ea][dj] = (TH2D*)File[ea][dj]->Get(name);
+	  hRhoByEta[p][e][ea][dj]->Scale(1./hRhoByEta[p][e][ea][dj]->GetEntries());
+	  hRhoByEta[p][e][ea][dj]->SetMarkerStyle( marker[ea][dj] );
+	  hRhoByEta[p][e][ea][dj]->SetMarkerColor( color[dj] );
+	  hRhoByEta[p][e][ea][dj]->SetLineColor( color[dj] );
 
 	  name = "pRho" + ptBinName[p] + etaBinName[e] + us + activity[ea] + us + jetdijet[dj] + ".root";
-	  pRhoByEta[p][e][ea][dj] = (TH1D*) hRhoByEta[p][e][c]->ProfileX(name,1,-1,"i");
+	  pRhoByEta[p][e][ea][dj] = (TH1D*) hRhoByEta[p][e][ea][dj]->ProfileX(name,1,-1,"i");
 	  
 	  gPad->SetTickx();
 	  gPad->SetTicky();
