@@ -19,7 +19,7 @@ void EAratioPlots(){
 
   const int c = 3;
   const TString BackgroundChargeBias[c] = { "_chgBG", "_neuBG", "_allBG" };
-  TString saveName = "plots/HTdijets/EA9Plot_chg.pdf"
+  TString saveName = "plots/HTdijets/EA9Plot_chg.pdf";
   TString name;
   
   const int EA = 2;
