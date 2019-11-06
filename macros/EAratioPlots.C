@@ -55,7 +55,7 @@ void EAratioPlots(){
 
   
   for (int ea=0; ea<EA; ++ea) {
-    for (int dj=0; dj<DJ; ++dj) {
+    for (int dj=0; dj<1; ++dj) {
       fileName[ea][dj] = "out/HTdijets/" + activity[ea] + "/pAu_2015_HT" + jetdijet[dj] + ".root";
       cout << fileName[ea][dj] <<endl;
       File[ea][dj] = new TFile( fileName[ea][dj], "READ" );
