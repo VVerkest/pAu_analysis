@@ -62,7 +62,8 @@ void EAratioPlots(){
 	
 	  TString name = "hRho" + ptBinName[p] + etaBinName[e] + BackgroundChargeBias[c];
 	  hRhoByEta[p][e][ea][dj] = (TH2D*)File[ea][dj]->Get(name);
-	  hRhoByEta[p][e][ea][dj]->Scale(1./hRhoByEta[p][e][ea][dj]->GetEntries());
+	  double entries = hRhoByEta[p][e][ea][dj]->GetEntries();
+	  hRhoByEta[p][e][ea][dj]->Scale(1./entries);
 	  hRhoByEta[p][e][ea][dj]->SetMarkerStyle( marker[ea][dj] );
 	  hRhoByEta[p][e][ea][dj]->SetMarkerColor( color[dj] );
 	  hRhoByEta[p][e][ea][dj]->SetLineColor( color[dj] );
