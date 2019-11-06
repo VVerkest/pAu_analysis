@@ -45,7 +45,7 @@ void EAratioPlots(){
   TCanvas * c0 = new TCanvas( "c0" , "" ,0 ,23 ,1280 ,700 );
   c0->SetTopMargin(0.4);
   TPaveText *cTitle = new TPaveText(0.345843,.881306,0.655712,.980712,"NB");
-  cTitle->AddText( "Event Activity" );
+  cTitle->AddText( "Underlying Event" );
   cTitle->SetFillStyle(0);
   cTitle->SetLineWidth(0);
   cTitle->SetTextAlign(21);
