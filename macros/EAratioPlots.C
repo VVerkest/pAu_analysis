@@ -81,6 +81,10 @@ void EAratioPlots(){
       for ( int p=0; p<3; ++p ) {
 	for ( int e=0; e<3; ++e ) {
 
+	  int dir = 1+e+(3*p);
+	  c0->cd(dir);
+	  sRhoByEta->Draw();
+	  
 	  double entries = hRhoByEta[p][e][ea][dj]->GetEntries();
 	  hRhoByEta[p][e][ea][dj]->Scale(1./entries);
 	  hRhoByEta[p][e][ea][dj]->SetMarkerStyle( marker[ea][dj] );
