@@ -29,8 +29,8 @@ void EAratioPlots(){
   TString fileName[EA][DJ];
   TString us = "_";
 
-  int marker[EA][DJ] = { 20, 24 }{ 21, 25 };
-  TColor color[DJ] = { kBlack, kRed };
+  int marker[EA][DJ] ={ { 20, 24 } , { 21, 25 } };  // LoEA: circle,  HiEA: square
+  EColor color[DJ] = { kBlack, kRed };
 
   TH2D *sRhoByEta = new TH2D("sRhoByEta","", 3,-1.5,1.5, 10,0,2.0);
   sRhoByEta->GetXaxis()->SetLabelSize(0);
