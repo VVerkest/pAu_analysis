@@ -19,6 +19,7 @@ void EAratioPlots(){
 
   const int c = 3;
   const TString BackgroundChargeBias[c] = { "_chgBG", "_neuBG", "_allBG" };
+  TString name;
   
   const int EA = 2;
   const int DJ = 2;
@@ -60,7 +61,7 @@ void EAratioPlots(){
       for ( int p=0; p<3; ++p ) {
 	for ( int e=0; e<3; ++e ) {
 	
-	  TString name = "hRho" + ptBinName[p] + etaBinName[e] + BackgroundChargeBias[c];
+	  name = "hRho" + ptBinName[p] + etaBinName[e] + BackgroundChargeBias[c];
 	  hRhoByEta[p][e][ea][dj] = (TH2D*)File[ea][dj]->Get(name);
 
 	}
