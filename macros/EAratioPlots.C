@@ -114,7 +114,7 @@ void EAratioPlots(){
   
 
 
-  c0->SaveAs("plots/HTdijets/EA9Plot.root","PDF");
+  c0->SaveAs("plots/HTdijets/EA9Plot.pdf","PDF");
   
 
   
