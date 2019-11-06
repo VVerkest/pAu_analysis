@@ -19,7 +19,7 @@ void EAratioPlots(){
 
   const int c = 3;
   const TString BackgroundChargeBias[c] = { "_chgBG", "_neuBG", "_allBG" };
-  TString saveName = "plots/HTdijets/EA9Plot_chg.pdf";
+  TString saveName = "plots/HTdijets/EA9Plot_neu.pdf";
   TString name;
   
   const int EA = 2;
@@ -65,7 +65,7 @@ void EAratioPlots(){
       for ( int p=0; p<3; ++p ) {
 	for ( int e=0; e<3; ++e ) {
 	
-	  name = "hRho" + ptBinName[p] + etaBinName[e] + "_chgBG";
+	  name = "hRho" + ptBinName[p] + etaBinName[e] + "_neuBG";
 	  // cout << name <<endl;
 	  hRhoByEta[p][e][ea][dj] = (TH2D*)File[ea][dj]->Get(name);
 	  // cout << hRhoByEta[p][e][ea][dj] << endl;
