@@ -64,7 +64,7 @@ void EAratioPlots(){
 	
 	  name = "hRho" + ptBinName[p] + etaBinName[e] + BackgroundChargeBias[c];
 	  hRhoByEta[p][e][ea][dj] = (TH2D*)File[ea][dj]->Get(name);
-
+	  cout << hRhoByEta[p][e][ea][dj] << endl;
 	}
       }
       
