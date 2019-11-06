@@ -65,7 +65,7 @@ void EAratioPlots(){
       for ( int p=0; p<3; ++p ) {
 	for ( int e=0; e<3; ++e ) {
 	
-	  name = "hRho" + ptBinName[p] + etaBinName[e] + "_allBG";
+	  name = "hRho" + ptBinName[p] + etaBinName[e] + "_chgBG";
 	  // cout << name <<endl;
 	  hRhoByEta[p][e][ea][dj] = (TH2D*)File[ea][dj]->Get(name);
 	  // cout << hRhoByEta[p][e][ea][dj] << endl;
