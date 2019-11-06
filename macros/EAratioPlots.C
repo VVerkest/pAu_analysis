@@ -70,13 +70,13 @@ void EAratioPlots(){
 	}
       }
       
-      File[ea][dj]->Close();
+      //File[ea][dj]->Close();
     }
   }
 
 
   for (int ea=0; ea<EA; ++ea) {
-    for (int dj=0; dj<DJ; ++dj) {
+    for (int dj=0; dj<1; ++dj) {
       
       for ( int p=0; p<3; ++p ) {
 	for ( int e=0; e<3; ++e ) {
