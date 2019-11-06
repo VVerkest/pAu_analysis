@@ -64,9 +64,9 @@ void EAratioPlots(){
 	for ( int e=0; e<3; ++e ) {
 	
 	  name = "hRho" + ptBinName[p] + etaBinName[e] + "_allBG";
-	  cout << name <<endl;
+	  // cout << name <<endl;
 	  hRhoByEta[p][e][ea][dj] = (TH2D*)File[ea][dj]->Get(name);
-	  cout << hRhoByEta[p][e][ea][dj] << endl;
+	  // cout << hRhoByEta[p][e][ea][dj] << endl;
 	}
       }
       
@@ -83,7 +83,7 @@ void EAratioPlots(){
 
 	  int dir = 1+e+(3*p);
 	  c0->cd(dir);
-	  sRhoByEta->Draw();
+	  sRhoByEta->Draw("SAME");
 	  
 	  double entries = hRhoByEta[p][e][ea][dj]->GetEntries();
 	  hRhoByEta[p][e][ea][dj]->Scale(1./entries);
@@ -98,7 +98,7 @@ void EAratioPlots(){
 	  gPad->SetTicky();
 	  gPad->SetGridy();
 	  // pRhoByEta[p][e][ea][dj]->SetLineWidth(0);
-	  pRhoByEta[p][e][ea][dj]->SetMarkerSize(2);
+	  // pRhoByEta[p][e][ea][dj]->SetMarkerSize(2);
 	  pRhoByEta[p][e][ea][dj]->GetXaxis()->SetLabelSize(0);
 	  pRhoByEta[p][e][ea][dj]->GetYaxis()->SetLabelSize(0.06);
 	  pRhoByEta[p][e][ea][dj]->GetYaxis()->SetNdivisions(10);
