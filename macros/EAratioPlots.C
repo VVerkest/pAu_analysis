@@ -98,8 +98,8 @@ void EAratioPlots(){
 	  gPad->SetTickx();
 	  gPad->SetTicky();
 	  gPad->SetGridy();
-	  // pRhoByEta[p][e][ea][dj]->SetLineWidth(0);
-	  pRhoByEta[p][e][ea][dj]->SetMarkerSize(2);
+	  pRhoByEta[p][e][ea][dj]->SetLineWidth(1.5);
+	  pRhoByEta[p][e][ea][dj]->SetMarkerSize(1.5);
 	  pRhoByEta[p][e][ea][dj]->GetXaxis()->SetLabelSize(0);
 	  pRhoByEta[p][e][ea][dj]->GetYaxis()->SetLabelSize(0.06);
 	  pRhoByEta[p][e][ea][dj]->GetYaxis()->SetNdivisions(10);
