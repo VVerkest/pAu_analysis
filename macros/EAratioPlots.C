@@ -33,6 +33,7 @@ void EAratioPlots(){
   int marker[EA][DJ] ={ { 20, 24 } , { 21, 25 } };  // LoEA: circle,  HiEA: square
   EColor color[DJ] = { kBlack, kRed };
 
+  gStyle->SetOptStat(0);
   TH2D *sRhoByEta = new TH2D("sRhoByEta","", 3,-1.5,1.5, 10,0,2.0);
   sRhoByEta->GetXaxis()->SetLabelSize(0);
   sRhoByEta->GetYaxis()->SetLabelSize(0.06);
@@ -64,10 +65,10 @@ void EAratioPlots(){
 	  name = "hRho" + ptBinName[p] + etaBinName[e] + BackgroundChargeBias[c];
 	  hRhoByEta[p][e][ea][dj] = (TH2D*)File[ea][dj]->Get(name);
 
-	  File[ea][dj]->Close();
 	  
 	}
       }
+      File[ea][dj]->Close();
     }
   }
 
