@@ -21,8 +21,8 @@ int main ( int argc, const char** argv ) {         // funcions and cuts specifie
   bool dijet = false;
   // Sort by Event Activity per Dave's definitions (https://drupal.star.bnl.gov/STAR/system/files/QM2019_Stewart_10.pdf)
   double BBCEmin = 0;        double BBCEmax = 100000;
-  bool HiEA = true;		if ( HiEA==true ){ BBCEmin = 38000;    BBCEmax = 100000; }
-  bool MidEA = false;	if ( MidEA==true ){ BBCEmin = 16000;    BBCEmax = 38000; }
+  bool HiEA = false;		if ( HiEA==true ){ BBCEmin = 38000;    BBCEmax = 100000; }
+  bool MidEA = true;	if ( MidEA==true ){ BBCEmin = 16000;    BBCEmax = 38000; }
   bool LoEA = false;		if ( LoEA==true ){ BBCEmin = 8000;    BBCEmax = 16000; }
   
   TH1::SetDefaultSumw2();  TH2::SetDefaultSumw2();  TH3::SetDefaultSumw2();
