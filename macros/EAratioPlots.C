@@ -35,7 +35,7 @@ void EAratioPlots(){
   EColor color[DJ] = { kBlack, kRed }; // jet: black,  dijet: red
 
   gStyle->SetOptStat(0);
-  TH2D *sRhoByEta = new TH2D("sRhoByEta","", 3,-1.5,1.5, 10,0.4,1.8);
+  TH2D *sRhoByEta = new TH2D("sRhoByEta","", 3,-1.5,1.5, 10,0.3,1.0);
   sRhoByEta->GetXaxis()->SetLabelSize(0);
   sRhoByEta->GetYaxis()->SetLabelSize(0.06);
   sRhoByEta->GetYaxis()->SetNdivisions(12);
