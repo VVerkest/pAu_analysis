@@ -34,7 +34,7 @@ void EAratioPlots(){
   EColor color[DJ] = { kBlack, kRed }; // jet: black,  dijet: red
 
   gStyle->SetOptStat(0);
-  TH2D *sRhoByEta = new TH2D("sRhoByEta","", 3,-1.5,1.5, 10,0,2.0);
+  TH2D *sRhoByEta = new TH2D("sRhoByEta","", 3,-1.5,1.5, 10,0.4,1.8);
   sRhoByEta->GetXaxis()->SetLabelSize(0);
   sRhoByEta->GetYaxis()->SetLabelSize(0.06);
   sRhoByEta->GetYaxis()->SetNdivisions(12);
@@ -42,7 +42,7 @@ void EAratioPlots(){
   TH1D *pRhoByEta[nPtBins][nEtaBins][EA][DJ];
 
 
-  TCanvas * c0 = new TCanvas( "c0" , "" ,0 ,23 ,1000 ,700 );
+  TCanvas * c0 = new TCanvas( "c0" , "" ,0 ,23 ,1280 ,700 );
   c0->SetTopMargin(0.4);
   TPaveText *cTitle = new TPaveText(0.345843,.881306,0.655712,.980712,"NB");
   cTitle->AddText( "Event Activity" );
@@ -99,7 +99,7 @@ void EAratioPlots(){
 	  gPad->SetTicky();
 	  gPad->SetGridy();
 	  pRhoByEta[p][e][ea][dj]->SetLineWidth(2);
-	  pRhoByEta[p][e][ea][dj]->SetMarkerSize(1.5);
+	  pRhoByEta[p][e][ea][dj]->SetMarkerSize(2);
 	  pRhoByEta[p][e][ea][dj]->GetXaxis()->SetLabelSize(0);
 	  pRhoByEta[p][e][ea][dj]->GetYaxis()->SetLabelSize(0.06);
 	  pRhoByEta[p][e][ea][dj]->GetYaxis()->SetNdivisions(10);
