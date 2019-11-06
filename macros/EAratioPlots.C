@@ -30,8 +30,8 @@ void EAratioPlots(){
   TString fileName[EA][DJ];
   TString us = "_";
 
-  int marker[EA][DJ] ={ { 20, 24 } , { 21, 25 } };  // LoEA: circle,  HiEA: square
-  EColor color[DJ] = { kBlack, kRed };
+  int marker[EA] = { 20, 21 };  // LoEA: circle,  HiEA: square
+  EColor color[DJ] = { kBlack, kRed }; // jet: black,  dijet: red
 
   gStyle->SetOptStat(0);
   TH2D *sRhoByEta = new TH2D("sRhoByEta","", 3,-1.5,1.5, 10,0,2.0);
@@ -55,7 +55,7 @@ void EAratioPlots(){
 
   
   for (int ea=0; ea<EA; ++ea) {
-    for (int dj=0; dj<1; ++dj) {
+    for (int dj=0; dj<DJ; ++dj) {
       fileName[ea][dj] = "out/HTdijets/" + activity[ea] + "/pAu_2015_HT" + jetdijet[dj] + ".root";
       //cout << fileName[ea][dj] <<endl;
       File[ea][dj] = new TFile( fileName[ea][dj], "READ" );
@@ -87,7 +87,7 @@ void EAratioPlots(){
 	  
 	  double entries = hRhoByEta[p][e][ea][dj]->GetEntries();
 	  hRhoByEta[p][e][ea][dj]->Scale(1./entries);
-	  hRhoByEta[p][e][ea][dj]->SetMarkerStyle( marker[ea][dj] );
+	  hRhoByEta[p][e][ea][dj]->SetMarkerStyle( marker[ea] );
 	  hRhoByEta[p][e][ea][dj]->SetMarkerColor( color[dj] );
 	  hRhoByEta[p][e][ea][dj]->SetLineColor( color[dj] );
 
