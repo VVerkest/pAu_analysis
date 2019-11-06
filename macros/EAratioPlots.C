@@ -57,6 +57,7 @@ void EAratioPlots(){
   for (int ea=0; ea<EA; ++ea) {
     for (int dj=0; dj<DJ; ++dj) {
       fileName[ea][dj] = "out/HTdijets/" + activity[ea] + "/pAu_2015_HT" + jetdijet[dj] + ".root";
+      cout << fileName[ea][dj] <<endl;
       File[ea][dj] = new TFile( fileName[ea][dj], "READ" );
 
       for ( int p=0; p<3; ++p ) {
@@ -64,7 +65,7 @@ void EAratioPlots(){
 	
 	  name = "hRho" + ptBinName[p] + etaBinName[e] + BackgroundChargeBias[c];
 	  hRhoByEta[p][e][ea][dj] = (TH2D*)File[ea][dj]->Get(name);
-	  cout << hRhoByEta[p][e][ea][dj] << endl;
+	  // cout << hRhoByEta[p][e][ea][dj] << endl;
 	}
       }
       
