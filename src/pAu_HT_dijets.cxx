@@ -18,11 +18,11 @@ int main ( int argc, const char** argv ) {         // funcions and cuts specifie
   else if ( argc==1 ) { inFile="production_pAu200_2015/HT/pAu_2015_200_HT*.root"; outFile="out/HT/pAuJets.root"; number_of_events=-1; }
   else { cerr<< "incorrect number of command line arguments"; return -1; }
 
-  bool dijet = true;
+  bool dijet = false;
   // Sort by Event Activity per Dave's definitions (https://drupal.star.bnl.gov/STAR/system/files/QM2019_Stewart_10.pdf)
   double BBCEmin = 0;        double BBCEmax = 100000;
-  bool HiEA = true;		if ( HiEA==true ){ BBCEmin = 38000;    BBCEmax = 100000; }
-  bool MidEA = false;	if ( MidEA==true ){ BBCEmin = 16000;    BBCEmax = 38000; }
+  bool HiEA = true;		if ( HiEA==true ){ BBCEmin = 30000;    BBCEmax = 100000; }
+  bool MidEA = false;	if ( MidEA==true ){ BBCEmin = 16000;    BBCEmax = 30000; }
   bool LoEA = false;		if ( LoEA==true ){ BBCEmin = 8000;    BBCEmax = 16000; }
   
   TH1::SetDefaultSumw2();  TH2::SetDefaultSumw2();  TH3::SetDefaultSumw2();
@@ -41,9 +41,7 @@ int main ( int argc, const char** argv ) {         // funcions and cuts specifie
   TH3D *hAllJetsPtEtaPhi = new TH3D( "hAllJetsPtEtaPhi", "Inclusive Jets p_{T}, #eta, #phi;Jet p_{T} (GeV);Jet #eta;Jet #phi", 400,0.0,100.0, 40,-1.0,1.0, 120,0.0,2*pi  );
   TH3D *hLeadJetPtRhoEta = new TH3D( "hLeadJetPtRhoEta", "Lead Jet p_{T}, #rho, #eta;Jet p_{T} (GeV);#rho;Jet #eta", 400,0.0,100.0, 100,0,25, 40,-1.0,1.0 );  
   TH3D *hLeadPtEtaPhi = new TH3D("hLeadPtEtaPhi","Lead Jet p_{T} vs. #eta vs. #phi;p_{T} (GeV);#eta;#phi", 280,0,70, 40,-1.0,1.0, 120,0,6.3);
-  TH3D *hPt_UE_BBCE = new TH3D("hPt_UE_BBCE","UE vs. BBC East Rate;Lead Jet p_{T} (GeV);Underlying Event (GeV);BBC East Rate", 500,0,125, 50,0,25, 140,0,7000000 );
   TH3D *hPt_UE_BBCsumE = new TH3D("hPt_UE_BBCsumE","UE vs. BBC ADC East Sum;Lead Jet p_{T} (GeV);Underlying Event (GeV);BBC ADC East Sum", 500,0,125, 50,0,25, 160,0,80000 );
-  TH3D *hBG = new TH3D("hBG","Background Particle #eta-#phi vs. p_{T};Background Particle p_{T}(GeV);Particle #eta;Particle #phi", 80,0,20, 40,-1,1, 120,0,2*pi );
   TH3D *hPartPtDEtaDPhi = new TH3D("hPartPtDEtaDPhi","Background Particle p_{T} vs. #Delta#eta vs. #Delta#phi;Particle p_{T} (GeV);#Delta#eta;#Delta#phi", 120,0,30, 80,-2.0,2.0, 120,-pi,pi );
   TH3D *hPartPtEtaPhi = new TH3D("hPartPtEtaPhi","Lead Jet p_{T} vs. #eta vs. #phi;Lead Jet p_{T} (GeV);Particle #eta;Particle #phi", 120,0,30, 40,-1.0,1.0, 120,0,2*pi );
 
@@ -235,7 +233,6 @@ int main ( int argc, const char** argv ) {         // funcions and cuts specifie
     hTowersVsRho->Fill( rho, nTowers );
     hLeadJetPtRhoEta->Fill( leadJet.pt(), rho, leadJet.eta() );
     hLeadPtEtaPhi->Fill( leadJet.pt(), leadJet.eta(), leadJet.phi() );
-    hPt_UE_BBCE->Fill( leadJet.pt(), rho, header->GetBbcEastRate() );
     hPt_UE_BBCsumE->Fill( leadJet.pt(), rho, header->GetBbcAdcSumEast() );    
     hPrimaryPerEvent->Fill( header->GetNOfPrimaryTracks() );
     hLeadPhi->Fill( leadJet.phi() );
@@ -270,11 +267,9 @@ int main ( int argc, const char** argv ) {         // funcions and cuts specifie
   hAllJetsPtEtaPhi->Write();
   hLeadJetPtRhoEta->Write();
   hLeadPtEtaPhi->Write();
-  hPt_UE_BBCE->Write();
   hPt_UE_BBCsumE->Write();
   hPartPtDEtaDPhi->Write();
   hPartPtEtaPhi->Write();
-  hBG->Write();
   hRho->Write();
   hLeadPhi->Write();
   hRecoPhi->Write();
