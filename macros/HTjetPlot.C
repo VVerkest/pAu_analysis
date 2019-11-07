@@ -8,22 +8,20 @@ void HTjetPlot() {
   // const int acn = 3;
   // TString BackgroundChargeBias[acn] = { "allBG", "chgBG", "neuBG" };
   // TString JetChargeBias[acn] = { "allJets", "chgJets", "neuJets" };
-  TString fileName, name, title, Ndj, avg, sigma;			double scale;
+  TString fileName, name, title, Ndj, avg, sigma, jdj;			double scale;
 
   // TString BackgroundChargeBias = "allBG";		TString BackgroundChargeString = "All Background";			//  [  "allBG",  "chgBG",  "neuBG"  ]
   // TString BackgroundChargeBias = "chgBG";		TString BackgroundChargeString = "Charged Background";
   // TString BackgroundChargeBias = "neuBG";		TString BackgroundChargeString = "Neutral Background";
   
-  // TString JetChargeBias = "allJets";				TString JetChargeString = "All Jets";						//  [ "allJets", "chgJets", "neuJets" ]
-  // TString JetChargeBias = "chgJets";				TString JetChargeString = "Charged Jets";
-  // TString JetChargeBias = "neuJets";				TString JetChargeString = "Neutral Jets";
-
-  // TString path = "HTjets/allTowers/";   // good/    allTowers/    towersRemoved/
-  TString path = "HTmonojet/";
+  TString path = "HiEA/";
+  // TString path = "MidEA/";
+  // TString path = "LoEA/";
   
-  //fileName = "out/" + path + "pAu_2015_200_" + BackgroundChargeBias + "_" + JetChargeBias + ".root";
-  fileName = "out/HTdijets/pAu_2015_HTmonojet.root";
-  //fileName = "out/HTJP2dijets/pAu_dijets_good.root";
+  jdj = "jets";
+  // jdj = "dijets";
+  
+  fileName = "out/HTdijets/" + path + "pAu_2015_HT" + jdj + ".root";
   TFile* inFile = new TFile( fileName, "READ" );
 
   TH1D *hTowersPerEvent = (TH1D*) inFile->Get("hTowersPerEvent");
@@ -48,17 +46,6 @@ void HTjetPlot() {
   TH2D *hLeadPtVsRho = (TH2D*)hPt_UE_BBCE->Project3D("XY");
   hLeadPtVsRho->GetYaxis()->SetRangeUser(0.0,10.0);
 
-  // hPrimaryVsRho->GetXaxis()->SetRangeUser(0.0,10.0);
-  // hPrimaryVsRho->GetYaxis()->SetRangeUser(0.0,125.0);
-  // hPrimaryVsGlobal->GetXaxis()->SetRangeUser(0.0,2000.0);
-  // hPrimaryVsGlobal->GetYaxis()->SetRangeUser(0.0,80.0);
-  // hChgVsNeuBG->GetXaxis()->SetRangeUser(0.0,10.0);
-  // hChgVsNeuBG->GetYaxis()->SetRangeUser(0.0,10.0);
-  // hGlobalVsRho->GetXaxis()->SetRangeUser(0.0,10.0);
-  // hnPrimaryVSnTowers->GetXaxis()->SetRangeUser(0.0,100.0);
-  // hnPrimaryVSnTowers->GetYaxis()->SetRangeUser(0.0,100.0);
-  //hTowersVsBBCsumE->GetYaxis->
-  
   // TH2D *hChgVsNeuBG = (TH2D*) inFile->Get("hChgVsNeuBG");				hChgVsNeuBG->Scale(1.0/hChgVsNeuBG->Integral("WIDTH"));
   // TH2D *hTowersPerRun = (TH2D*) inFile->Get("hTowersPerRun");	       		hTowersPerRun->Scale(1.0/hTowersPerRun->Integral("WIDTH"));
   // TH2D *hPrimaryPerRun = (TH2D*) inFile->Get("hPrimaryPerRun");		       	hPrimaryPerRun->Scale(1.0/hPrimaryPerRun->Integral("WIDTH"));
@@ -94,7 +81,7 @@ void HTjetPlot() {
   // int color[nPtBins] = { 879, 856, 796, 896 };
   // int marker[nPtBins] = { 33, 22, 21, 20 };
 
-  const int nPtBins = 3;;
+  const int nPtBins = 3;
   double LeadPtBinLo[nPtBins] = { 10.0, 15.0, 20.0 };
   double LeadPtBinHi[nPtBins] = { 15.0, 20.0, 30.0 };
   TString LeadPtBinString[nPtBins] = { "10-15 GeV", "15-20 GeV",  "20-30 GeV" };
