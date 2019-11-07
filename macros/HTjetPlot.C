@@ -43,7 +43,7 @@ void HTjetPlot() {
   
   TH3D *hLeadPtEtaPhi = (TH3D*) inFile->Get("hLeadPtEtaPhi");
 
-  TH2D *hLeadPtVsRho = (TH2D*)hPt_UE_BBCE->Project3D("XY");
+  TH2D *hLeadPtVsRho = (TH2D*)hPt_UE_BBCsumE->Project3D("XY");
   hLeadPtVsRho->GetYaxis()->SetRangeUser(0.0,10.0);
 
   // TH2D *hChgVsNeuBG = (TH2D*) inFile->Get("hChgVsNeuBG");				hChgVsNeuBG->Scale(1.0/hChgVsNeuBG->Integral("WIDTH"));
