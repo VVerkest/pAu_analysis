@@ -37,7 +37,7 @@ void HTjetPlot() {
   hTowersVsRho->GetXaxis()->SetRangeUser(0.0,10.0);
   hTowersVsRho->GetYaxis()->SetRangeUser(0.0,200.0);
 
-  TH3D *hPt_UE_BBCE = (TH3D*) inFile->Get("hPt_UE_BBCE");
+  //TH3D *hPt_UE_BBCE = (TH3D*) inFile->Get("hPt_UE_BBCE");
   
   TH3D *hPt_UE_BBCsumE = (TH3D*) inFile->Get("hPt_UE_BBCsumE");
   
