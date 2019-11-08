@@ -10,10 +10,10 @@ void HTjetPlot() {
   // TString JetChargeBias[acn] = { "allJets", "chgJets", "neuJets" };
   TString fileName, name, title, Ndj, avg, sigma, jdj, ea;			double scale;
   
-  jdj = "dijets";
+  jdj = "jets";
   // jdj = "dijets";
-  ea = "HiEA";
-  // ea = "LoEA";
+  //ea = "HiEA";
+  ea = "LoEA";
 
   TString slash = "/";
   
