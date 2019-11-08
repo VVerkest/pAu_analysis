@@ -35,7 +35,7 @@ namespace pAuAnalysis {
   }
 
   
-  void CalculateRhoByChargeAndEta( std::vector<fastjet::PseudoJet> chgPart, std::vector<fastjet::PseudoJet> neuPart, double chgEast_Rho, double chgMid_Rho, double chgWest_Rho, double neuEast_Rho, double neuMid_Rho, double neuWest_Rho, TH2D *hChg, TH2D *hNeu ) {
+  void CalculateRhoByChargeAndEta( std::vector<fastjet::PseudoJet> chgPart, std::vector<fastjet::PseudoJet> neuPart, double chgEast_Sum, double chgMid_Sum, double chgWest_Sum, double neuEast_Sum, double neuMid_Sum, double neuWest_Sum, TH2D *hChg, TH2D *hNeu ) {
 
     double etaLoEast = -1.0;
     double etaLoMid = -0.3;
@@ -43,39 +43,34 @@ namespace pAuAnalysis {
     double etaHiEast = -0.3;
     double etaHiMid = 0.3;
     double etaHiWest = 1.0;
-    double BGeta, chgEastSum, chgMidSum, chgWestSum, neuEastSum, neuMidSum, neuWestSum;
+    double BGeta;
 
-    chgEastSum = 0;
-    chgMidSum = 0;
-    chgWestSum = 0;
-    neuEastSum = 0;
-    neuMidSum = 0;
-    neuWestSum = 0;
+    chgEast_Sum=0;
+    chgMid_Sum=0;
+    chgWest_Sum=0;
+    neuEast_Sum=0;
+    neuMid_Sum=0;
+    neuWest_Sum=0;
+
     
     for ( int i=0; i<chgPart.size(); ++i ) {
       BGeta = chgPart[i].eta();
       hChg->Fill( BGeta, chgPart[i].phi() );
-      if ( BGeta>=etaLoMid && BGeta<etaHiMid ) { chgMidSum+= chgPart[i].pt(); }
-      else if ( BGeta>=etaLoEast && BGeta<=etaHiEast ) { chgEastSum+= chgPart[i].pt(); }
-      else if ( BGeta>etaLoWest && BGeta<=etaHiWest ) { chgWestSum+= chgPart[i].pt(); }
+      if ( BGeta>=etaLoMid && BGeta<etaHiMid ) { chgMid_Sum+= chgPart[i].pt(); }
+      else if ( BGeta>=etaLoEast && BGeta<=etaHiEast ) { chgEast_Sum+= chgPart[i].pt(); }
+      else if ( BGeta>etaLoWest && BGeta<=etaHiWest ) { chgWest_Sum+= chgPart[i].pt(); }
       else { std::cerr<<"error with chg BG particle eta"<<std::endl; }
     }
     
     for ( int i=0; i<neuPart.size(); ++i ) {
       BGeta = neuPart[i].eta();
       hNeu->Fill( BGeta, neuPart[i].phi() );
-      if ( BGeta>=etaLoMid && BGeta<etaHiMid ) { neuMidSum+= neuPart[i].pt(); }
-      else if ( BGeta>=etaLoEast && BGeta<=etaHiEast ) { neuEastSum+= neuPart[i].pt(); }
-      else if ( BGeta>etaLoWest && BGeta<=etaHiWest ) { neuWestSum+= neuPart[i].pt(); }
+      if ( BGeta>=etaLoMid && BGeta<etaHiMid ) { neuMid_Sum+= neuPart[i].pt(); }
+      else if ( BGeta>=etaLoEast && BGeta<=etaHiEast ) { neuEast_Sum+= neuPart[i].pt(); }
+      else if ( BGeta>etaLoWest && BGeta<=etaHiWest ) { neuWest_Sum+= neuPart[i].pt(); }
       else { std::cerr<<"error with neu BG particle eta"<<std::endl; }
     }
 
-    chgEast_Rho = chgEastSum/eastArea;
-    chgMid_Rho = chgMidSum/midArea;
-    chgWest_Rho = chgWestSum/westArea;
-    neuEast_Rho = neuEastSum/eastArea;
-    neuMid_Rho = neuMidSum/midArea;
-    neuWest_Rho = neuWestSum/westArea;
 
   }
 

@@ -21,20 +21,22 @@ int main ( int argc, const char** argv ) {         // funcions and cuts specifie
 
   TTree *HTjetTree = new TTree( "HTjetTree", "HT_JetTree" );
   
+  double chgEastSum, chgMidSum, chgWestSum, neuEastSum, neuMidSum, neuWestSum;
+  
   //  Tree variables
   int RunID, EventID, nTowers, nPrimary, nGlobal, nVertices, refMult, gRefMult;
   double Vz, BbcAdcEastSum, leadPt, leadEta, leadPhi, chgEastRho, chgMidRho, chgWestRho, neuEastRho, neuMidRho, neuWestRho;
 
-HTjetTree->Branch( "RunID", &RunID );				HTjetTree->Branch( "EventID", &EventID );				HTjetTree->Branch( "nTowers", &nTowers );
-HTjetTree->Branch( "nPrimary", &nPrimary );			HTjetTree->Branch( "nGlobal", &nGlobal );				HTjetTree->Branch( "nVertices", &nVertices );
-HTjetTree->Branch( "refMult", &refMult );			HTjetTree->Branch( "gRefMult", &gRefMult );				HTjetTree->Branch( "Vz", &Vz );
-HTjetTree->Branch( "leadPt", &leadPt );				HTjetTree->Branch( "BbcAdcEastSum", &BbcAdcEastSum );	HTjetTree->Branch( "leadEta", &leadEta );
-HTjetTree->Branch( "leadPhi", &leadPhi );			HTjetTree->Branch( "chgEastRho", &chgEastRho );			HTjetTree->Branch( "chgMidRho", &chgMidRho );
-HTjetTree->Branch( "chgWestRho", &chgWestRho );	HTjetTree->Branch( "neuEastRho", &neuEastRho );			HTjetTree->Branch( "neuMidRho", &neuMidRho );
-HTjetTree->Branch( "neuWestRho", &neuWestRho );
+  HTjetTree->Branch( "RunID", &RunID );				HTjetTree->Branch( "EventID", &EventID );				HTjetTree->Branch( "nTowers", &nTowers );
+  HTjetTree->Branch( "nPrimary", &nPrimary );	       	HTjetTree->Branch( "nGlobal", &nGlobal );				HTjetTree->Branch( "nVertices", &nVertices );
+  HTjetTree->Branch( "refMult", &refMult );			HTjetTree->Branch( "gRefMult", &gRefMult );				HTjetTree->Branch( "Vz", &Vz );
+  HTjetTree->Branch( "leadPt", &leadPt );				HTjetTree->Branch( "BbcAdcEastSum", &BbcAdcEastSum );	HTjetTree->Branch( "leadEta", &leadEta );
+  HTjetTree->Branch( "leadPhi", &leadPhi );			HTjetTree->Branch( "chgEastRho", &chgEastRho );			HTjetTree->Branch( "chgMidRho", &chgMidRho );
+  HTjetTree->Branch( "chgWestRho", &chgWestRho );	HTjetTree->Branch( "neuEastRho", &neuEastRho );			HTjetTree->Branch( "neuMidRho", &neuMidRho );
+  HTjetTree->Branch( "neuWestRho", &neuWestRho );
 	
-  TH2D *hChgBgEtaPhi = new TH2D( "hChgBgEtaPhi", "Charged Background #phi vs. #eta", 40,-1.0,1.0, 120,0.0,2*pi );
-  TH2D *hNeuBgEtaPhi = new TH2D( "hNeuBgEtaPhi", "Nuetral Background #phi vs. #eta", 40,-1.0,1.0, 120,0.0,2*pi );
+  TH2D *hChgBgEtaPhi = new TH2D( "hChgBgEtaPhi", "Charged Background #phi vs. #eta;#eta;#phi", 40,-1.0,1.0, 120,0.0,2*pi );
+  TH2D *hNeuBgEtaPhi = new TH2D( "hNeuBgEtaPhi", "Neutral Background #phi vs. #eta;#eta;#phi", 40,-1.0,1.0, 120,0.0,2*pi );
 
   JetDefinition jet_def(antikt_algorithm, R);     //  JET DEFINITION
   Selector jetEtaSelector = SelectorAbsEtaMax( 1.0-R );
@@ -92,7 +94,14 @@ HTjetTree->Branch( "neuWestRho", &neuWestRho );
     //  BACKGROUND ESTIMATION
     GatherChargedBG( leadJet, container, chgParticles );
     GatherNeutralBG( leadJet, container, neuParticles );
-    CalculateRhoByChargeAndEta( chgParticles, neuParticles, chgEastRho, chgMidRho, chgWestRho, neuEastRho, neuMidRho, neuWestRho, hChgBgEtaPhi, hNeuBgEtaPhi ); 
+    chgEastSum = 0;            chgMidSum = 0;            chgWestSum = 0;            neuEastSum = 0;            neuMidSum = 0;            neuWestSum = 0;
+    CalculateRhoByChargeAndEta( chgParticles, neuParticles, chgEastSum, chgMidSum, chgWestSum, neuEastSum, neuMidSum, neuWestRho, hChgBgEtaPhi, hNeuBgEtaPhi ); 
+    chgEastRho = chgEastSum/eastArea;
+    chgMidRho = chgMidSum/midArea;
+    chgWestRho = chgWestSum/westArea;
+    neuEastRho = neuEastSum/eastArea;
+    neuMidRho = neuMidSum/midArea;
+    neuWestRho = neuWestSum/westArea;
     
     HTjetTree->Fill();
     
