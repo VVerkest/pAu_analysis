@@ -19,7 +19,6 @@ int main ( int argc, const char** argv ) {         // funcions and cuts specifie
 
   TH1::SetDefaultSumw2();  TH2::SetDefaultSumw2();  TH3::SetDefaultSumw2();
 
-  TFile *pAuFile = new TFile( outFile.c_str() ,"RECREATE");
   TTree *HTjetTree = new TTree( "HTjetTree", "HT_JetTree" );
 
   double BGeta, chgEastSum, chgMidSum, chgWestSum, neuEastSum, neuMidSum, neuWestSum;
@@ -143,7 +142,7 @@ int main ( int argc, const char** argv ) {         // funcions and cuts specifie
     
   }  // ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~  END EVENT LOOP!  ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~
 
-
+  TFile *pAuFile = new TFile( outFile.c_str() ,"RECREATE");
 
   //  ~ ~ ~ ~ ~ ~ ~ ~ WRITE HISTOGRAMS & TREE ~ ~ ~ ~ ~ ~ ~ ~
   hChgBgEtaPhi->Write();
