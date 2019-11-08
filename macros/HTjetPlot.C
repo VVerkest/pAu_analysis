@@ -69,18 +69,6 @@ void HTjetPlot() {
   // TH3D *hVertex = (TH3D*) inFile->Get("hVertex");
   // TH3D *hSubPtEtaPhi = (TH3D*) inFile->Get("hSubPtEtaPhi");
   
-  // const int nPtBins = 4;
-  // double LeadPtBinLo[nPtBins] = { 10.0, 15.0, 20.0, 30.0 };
-  // double LeadPtBinHi[nPtBins] = { 15.0, 20.0, 30.0, 100.0 };
-  // TString LeadPtBinString[nPtBins] = { "10-15 GeV", "15-20 GeV",  "20-30 GeV", ">30 GeV" };
-  // TString LeadPtBinName[nPtBins] = { "_10_15", "_15_20", "_20_30", "_30" };
-  // double SubPtBinLo[nPtBins] = { 0.0, 10.0, 15.0, 20.0 };
-  // double SubPtBinHi[nPtBins] = { 10.0, 15.0, 20.0, 100.0 };
-  // TString SubPtBinString[nPtBins] = { "<10 GeV", "10-15 GeV", "15-20 GeV", ">20 GeV" };
-  // TString SubPtBinName[nPtBins] = { "_02_10","_10_15", "_15_20", "_20" };
-  // int color[nPtBins] = { 879, 856, 796, 896 };
-  // int marker[nPtBins] = { 33, 22, 21, 20 };
-
   const int nPtBins = 3;
   double LeadPtBinLo[nPtBins] = { 10.0, 15.0, 20.0 };
   double LeadPtBinHi[nPtBins] = { 15.0, 20.0, 30.0 };
@@ -126,6 +114,12 @@ void HTjetPlot() {
     hLeadEta[i] = (TH1D*) hLeadPtEtaPhi->Project3D( "Y" );       // PROJECT
     hLeadEta[i]->SetNameTitle(name,title);
     hLeadEta[i]->SetStats(0);
+
+    if ( jdj == "dijets" ) {
+      for (int j=1;j<15;++j){double val=hLeadEta[i]->GetBinContent(j); hLeadEta[i]->SetBinContent(j,val/0.3);}
+      for (int j=15;j<27;++j){double val=hLeadEta[i]->GetBinContent(j); hLeadEta[i]->SetBinContent(j,val/0.6);}
+      for (int j=27;j<40;++j){double val=hLeadEta[i]->GetBinContent(j); hLeadEta[i]->SetBinContent(j,val/0.3);}    
+    }
     
     hLeadEta[i]->Scale( 1./hLeadEta[i]->Integral("WIDTH") );                     // NORMALIZE
     hLeadEta[i]->SetLineColor( color[i] );    hLeadEta[i]->SetMarkerStyle( marker[i] );    hLeadEta[i]->SetMarkerColor( color[i] );
