@@ -34,6 +34,45 @@ namespace pAuAnalysis {
   }
 
   
+  void CalculateRhoByChargeAndEta( std::vector<fastjet::PseudoJet> chgPart, std::vector<fastjet::PseudoJet> neuPart, double chgEast_Rho, double chgMid_Rho, double chgWest_Rho, double neuEast_Rho, double neuMid_Rho, double neuWest_Rho ) {
+      
+    double BGeta, chgEastSum, chgMidSum, chgWestSum, neuEastSum, neuMidSum, neuWestSum;
+
+    chgEastSum = 0;
+    chgMidSum = 0;
+    chgWestSum = 0;
+    neuEastSum = 0;
+    neuMidSum = 0;
+    neuWestSum = 0;
+    
+    for ( int i=0; i<chgPart.size(); ++i ) {
+      BGeta = chgPart[i].eta();
+      hChgBgEtaPhi->Fill( BGeta, chgPart[i].phi() );
+      if ( BGeta>=etaLoMid && BGeta<etaHiMid ) { chgMidSum+= chgPart[i].pt(); }
+      else if ( BGeta>=etaLoEast && BGeta<=etaHiEast ) { chgEastSum+= chgPart[i].pt(); }
+      else if ( BGeta>etaLoWest && BGeta<=etaHiWest ) { chgWestSum+= chgPart[i].pt(); }
+      else { cerr<<"error with chg BG particle eta"<<endl; }
+    }
+    
+    for ( int i=0; i<neuPart.size(); ++i ) {
+      BGeta = neuPart[i].eta();
+      hNeuBgEtaPhi->Fill( BGeta, neuPart[i].phi() );
+      if ( BGeta>=etaLoMid && BGeta<etaHiMid ) { neuMidSum+= neuPart[i].pt(); }
+      else if ( BGeta>=etaLoEast && BGeta<=etaHiEast ) { neuEastSum+= neuPart[i].pt(); }
+      else if ( BGeta>etaLoWest && BGeta<=etaHiWest ) { neuWestSum+= neuPart[i].pt(); }
+      else { cerr<<"error with neu BG particle eta"<<endl; }
+    }
+
+    chgEast_Rho = chgEastSum/eastArea;
+    chgMid_Rho = chgMidSum/midArea;
+    chgWest_Rho = chgWestSum/westArea;
+    neuEast_Rho = neuEastSum/eastArea;
+    neuMid_Rho = neuMidSum/midArea;
+    neuWest_Rho = neuWestSum/westArea;
+
+  }
+
+  
   int CountTowers( TList *selectedtowers ) {
 
     TStarJetPicoTower *tow;

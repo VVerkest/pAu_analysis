@@ -20,33 +20,19 @@ int main ( int argc, const char** argv ) {         // funcions and cuts specifie
   TH1::SetDefaultSumw2();  TH2::SetDefaultSumw2();  TH3::SetDefaultSumw2();
 
   TTree *HTjetTree = new TTree( "HTjetTree", "HT_JetTree" );
-
-  double BGeta, chgEastSum, chgMidSum, chgWestSum, neuEastSum, neuMidSum, neuWestSum;
   
   //  Tree variables
   int RunID, EventID, nTowers, nPrimary, nGlobal, nVertices, refMult, gRefMult;
   double Vz, BbcAdcEastSum, leadPt, leadEta, leadPhi, chgEastRho, chgMidRho, chgWestRho, neuEastRho, neuMidRho, neuWestRho;
 
-  HTjetTree->Branch( "RunID", &RunID );
-  HTjetTree->Branch( "EventID", &EventID );
-  HTjetTree->Branch( "nTowers", &nTowers );
-  HTjetTree->Branch( "nPrimary", &nPrimary );
-  HTjetTree->Branch( "nGlobal", &nGlobal );
-  HTjetTree->Branch( "nVertices", &nVertices );
-  HTjetTree->Branch( "refMult", &refMult );
-  HTjetTree->Branch( "gRefMult", &gRefMult );
-  HTjetTree->Branch( "Vz", &Vz );
-  HTjetTree->Branch( "BbcAdcEastSum", &BbcAdcEastSum );
-  HTjetTree->Branch( "leadPt", &leadPt );
-  HTjetTree->Branch( "leadEta", &leadEta );
-  HTjetTree->Branch( "leadPhi", &leadPhi );
-  HTjetTree->Branch( "chgEastRho", &chgEastRho );
-  HTjetTree->Branch( "chgMidRho", &chgMidRho );
-  HTjetTree->Branch( "chgWestRho", &chgWestRho );
-  HTjetTree->Branch( "neuEastRho", &neuEastRho );
-  HTjetTree->Branch( "neuMidRho", &neuMidRho );
-  HTjetTree->Branch( "neuWestRho", &neuWestRho );
-  
+HTjetTree->Branch( "RunID", &RunID );				HTjetTree->Branch( "EventID", &EventID );				HTjetTree->Branch( "nTowers", &nTowers );
+HTjetTree->Branch( "nPrimary", &nPrimary );			HTjetTree->Branch( "nGlobal", &nGlobal );				HTjetTree->Branch( "nVertices", &nVertices );
+HTjetTree->Branch( "refMult", &refMult );			HTjetTree->Branch( "gRefMult", &gRefMult );				HTjetTree->Branch( "Vz", &Vz );
+HTjetTree->Branch( "leadPt", &leadPt );				HTjetTree->Branch( "BbcAdcEastSum", &BbcAdcEastSum );	HTjetTree->Branch( "leadEta", &leadEta );
+HTjetTree->Branch( "leadPhi", &leadPhi );			HTjetTree->Branch( "chgEastRho", &chgEastRho );			HTjetTree->Branch( "chgMidRho", &chgMidRho );
+HTjetTree->Branch( "chgWestRho", &chgWestRho );	HTjetTree->Branch( "neuEastRho", &neuEastRho );			HTjetTree->Branch( "neuMidRho", &neuMidRho );
+HTjetTree->Branch( "neuWestRho", &neuWestRho );
+	
   TH2D *hChgBgEtaPhi = new TH2D( "hChgBgEtaPhi", "Charged Background #phi vs. #eta", 40,-1.0,1.0, 120,0.0,2*pi );
   TH2D *hNeuBgEtaPhi = new TH2D( "hNeuBgEtaPhi", "Nuetral Background #phi vs. #eta", 40,-1.0,1.0, 120,0.0,2*pi );
 
@@ -104,51 +90,21 @@ int main ( int argc, const char** argv ) {         // funcions and cuts specifie
     leadPhi = leadJet.phi();
 
     //  BACKGROUND ESTIMATION
-    chgEastSum = 0;
-    chgMidSum = 0;
-    chgWestSum = 0;
-    neuEastSum = 0;
-    neuMidSum = 0;
-    neuWestSum = 0;
-
     GatherChargedBG( leadJet, container, chgParticles );
-    for ( int i=0; i<chgParticles.size(); ++i ) {
-      BGeta = chgParticles[i].eta();
-      hChgBgEtaPhi->Fill( BGeta, chgParticles[i].phi() );
-      if ( BGeta>=etaLoMid && BGeta<etaHiMid ) { chgMidSum+= chgParticles[i].pt(); }
-      else if ( BGeta>=etaLoEast && BGeta<=etaHiEast ) { chgEastSum+= chgParticles[i].pt(); }
-      else if ( BGeta>etaLoWest && BGeta<=etaHiWest ) { chgWestSum+= chgParticles[i].pt(); }
-      else { cerr<<"error with chg BG particle eta"<<endl; }
-    }
-    
     GatherNeutralBG( leadJet, container, neuParticles );
-    for ( int i=0; i<neuParticles.size(); ++i ) {
-      BGeta = neuParticles[i].eta();
-      hNeuBgEtaPhi->Fill( BGeta, neuParticles[i].phi() );
-      if ( BGeta>=etaLoMid && BGeta<etaHiMid ) { neuMidSum+= neuParticles[i].pt(); }
-      else if ( BGeta>=etaLoEast && BGeta<=etaHiEast ) { neuEastSum+= neuParticles[i].pt(); }
-      else if ( BGeta>etaLoWest && BGeta<=etaHiWest ) { neuWestSum+= neuParticles[i].pt(); }
-      else { cerr<<"error with neu BG particle eta"<<endl; }
-    }
-
-    chgEastRho = chgEastSum/eastArea;
-    chgMidRho = chgMidSum/midArea;
-    chgWestRho = chgWestSum/westArea;
-    neuEastRho = neuEastSum/eastArea;
-    neuMidRho = neuMidSum/midArea;
-    neuWestRho = neuWestSum/westArea;
-
+    CalculateRhoByChargeAndEta( chgParticles, neuParticles, chgEastRho, chgMidRho, chgWestRho, neuEastRho, neuMidRho, neuWestRho ); 
+    
     HTjetTree->Fill();
     
   }  // ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~  END EVENT LOOP!  ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~
 
   TFile *pAuFile = new TFile( outFile.c_str() ,"RECREATE");
 
-  //  ~ ~ ~ ~ ~ ~ ~ ~ WRITE HISTOGRAMS & TREE ~ ~ ~ ~ ~ ~ ~ ~
-  hChgBgEtaPhi->Write();
+  hChgBgEtaPhi->Write();  //  WRITE HISTOGRAMS & TREE
   hNeuBgEtaPhi->Write();
   HTjetTree->Write();  
-  
+
+  pAuFile->Write();
   pAuFile->Close();
 
   return 0;
