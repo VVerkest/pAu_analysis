@@ -116,9 +116,9 @@ int main ( int argc, const char** argv ) {         // funcions and cuts specifie
     for ( int i=0; i<chgParticles.size(); ++i ) {
       BGeta = chgParticles[i].eta();
       hChgBgEtaPhi->Fill( BGeta, chgParticles[i].phi() );
-      if ( BGeta<etaLoMid && BGeta>etaHiMid ) { chgMidSum+= chgParticles[i].pt(); }
-      else if ( BGeta<etaLoEast && BGeta>etaHiEast ) { chgEastSum+= chgParticles[i].pt(); }
-      else if ( BGeta<etaLoWest && BGeta>etaHiWest ) { chgWestSum+= chgParticles[i].pt(); }
+      if ( BGeta>etaLoMid && BGeta<etaHiMid ) { chgMidSum+= chgParticles[i].pt(); }
+      else if ( BGeta>etaLoEast && BGeta<etaHiEast ) { chgEastSum+= chgParticles[i].pt(); }
+      else if ( BGeta>etaLoWest && BGeta<etaHiWest ) { chgWestSum+= chgParticles[i].pt(); }
       else { cerr<<"error with chg BG particle eta"<<endl; }
     }
     
@@ -126,9 +126,9 @@ int main ( int argc, const char** argv ) {         // funcions and cuts specifie
     for ( int i=0; i<neuParticles.size(); ++i ) {
       BGeta = neuParticles[i].eta();
       hNeuBgEtaPhi->Fill( BGeta, neuParticles[i].phi() );
-      if ( BGeta<etaLoMid && BGeta>etaHiMid ) { neuMidSum+= neuParticles[i].pt(); }
-      else if ( BGeta<etaLoEast && BGeta>etaHiEast ) { neuEastSum+= neuParticles[i].pt(); }
-      else if ( BGeta<etaLoWest && BGeta>etaHiWest ) { neuWestSum+= neuParticles[i].pt(); }
+      if ( BGeta>etaLoMid && BGeta<etaHiMid ) { neuMidSum+= neuParticles[i].pt(); }
+      else if ( BGeta>etaLoEast && BGeta<etaHiEast ) { neuEastSum+= neuParticles[i].pt(); }
+      else if ( BGeta>etaLoWest && BGeta<etaHiWest ) { neuWestSum+= neuParticles[i].pt(); }
       else { cerr<<"error with neu BG particle eta"<<endl; }
     }
 
