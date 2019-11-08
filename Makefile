@@ -60,7 +60,7 @@ $(BDIR)/%  : $(ODIR)/%.o
 ###############################################################################
 ############################# Main Targets ####################################
 ###############################################################################
-all : $(BDIR)/pAu_QA $(BDIR)/pAu_analysis_MB $(BDIR)/pAu_analysis_HT $(BDIR)/pAu_HT_jets $(BDIR)/pAu_HT_dijets $(BDIR)/pAu_HT_jetTree $(BDIR)/pAu_HT_jetPlot $(BDIR)/find_bad_towers $(BDIR)/find_bad_trigger_towers $(BDIR)/test
+all : $(BDIR)/pAu_QA $(BDIR)/pAu_analysis_MB $(BDIR)/pAu_analysis_HT $(BDIR)/pAu_HT_jets $(BDIR)/pAu_HT_dijets $(BDIR)/pAu_HT_jetTree $(BDIR)/pAu_HT_jetPlot $(BDIR)/find_bad_towers $(BDIR)/find_bad_trigger_towers $(BDIR)/test $(BDIR)/pAuHTjetUE
 
 $(ODIR)/pAuQAFunctions.o : $(SDIR)/pAuQAFunctions.cxx $(SDIR)/pAuQAFunctions.hh
 $(ODIR)/pAu_QA.o : $(SDIR)/pAu_QA.cxx $(SDIR)/pAuQAFunctions.hh
@@ -68,6 +68,7 @@ $(ODIR)/pAuFunctions.o : $(SDIR)/pAuFunctions.cxx $(SDIR)/pAuFunctions.hh
 $(ODIR)/pAu_analysis_MB.o : $(SDIR)/pAu_analysis_MB.cxx
 $(ODIR)/pAu_analysis_HT.o : $(SDIR)/pAu_analysis_HT.cxx
 $(ODIR)/pAu_HT_jets.o : $(SDIR)/pAu_HT_jets.cxx $(SDIR)/pAu_HT_jetParameters.hh $(SDIR)/bemc_helper.h
+$(ODIR)/pAuHTjetUE.o : $(SDIR)/pAuHTjetUE.cxx $(SDIR)/pAu_HT_jetParameters.hh
 $(ODIR)/pAu_HT_dijets.o : $(SDIR)/pAu_HT_dijets.cxx
 $(ODIR)/pAu_HT_jetTree.o : $(SDIR)/pAu_HT_jetTree.cxx
 $(ODIR)/pAu_HT_jetPlot.o : $(SDIR)/pAu_HT_jetPlot.cxx
@@ -80,6 +81,7 @@ $(BDIR)/pAu_QA :	$(ODIR)/pAu_QA.o	$(ODIR)/pAuQAFunctions.o
 $(BDIR)/pAu_analysis_MB :	$(ODIR)/pAu_analysis_MB.o	$(ODIR)/pAuFunctions.o
 $(BDIR)/pAu_analysis_HT :	$(ODIR)/pAu_analysis_HT.o	$(ODIR)/pAuFunctions.o
 $(BDIR)/pAu_HT_jets :	$(ODIR)/pAu_HT_jets.o	$(ODIR)/pAuFunctions.o
+$(BDIR)/pAuHTjetUE :	$(ODIR)/pAuHTjetUE.o	$(ODIR)/pAuFunctions.o
 $(BDIR)/pAu_HT_dijets :	$(ODIR)/pAu_HT_dijets.o	$(ODIR)/pAuFunctions.o
 $(BDIR)/pAu_HT_jetTree :	$(ODIR)/pAu_HT_jetTree.o	$(ODIR)/pAuFunctions.o
 $(BDIR)/pAu_HT_jetPlot :	$(ODIR)/pAu_HT_jetPlot.o
