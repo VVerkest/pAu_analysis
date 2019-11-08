@@ -8,21 +8,27 @@ void HTjetPlot() {
   // const int acn = 3;
   // TString BackgroundChargeBias[acn] = { "allBG", "chgBG", "neuBG" };
   // TString JetChargeBias[acn] = { "allJets", "chgJets", "neuJets" };
-  TString fileName, name, title, Ndj, avg, sigma, jdj;			double scale;
+  TString fileName, name, title, Ndj, avg, sigma, jdj, ea;			double scale;
 
   // TString BackgroundChargeBias = "allBG";		TString BackgroundChargeString = "All Background";			//  [  "allBG",  "chgBG",  "neuBG"  ]
   // TString BackgroundChargeBias = "chgBG";		TString BackgroundChargeString = "Charged Background";
   // TString BackgroundChargeBias = "neuBG";		TString BackgroundChargeString = "Neutral Background";
   
-  TString path = "HiEA/";
-  // TString path = "MidEA/";
-  // TString path = "LoEA/";
-  
   jdj = "jets";
   // jdj = "dijets";
+  ea = "HiEA";
+  // ea = "LoEA";
+
+  TString slash = "/";
   
-  fileName = "out/HTdijets/" + path + "pAu_2015_HT" + jdj + ".root";
+  TString path = "HTdijets/HiEA/";
+  // TString path = "HTdijets/MidEA/";
+  // TString path = "HTdijets/LoEA/";
+  
+  fileName = "out/" + path + "pAu_2015_HT" + jdj + ".root";
   TFile* inFile = new TFile( fileName, "READ" );
+
+  path = ea + slash + jdj + slash;
 
   TH1D *hTowersPerEvent = (TH1D*) inFile->Get("hTowersPerEvent");
   hTowersPerEvent->Scale(1.0/hTowersPerEvent->Integral("WIDTH"));
