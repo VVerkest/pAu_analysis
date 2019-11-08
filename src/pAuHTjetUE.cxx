@@ -92,7 +92,7 @@ HTjetTree->Branch( "neuWestRho", &neuWestRho );
     //  BACKGROUND ESTIMATION
     GatherChargedBG( leadJet, container, chgParticles );
     GatherNeutralBG( leadJet, container, neuParticles );
-    CalculateRhoByChargeAndEta( chgParticles, neuParticles, chgEastRho, chgMidRho, chgWestRho, neuEastRho, neuMidRho, neuWestRho ); 
+    CalculateRhoByChargeAndEta( chgParticles, neuParticles, chgEastRho, chgMidRho, chgWestRho, neuEastRho, neuMidRho, neuWestRho, hChgBgEtaPhi, hNeuBgEtaPhi ); 
     
     HTjetTree->Fill();
     

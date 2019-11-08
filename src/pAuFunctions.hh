@@ -75,7 +75,7 @@ namespace pAuAnalysis {
   void BackGroundEstimationAndPlots( std::vector<fastjet::PseudoJet> chgPart, std::vector<fastjet::PseudoJet> neuPart, fastjet::PseudoJet leadJet,
 				     TH3D *PartPtDEtaDPhi, TH3D *PartPtEtaPhi, TH3D *BG, double &chgSum, double &neuSum );
 
-  void CalculateRhoByChargeAndEta( std::vector<fastjet::PseudoJet> chgPart, std::vector<fastjet::PseudoJet> neuPart, double chgEast_Rho, double chgMid_Rho, double chgWest_Rho, double neuEast_Rho, double neuMid_Rho, double neuWest_Rho );
+  void CalculateRhoByChargeAndEta( std::vector<fastjet::PseudoJet> chgPart, std::vector<fastjet::PseudoJet> neuPart, double chgEast_Rho, double chgMid_Rho, double chgWest_Rho, double neuEast_Rho, double neuMid_Rho, double neuWest_Rho, TH2D *hChg, TH2D *hNeu );
   
   int CountTowers( TList *selectedtowers );
 

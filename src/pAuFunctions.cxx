@@ -35,7 +35,7 @@ namespace pAuAnalysis {
   }
 
   
-  void CalculateRhoByChargeAndEta( std::vector<fastjet::PseudoJet> chgPart, std::vector<fastjet::PseudoJet> neuPart, double chgEast_Rho, double chgMid_Rho, double chgWest_Rho, double neuEast_Rho, double neuMid_Rho, double neuWest_Rho ) {
+  void CalculateRhoByChargeAndEta( std::vector<fastjet::PseudoJet> chgPart, std::vector<fastjet::PseudoJet> neuPart, double chgEast_Rho, double chgMid_Rho, double chgWest_Rho, double neuEast_Rho, double neuMid_Rho, double neuWest_Rho, TH2D *hChg, TH2D *hNeu ) {
 
     double etaLoEast = -1.0;
     double etaLoMid = -0.3;
@@ -54,7 +54,7 @@ namespace pAuAnalysis {
     
     for ( int i=0; i<chgPart.size(); ++i ) {
       BGeta = chgPart[i].eta();
-      hChgBgEtaPhi->Fill( BGeta, chgPart[i].phi() );
+      hChg->Fill( BGeta, chgPart[i].phi() );
       if ( BGeta>=etaLoMid && BGeta<etaHiMid ) { chgMidSum+= chgPart[i].pt(); }
       else if ( BGeta>=etaLoEast && BGeta<=etaHiEast ) { chgEastSum+= chgPart[i].pt(); }
       else if ( BGeta>etaLoWest && BGeta<=etaHiWest ) { chgWestSum+= chgPart[i].pt(); }
@@ -63,7 +63,7 @@ namespace pAuAnalysis {
     
     for ( int i=0; i<neuPart.size(); ++i ) {
       BGeta = neuPart[i].eta();
-      hNeuBgEtaPhi->Fill( BGeta, neuPart[i].phi() );
+      hNeu->Fill( BGeta, neuPart[i].phi() );
       if ( BGeta>=etaLoMid && BGeta<etaHiMid ) { neuMidSum+= neuPart[i].pt(); }
       else if ( BGeta>=etaLoEast && BGeta<=etaHiEast ) { neuEastSum+= neuPart[i].pt(); }
       else if ( BGeta>etaLoWest && BGeta<=etaHiWest ) { neuWestSum+= neuPart[i].pt(); }
