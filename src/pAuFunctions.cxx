@@ -2,6 +2,7 @@
 //  Veronica Verkest       May 15, 2019
 
 #include "pAuFunctions.hh"
+#include "pAu_HT_jetParameters.hh"
 
 namespace pAuAnalysis {
 
