@@ -148,7 +148,7 @@ void HTjetPlot() {
   c0->SetLogy();
   
   name = /*JetChargeString + ": " + BackgroundChargeString + " */ "Underlying Event by Lead Jet p_{T};#rho (GeV);";
-  TH2D *sLeadPtVsRho = new TH2D( "sLeadPtVsRho", name, 50,0,15, 10,0, 1.0 );
+  TH2D *sLeadPtVsRho = new TH2D( "sLeadPtVsRho", name, 50,0,15, 10,0.000001, 1.0 );
   sLeadPtVsRho->SetStats(0);
 
   TLegend *leg2 = new TLegend(0.6, 0.65, 0.9, 0.9,NULL,"brNDC");    // LEGEND
