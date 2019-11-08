@@ -35,7 +35,13 @@ namespace pAuAnalysis {
 
   
   void CalculateRhoByChargeAndEta( std::vector<fastjet::PseudoJet> chgPart, std::vector<fastjet::PseudoJet> neuPart, double chgEast_Rho, double chgMid_Rho, double chgWest_Rho, double neuEast_Rho, double neuMid_Rho, double neuWest_Rho ) {
-      
+
+    double etaLoEast = -1.0;
+    double etaLoMid = -0.3;
+    double etaLoWest = 0.3;
+    double etaHiEast = -0.3;
+    double etaHiMid = 0.3;
+    double etaHiWest = 1.0;
     double BGeta, chgEastSum, chgMidSum, chgWestSum, neuEastSum, neuMidSum, neuWestSum;
 
     chgEastSum = 0;
