@@ -10,16 +10,14 @@ void HTjetPlot() {
   // TString JetChargeBias[acn] = { "allJets", "chgJets", "neuJets" };
   TString fileName, name, title, Ndj, avg, sigma, jdj, ea;			double scale;
   
-  jdj = "jets";
+  jdj = "dijets";
   // jdj = "dijets";
   ea = "HiEA";
   // ea = "LoEA";
 
   TString slash = "/";
   
-  TString path = "HTdijets/HiEA/";
-  // TString path = "HTdijets/MidEA/";
-  // TString path = "HTdijets/LoEA/";
+  TString path = "HTdijets/" + ea + slash;
   
   fileName = "out/" + path + "pAu_2015_HT" + jdj + ".root";
   TFile* inFile = new TFile( fileName, "READ" );
