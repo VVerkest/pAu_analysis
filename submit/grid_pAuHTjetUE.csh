@@ -6,7 +6,7 @@
  make bin/pAuHTjetUE || exit
 
 set ExecPath = `pwd`
-set execute = './bin/pAu_HT_jets'
+set execute = './bin/pAuHTjetUE'
 set numevents = -1
 set base = /wsu/home/el/el98/el9852/physics/analysis/pAu_analysis/production_pAu200_2015/HT/pAu_2015_200_HT
 set outDir = UE
