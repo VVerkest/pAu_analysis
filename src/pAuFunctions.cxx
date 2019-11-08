@@ -58,7 +58,7 @@ namespace pAuAnalysis {
       if ( BGeta>=etaLoMid && BGeta<etaHiMid ) { chgMidSum+= chgPart[i].pt(); }
       else if ( BGeta>=etaLoEast && BGeta<=etaHiEast ) { chgEastSum+= chgPart[i].pt(); }
       else if ( BGeta>etaLoWest && BGeta<=etaHiWest ) { chgWestSum+= chgPart[i].pt(); }
-      else { cerr<<"error with chg BG particle eta"<<endl; }
+      else { std::cerr<<"error with chg BG particle eta"<<std::endl; }
     }
     
     for ( int i=0; i<neuPart.size(); ++i ) {
@@ -67,7 +67,7 @@ namespace pAuAnalysis {
       if ( BGeta>=etaLoMid && BGeta<etaHiMid ) { neuMidSum+= neuPart[i].pt(); }
       else if ( BGeta>=etaLoEast && BGeta<=etaHiEast ) { neuEastSum+= neuPart[i].pt(); }
       else if ( BGeta>etaLoWest && BGeta<=etaHiWest ) { neuWestSum+= neuPart[i].pt(); }
-      else { cerr<<"error with neu BG particle eta"<<endl; }
+      else { std::cerr<<"error with neu BG particle eta"<<std::endl; }
     }
 
     chgEast_Rho = chgEastSum/eastArea;
