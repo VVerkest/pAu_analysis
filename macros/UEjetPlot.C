@@ -69,7 +69,7 @@ void UEjetPlot(){
     title = "BBC ADC East Sum:  " + etaBinString[e] + ";BBC East Sum";
     hBBCEastSum[e] = new TH1D( name, title, 70,0,70000 );
     hBBCEastSum[e]->SetMarkerStyle( etaMarker[e] );
-    //hBBCEastSum[e]->SetMarkerSize(2);
+    hBBCEastSum[e]->SetMarkerColor( etaColor[e] );
   }
 
   for ( int p=0; p<nPtBins; ++p ) {
@@ -142,21 +142,25 @@ void UEjetPlot(){
     
 
   TCanvas * c1 = new TCanvas( "c0" , "" ,700 ,500 );              // CANVAS 1
-  
+
+  //TH2D *sBBCbyEta = new TH2D("sBBCbyEta", "BBC ADC East Sum by Lead Jet #eta;BBC East Sum", );
   for ( int e=0; e<nEtaBins; ++e ) {
     hBBCEastSum[e]->SetStats(0);
-    hBBCEastSum[e]->Scale(1./hBBCEastSum[e]->Integral("WIDTH"));
+    hBBCEastSum[e]->Scale(1./hBBCEastSum[e]->Integral());
     hBBCEastSum[e]->Draw("SAME");
   }
+  c1->BuildLegend();
   c1->SaveAs( "plots/UE/BBCEastSum_by_eta.pdf" , "PDF" );
 
-  TCanvas * c2 = new TCanvas( "c2" , "" ,700 ,500 );              // CANVAS 2
-  for ( int e=0; e<nEtaBins; ++e ) {
-    for ( int p=0; p<nPtBins; ++p ) {
-      hLeadEta[p]->Scale(1./hLeadEta[p]->Integral("WIDTH"));
-      hLeadEta[p]->Draw("SAME");
-    }
+
+  TH2D *sLeadEtaByPt = new TH2D("sBBCbyEta", "BBC ADC East Sum by Lead Jet #eta;BBC East Sum", 40,-1,1, 20,0.5,1);
+  sLeadEtaByPt->Draw();
+  for ( int p=0; p<nPtBins; ++p ) {
+    hLeadEta[p]->SetStats(0);
+    hLeadEta[p]->Scale(1./hLeadEta[p]->Integral("WIDTH"));
+    hLeadEta[p]->Draw("SAME");
   }
-  c1->SaveAs( "plots/UE/LeadEta_by_pteta.pdf" , "PDF" );
+  c1->BuildLegend();
+  c1->SaveAs( "plots/UE/LeadEta_by_pt.pdf" , "PDF" );
     
 }
