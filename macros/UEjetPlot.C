@@ -176,7 +176,7 @@ void UEjetPlot(){
   leg1->AddEntry((TObject*)0,"#bf{p_{T}^{lead}}", "");
   leg1->AddEntry((TObject*)0,"#bf{<#eta>}", "");
   
-  TH2D *sLeadEtaByPt = new TH2D("sBBCbyEta", "BBC ADC East Sum by Lead Jet #eta;BBC East Sum", 40,-1,1, 20,0.5,1);
+  TH2D *sLeadEtaByPt = new TH2D("sLeadEtaByPt", "BBC ADC East Sum by Lead Jet #eta;BBC East Sum", 40,-1,1, 20,0.5,1);
   sLeadEtaByPt->SetStats(0);
   sLeadEtaByPt->Draw();
 
