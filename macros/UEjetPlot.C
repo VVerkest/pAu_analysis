@@ -142,7 +142,7 @@ void UEjetPlot(){
   c0->SaveAs( "plots/UE/rho.pdf" , "PDF" );
     
 
-  TCanvas * c1 = new TCanvas( "c0" , "" ,700 ,500 );              // CANVAS 1
+  TCanvas * c1 = new TCanvas( "c1" , "" ,700 ,500 );              // CANVAS 1
 
   TLegend *leg0 = new TLegend(0.65, 0.65, 0.9, 0.9,NULL,"brNDC");    // LEGEND 0
   leg0->SetBorderSize(1);   leg0->SetLineColor(1);   leg0->SetLineStyle(1);   leg0->SetLineWidth(1);   leg0->SetFillColor(0);   leg0->SetFillStyle(1001);
@@ -165,21 +165,34 @@ void UEjetPlot(){
     leg0->AddEntry((TObject*)0,title, "");    leg0->AddEntry((TObject*)0,avg, "");
 
   }
-  c1->BuildLegend();
+  leg0->Draw();
   c1->SaveAs( "plots/UE/BBCEastSum_by_eta.pdf" , "PDF" );
 
 
+  TLegend *leg1 = new TLegend(0.65, 0.65, 0.9, 0.9,NULL,"brNDC");    // LEGEND 0
+  leg1->SetBorderSize(1);   leg1->SetLineColor(1);   leg1->SetLineStyle(1);   leg1->SetLineWidth(1);   leg1->SetFillColor(0);   leg1->SetFillStyle(1001);
+  leg1->SetNColumns(2);
+  leg1->AddEntry((TObject*)0,"#bf{p_{T}^{lead}}", "");
+  leg1->AddEntry((TObject*)0,"#bf{<#eta>}", "");
+  
   TH2D *sLeadEtaByPt = new TH2D("sBBCbyEta", "BBC ADC East Sum by Lead Jet #eta;BBC East Sum", 40,-1,1, 20,0.5,1);
+  sLeadEtaByPt->SetStats(0);
   sLeadEtaByPt->Draw();
-
-
 
   for ( int p=0; p<nPtBins; ++p ) {
     hLeadEta[p]->SetStats(0);
     hLeadEta[p]->Scale(1./hLeadEta[p]->Integral("WIDTH"));
     hLeadEta[p]->Draw("SAME");
+    avg = "";
+    avg += hLeadEta[p]->GetMean(1);
+    avg = avg(0,6);
+    name = "hEta" + ptBinName[p];
+    title = ptBinString[p];
+    leg1->AddEntry( name, title, "lpf" );                            // ADD TO LEGEND
+    leg1->AddEntry((TObject*)0,title, "");    leg1->AddEntry((TObject*)0,avg, "");
+
   }
-  c1->BuildLegend();
+  leg1->Draw();
   c1->SaveAs( "plots/UE/LeadEta_by_pt.pdf" , "PDF" );
     
 }
