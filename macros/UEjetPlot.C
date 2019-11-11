@@ -101,12 +101,13 @@ void UEjetPlot(){
     hLeadPtEtaPhi->Fill(leadPt,leadEta,leadPhi);
     hPt_UE_BBCsumE->Fill(leadPt,rho,BbcAdcEastSum);
 
-
+    pval = 99;    eval = 99;
+    
     for ( int p=0; p<3; ++p ) {
-      if ( leadJet.pt() >= ptLo[p]  &&  leadJet.pt() <= ptHi[p] ) { pval = p; }
+      if ( leadPt >= ptLo[p]  &&  leadPt <= ptHi[p] ) { pval = p; }
     }
     for ( int e=0; e<3; ++e ) {
-      if ( leadJet.eta() >= etaLo[e]  &&  leadJet.eta() <= etaHi[e] ) { eval = e; }
+      if ( leadEta >= etaLo[e]  &&  leadEta <= etaHi[e] ) { eval = e; }
     }
     if ( pval==99 || eval==99 ) { cerr<<"UNABLE TO FIND PT OR ETA RANGE FOR LEAD JET"<<endl; }
 
