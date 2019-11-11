@@ -89,8 +89,8 @@ void UEjetPlot(){
   hBGneu->Draw("COLZ");
   c0->SaveAs( "plots/UE/neuBgEtaPhi.pdf" , "PDF" );
 
-  c0->GetZaxis()->SetRangeUser(0.000001,1);
   hTowersVsRho->Scale(1./hTowersVsRho->Integral("WIDTH"));
+  hTowersVsRho->GetZaxis()->SetRangeUser(0.000001,1);
   hTowersVsRho->Draw("COLZ");
   c0->SaveAs( "plots/UE/towersVsRho.pdf" , "PDF" );
 
