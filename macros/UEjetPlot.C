@@ -162,7 +162,7 @@ void UEjetPlot(){
     name = "hBBCEastSum" + etaBinName[e];
     title = etaBinString[e];
     leg0->AddEntry( name, title, "lpf" );                            // ADD TO LEGEND
-    leg0->AddEntry((TObject*)0,title, "");    leg0->AddEntry((TObject*)0,avg, "");
+    leg0->AddEntry((TObject*)0,avg, "");
 
   }
   leg0->Draw();
@@ -186,10 +186,10 @@ void UEjetPlot(){
     avg = "";
     avg += hLeadEta[p]->GetMean(1);
     avg = avg(0,6);
-    name = "hEta" + ptBinName[p];
+    name = "hLeadEta" + ptBinName[p];
     title = ptBinString[p];
     leg1->AddEntry( name, title, "lpf" );                            // ADD TO LEGEND
-    leg1->AddEntry((TObject*)0,title, "");    leg1->AddEntry((TObject*)0,avg, "");
+    leg1->AddEntry((TObject*)0,avg, "");
 
   }
   leg1->Draw();
