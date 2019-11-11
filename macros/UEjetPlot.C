@@ -29,7 +29,7 @@ void UEjetPlot(){
   const int marker[nChgBins] = { 22, 23, 20 };
 
   int eval, pval;
-  TString name, saveName, title;
+  TString name, saveName, title, avg;
   
   TString fileName = "out/UE/pAuHTjetUE.root";
   TFile* inFile = new TFile( fileName, "READ" );
@@ -70,6 +70,7 @@ void UEjetPlot(){
     hBBCEastSum[e] = new TH1D( name, title, 70,0,70000 );
     hBBCEastSum[e]->SetMarkerStyle( etaMarker[e] );
     hBBCEastSum[e]->SetMarkerColor( etaColor[e] );
+    hBBCEastSum[e]->SetLineColor( etaColor[e] );
   }
 
   for ( int p=0; p<nPtBins; ++p ) {
@@ -143,11 +144,26 @@ void UEjetPlot(){
 
   TCanvas * c1 = new TCanvas( "c0" , "" ,700 ,500 );              // CANVAS 1
 
-  //TH2D *sBBCbyEta = new TH2D("sBBCbyEta", "BBC ADC East Sum by Lead Jet #eta;BBC East Sum", );
+  TLegend *leg0 = new TLegend(0.65, 0.65, 0.9, 0.9,NULL,"brNDC");    // LEGEND 0
+  leg0->SetBorderSize(1);   leg0->SetLineColor(1);   leg0->SetLineStyle(1);   leg0->SetLineWidth(1);   leg0->SetFillColor(0);   leg0->SetFillStyle(1001);
+  leg0->SetNColumns(2);
+  leg0->AddEntry((TObject*)0,"#bf{#eta_{lead}}", "");
+  leg0->AddEntry((TObject*)0,"#bf{<BBCE sum>}", "");
+  
+  TH2D *sBBCbyEta = new TH2D("sBBCbyEta", "BBC ADC East Sum by Lead Jet #eta;BBC East Sum", 70,0,70000, 10,0,0.03);
+  sBBCbyEta->SetStats(0);
   for ( int e=0; e<nEtaBins; ++e ) {
     hBBCEastSum[e]->SetStats(0);
     hBBCEastSum[e]->Scale(1./hBBCEastSum[e]->Integral());
     hBBCEastSum[e]->Draw("SAME");
+    avg = "";
+    avg += hBBCEastSum[e]->GetMean(1);                                           // 1 denotes x-axis
+    avg = avg(0,6);
+    name = "hBBCEastSum" + etaBinName[e];
+    title = etaBinString[e];
+    leg0->AddEntry( name, title, "lpf" );                            // ADD TO LEGEND
+    leg0->AddEntry((TObject*)0,title, "");    leg0->AddEntry((TObject*)0,avg, "");
+
   }
   c1->BuildLegend();
   c1->SaveAs( "plots/UE/BBCEastSum_by_eta.pdf" , "PDF" );
@@ -155,6 +171,9 @@ void UEjetPlot(){
 
   TH2D *sLeadEtaByPt = new TH2D("sBBCbyEta", "BBC ADC East Sum by Lead Jet #eta;BBC East Sum", 40,-1,1, 20,0.5,1);
   sLeadEtaByPt->Draw();
+
+
+
   for ( int p=0; p<nPtBins; ++p ) {
     hLeadEta[p]->SetStats(0);
     hLeadEta[p]->Scale(1./hLeadEta[p]->Integral("WIDTH"));
