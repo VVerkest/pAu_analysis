@@ -60,29 +60,26 @@ void UEjetPlot(){
   TH3D *hLeadPtEtaPhi = new TH3D("hLeadPtEtaPhi","Lead Jet p_{T} vs. #eta vs. #phi;p_{T} (GeV);#eta;#phi", 280,0,70, 40,-1.0,1.0, 120,0,6.3);
   TH3D *hPt_UE_BBCsumE = new TH3D("hPt_UE_BBCsumE","UE vs. BBC ADC East Sum;Lead Jet p_{T} (GeV);Underlying Event (GeV);BBC ADC East Sum", 500,0,125, 50,0,25, 160,0,80000 );
 
-  TH1D *hLeadEta[nPtBins][nEtaBins];
+  TH1D *hLeadEta[nPtBins];
   TH1D *hBBCEastSum[nEtaBins];
 
   for ( int e=0; e<nEtaBins; ++e ) {
 
     name = "hBBCEastSum" + etaBinName[e];
     title = "BBC ADC East Sum:  " + etaBinString[e] + ";BBC East Sum";
-    hBBCEastSum[e] = new TH1D( name, title, 700,0,70000 );
+    hBBCEastSum[e] = new TH1D( name, title, 70,0,70000 );
     hBBCEastSum[e]->SetMarkerStyle( etaMarker[e] );
-    hBBCEastSum[e]->SetMarkerSize(2);
-    
-    for ( int p=0; p<nPtBins; ++p ) {
-      name = "hLeadEta" + ptBinName[p] + etaBinName[e];
-      title = "Lead Jet #eta:  " + ptBinString[p] + "   " + etaBinString[e] + ";#eta_{lead}";
-      hLeadEta[p][e] = new TH1D( name, title, 40, -1.0, 1.0 );
-      hLeadEta[p][e]->SetLineColor( ptColor[p] );
-      hLeadEta[p][e]->SetMarkerColor( ptColor[p] );
-      hLeadEta[p][e]->SetMarkerStyle( etaMarker[e] );
-      hLeadEta[p][e]->SetMarkerSize(2);
-    }
+    //hBBCEastSum[e]->SetMarkerSize(2);
   }
 
-  
+  for ( int p=0; p<nPtBins; ++p ) {
+    name = "hLeadEta" + ptBinName[p];
+    title = "Lead Jet #eta:  " + ptBinString[p] + ";#eta_{lead}";
+    hLeadEta[p] = new TH1D( name, title, 40, -1.0, 1.0 );
+    hLeadEta[p]->SetLineColor( ptColor[p] );
+    hLeadEta[p]->SetMarkerColor( ptColor[p] );
+    hLeadEta[p]->SetMarkerSize(2);
+  }
   
   double chgRho, neuRho, midRho, eastRho, westRho, rho, sigma;
   
@@ -156,8 +153,8 @@ void UEjetPlot(){
   TCanvas * c2 = new TCanvas( "c2" , "" ,700 ,500 );              // CANVAS 2
   for ( int e=0; e<nEtaBins; ++e ) {
     for ( int p=0; p<nPtBins; ++p ) {
-      hLeadEta[p][e]->Scale(1./hLeadEta[p][e]->Integral("WIDTH"));
-      hLeadEta[p][e]->Draw("SAME");
+      hLeadEta[p]->Scale(1./hLeadEta[p]->Integral("WIDTH"));
+      hLeadEta[p]->Draw("SAME");
     }
   }
   c1->SaveAs( "plots/UE/LeadEta_by_pteta.pdf" , "PDF" );
