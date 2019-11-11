@@ -30,6 +30,7 @@ void UEjetPlot(){
 
   int eval, pval;
   TString name, saveName, title, avg, sigma;
+  double chgRho, neuRho, midRho, eastRho, westRho, rho;
   
   TString fileName = "out/UE/pAuHTjetUE.root";
   TFile* inFile = new TFile( fileName, "READ" );
@@ -83,9 +84,7 @@ void UEjetPlot(){
     hLeadEta[p]->SetMarkerColor( ptColor[p] );
     hLeadEta[p]->SetMarkerSize(2);
   }
-  
-  double chgRho, neuRho, midRho, eastRho, westRho, rho, sigma;
-  
+    
   for ( int i=0; i<nEntries; ++i ) {
 
     jetTree->GetEntry(i);
@@ -207,6 +206,7 @@ void UEjetPlot(){
   c1->SaveAs( "plots/UE/LeadEta_by_pt.pdf" , "PDF" );
 
 
+  TH2D *hRho2d;
   jetTree->Draw("leadPt:((chgEastRho+neuEastRho)+(chgMidRho+neuMidRho)+(chgWestRho+neuWestRho))/3>>hRho2d","","COLZ");
   c1->SetLogy();
   TLegend *leg2 = new TLegend(0.65, 0.65, 0.9, 0.9,NULL,"brNDC");    // LEGEND 0
@@ -227,7 +227,6 @@ void UEjetPlot(){
     title =  ptBinString[p];
     hPtRho[p]->SetNameTitle( name, title );
     hPtRho[p]->SetLineColor( ptColor[p] );
-    hPtRho[p]->SetMakerColor( ptColor[p] );
     hPtRho[p]->Scale(1./hPtRho[p]->GetEntries());
     hPtRho[p]->SetStats(0);
     hPtRho[p]->Draw("SAME");
