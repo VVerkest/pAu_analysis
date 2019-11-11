@@ -49,7 +49,7 @@ void UEjetPlot(){
 
   TH1D *hRho = new TH1D("hRho","Underlying Event;#rho (GeV)",120,0,30);
   TH1D *hLeadPhi = new TH1D("hLeadPhi","Lead Jet #phi;#phi_{lead}",12,0,2*pi);
-  TH2D *hTowersVsRho = new TH2D("hTowersVsRho","# of Towers vs. UE;#rho (GeV);# of Towers", 25,0,25, 200,0,200 );
+  TH2D *hTowersVsRho = new TH2D("hTowersVsRho","# of Towers vs. UE;#rho (GeV);# of Towers", 25,0,25, 15,0,15 );
   TH3D *hLeadJetPtRhoEta = new TH3D( "hLeadJetPtRhoEta", "Lead Jet p_{T}, #rho, #eta;Jet p_{T} (GeV);#rho;Jet #eta", 400,0.0,100.0, 100,0,25, 40,-1.0,1.0 );  
   TH3D *hLeadPtEtaPhi = new TH3D("hLeadPtEtaPhi","Lead Jet p_{T} vs. #eta vs. #phi;p_{T} (GeV);#eta;#phi", 280,0,70, 40,-1.0,1.0, 120,0,6.3);
   TH3D *hPt_UE_BBCsumE = new TH3D("hPt_UE_BBCsumE","UE vs. BBC ADC East Sum;Lead Jet p_{T} (GeV);Underlying Event (GeV);BBC ADC East Sum", 500,0,125, 50,0,25, 160,0,80000 );
@@ -81,6 +81,14 @@ void UEjetPlot(){
 
   c0->SetLogz();
 
+  hBGchg->Scale(1./hBGchg->Integral("WIDTH"));
+  hBGchg->Draw("COLZ");
+  c0->SaveAs( "plots/UE/chgBgEtaPhi.pdf" , "PDF" );
+  
+  hBGneu->Scale(1./hBGneu->Integral("WIDTH"));
+  hBGneu->Draw("COLZ");
+  c0->SaveAs( "plots/UE/neuBgEtaPhi.pdf" , "PDF" );
+  
   hTowersVsRho->Scale(1./hTowersVsRho->Integral("WIDTH"));
   hTowersVsRho->Draw("COLZ");
   c0->SaveAs( "plots/UE/towersVsRho.pdf" , "PDF" );
