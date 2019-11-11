@@ -109,7 +109,7 @@ void UEjetPlot(){
     if ( pval==99 || eval==99 ) { cerr<<"UNABLE TO FIND PT OR ETA RANGE FOR LEAD JET"<<endl; }
 
     hBBCEastSum[eval]->Fill( BbcAdcEastSum );
-    hLeadEta[pval][eval]->Fill( leadEta );
+    hLeadEta[pval]->Fill( leadEta );
     
   }
 
