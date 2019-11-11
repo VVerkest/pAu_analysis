@@ -58,10 +58,11 @@ void UEjetPlot(){
   
   for ( int i=0; i<nEntries; ++i ) {
 
+    jetTree->GetEntry(i);
+
     chgRho = ( chgEastRho + chgMidRho + chgWestRho )/3;
     neuRho = ( neuEastRho + neuMidRho + neuWestRho )/3;
     rho = chgRho + neuRho;
-
 
     hRho->Fill(rho);
     hLeadPhi->Fill(leadPhi);
