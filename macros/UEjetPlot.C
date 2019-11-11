@@ -125,10 +125,13 @@ void UEjetPlot(){
   c0->SetLogz();
 
   hBGchg->Scale(1./hBGchg->Integral("WIDTH"));
+  title = "Hi EA: " + hBGchg->GetTitle();
+  hBGchg->SetTitle( title );
   hBGchg->Draw("COLZ");
   c0->SaveAs( "plots/UE/HIEAchgBgEtaPhi.pdf" , "PDF" );
   
   hBGneu->Scale(1./hBGneu->Integral("WIDTH"));
+  title = "Hi EA: " + hBGneu->GetTitle();
   hBGneu->Draw("COLZ");
   c0->SaveAs( "plots/UE/HIEAneuBgEtaPhi.pdf" , "PDF" );
 
