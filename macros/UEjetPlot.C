@@ -59,6 +59,8 @@ void UEjetPlot(){
   TH3D *hLeadJetPtRhoEta = new TH3D( "hLeadJetPtRhoEta", "Lead Jet p_{T}, #rho, #eta;Jet p_{T} (GeV);#rho;Jet #eta", 400,0.0,100.0, 100,0,25, 40,-1.0,1.0 );  
   TH3D *hLeadPtEtaPhi = new TH3D("hLeadPtEtaPhi","Lead Jet p_{T} vs. #eta vs. #phi;p_{T} (GeV);#eta;#phi", 280,0,70, 40,-1.0,1.0, 120,0,6.3);
   TH3D *hPt_UE_BBCsumE = new TH3D("hPt_UE_BBCsumE","UE vs. BBC ADC East Sum;Lead Jet p_{T} (GeV);Underlying Event (GeV);BBC ADC East Sum", 500,0,125, 50,0,25, 160,0,80000 );
+  TH1D *hleadEta_LoEA = new TH1D( "hleadEta_LoEA", "Low Event Activity", 40,-1,1 );
+  TH1D *hleadEta_HiEA = new TH1D( "hleadEta_HiEA", "High Event Activity", 40,-1,1 );
 
   TH1D *hLeadEta[nPtBins];
   TH1D *hBBCEastSum[nEtaBins];
@@ -99,6 +101,14 @@ void UEjetPlot(){
     hLeadPtEtaPhi->Fill(leadPt,leadEta,leadPhi);
     hPt_UE_BBCsumE->Fill(leadPt,rho,BbcAdcEastSum);
 
+    if ( BbcAdcEastSum>8000 && BbcAdcEastSum<16000 ) {
+      hleadEta_LoEA->Fill(leadEta);
+    }
+
+    if ( BbcAdcEastSum>30000 ) {
+      hleadEta_HiEA->Fill(leadEta);
+    }
+	
     pval = 99;    eval = 99;
     
     for ( int p=0; p<3; ++p ) {
@@ -195,5 +205,7 @@ void UEjetPlot(){
   }
   leg1->Draw();
   c1->SaveAs( "plots/UE/LeadEta_by_pt.pdf" , "PDF" );
-    
+
+
+
 }
