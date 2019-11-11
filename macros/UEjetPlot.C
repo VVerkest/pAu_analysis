@@ -152,13 +152,14 @@ void UEjetPlot(){
   
   TH2D *sBBCbyEta = new TH2D("sBBCbyEta", "BBC ADC East Sum by Lead Jet #eta;BBC East Sum", 70,0,70000, 10,0,0.03);
   sBBCbyEta->SetStats(0);
+  sBBCbyEta->Draw();
   for ( int e=0; e<nEtaBins; ++e ) {
     hBBCEastSum[e]->SetStats(0);
     hBBCEastSum[e]->Scale(1./hBBCEastSum[e]->Integral());
     hBBCEastSum[e]->Draw("SAME");
     avg = "";
     avg += hBBCEastSum[e]->GetMean(1);                                           // 1 denotes x-axis
-    avg = avg(0,6);
+    avg = avg(0,5);
     name = "hBBCEastSum" + etaBinName[e];
     title = etaBinString[e];
     leg0->AddEntry( name, title, "lpf" );                            // ADD TO LEGEND
