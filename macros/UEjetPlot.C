@@ -29,7 +29,7 @@ void UEjetPlot(){
   const int marker[nChgBins] = { 22, 23, 20 };
 
   int eval, pval;
-  TString name, saveName, title, avg;
+  TString name, saveName, title, avg, sigma;
   
   TString fileName = "out/UE/pAuHTjetUE.root";
   TFile* inFile = new TFile( fileName, "READ" );
@@ -150,7 +150,7 @@ void UEjetPlot(){
   hRho->Scale(1./hRho->Integral("WIDTH"));
   hRho->Draw();
   c0->SaveAs( "plots/UE/rho.pdf" , "PDF" );
-    
+
 
   TCanvas * c1 = new TCanvas( "c1" , "" ,700 ,500 );              // CANVAS 1
 
@@ -207,5 +207,42 @@ void UEjetPlot(){
   c1->SaveAs( "plots/UE/LeadEta_by_pt.pdf" , "PDF" );
 
 
+  jetTree->Draw("leadPt:((chgEastRho+neuEastRho)+(chgMidRho+neuMidRho)+(chgWestRho+neuWestRho))/3>>hRho2d","","COLZ");
+  c1->SetLogy();
+  TLegend *leg2 = new TLegend(0.65, 0.65, 0.9, 0.9,NULL,"brNDC");    // LEGEND 0
+  leg2->SetBorderSize(1);   leg2->SetLineColor(1);   leg2->SetLineStyle(1);   leg2->SetLineWidth(1);   leg2->SetFillColor(0);   leg2->SetFillStyle(1001);
+  leg2->SetNColumns(3);
+  leg2->AddEntry((TObject*)0,"#bf{p_{T}^{lead}}", "");
+  leg2->AddEntry((TObject*)0,"#bf{<#rho>}", "");
+  leg2->AddEntry((TObject*)0,"#bf{<#sigma>}", "");
+
+  TH1D *hPtRho[nPtBins];
+  TH2D *sPtRho = new TH2D( "sPtRho", "Underlying Event by Lead Jet p_{T};#rho (GeV)", 10,0,0.5, 20,0,15 );
+  sPtRho->SetStats(0);
+  sPtRho->Draw();
+  for ( int p=0; p<nPtBins; ++p ) {
+    hRho2d->GetYaxis()->SetRangeUser( ptLo[p], ptHi[p] );
+    hPtRho[p] = (TH1D*) hRho2d->ProjectionX();
+    name = "hUE" + ptBinName[p];
+    title =  ptBinString[p];
+    hPtRho[p]->SetNameTitle( name, title );
+    hPtRho[p]->SetLineColor( ptColor[p] );
+    hPtRho[p]->SetMakerColor( ptColor[p] );
+    hPtRho[p]->Scale(1./hPtRho[p]->GetEntries());
+    hPtRho[p]->SetStats(0);
+    hPtRho[p]->Draw("SAME");
+
+    avg = "";
+    avg+=hPtRho[p]->GetMean(1);
+    avg = avg(0,6);
+    sigma="";
+    sigma+=hPtRho[p]->GetStdDev(1);
+    sigma = sigma(0,6);
+    leg2->AddEntry( name, title, "lpf" );                            // ADD TO LEGEND
+    leg2->AddEntry((TObject*)0,avg, "");
+    leg2->AddEntry((TObject*)0,sigma, "");
+  }
+  leg2->Draw();
+  c1->SaveAs("plots/UE/rhoByLeadPt.pdf","PDF");
 
 }
