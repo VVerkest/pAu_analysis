@@ -109,7 +109,9 @@ void UEjetPlot(){
     }
     if ( pval==99 || eval==99 ) { cerr<<"UNABLE TO FIND PT OR ETA RANGE FOR LEAD JET"<<endl; }
 
-    hBBCEastSum[eval]->Fill( BbcAdcEastSum );
+    if ( BbcAdcEastSum>30000 ) {
+      hBBCEastSum[eval]->Fill( BbcAdcEastSum );
+    }
     hLeadEta[pval]->Fill( leadEta );
     
   }
@@ -124,11 +126,11 @@ void UEjetPlot(){
 
   hBGchg->Scale(1./hBGchg->Integral("WIDTH"));
   hBGchg->Draw("COLZ");
-  c0->SaveAs( "plots/UE/chgBgEtaPhi.pdf" , "PDF" );
+  c0->SaveAs( "plots/UE/HIEAchgBgEtaPhi.pdf" , "PDF" );
   
   hBGneu->Scale(1./hBGneu->Integral("WIDTH"));
   hBGneu->Draw("COLZ");
-  c0->SaveAs( "plots/UE/neuBgEtaPhi.pdf" , "PDF" );
+  c0->SaveAs( "plots/UE/HIEAneuBgEtaPhi.pdf" , "PDF" );
 
   hTowersVsRho->Scale(1./hTowersVsRho->Integral("WIDTH"));
   hTowersVsRho->GetZaxis()->SetRangeUser(0.000001,1);
