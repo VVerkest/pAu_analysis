@@ -70,7 +70,7 @@ void UEjetPlot(){
 
     name = "hBBCEastSum" + etaBinName[e];
     title = "BBC ADC East Sum:  " + etaBinString[e] + ";BBC East Sum";
-    hBBCEastSum[e] = new TH1D( name, title, 70,0,70000 );
+    hBBCEastSum[e] = new TH1D( name, title, 18,0,70000 );
     hBBCEastSum[e]->SetMarkerStyle( etaMarker[e] );
     hBBCEastSum[e]->SetMarkerColor( etaColor[e] );
     hBBCEastSum[e]->SetLineColor( etaColor[e] );
