@@ -207,7 +207,7 @@ void UEjetPlot(){
 
 
   jetTree->Draw("leadPt:((chgEastRho+neuEastRho)+(chgMidRho+neuMidRho)+(chgWestRho+neuWestRho))/3>>hRho2d","","COLZ");
-  TH2D *hRho2d = (TH1F*)gDirectory->Get("hRho2d");
+  TH2D *hRho2d = (TH2D*)gDirectory->Get("hRho2d");
   c1->SetLogy();
   TLegend *leg2 = new TLegend(0.65, 0.65, 0.9, 0.9,NULL,"brNDC");    // LEGEND 0
   leg2->SetBorderSize(1);   leg2->SetLineColor(1);   leg2->SetLineStyle(1);   leg2->SetLineWidth(1);   leg2->SetFillColor(0);   leg2->SetFillStyle(1001);
