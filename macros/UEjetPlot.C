@@ -228,16 +228,17 @@ void UEjetPlot(){
     hPtRho[p]->SetNameTitle( name, title );
     hPtRho[p]->SetLineColor( ptColor[p] );
     hPtRho[p]->SetMarkerColor( ptColor[p] );
+    hPtRho[p]->SetMarkerStyle( 27 );
     hPtRho[p]->Scale(1./hPtRho[p]->GetEntries());
     hPtRho[p]->SetStats(0);
     hPtRho[p]->Draw("SAME");
 
     avg = "";
     avg+=hPtRho[p]->GetMean(1);
-    avg = avg(0,6);
+    avg = avg(0,5);
     sigma="";
     sigma+=hPtRho[p]->GetStdDev(1);
-    sigma = sigma(0,6);
+    sigma = sigma(0,5);
     leg2->AddEntry( name, title, "lpf" );                            // ADD TO LEGEND
     leg2->AddEntry((TObject*)0,avg, "");
     leg2->AddEntry((TObject*)0,sigma, "");
