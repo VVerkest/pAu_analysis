@@ -3,7 +3,7 @@
 # used to submit sequential jobs on the grid
 
 # first make sure program is updated and exists
- make bin/pAuHTjetUE || exit
+ make bin/pAuHTdijetUE || exit
 
 set ExecPath = `pwd`
 set execute = './bin/pAuHTdijetUE'
