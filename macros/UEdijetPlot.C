@@ -158,7 +158,7 @@ void UEdijetPlot(){
   leg0->AddEntry((TObject*)0,"#bf{#eta_{lead}}", "");
   leg0->AddEntry((TObject*)0,"#bf{<BBCE sum>}", "");
   
-  TH2D *sBBCbyEta = new TH2D("sBBCbyEta", "BBC ADC East Sum by Lead Jet #eta;BBC East Sum", 70,0,70000, 10,0,0.05);
+  TH2D *sBBCbyEta = new TH2D("sBBCbyEta", "BBC ADC East Sum by Lead Jet #eta;BBC East Sum", 70,0,70000, 10,0,0.1);
   sBBCbyEta->SetStats(0);
   sBBCbyEta->Draw();
   for ( int e=0; e<nEtaBins; ++e ) {
@@ -191,6 +191,11 @@ void UEdijetPlot(){
 
   for ( int p=0; p<nPtBins; ++p ) {
     hLeadEta[p]->SetStats(0);
+
+    for (int j=1;j<15;++j)   {double val=hLeadEta[p]->GetBinContent(j); hLeadEta[p]->SetBinContent(j,val/0.3);}
+    for (int j=15;j<27;++j) {double val=hLeadEta[p]->GetBinContent(j); hLeadEta[p]->SetBinContent(j,val/0.6);}
+    for (int j=27;j<40;++j) {double val=hLeadEta[p]->GetBinContent(j); hLeadEta[p]->SetBinContent(j,val/0.3);}    
+    
     hLeadEta[p]->Scale(1./hLeadEta[p]->Integral("WIDTH"));
     hLeadEta[p]->SetMarkerStyle( 20 );
     hLeadEta[p]->Draw("SAME");
