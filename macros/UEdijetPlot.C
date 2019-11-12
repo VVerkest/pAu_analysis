@@ -158,7 +158,7 @@ void UEdijetPlot(){
   leg0->AddEntry((TObject*)0,"#bf{#eta_{lead}}", "");
   leg0->AddEntry((TObject*)0,"#bf{<BBCE sum>}", "");
   
-  TH2D *sBBCbyEta = new TH2D("sBBCbyEta", "BBC ADC East Sum by Lead Jet #eta;BBC East Sum", 35,0,70000, 10,0,0.07);
+  TH2D *sBBCbyEta = new TH2D("sBBCbyEta", "BBC ADC East Sum by Lead Jet #eta;BBC East Sum", 20,0,70000, 10,0,0.07);
   sBBCbyEta->SetStats(0);
   sBBCbyEta->Draw();
   for ( int e=0; e<nEtaBins; ++e ) {
@@ -185,7 +185,7 @@ void UEdijetPlot(){
   leg1->AddEntry((TObject*)0,"#bf{p_{T}^{lead}}", "");
   leg1->AddEntry((TObject*)0,"#bf{<#eta>}", "");
   
-  TH2D *sLeadEtaByPt = new TH2D("sLeadEtaByPt", "Lead Jet #eta by p_{T};#eta_{lead}", 40,-1,1, 20,0.5,1);
+  TH2D *sLeadEtaByPt = new TH2D("sLeadEtaByPt", "Lead Jet #eta by p_{T};#eta_{lead}", 40,-1,1, 20,0.5,1.5);
   sLeadEtaByPt->SetStats(0);
   sLeadEtaByPt->Draw();
 
