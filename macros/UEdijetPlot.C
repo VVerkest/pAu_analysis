@@ -18,7 +18,7 @@ void UEdijetPlot(){
   const double etaLo[nEtaBins] = { -1.0, -0.3, 0.3 };
   const double etaHi[nEtaBins] = { -0.3, 0.3, 1.0 };
   const TString etaBinName[nEtaBins] = { "_eastEta", "_midEta", "_westEta" };
-  const TString etaBinString[nEtaBins] = { "-1.0<#eta_{jet}<-0.3", "-0.3<#eta_{jet}<0.3", "0.3<#eta_{jet}<1.0" };
+  const TString etaBinString[nEtaBins] = { "-0.6<#eta_{jet}<-0.3", "-0.3<#eta_{jet}<0.3", "0.3<#eta_{jet}<0.6" };
   const int etaColor[nEtaBins] = { 877, 596, 814 };
   const int etaMarker[nEtaBins] = { 25, 27, 28 };
 
@@ -126,28 +126,28 @@ void UEdijetPlot(){
 
   hLeadPhi->Scale(1./hLeadPhi->Integral("WIDTH"));
   hLeadPhi->Draw();
-  c0->SaveAs( "plots/UE/leadPhi.pdf" , "PDF" );
+  c0->SaveAs( "plots/UE/dijet_leadPhi.pdf" , "PDF" );
 
   c0->SetLogz();
 
   hBGchg->Scale(1./hBGchg->Integral("WIDTH"));
   hBGchg->Draw("COLZ");
-  c0->SaveAs( "plots/UE/chgBgEtaPhi.pdf" , "PDF" );
+  c0->SaveAs( "plots/UE/dijet_chgBgEtaPhi.pdf" , "PDF" );
   
   hBGneu->Scale(1./hBGneu->Integral("WIDTH"));
   hBGneu->Draw("COLZ");
-  c0->SaveAs( "plots/UE/neuBgEtaPhi.pdf" , "PDF" );
+  c0->SaveAs( "plots/UE/dijet_neuBgEtaPhi.pdf" , "PDF" );
 
   hTowersVsRho->Scale(1./hTowersVsRho->Integral("WIDTH"));
   hTowersVsRho->GetZaxis()->SetRangeUser(0.000001,1);
   hTowersVsRho->Draw("COLZ");
-  c0->SaveAs( "plots/UE/towersVsRho.pdf" , "PDF" );
+  c0->SaveAs( "plots/UE/dijet_towersVsRho.pdf" , "PDF" );
 
   c0->SetLogy();
 
   hRho->Scale(1./hRho->Integral("WIDTH"));
   hRho->Draw();
-  c0->SaveAs( "plots/UE/rho.pdf" , "PDF" );
+  c0->SaveAs( "plots/UE/dijet_rho.pdf" , "PDF" );
 
 
   TCanvas * c1 = new TCanvas( "c1" , "" ,700 ,500 );              // CANVAS 1
@@ -158,7 +158,7 @@ void UEdijetPlot(){
   leg0->AddEntry((TObject*)0,"#bf{#eta_{lead}}", "");
   leg0->AddEntry((TObject*)0,"#bf{<BBCE sum>}", "");
   
-  TH2D *sBBCbyEta = new TH2D("sBBCbyEta", "BBC ADC East Sum by Lead Jet #eta;BBC East Sum", 70,0,70000, 10,0,0.1);
+  TH2D *sBBCbyEta = new TH2D("sBBCbyEta", "BBC ADC East Sum by Lead Jet #eta;BBC East Sum", 70,0,70000, 10,0,0.07);
   sBBCbyEta->SetStats(0);
   sBBCbyEta->Draw();
   for ( int e=0; e<nEtaBins; ++e ) {
@@ -175,7 +175,7 @@ void UEdijetPlot(){
 
   }
   leg0->Draw();
-  c1->SaveAs( "plots/UE/BBCEastSum_by_eta.pdf" , "PDF" );
+  c1->SaveAs( "plots/UE/dijet_BBCEastSum_by_eta.pdf" , "PDF" );
   c1->SetLogy(0);
 
 
@@ -209,7 +209,7 @@ void UEdijetPlot(){
 
   }
   leg1->Draw();
-  c1->SaveAs( "plots/UE/LeadEta_by_pt.pdf" , "PDF" );
+  c1->SaveAs( "plots/UE/dijet_LeadEta_by_pt.pdf" , "PDF" );
 
 
   dijetTree->Draw("leadPt:((chgEastRho+neuEastRho)+(chgMidRho+neuMidRho)+(chgWestRho+neuWestRho))/3>>hRho2d","","COLZ");
@@ -250,6 +250,6 @@ void UEdijetPlot(){
     leg2->AddEntry((TObject*)0,sigma, "");
   }
   leg2->Draw();
-  c1->SaveAs("plots/UE/rhoByLeadPt.pdf","PDF");
+  c1->SaveAs("plots/UE/dijet_rhoByLeadPt.pdf","PDF");
 
 }

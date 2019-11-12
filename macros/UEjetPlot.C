@@ -18,7 +18,7 @@ void UEjetPlot(){
   const double etaLo[nEtaBins] = { -1.0, -0.3, 0.3 };
   const double etaHi[nEtaBins] = { -0.3, 0.3, 1.0 };
   const TString etaBinName[nEtaBins] = { "_eastEta", "_midEta", "_westEta" };
-  const TString etaBinString[nEtaBins] = { "-1.0<#eta_{jet}<-0.3", "-0.3<#eta_{jet}<0.3", "0.3<#eta_{jet}<1.0" };
+  const TString etaBinString[nEtaBins] = { "-0.6<#eta_{jet}<-0.3", "-0.3<#eta_{jet}<0.3", "0.3<#eta_{jet}<0.6" };
   const int etaColor[nEtaBins] = { 877, 596, 814 };
   const int etaMarker[nEtaBins] = { 25, 27, 28 };
 
@@ -159,7 +159,7 @@ void UEjetPlot(){
   leg0->AddEntry((TObject*)0,"#bf{#eta_{lead}}", "");
   leg0->AddEntry((TObject*)0,"#bf{<BBCE sum>}", "");
   
-  TH2D *sBBCbyEta = new TH2D("sBBCbyEta", "BBC ADC East Sum by Lead Jet #eta;BBC East Sum", 70,0,70000, 10,0,0.03);
+  TH2D *sBBCbyEta = new TH2D("sBBCbyEta", "BBC ADC East Sum by Lead Jet #eta;BBC East Sum", 35,0,70000, 10,0,0.03);
   sBBCbyEta->SetStats(0);
   sBBCbyEta->Draw();
   for ( int e=0; e<nEtaBins; ++e ) {
@@ -219,7 +219,7 @@ void UEjetPlot(){
   leg2->AddEntry((TObject*)0,"#bf{<#sigma>}", "");
 
   TH1D *hPtRho[nPtBins];
-  TH2D *sPtRho = new TH2D( "sPtRho", "Underlying Event by Lead Jet p_{T};#rho (GeV)", 20,0,12, 10,0.000001,1 );
+  TH2D *sPtRho = new TH2D( "sPtRho", "Underlying Event by Lead Jet p_{T};#rho (GeV)", 20,0,8, 10,0.000001,1 );
   sPtRho->SetStats(0);
   sPtRho->Draw();
   for ( int p=0; p<nPtBins; ++p ) {
