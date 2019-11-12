@@ -5,9 +5,9 @@ void HTdijet9Plot(){
 
   gStyle->SetErrorX(0.0001);
 
-  TFile* inFile = new TFile( "out/HTdijets/LoEA/pAu_2015_HTdijets.root", "READ" );
-  TString saveName = "plots/HTdijets/LoEAdijet9plot.pdf";
-  TString title = "Low EA Dijet Underlying Event";
+  TFile* inFile = new TFile( "out/HTdijets/HiEA/pAu_2015_HTdijets.root", "READ" );
+  TString saveName = "plots/HTdijets/HiEAdijet9plot.pdf";
+  TString title = "High EA Dijet Underlying Event";
   
   const int nPtBins = 3;
   const double ptLo[nPtBins] = { 10.0, 15.0, 20.0 };
