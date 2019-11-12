@@ -151,7 +151,6 @@ void UEjetPlot(){
 
 
   TCanvas * c1 = new TCanvas( "c1" , "" ,700 ,500 );              // CANVAS 1
-  c1->SetLogy();
   
   TLegend *leg0 = new TLegend(0.65, 0.65, 0.9, 0.9,NULL,"brNDC");    // LEGEND 0
   leg0->SetBorderSize(1);   leg0->SetLineColor(1);   leg0->SetLineStyle(1);   leg0->SetLineWidth(1);   leg0->SetFillColor(0);   leg0->SetFillStyle(1001);
