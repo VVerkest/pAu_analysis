@@ -217,7 +217,7 @@ void UEjetPlot(){
   leg2->AddEntry((TObject*)0,"#bf{<#sigma>}", "");
 
   TH1D *hPtRho[nPtBins];
-  TH2D *sPtRho = new TH2D( "sPtRho", "Underlying Event by Lead Jet p_{T};#rho (GeV)", 10,0,0.5, 20,0,15 );
+  TH2D *sPtRho = new TH2D( "sPtRho", "Underlying Event by Lead Jet p_{T};#rho (GeV)", 20,0,15, 10,0,0.5 );
   sPtRho->SetStats(0);
   sPtRho->Draw();
   for ( int p=0; p<nPtBins; ++p ) {
