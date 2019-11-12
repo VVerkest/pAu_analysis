@@ -12,7 +12,7 @@ void UEjetPlot(){
   const double ptHi[nPtBins] = { 15.0, 20.0, 30.0 };
   const TString ptBinName[nPtBins] = { "_10_15GeV", "_15_20GeV", "_20_30GeV" };
   const TString ptBinString[nPtBins] = { "10<p_{T}^{lead}<15", "15<p_{T}^{lead}<20",  "20<p_{T}^{lead}<30" };
-  const int ptColor[nPtBins] = { 435, 872, 892 };
+  const int ptColor[nPtBins] = { 797, 593, 892 };
 
   const int nEtaBins = 3;
   const double etaLo[nEtaBins] = { -1.0, -0.3, 0.3 };
