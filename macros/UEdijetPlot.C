@@ -1,7 +1,7 @@
 // Veronica Verkest
-// November 11, 2019
+// November 12, 2019
 
-void UEjetPlot(){
+void UEdijetPlot(){
 
   TH1::SetDefaultSumw2();  TH2::SetDefaultSumw2();  TH3::SetDefaultSumw2();
 
@@ -32,27 +32,27 @@ void UEjetPlot(){
   TString name, saveName, title, avg, sigma;
   double chgRho, neuRho, midRho, eastRho, westRho, rho;
   
-  TString fileName = "out/UE/pAuHTjetUE.root";
+  TString fileName = "out/UE/pAuHTdijetUE.root";
   TFile* inFile = new TFile( fileName, "READ" );
 
   TH2D *hBGchg = (TH2D*) inFile->Get("hChgBgEtaPhi");
   TH2D *hBGneu = (TH2D*) inFile->Get("hNeuBgEtaPhi");
 
-  TTree *jetTree = (TTree*) inFile->Get("HTjetTree");
+  TTree *dijetTree = (TTree*) inFile->Get("HTdijetTree");
 
   //  Tree variables
   int RunID, EventID, nTowers, nPrimary, nGlobal, nVertices, refMult, gRefMult;
   double Vz, BbcAdcEastSum, leadPt, leadEta, leadPhi, chgEastRho, chgMidRho, chgWestRho, neuEastRho, neuMidRho, neuWestRho;
 
-  jetTree->SetBranchAddress( "RunID", &RunID );      	       		jetTree->SetBranchAddress( "EventID", &EventID );					jetTree->SetBranchAddress( "nTowers", &nTowers );
-  jetTree->SetBranchAddress( "nPrimary", &nPrimary );       		jetTree->SetBranchAddress( "nGlobal", &nGlobal );					jetTree->SetBranchAddress( "nVertices", &nVertices );
-  jetTree->SetBranchAddress( "refMult", &refMult );			jetTree->SetBranchAddress( "gRefMult", &gRefMult );		       		jetTree->SetBranchAddress( "Vz", &Vz );
-  jetTree->SetBranchAddress( "leadPt", &leadPt );	       			jetTree->SetBranchAddress( "BbcAdcEastSum", &BbcAdcEastSum );	jetTree->SetBranchAddress( "leadEta", &leadEta );
-  jetTree->SetBranchAddress( "leadPhi", &leadPhi );	       		jetTree->SetBranchAddress( "chgEastRho", &chgEastRho );	       		jetTree->SetBranchAddress( "chgMidRho", &chgMidRho );
-  jetTree->SetBranchAddress( "chgWestRho", &chgWestRho );	jetTree->SetBranchAddress( "neuEastRho", &neuEastRho );			jetTree->SetBranchAddress( "neuMidRho", &neuMidRho );
-  jetTree->SetBranchAddress( "neuWestRho", &neuWestRho );
+  dijetTree->SetBranchAddress( "RunID", &RunID );      	       	dijetTree->SetBranchAddress( "EventID", &EventID );		       		dijetTree->SetBranchAddress( "nTowers", &nTowers );
+  dijetTree->SetBranchAddress( "nPrimary", &nPrimary );       	dijetTree->SetBranchAddress( "nGlobal", &nGlobal );		       		dijetTree->SetBranchAddress( "nVertices", &nVertices );
+  dijetTree->SetBranchAddress( "refMult", &refMult );	       	dijetTree->SetBranchAddress( "gRefMult", &gRefMult );		       		dijetTree->SetBranchAddress( "Vz", &Vz );
+  dijetTree->SetBranchAddress( "leadPt", &leadPt );	       	       	dijetTree->SetBranchAddress( "BbcAdcEastSum", &BbcAdcEastSum );	dijetTree->SetBranchAddress( "leadEta", &leadEta );
+  dijetTree->SetBranchAddress( "leadPhi", &leadPhi );	       	dijetTree->SetBranchAddress( "chgEastRho", &chgEastRho );	       		dijetTree->SetBranchAddress( "chgMidRho", &chgMidRho );
+  dijetTree->SetBranchAddress( "chgWestRho", &chgWestRho );	dijetTree->SetBranchAddress( "neuEastRho", &neuEastRho );     	dijetTree->SetBranchAddress( "neuMidRho", &neuMidRho );
+  dijetTree->SetBranchAddress( "neuWestRho", &neuWestRho );
 
-  int nEntries = jetTree->GetEntries();
+  int nEntries = dijetTree->GetEntries();
 
   TH1D *hRho = new TH1D("hRho","Underlying Event;#rho (GeV)",120,0,30);
   TH1D *hLeadPhi = new TH1D("hLeadPhi","Lead Jet #phi;#phi_{lead}",12,0,2*pi);
@@ -86,7 +86,7 @@ void UEjetPlot(){
     
   for ( int i=0; i<nEntries; ++i ) {
 
-    jetTree->GetEntry(i);
+    dijetTree->GetEntry(i);
 
     chgRho = ( chgEastRho + chgMidRho + chgWestRho )/3;
     neuRho = ( neuEastRho + neuMidRho + neuWestRho )/3;
@@ -208,7 +208,7 @@ void UEjetPlot(){
   c1->SaveAs( "plots/UE/LeadEta_by_pt.pdf" , "PDF" );
 
 
-  jetTree->Draw("leadPt:((chgEastRho+neuEastRho)+(chgMidRho+neuMidRho)+(chgWestRho+neuWestRho))/3>>hRho2d","","COLZ");
+  dijetTree->Draw("leadPt:((chgEastRho+neuEastRho)+(chgMidRho+neuMidRho)+(chgWestRho+neuWestRho))/3>>hRho2d","","COLZ");
   TH2D *hRho2d = (TH2D*)gDirectory->Get("hRho2d");
   c1->SetLogy();
   TLegend *leg2 = new TLegend(0.65, 0.65, 0.9, 0.9,NULL,"brNDC");    // LEGEND 0
