@@ -217,7 +217,7 @@ void UEjetPlot(){
   leg2->AddEntry((TObject*)0,"#bf{<#sigma>}", "");
 
   TH1D *hPtRho[nPtBins];
-  TH2D *sPtRho = new TH2D( "sPtRho", "Underlying Event by Lead Jet p_{T};#rho (GeV)", 20,0,15, 10,0,0.5 );
+  TH2D *sPtRho = new TH2D( "sPtRho", "Underlying Event by Lead Jet p_{T};#rho (GeV)", 20,0,15, 10,0.000001,1 );
   sPtRho->SetStats(0);
   sPtRho->Draw();
   for ( int p=0; p<nPtBins; ++p ) {
@@ -227,6 +227,7 @@ void UEjetPlot(){
     title =  ptBinString[p];
     hPtRho[p]->SetNameTitle( name, title );
     hPtRho[p]->SetLineColor( ptColor[p] );
+    hPtRho[p]->SetMarkerColor( ptColor[p] );
     hPtRho[p]->Scale(1./hPtRho[p]->GetEntries());
     hPtRho[p]->SetStats(0);
     hPtRho[p]->Draw("SAME");
