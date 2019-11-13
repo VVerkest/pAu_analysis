@@ -32,7 +32,7 @@ void UEdijetPlot(){
   TString name, saveName, title, avg, sigma;
   double chgRho, neuRho, midRho, eastRho, westRho, rho;
   
-  TString fileName = "out/UE/pAuHTdijetUE.root";
+  TString fileName = "out/UE/pAuHTdijetUE_noRecoEtaMatchReq.root";
   TFile* inFile = new TFile( fileName, "READ" );
 
   TH2D *hBGchg = (TH2D*) inFile->Get("hChgBgEtaPhi");

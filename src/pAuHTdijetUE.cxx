@@ -27,12 +27,12 @@ int main ( int argc, const char** argv ) {         // funcions and cuts specifie
   int RunID, EventID, nTowers, nPrimary, nGlobal, nVertices, refMult, gRefMult, eval, pval;
   double Vz, BbcAdcEastSum, leadPt, leadEta, leadPhi, chgEastRho, chgMidRho, chgWestRho, neuEastRho, neuMidRho, neuWestRho;
 
-  HTdijetTree->Branch( "RunID", &RunID );				HTdijetTree->Branch( "EventID", &EventID );				HTdijetTree->Branch( "nTowers", &nTowers );
+  HTdijetTree->Branch( "RunID", &RunID );			HTdijetTree->Branch( "EventID", &EventID );				HTdijetTree->Branch( "nTowers", &nTowers );
   HTdijetTree->Branch( "nPrimary", &nPrimary );	       	HTdijetTree->Branch( "nGlobal", &nGlobal );				HTdijetTree->Branch( "nVertices", &nVertices );
-  HTdijetTree->Branch( "refMult", &refMult );			HTdijetTree->Branch( "gRefMult", &gRefMult );				HTdijetTree->Branch( "Vz", &Vz );
-  HTdijetTree->Branch( "leadPt", &leadPt );				HTdijetTree->Branch( "BbcAdcEastSum", &BbcAdcEastSum );	HTdijetTree->Branch( "leadEta", &leadEta );
-  HTdijetTree->Branch( "leadPhi", &leadPhi );			HTdijetTree->Branch( "chgEastRho", &chgEastRho );			HTdijetTree->Branch( "chgMidRho", &chgMidRho );
-  HTdijetTree->Branch( "chgWestRho", &chgWestRho );	HTdijetTree->Branch( "neuEastRho", &neuEastRho );			HTdijetTree->Branch( "neuMidRho", &neuMidRho );
+  HTdijetTree->Branch( "refMult", &refMult );			HTdijetTree->Branch( "gRefMult", &gRefMult );			HTdijetTree->Branch( "Vz", &Vz );
+  HTdijetTree->Branch( "leadPt", &leadPt );			HTdijetTree->Branch( "BbcAdcEastSum", &BbcAdcEastSum );	HTdijetTree->Branch( "leadEta", &leadEta );
+  HTdijetTree->Branch( "leadPhi", &leadPhi );			HTdijetTree->Branch( "chgEastRho", &chgEastRho );		HTdijetTree->Branch( "chgMidRho", &chgMidRho );
+  HTdijetTree->Branch( "chgWestRho", &chgWestRho );	HTdijetTree->Branch( "neuEastRho", &neuEastRho );		HTdijetTree->Branch( "neuMidRho", &neuMidRho );
   HTdijetTree->Branch( "neuWestRho", &neuWestRho );
 	
   TH2D *hChgBgEtaPhi = new TH2D( "hChgBgEtaPhi", "Charged Background #phi vs. #eta;#eta;#phi", 40,-1.0,1.0, 120,0.0,2*pi );
@@ -88,7 +88,7 @@ int main ( int argc, const char** argv ) {         // funcions and cuts specifie
 
     //   REQUIRE RECOIL JET TO HAVE AT LEAST HALF OF LEAD PT AND BE IN THE SAME ETA RANGE!
     Selector recoPtRangeSelector = SelectorPtRange( leadJet.pt()/2, ptHi[pval] );          //  JET pT RANGE    { 10-15, 15-20, 20-30 }
-    Selector etaRangeSelector = SelectorEtaRange( etaLo[eval], etaHi[eval] );          //  JET eta RANGE
+    //Selector etaRangeSelector = SelectorEtaRange( etaLo[eval], etaHi[eval] );          //  JET eta RANGE
 
     Selector recoJetSelector = recoPtRangeSelector && etaRangeSelector && jetEtaSelector;
     
