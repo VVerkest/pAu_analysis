@@ -88,9 +88,10 @@ int main ( int argc, const char** argv ) {         // funcions and cuts specifie
 
     //   REQUIRE RECOIL JET TO HAVE AT LEAST HALF OF LEAD PT AND BE IN THE SAME ETA RANGE!
     Selector recoPtRangeSelector = SelectorPtRange( leadJet.pt()/2, ptHi[pval] );          //  JET pT RANGE    { 10-15, 15-20, 20-30 }
-    //Selector etaRangeSelector = SelectorEtaRange( etaLo[eval], etaHi[eval] );          //  JET eta RANGE
+    Selector etaRangeSelector = SelectorEtaRange( etaLo[eval], etaHi[eval] );          //  JET eta RANGE
 
-    Selector recoJetSelector = recoPtRangeSelector && etaRangeSelector && jetEtaSelector;
+    // Selector recoJetSelector = recoPtRangeSelector && etaRangeSelector && jetEtaSelector;
+    Selector recoJetSelector = recoPtRangeSelector && jetEtaSelector;
     
     recoCandidates = sorted_by_pt( recoJetSelector( jetCluster.inclusive_jets() ) );     // EXTRACT SELECTED JETS
 
