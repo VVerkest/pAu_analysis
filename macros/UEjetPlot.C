@@ -55,11 +55,15 @@ void UEjetPlot(){
   int nEntries = jetTree->GetEntries();
 
   TH1D *hRho = new TH1D("hRho","Underlying Event;#rho (GeV)",120,0,30);
+  TH1D *hRho_HI = new TH1D("hRho_HI","High EA Underlying Event;#rho (GeV)",120,0,30);
+  TH1D *hRho_LO = new TH1D("hRho_LO","Low EA Underlying Event;#rho (GeV)",120,0,30);
   TH1D *hLeadPhi = new TH1D("hLeadPhi","Lead Jet #phi;#phi_{lead}",12,0,2*pi);
   TH2D *hTowersVsRho = new TH2D("hTowersVsRho","# of Towers vs. UE;#rho (GeV);# of Towers", 60,0,15, 200,0,200 );
   TH3D *hLeadJetPtRhoEta = new TH3D( "hLeadJetPtRhoEta", "Lead Jet p_{T}, #rho, #eta;Jet p_{T} (GeV);#rho;Jet #eta", 400,0.0,100.0, 100,0,25, 40,-1.0,1.0 );  
   TH3D *hLeadPtEtaPhi = new TH3D("hLeadPtEtaPhi","Lead Jet p_{T} vs. #eta vs. #phi;p_{T} (GeV);#eta;#phi", 280,0,70, 40,-1.0,1.0, 120,0,6.3);
-  TH3D *hPt_UE_BBCsumE = new TH3D("hPt_UE_BBCsumE","UE vs. BBC ADC East Sum;Lead Jet p_{T} (GeV);Underlying Event (GeV);BBC ADC East Sum", 500,0,125, 50,0,25, 80,0,80000 );
+  TH3D *hPt_UE_BBCsumE = new TH3D("hPt_UE_BBCsumE","UE vs. BBC ADC East Sum;Lead Jet p_{T} (GeV);Underlying Event (GeV);BBC ADC East Sum", 500,0,125, 50,0,25, 140,0,70000 );
+  TH1D *hBBCsumE = new TH1D("hBBCsumE","BBC ADC East Sum;BBCE Sum", 140,0,70000 );
+  TH1D *hBBCsumE_integral = new TH1D("integral","BBC ADC East Sum Integral;Int(BBCE Sum)", 280,0,70000 );
   TH1D *hleadEta_LoEA = new TH1D( "hleadEta_LoEA", "Low Event Activity", 40,-1,1 );
   TH1D *hleadEta_HiEA = new TH1D( "hleadEta_HiEA", "High Event Activity", 40,-1,1 );
 
@@ -83,7 +87,10 @@ void UEjetPlot(){
     hLeadEta[p]->SetLineColor( ptColor[p] );
     hLeadEta[p]->SetMarkerColor( ptColor[p] );
   }
-    
+
+
+  double BBCEintegral;
+  
   for ( int i=0; i<nEntries; ++i ) {
 
     jetTree->GetEntry(i);
@@ -98,12 +105,15 @@ void UEjetPlot(){
     hLeadJetPtRhoEta->Fill(leadPt,rho,leadEta);
     hLeadPtEtaPhi->Fill(leadPt,leadEta,leadPhi);
     hPt_UE_BBCsumE->Fill(leadPt,rho,BbcAdcEastSum);
-
-    if ( BbcAdcEastSum>8000 && BbcAdcEastSum<16000 ) {
+    hBBCsumE->Fill(BbcAdcEastSum);
+    BBCEintegral = hBBCsumE->Integral(0,i);
+    hBBCsumE_integral->Fill( BBCEintegral );
+  
+    if ( BbcAdcEastSum>4107 && BbcAdcEastSum<11503 ) { // LO: 4107-11503;  HI: 28537+
       hleadEta_LoEA->Fill(leadEta);
     }
 
-    if ( BbcAdcEastSum>30000 ) {
+    if ( BbcAdcEastSum>28537 ) {
       hleadEta_HiEA->Fill(leadEta);
     }
 	
@@ -247,4 +257,109 @@ void UEjetPlot(){
   leg2->Draw();
   c1->SaveAs("plots/UE/rhoByLeadPt.pdf","PDF");
 
+
+
+
+
+// LO: 4107-11503
+  jetTree->Draw("leadPt:((chgEastRho+neuEastRho)+(chgMidRho+neuMidRho)+(chgWestRho+neuWestRho))/3>>hRho2d_LO","BbcAdcEastSum>4107 && BbcAdcEastSum<11503","COLZ");
+  TH2D *hRho2d_LO = (TH2D*)gDirectory->Get("hRho2d_LO");
+  c1->SetLogy();
+  TLegend *leg3 = new TLegend(0.65, 0.65, 0.9, 0.9,NULL,"brNDC");    // LEGEND 0
+  leg3->SetBorderSize(1);   leg3->SetLineColor(1);   leg3->SetLineStyle(1);   leg3->SetLineWidth(1);   leg3->SetFillColor(0);   leg3->SetFillStyle(1001);
+  leg3->SetNColumns(3);
+  leg3->AddEntry((TObject*)0,"#bf{p_{T}^{lead}}", "");
+  leg3->AddEntry((TObject*)0,"#bf{<#rho>}", "");
+  leg3->AddEntry((TObject*)0,"#bf{<#sigma>}", "");
+
+  TH1D *hPtRho_LO[nPtBins];
+  TH2D *sPtRho_LO = new TH2D( "sPtRho_LO", "Low EA: Underlying Event by Lead Jet p_{T};#rho (GeV)", 20,0,8, 10,0.000001,1 );
+  sPtRho_LO->SetStats(0);
+  sPtRho_LO->Draw();
+  for ( int p=0; p<nPtBins; ++p ) {
+    hRho2d_LO->GetYaxis()->SetRangeUser( ptLo[p], ptHi[p] );
+    hPtRho_LO[p] = (TH1D*) hRho2d_LO->ProjectionX();
+    name = "hUE" + ptBinName[p];
+    title =  ptBinString[p];
+    hPtRho_LO[p]->SetNameTitle( name, title );
+    hPtRho_LO[p]->SetLineColor( ptColor[p] );
+    hPtRho_LO[p]->SetMarkerColor( ptColor[p] );
+    hPtRho_LO[p]->SetMarkerStyle( 20 );
+    hPtRho_LO[p]->Scale(1./hPtRho_LO[p]->GetEntries());
+    hPtRho_LO[p]->SetStats(0);
+    hPtRho_LO[p]->Draw("SAME");
+
+    avg = "";
+    avg+=hPtRho_LO[p]->GetMean(1);
+    avg = avg(0,5);
+    sigma="";
+    sigma+=hPtRho_LO[p]->GetStdDev(1);
+    sigma = sigma(0,5);
+    leg3->AddEntry( name, title, "lpf" );                            // ADD TO LEGEND
+    leg3->AddEntry((TObject*)0,avg, "");
+    leg3->AddEntry((TObject*)0,sigma, "");
+  }
+  leg3->Draw();
+  c1->SaveAs("plots/UE/rhoByLeadPt_LOEA.pdf","PDF");
+
+
+
+
+  // HI: 28537+
+  jetTree->Draw("leadPt:((chgEastRho+neuEastRho)+(chgMidRho+neuMidRho)+(chgWestRho+neuWestRho))/3>>hRho2d_HI","BbcAdcEastSum>28537","COLZ");
+  TH2D *hRho2d_HI = (TH2D*)gDirectory->Get("hRho2d_HI");
+  c1->SetLogy();
+  TLegend *leg4 = new TLegend(0.65, 0.65, 0.9, 0.9,NULL,"brNDC");    // LEGEND 0
+  leg4->SetBorderSize(1);   leg4->SetLineColor(1);   leg4->SetLineStyle(1);   leg4->SetLineWidth(1);   leg4->SetFillColor(0);   leg4->SetFillStyle(1001);
+  leg4->SetNColumns(3);
+  leg4->AddEntry((TObject*)0,"#bf{p_{T}^{lead}}", "");
+  leg4->AddEntry((TObject*)0,"#bf{<#rho>}", "");
+  leg4->AddEntry((TObject*)0,"#bf{<#sigma>}", "");
+
+  TH1D *hPtRho_HI[nPtBins];
+  TH2D *sPtRho_HI = new TH2D( "sPtRho_HI", "High EA: Underlying Event by Lead Jet p_{T};#rho (GeV)", 20,0,8, 10,0.000001,1 );
+  sPtRho_HI->SetStats(0);
+  sPtRho_HI->Draw();
+  for ( int p=0; p<nPtBins; ++p ) {
+    hRho2d_HI->GetYaxis()->SetRangeUser( ptLo[p], ptHi[p] );
+    hPtRho_HI[p] = (TH1D*) hRho2d_HI->ProjectionX();
+    name = "hUE" + ptBinName[p];
+    title =  ptBinString[p];
+    hPtRho_HI[p]->SetNameTitle( name, title );
+    hPtRho_HI[p]->SetLineColor( ptColor[p] );
+    hPtRho_HI[p]->SetMarkerColor( ptColor[p] );
+    hPtRho_HI[p]->SetMarkerStyle( 20 );
+    hPtRho_HI[p]->Scale(1./hPtRho_HI[p]->GetEntries());
+    hPtRho_HI[p]->SetStats(0);
+    hPtRho_HI[p]->Draw("SAME");
+
+    avg = "";
+    avg+=hPtRho_HI[p]->GetMean(1);
+    avg = avg(0,5);
+    sigma="";
+    sigma+=hPtRho_HI[p]->GetStdDev(1);
+    sigma = sigma(0,5);
+    leg4->AddEntry( name, title, "lpf" );                            // ADD TO LEGEND
+    leg4->AddEntry((TObject*)0,avg, "");
+    leg4->AddEntry((TObject*)0,sigma, "");
+  }
+  leg4->Draw();
+  c1->SaveAs("plots/UE/rhoByLeadPt_HIEA.pdf","PDF");
+
+  c1->SetLogy();
+
+  hBBCsumE->SetBinError(4107,100000);
+  hBBCsumE->SetBinError(4107,100000000000);
+  hBBCsumE->SetBinError(7802,100000000000);
+  hBBCsumE->SetBinError(11503,100000000000);
+  hBBCsumE->SetBinError(15399,100000000000);
+  hBBCsumE->SetBinError(19525,100000000000);;
+  hBBCsumE->SetBinError(23781,100000000000);
+  hBBCsumE->SetBinError(28537,100000000000);
+  hBBCsumE->SetBinError(34082,100000000000);
+  hBBCsumE->SetBinError(41108,100000000000);
+  hBBCsumE->SetBinError(63974,100000000000);
+  hBBCsumE->Draw();
+
+  
 }
