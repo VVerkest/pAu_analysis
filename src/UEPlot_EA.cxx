@@ -68,7 +68,7 @@ void UEPlot_EA(){
   int nEntries = jetTree->GetEntries();
 
   const int nEAbins = 2;
-  TString EAbinString[nEAbins] = { "Lo", "Hi" };
+  TString EAbinName[nEAbins] = { "Lo", "Hi" };
   TString BBCselection[nEAbins] = { "BbcAdcEastSum>4107 && BbcAdcEastSum<11503", "BbcAdcEastSum>28537" };
 
   TH1D *hRho_pt[nPtBins][nEtaBins][nEAbins];
@@ -82,7 +82,7 @@ void UEPlot_EA(){
   int EAcolor[nEAbins] = { 810, 884 };
   int EAmarker[nEAbins] = { 23, 22 };
 
-  int MARKER[nEAbins][nEtaBins] = { { 24, 25, 30 }, { 20, 21, 29 } };
+  int MARKER[nEAbins][nPtBins] = { { 24, 25, 30 }, { 20, 21, 29 } };
   int COLOR[nEtaBins] = { 877, 596, 814 };
 
   TH1D *hRhoByEta_pt[nPtBins][nEAbins];
@@ -91,16 +91,9 @@ void UEPlot_EA(){
   for ( int a=0; a<nEAbins; ++a ) {
     for ( int p=0; p<nPtBins; ++p ) {
 
-      name = "hRhoByEta" + EAbinString[a] + ptBinName[p];
+      name = "hRhoByEta" + EAbinName[a] + ptBinName[p];
       hRhoByEta_pt[p][a] = new TH1D( name, "", 3,-1.5,1.5 );
 
-      for ( int a=0; a<nEAbins; ++a ) {
-	name = "hRho" + eastmidwest[e] + EAbinString[a] + ptBinName[p];
-	hRho[p][je][e][a] = new TH1D( name, "", 3,-1.5,1.5 );
-	hRho[p][je][e][a]->SetMarkerStyle( MARKER[a][e] );
-	hRho[p][je][e][a]->SetMarkerColor( COLOR[e] );
-	hRho[p][je][e][a]->SetLineColor( COLOR[e] );	
-      }
     }
   }
   
@@ -120,7 +113,7 @@ void UEPlot_EA(){
   for ( int a=0; a<nEAbins; ++a ) {
     for ( int p=0; p<nPtBins; ++p ) {
       for ( int e=0; e<nEtaBins; ++e ) {
-	hname[p][e][a] = "h" + eastmidwest[e] + EAbinString[a] + ptBinName[p];
+	hname[p][e][a] = "h" + eastmidwest[e] + EAbinName[a] + ptBinName[p];
 	TString drawString = rhoVal[e] + ">>" + hname[p][e][a];
 	TString drawCuts = ptSelection[p] + " && " + BBCselection[a];
 	cx->cd();
@@ -161,7 +154,7 @@ void UEPlot_EA(){
   for ( int a=0; a<nEAbins; ++a ) {
     for ( int p=0; p<nPtBins; ++p ) {
 
-      name = "hRhoByEta" + EAbinString[a] + etaBinName[p];
+      name = "hRhoByEta" + EAbinName[a] + etaBinName[p];
       hRhoByEta_eta[p][a] = new TH1D( name, "", 3,-1.5,1.5 );
     }
   }
@@ -173,7 +166,7 @@ void UEPlot_EA(){
   for ( int a=0; a<nEAbins; ++a ) {
     for ( int je=0; je<nPtBins; ++je ) {
       for ( int e=0; e<nEtaBins; ++e ) {
-	hname[je][e][a] = "h" + eastmidwest[e] + EAbinString[a] + etaBinName[je];
+	hname[je][e][a] = "h" + eastmidwest[e] + EAbinName[a] + etaBinName[je];
 	TString drawString = rhoVal[e] + ">>" + hname[je][e][a];
 	TString drawCuts = etaSelection[je] + " && " + BBCselection[a];
 	cx->cd();
@@ -208,28 +201,41 @@ void UEPlot_EA(){
 
 
 
-
   //    WITH HI/LO EA AND JET ETA
-
+  sRhoByEta->GetYaxis()->SetRangeUser( 0.5, 1.5 );
+  
   TString hname2[nPtBins][nEtaBins][nEtaBins][nEAbins];
   TH1D *hRhoByEta_jetEta__pt[nPtBins][nEAbins][nEtaBins];
   
   TCanvas *cpt2 = new TCanvas( "cpt2", "", 0, 23, 300, 900 );
   cpt2->Divide(1,3,0,0);
   for ( int e=0; e<nEtaBins; ++e ) { cpt2->cd(e+1);  sRhoByEta->Draw(); }
+
+  for ( int a=0; a<nEAbins; ++a ) {
+    for ( int p=0; p<nPtBins; ++p ) {
+      for ( int je=0; je<nEtaBins; ++je ) {
+	name = "hRho" + EAbinName[a] + jetEtaBinName[je] + ptBinName[p];
+	hRhoByEta_jetEta__pt[p][a][je] = new TH1D( name, "", 3,-1.5,1.5 );
+	hRhoByEta_jetEta__pt[p][a][je]->SetMarkerStyle( MARKER[a][p] );
+	hRhoByEta_jetEta__pt[p][a][je]->SetMarkerColor( COLOR[je] );
+	hRhoByEta_jetEta__pt[p][a][je]->SetLineColor( COLOR[je] );
+      }
+    }
+  }
   
   for ( int a=0; a<nEAbins; ++a ) {
     for ( int p=0; p<nPtBins; ++p ) {
-      for ( int e=0; e<nEtaBins; ++e ) {
-	for ( int je=0; je<nEtaBins; ++je ) {
-	  hname[p][e][je][a] = "h" + eastmidwest[e] + EAbinString[a] + jetEtaBinName[je] + ptBinName[p];
-	  TString drawString = rhoVal[e] + ">>" + hname[p][e][je][a];
+      for ( int je=0; je<nEtaBins; ++je ) {
+	for ( int e=0; e<nEtaBins; ++e ) {
+
+	  
+	  hname2[p][je][e][a] = "h" + eastmidwest[e] + EAbinName[a] + jetEtaBinName[je] + ptBinName[p];
+	  name = hname2[p][je][e][a];
+	  TString drawString = rhoVal[e] + ">>" + name;
 	  TString drawCuts = ptSelection[p] + " && " + BBCselection[a] + "&&" + etaSelection[je];
 	  cx->cd();
 	  jetTree->Draw( drawString, drawCuts, "" );
-	  name = hname[p][e][je][a];
 	  hRho[p][je][e][a] = (TH1D*)gDirectory->Get( name );
-	  hRho[p][je][e][a]->SetStats(0);
 	  hRho[p][je][e][a]->SetStats(0);
 
 	  rho = hRho[p][je][e][a]->GetMean();
@@ -237,10 +243,7 @@ void UEPlot_EA(){
       
 	  hRhoByEta_jetEta__pt[p][a][je]->SetBinContent( e+1, rho );
 	  hRhoByEta_jetEta__pt[p][a][je]->SetBinError( e+1, stdev );
-	  hRhoByEta_jetEta__pt[p][a][je]->SetMarkerStyle( EAmarker[a] );
-	  hRhoByEta_jetEta__pt[p][a][je]->SetMarkerSize( 2 );
-	  hRhoByEta_jetEta__pt[p][a][je]->SetMarkerColor( EAcolor[a] );
-	  hRhoByEta_jetEta__pt[p][a][je]->SetLineColor( EAcolor[a] );	
+	  hRhoByEta_jetEta__pt[p][a][je]->SetMarkerSize( 1.2 );
 	}
 	cpt2->cd();
 	cpt2->cd(p+1);
@@ -258,54 +261,26 @@ void UEPlot_EA(){
   
 
 
-  // TH1D *hRhoByEta_eta[nPtBins][nEAbins];
+
+  TCanvas *ceta2 = new TCanvas( "ceta2", "", 0, 23, 900, 300 );
+  ceta2->Divide(3,1,0,0);
+  for ( int e=0; e<nEtaBins; ++e ) { ceta2->cd(e+1);  sRhoByEta->Draw(); }
   
-  // for ( int a=0; a<nEAbins; ++a ) {
-  //   for ( int p=0; p<nPtBins; ++p ) {
-
-  //     name = "hRhoByEta" + EAbinString[a] + etaBinName[p];
-  //     hRhoByEta_eta[p][a] = new TH1D( name, "", 3,-1.5,1.5 );
-  //   }
-  // }
-
-  // TCanvas *ceta = new TCanvas( "ceta", "", 0, 23, 900, 300 );
-  // ceta->Divide(3,1,0,0);
-  // for ( int e=0; e<nEtaBins; ++e ) { ceta->cd(e+1);  sRhoByEta->Draw(); }
-  
-  // for ( int a=0; a<nEAbins; ++a ) {
-  //   for ( int je=0; je<nPtBins; ++je ) {
-  //     for ( int e=0; e<nEtaBins; ++e ) {
-  // 	hname[je][e][a] = "h" + eastmidwest[e] + EAbinString[a] + etaBinName[je];
-  // 	TString drawString = rhoVal[e] + ">>" + hname[je][e][a];
-  // 	TString drawCuts = etaSelection[je] + " && " + BBCselection[a];
-  // 	cx->cd();
-  // 	jetTree->Draw( drawString, drawCuts, "" );
-  // 	name = hname[je][e][a];
-  // 	hRho_eta[je][e][a] = (TH1D*)gDirectory->Get( name );
-  // 	hRho_eta[je][e][a]->SetStats(0);
-  // 	hRho_eta[je][e][a]->SetStats(0);
-
-  // 	rho = hRho_eta[je][e][a]->GetMean();
-  // 	stdev = hRho_eta[je][e][a]->GetMeanError();
-      
-  // 	hRhoByEta_eta[je][a]->SetBinContent( e+1, rho );
-  // 	hRhoByEta_eta[je][a]->SetBinError( e+1, stdev );
-  // 	hRhoByEta_eta[je][a]->SetMarkerStyle( EAmarker[a] );
-  // 	hRhoByEta_eta[je][a]->SetMarkerSize( 2 );
-  // 	hRhoByEta_eta[je][a]->SetMarkerColor( EAcolor[a] );
-  // 	hRhoByEta_eta[je][a]->SetLineColor( EAcolor[a] );	
-  //     }
-  //     ceta->cd();
-  //     ceta->cd(je+1);
-  //     gPad->SetTickx();
-  //     gPad->SetTicky();
-  //     gPad->SetGridy();
-  //     hRhoByEta_eta[je][a]->Draw("PSAME");
-  //   }
-  // }
+  for ( int a=0; a<nEAbins; ++a ) {
+    for ( int p=0; p<nPtBins; ++p ) {
+      for ( int je=0; je<nEtaBins; ++je ) {
+	ceta2->cd();
+	ceta2->cd(je+1);
+	gPad->SetTickx();
+	gPad->SetTicky();
+	gPad->SetGridy();
+	hRhoByEta_jetEta__pt[p][a][je]->Draw("PSAME");
+      }
+    }
+  }
 
 
-  // ceta->SaveAs("plots/UE/etaJetEta3plot.pdf","PDF");
+  ceta2->SaveAs("plots/UE/etaJetEta3plot.pdf","PDF");
   
 
 }
