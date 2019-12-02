@@ -69,6 +69,7 @@ void UEjetPlot(){
 
   TH1D *hLeadEta[nPtBins];
   TH1D *hBBCEastSum[nEtaBins];
+  TH1D *hEAdist[nPtBins][nEtaBins];
 
   for ( int e=0; e<nEtaBins; ++e ) {
 
@@ -78,8 +79,17 @@ void UEjetPlot(){
     hBBCEastSum[e]->SetMarkerStyle( etaMarker[e] );
     hBBCEastSum[e]->SetMarkerColor( etaColor[e] );
     hBBCEastSum[e]->SetLineColor( etaColor[e] );
-  }
 
+    for ( int p=0; p<nPtBins; ++p ) {
+      name = "hEAdist" + ptBinName[p] + etaBinName[e];
+      title = "BBC ADC East Sum:  " + ptBinString[p] + "     " + etaBinString[e] + ";BBC East Sum";
+      hEAdist[p][e] = new TH1D( name, title, 18,0,70000 );
+      hEAdist[p][e]->SetLineColor( etaColor[e] );
+      hEAdist[p][e]->SetMarkerColor( etaColor[e] );
+      hEAdist[p][e]->SetMarkerStyle( etaMarker[e] );
+    }
+  }
+  
   for ( int p=0; p<nPtBins; ++p ) {
     name = "hLeadEta" + ptBinName[p];
     title = "Lead Jet #eta:  " + ptBinString[p] + ";#eta_{lead}";
@@ -129,6 +139,7 @@ void UEjetPlot(){
 
     hBBCEastSum[eval]->Fill( BbcAdcEastSum );
     hLeadEta[pval]->Fill( leadEta );
+    hEAdist[pval][eval]->Fill( BbcAdcEastSum );
     
   }
 
@@ -361,5 +372,37 @@ void UEjetPlot(){
   hBBCsumE->SetBinError(63974,100000000000);
   hBBCsumE->Draw();
 
+  TCanvas * c2 = new TCanvas( "c2" , "" ,700 ,500 );              // CANVAS 1
   
+  TLegend *leg5[nPtBins];
+  
+  for ( int p=0; p<nPtBins; ++p ) {
+    leg5[p] = new TLegend(0.65, 0.65, 0.9, 0.9,NULL,"brNDC");    // LEGEND 0
+    leg5[p]->SetBorderSize(1);   leg5[p]->SetLineColor(1);   leg5[p]->SetLineStyle(1);   leg5[p]->SetLineWidth(1);   leg5[p]->SetFillColor(0);   leg5[p]->SetFillStyle(1001);
+    leg5[p]->SetNColumns(2);
+    leg5[p]->AddEntry((TObject*)0,"#bf{#eta_{lead}}", "");
+    leg5[p]->AddEntry((TObject*)0,"#bf{<BBCE sum>}", "");
+
+    title = "BBC ADC East Sum by Lead Jet #eta:    " + ptBinString[p] + ";BBC East Sum";
+    sBBCbyEta->SetTitle( title );
+    //TH2D *sBBCbyEta = new TH2D("sBBCbyEta", title, 35,0,70000, 10,0,0.15);
+    sBBCbyEta->SetStats(0);
+    sBBCbyEta->Draw();
+    for ( int e=0; e<nEtaBins; ++e ) {
+      hEAdist[p][e]->SetStats(0);
+      hEAdist[p][e]->Scale(1./hEAdist[p][e]->Integral());
+      hEAdist[p][e]->Draw("SAME");
+      avg = "";
+      avg += hEAdist[p][e]->GetMean(1);                                           // 1 denotes x-axis
+      avg = avg(0,5);
+      name = "hEAdist" + ptBinName[p] + etaBinName[e];
+      title = etaBinString[e];
+      leg5[p]->AddEntry( name, title, "lpf" );                            // ADD TO LEGEND
+      leg5[p]->AddEntry((TObject*)0,avg, "");
+
+    }
+    leg5[p]->Draw();
+    saveName = "plots/UE/BBCEastSum_by_eta" + ptBinName[p] +".pdf";
+    c2->SaveAs( saveName , "PDF" );
+  }
 }
