@@ -25,7 +25,7 @@ int main ( int argc, const char** argv ) {         // funcions and cuts specifie
   
   //  Tree variables
   int RunID, EventID, nTowers, nPrimary, nGlobal, nVertices, refMult, gRefMult, eval, pval;
-  double Vz, BbcAdcEastSum, leadPt, leadEta, leadPhi, chgEastRho, chgMidRho, chgWestRho, neuEastRho, neuMidRho, neuWestRho;
+  double Vz, BbcAdcEastSum, leadPt, leadEta, leadPhi, chgEastRho, chgMidRho, chgWestRho, neuEastRho, neuMidRho, neuWestRho, leadArea;
 
   HTdijetTree->Branch( "RunID", &RunID );			HTdijetTree->Branch( "EventID", &EventID );				HTdijetTree->Branch( "nTowers", &nTowers );
   HTdijetTree->Branch( "nPrimary", &nPrimary );	       	HTdijetTree->Branch( "nGlobal", &nGlobal );				HTdijetTree->Branch( "nVertices", &nVertices );
@@ -33,7 +33,7 @@ int main ( int argc, const char** argv ) {         // funcions and cuts specifie
   HTdijetTree->Branch( "leadPt", &leadPt );			HTdijetTree->Branch( "BbcAdcEastSum", &BbcAdcEastSum );	HTdijetTree->Branch( "leadEta", &leadEta );
   HTdijetTree->Branch( "leadPhi", &leadPhi );			HTdijetTree->Branch( "chgEastRho", &chgEastRho );		HTdijetTree->Branch( "chgMidRho", &chgMidRho );
   HTdijetTree->Branch( "chgWestRho", &chgWestRho );	HTdijetTree->Branch( "neuEastRho", &neuEastRho );		HTdijetTree->Branch( "neuMidRho", &neuMidRho );
-  HTdijetTree->Branch( "neuWestRho", &neuWestRho );
+  HTdijetTree->Branch( "neuWestRho", &neuWestRho );	HTdijetTree->Branch( "leadArea", &leadArea );
 	
   TH2D *hChgBgEtaPhi = new TH2D( "hChgBgEtaPhi", "Charged Background #phi vs. #eta;#eta;#phi", 40,-1.0,1.0, 120,0.0,2*pi );
   TH2D *hNeuBgEtaPhi = new TH2D( "hNeuBgEtaPhi", "Neutral Background #phi vs. #eta;#eta;#phi", 40,-1.0,1.0, 120,0.0,2*pi );
@@ -70,7 +70,11 @@ int main ( int argc, const char** argv ) {         // funcions and cuts specifie
     if ( UseEvent( header, event, vzCut, Vz ) == false ) { continue; }   //  Skip events based on: Run#, vz cut, BBCEastSum;    only accept HT Trigger events
 
     GatherParticles( container, rawParticles );
-    ClusterSequence jetCluster( rawParticles, jet_def );           //  CLUSTER ALL JETS
+    // ClusterSequence jetCluster( rawParticles, jet_def );           //  CLUSTER ALL JETS
+
+    GhostedAreaSpec gAreaSpec( 1.0, 1, 0.01 );
+    AreaDefinition area_def(active_area_explicit_ghosts, gAreaSpec);
+    ClusterSequenceArea jetCluster( rawParticles, jet_def, area_def); 
 
     leadJetSelector = leadPtMinSelector && ptMaxSelector && jetEtaSelector;
     rawJets = sorted_by_pt( leadJetSelector( jetCluster.inclusive_jets() ) );     // EXTRACT ALL JETS IN 10-30 GeV RANGE
@@ -136,6 +140,7 @@ int main ( int argc, const char** argv ) {         // funcions and cuts specifie
     leadPt = leadJet.pt();
     leadEta = leadJet.eta();
     leadPhi = leadJet.phi();
+    leadArea = leadJet.area();
 
     //  BACKGROUND ESTIMATION
     GatherChargedBG( leadJet, container, chgParticles );
