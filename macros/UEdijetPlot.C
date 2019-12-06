@@ -33,6 +33,7 @@ void UEdijetPlot(){
   double chgRho, neuRho, midRho, eastRho, westRho, rho;
   
   TString fileName = "out/UE/pAuHTdijetUE.root";
+  // TString fileName = "out/UE/pAuHTdijetUE_noRecoEtaMatchReq.root";
   TFile* inFile = new TFile( fileName, "READ" );
 
   TH2D *hBGchg = (TH2D*) inFile->Get("hChgBgEtaPhi");
@@ -55,27 +56,41 @@ void UEdijetPlot(){
   int nEntries = dijetTree->GetEntries();
 
   TH1D *hRho = new TH1D("hRho","Underlying Event;#rho (GeV)",120,0,30);
+  TH1D *hRho_HI = new TH1D("hRho_HI","High EA Underlying Event;#rho (GeV)",120,0,30);
+  TH1D *hRho_LO = new TH1D("hRho_LO","Low EA Underlying Event;#rho (GeV)",120,0,30);
   TH1D *hLeadPhi = new TH1D("hLeadPhi","Lead Jet #phi;#phi_{lead}",12,0,2*pi);
   TH2D *hTowersVsRho = new TH2D("hTowersVsRho","# of Towers vs. UE;#rho (GeV);# of Towers", 60,0,15, 200,0,200 );
   TH3D *hLeadJetPtRhoEta = new TH3D( "hLeadJetPtRhoEta", "Lead Jet p_{T}, #rho, #eta;Jet p_{T} (GeV);#rho;Jet #eta", 400,0.0,100.0, 100,0,25, 40,-1.0,1.0 );  
   TH3D *hLeadPtEtaPhi = new TH3D("hLeadPtEtaPhi","Lead Jet p_{T} vs. #eta vs. #phi;p_{T} (GeV);#eta;#phi", 280,0,70, 40,-1.0,1.0, 120,0,6.3);
-  TH3D *hPt_UE_BBCsumE = new TH3D("hPt_UE_BBCsumE","UE vs. BBC ADC East Sum;Lead Jet p_{T} (GeV);Underlying Event (GeV);BBC ADC East Sum", 500,0,125, 50,0,25, 80,0,80000 );
+  TH3D *hPt_UE_BBCsumE = new TH3D("hPt_UE_BBCsumE","UE vs. BBC ADC East Sum;Lead Jet p_{T} (GeV);Underlying Event (GeV);BBC ADC East Sum", 500,0,125, 50,0,25, 140,0,70000 );
+  TH1D *hBBCsumE = new TH1D("hBBCsumE","BBC ADC East Sum;BBCE Sum", 140,0,70000 );
+  TH1D *hBBCsumE_integral = new TH1D("integral","BBC ADC East Sum Integral;Int(BBCE Sum)", 280,0,70000 );
   TH1D *hleadEta_LoEA = new TH1D( "hleadEta_LoEA", "Low Event Activity", 40,-1,1 );
   TH1D *hleadEta_HiEA = new TH1D( "hleadEta_HiEA", "High Event Activity", 40,-1,1 );
 
   TH1D *hLeadEta[nPtBins];
   TH1D *hBBCEastSum[nEtaBins];
+  TH1D *hEAdist[nPtBins][nEtaBins];
 
   for ( int e=0; e<nEtaBins; ++e ) {
 
     name = "hBBCEastSum" + etaBinName[e];
     title = "BBC ADC East Sum:  " + etaBinString[e] + ";BBC East Sum";
-    hBBCEastSum[e] = new TH1D( name, title, 18,0,70000 );
+    hBBCEastSum[e] = new TH1D( name, title, 9,0,70000 );
     hBBCEastSum[e]->SetMarkerStyle( etaMarker[e] );
     hBBCEastSum[e]->SetMarkerColor( etaColor[e] );
     hBBCEastSum[e]->SetLineColor( etaColor[e] );
-  }
 
+    for ( int p=0; p<nPtBins; ++p ) {
+      name = "hEAdist" + ptBinName[p] + etaBinName[e];
+      title = "BBC ADC East Sum:  " + ptBinString[p] + "     " + etaBinString[e] + ";BBC East Sum";
+      hEAdist[p][e] = new TH1D( name, title, 18,0,70000 );
+      hEAdist[p][e]->SetLineColor( etaColor[e] );
+      hEAdist[p][e]->SetMarkerColor( etaColor[e] );
+      hEAdist[p][e]->SetMarkerStyle( etaMarker[e] );
+    }
+  }
+  
   for ( int p=0; p<nPtBins; ++p ) {
     name = "hLeadEta" + ptBinName[p];
     title = "Lead Jet #eta:  " + ptBinString[p] + ";#eta_{lead}";
@@ -83,6 +98,8 @@ void UEdijetPlot(){
     hLeadEta[p]->SetLineColor( ptColor[p] );
     hLeadEta[p]->SetMarkerColor( ptColor[p] );
   }
+
+  
     
   for ( int i=0; i<nEntries; ++i ) {
 
@@ -98,6 +115,7 @@ void UEdijetPlot(){
     hLeadJetPtRhoEta->Fill(leadPt,rho,leadEta);
     hLeadPtEtaPhi->Fill(leadPt,leadEta,leadPhi);
     hPt_UE_BBCsumE->Fill(leadPt,rho,BbcAdcEastSum);
+    hBBCsumE->Fill(BbcAdcEastSum);
 
     if ( BbcAdcEastSum>8000 && BbcAdcEastSum<16000 ) {
       hleadEta_LoEA->Fill(leadEta);
@@ -119,6 +137,7 @@ void UEdijetPlot(){
 
     hBBCEastSum[eval]->Fill( BbcAdcEastSum );
     hLeadEta[pval]->Fill( leadEta );
+    hEAdist[pval][eval]->Fill( BbcAdcEastSum );
     
   }
 
@@ -139,7 +158,7 @@ void UEdijetPlot(){
   c0->SaveAs( "plots/UE/dijet_neuBgEtaPhi.pdf" , "PDF" );
 
   hTowersVsRho->Scale(1./hTowersVsRho->Integral("WIDTH"));
-  hTowersVsRho->GetZaxis()->SetRangeUser(0.000001,1);
+  hTowersVsRho->GetZaxis()->SetRangeUser(0.0001,1);
   hTowersVsRho->Draw("COLZ");
   c0->SaveAs( "plots/UE/dijet_towersVsRho.pdf" , "PDF" );
 
@@ -251,5 +270,126 @@ void UEdijetPlot(){
   }
   leg2->Draw();
   c1->SaveAs("plots/UE/dijet_rhoByLeadPt.pdf","PDF");
+
+
+  // LO: 4107-11503
+  dijetTree->Draw("leadPt:((chgEastRho+neuEastRho)+(chgMidRho+neuMidRho)+(chgWestRho+neuWestRho))/3>>hRho2d_LO","BbcAdcEastSum>4107 && BbcAdcEastSum<11503","COLZ");
+  TH2D *hRho2d_LO = (TH2D*)gDirectory->Get("hRho2d_LO");
+  c1->SetLogy();
+  TLegend *leg3 = new TLegend(0.65, 0.65, 0.9, 0.9,NULL,"brNDC");    // LEGEND 0
+  leg3->SetBorderSize(1);   leg3->SetLineColor(1);   leg3->SetLineStyle(1);   leg3->SetLineWidth(1);   leg3->SetFillColor(0);   leg3->SetFillStyle(1001);
+  leg3->SetNColumns(3);
+  leg3->AddEntry((TObject*)0,"#bf{p_{T}^{lead}}", "");
+  leg3->AddEntry((TObject*)0,"#bf{<#rho>}", "");
+  leg3->AddEntry((TObject*)0,"#bf{<#sigma>}", "");
+
+  TH1D *hPtRho_LO[nPtBins];
+  TH2D *sPtRho_LO = new TH2D( "sPtRho_LO", "Low EA: Underlying Event by Lead Jet p_{T};#rho (GeV)", 20,0,8, 10,0.0001,1 );
+  sPtRho_LO->SetStats(0);
+  sPtRho_LO->Draw();
+  for ( int p=0; p<nPtBins; ++p ) {
+    hRho2d_LO->GetYaxis()->SetRangeUser( ptLo[p], ptHi[p] );
+    hPtRho_LO[p] = (TH1D*) hRho2d_LO->ProjectionX();
+    name = "hUE" + ptBinName[p];
+    title =  ptBinString[p];
+    hPtRho_LO[p]->SetNameTitle( name, title );
+    hPtRho_LO[p]->SetLineColor( ptColor[p] );
+    hPtRho_LO[p]->SetMarkerColor( ptColor[p] );
+    hPtRho_LO[p]->SetMarkerStyle( 20 );
+    hPtRho_LO[p]->Scale(1./hPtRho_LO[p]->GetEntries());
+    hPtRho_LO[p]->SetStats(0);
+    hPtRho_LO[p]->Draw("SAME");
+
+    avg = "";
+    avg+=hPtRho_LO[p]->GetMean(1);
+    avg = avg(0,5);
+    sigma="";
+    sigma+=hPtRho_LO[p]->GetStdDev(1);
+    sigma = sigma(0,5);
+    leg3->AddEntry( name, title, "lpf" );                            // ADD TO LEGEND
+    leg3->AddEntry((TObject*)0,avg, "");
+    leg3->AddEntry((TObject*)0,sigma, "");
+  }
+  leg3->Draw();
+  c1->SaveAs("plots/UE/dijetrhoByLeadPt_LOEA.pdf","PDF");
+
+
+
+
+  // HI: 28537+
+  dijetTree->Draw("leadPt:((chgEastRho+neuEastRho)+(chgMidRho+neuMidRho)+(chgWestRho+neuWestRho))/3>>hRho2d_HI","BbcAdcEastSum>28537","COLZ");
+  TH2D *hRho2d_HI = (TH2D*)gDirectory->Get("hRho2d_HI");
+  c1->SetLogy();
+  TLegend *leg4 = new TLegend(0.65, 0.65, 0.9, 0.9,NULL,"brNDC");    // LEGEND 0
+  leg4->SetBorderSize(1);   leg4->SetLineColor(1);   leg4->SetLineStyle(1);   leg4->SetLineWidth(1);   leg4->SetFillColor(0);   leg4->SetFillStyle(1001);
+  leg4->SetNColumns(3);
+  leg4->AddEntry((TObject*)0,"#bf{p_{T}^{lead}}", "");
+  leg4->AddEntry((TObject*)0,"#bf{<#rho>}", "");
+  leg4->AddEntry((TObject*)0,"#bf{<#sigma>}", "");
+
+  TH1D *hPtRho_HI[nPtBins];
+  TH2D *sPtRho_HI = new TH2D( "sPtRho_HI", "High EA: Underlying Event by Lead Jet p_{T};#rho (GeV)", 20,0,8, 10,0.0001,1 );
+  sPtRho_HI->SetStats(0);
+  sPtRho_HI->Draw();
+  for ( int p=0; p<nPtBins; ++p ) {
+    hRho2d_HI->GetYaxis()->SetRangeUser( ptLo[p], ptHi[p] );
+    hPtRho_HI[p] = (TH1D*) hRho2d_HI->ProjectionX();
+    name = "hUE" + ptBinName[p];
+    title =  ptBinString[p];
+    hPtRho_HI[p]->SetNameTitle( name, title );
+    hPtRho_HI[p]->SetLineColor( ptColor[p] );
+    hPtRho_HI[p]->SetMarkerColor( ptColor[p] );
+    hPtRho_HI[p]->SetMarkerStyle( 20 );
+    hPtRho_HI[p]->Scale(1./hPtRho_HI[p]->GetEntries());
+    hPtRho_HI[p]->SetStats(0);
+    hPtRho_HI[p]->Draw("SAME");
+
+    avg = "";
+    avg+=hPtRho_HI[p]->GetMean(1);
+    avg = avg(0,5);
+    sigma="";
+    sigma+=hPtRho_HI[p]->GetStdDev(1);
+    sigma = sigma(0,5);
+    leg4->AddEntry( name, title, "lpf" );                            // ADD TO LEGEND
+    leg4->AddEntry((TObject*)0,avg, "");
+    leg4->AddEntry((TObject*)0,sigma, "");
+  }
+  leg4->Draw();
+  c1->SaveAs("plots/UE/dijetrhoByLeadPt_HIEA.pdf","PDF");
+
+
+  TCanvas * c2 = new TCanvas( "c2" , "" ,700 ,500 );              // CANVAS 1
+  
+  TLegend *leg5[nPtBins];
+  
+  for ( int p=0; p<nPtBins; ++p ) {
+    leg5[p] = new TLegend(0.65, 0.65, 0.9, 0.9,NULL,"brNDC");    // LEGEND 0
+    leg5[p]->SetBorderSize(1);   leg5[p]->SetLineColor(1);   leg5[p]->SetLineStyle(1);   leg5[p]->SetLineWidth(1);   leg5[p]->SetFillColor(0);   leg5[p]->SetFillStyle(1001);
+    leg5[p]->SetNColumns(2);
+    leg5[p]->AddEntry((TObject*)0,"#bf{#eta_{lead}}", "");
+    leg5[p]->AddEntry((TObject*)0,"#bf{<BBCE sum>}", "");
+
+    title = "BBC ADC East Sum by Lead Jet #eta:    " + ptBinString[p] + ";BBC East Sum";
+    sBBCbyEta->SetTitle( title );
+    //TH2D *sBBCbyEta = new TH2D("sBBCbyEta", title, 35,0,70000, 10,0,0.15);
+    sBBCbyEta->SetStats(0);
+    sBBCbyEta->Draw();
+    for ( int e=0; e<nEtaBins; ++e ) {
+      hEAdist[p][e]->SetStats(0);
+      hEAdist[p][e]->Scale(1./hEAdist[p][e]->Integral());
+      hEAdist[p][e]->Draw("SAME");
+      avg = "";
+      avg += hEAdist[p][e]->GetMean(1);                                           // 1 denotes x-axis
+      avg = avg(0,5);
+      name = "hEAdist" + ptBinName[p] + etaBinName[e];
+      title = etaBinString[e];
+      leg5[p]->AddEntry( name, title, "lpf" );                            // ADD TO LEGEND
+      leg5[p]->AddEntry((TObject*)0,avg, "");
+
+    }
+    leg5[p]->Draw();
+    saveName = "plots/UE/dijetBBCEastSum_by_eta" + ptBinName[p] +".pdf";
+    c2->SaveAs( saveName , "PDF" );
+  }
 
 }
