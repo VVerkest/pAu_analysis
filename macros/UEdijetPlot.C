@@ -28,6 +28,11 @@ void UEdijetPlot(){
   const int color[nChgBins] = { 807, 823, 874 };
   const int marker[nChgBins] = { 22, 23, 20 };
 
+  const int nEA = 3;
+  const TString EAstring[nEA] = { "low", "mid", "high" };
+  const double BBCEsumLo[nEA] = { 4107, 11504, 28537 };   // LO: 4107-11503;  HI: 28537+
+  const double BBCEsumHi[nEA] = { 11503, 28536, 64000 };
+
   int eval, pval;
   TString name, saveName, title, avg, sigma;
   double chgRho, neuRho, midRho, eastRho, westRho, rho;
@@ -43,7 +48,7 @@ void UEdijetPlot(){
 
   //  Tree variables
   int RunID, EventID, nTowers, nPrimary, nGlobal, nVertices, refMult, gRefMult;
-  double Vz, BbcAdcEastSum, leadPt, leadEta, leadPhi, chgEastRho, chgMidRho, chgWestRho, neuEastRho, neuMidRho, neuWestRho;
+  double Vz, BbcAdcEastSum, leadPt, leadEta, leadPhi, chgEastRho, chgMidRho, chgWestRho, neuEastRho, neuMidRho, neuWestRho, leadArea;
 
   dijetTree->SetBranchAddress( "RunID", &RunID );      	       	dijetTree->SetBranchAddress( "EventID", &EventID );		       		dijetTree->SetBranchAddress( "nTowers", &nTowers );
   dijetTree->SetBranchAddress( "nPrimary", &nPrimary );       	dijetTree->SetBranchAddress( "nGlobal", &nGlobal );		       		dijetTree->SetBranchAddress( "nVertices", &nVertices );
@@ -51,7 +56,7 @@ void UEdijetPlot(){
   dijetTree->SetBranchAddress( "leadPt", &leadPt );	       	       	dijetTree->SetBranchAddress( "BbcAdcEastSum", &BbcAdcEastSum );	dijetTree->SetBranchAddress( "leadEta", &leadEta );
   dijetTree->SetBranchAddress( "leadPhi", &leadPhi );	       	dijetTree->SetBranchAddress( "chgEastRho", &chgEastRho );	       		dijetTree->SetBranchAddress( "chgMidRho", &chgMidRho );
   dijetTree->SetBranchAddress( "chgWestRho", &chgWestRho );	dijetTree->SetBranchAddress( "neuEastRho", &neuEastRho );     	dijetTree->SetBranchAddress( "neuMidRho", &neuMidRho );
-  dijetTree->SetBranchAddress( "neuWestRho", &neuWestRho );
+  dijetTree->SetBranchAddress( "neuWestRho", &neuWestRho );	dijetTree->Branch( "leadArea", &leadArea );
 
   int nEntries = dijetTree->GetEntries();
 

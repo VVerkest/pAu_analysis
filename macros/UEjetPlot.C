@@ -17,6 +17,7 @@ void UEjetPlot(){
   const int nEtaBins = 3;
   const double etaLo[nEtaBins] = { -1.0, -0.3, 0.3 };
   const double etaHi[nEtaBins] = { -0.3, 0.3, 1.0 };
+  const TString jetEtaBinName[nEtaBins] = { "_eastJet", "_midJet", "_westJet" };
   const TString etaBinName[nEtaBins] = { "_eastEta", "_midEta", "_westEta" };
   const TString etaBinString[nEtaBins] = { "-0.6<#eta_{jet}<-0.3", "-0.3<#eta_{jet}<0.3", "0.3<#eta_{jet}<0.6" };
   const int etaColor[nEtaBins] = { 877, 596, 814 };
@@ -27,10 +28,15 @@ void UEjetPlot(){
   const TString BackgroundChargeString[nChgBins] = { "Charged", "Neutral", "Chg+Neu" };
   const int color[nChgBins] = { 807, 823, 874 };
   const int marker[nChgBins] = { 22, 23, 20 };
-
-  int eval, pval;
+  
+  const int nEA = 3;
+  const TString EAstring[nEA] = { "low", "mid", "high" };
+  const double BBCEsumLo[nEA] = { 4107, 11503, 28537 };   // LO: 4107-11503;  HI: 28537+
+  const double BBCEsumHi[nEA] = { 11503, 28537, 64000 };
+  
+  int jeval, bgeval, pval, eaval;
   TString name, saveName, title, avg, sigma;
-  double chgRho, neuRho, midRho, eastRho, westRho, rho;
+  double chgRho, neuRho, rho;
   
   TString fileName = "out/UE/pAuHTjetUE.root";
   TFile* inFile = new TFile( fileName, "READ" );
@@ -42,7 +48,7 @@ void UEjetPlot(){
 
   //  Tree variables
   int RunID, EventID, nTowers, nPrimary, nGlobal, nVertices, refMult, gRefMult;
-  double Vz, BbcAdcEastSum, leadPt, leadEta, leadPhi, chgEastRho, chgMidRho, chgWestRho, neuEastRho, neuMidRho, neuWestRho;
+  double Vz, BbcAdcEastSum, leadPt, leadEta, leadPhi, chgEastRho, chgMidRho, chgWestRho, neuEastRho, neuMidRho, neuWestRho, leadArea, eastRho, midRho, westRho;
 
   jetTree->SetBranchAddress( "RunID", &RunID );      	       	jetTree->SetBranchAddress( "EventID", &EventID );					jetTree->SetBranchAddress( "nTowers", &nTowers );
   jetTree->SetBranchAddress( "nPrimary", &nPrimary );       	jetTree->SetBranchAddress( "nGlobal", &nGlobal );					jetTree->SetBranchAddress( "nVertices", &nVertices );
@@ -50,7 +56,7 @@ void UEjetPlot(){
   jetTree->SetBranchAddress( "leadPt", &leadPt );	       		jetTree->SetBranchAddress( "BbcAdcEastSum", &BbcAdcEastSum );	jetTree->SetBranchAddress( "leadEta", &leadEta );
   jetTree->SetBranchAddress( "leadPhi", &leadPhi );	       	jetTree->SetBranchAddress( "chgEastRho", &chgEastRho );	       		jetTree->SetBranchAddress( "chgMidRho", &chgMidRho );
   jetTree->SetBranchAddress( "chgWestRho", &chgWestRho );	jetTree->SetBranchAddress( "neuEastRho", &neuEastRho );		jetTree->SetBranchAddress( "neuMidRho", &neuMidRho );
-  jetTree->SetBranchAddress( "neuWestRho", &neuWestRho );
+  jetTree->SetBranchAddress( "neuWestRho", &neuWestRho );	jetTree->Branch( "leadArea", &leadArea );
 
   int nEntries = jetTree->GetEntries();
 
@@ -67,10 +73,27 @@ void UEjetPlot(){
   TH1D *hleadEta_LoEA = new TH1D( "hleadEta_LoEA", "Low Event Activity", 40,-1,1 );
   TH1D *hleadEta_HiEA = new TH1D( "hleadEta_HiEA", "High Event Activity", 40,-1,1 );
 
+  TH2D *hLeadPtVsPtCorrected = new TH2D("hLeadPtVsPtCorrected","Lead Jet p_{T} vs. Background-Subtracted p_{T} ;p_{T} (GeV);p_{T}^{corrected} (GeV)", 80,10,30, 120,0,30 );
+  TH1D *hPtCorrectedRatio = new TH1D("hPtCorrectedRatio","Lead Jet:   p_{T}^{corrected} / p_{T};p_{T}^{corrected}/p_{T}",10,0.9,1.0);
+  
   TH1D *hLeadEta[nPtBins];
   TH1D *hBBCEastSum[nEtaBins];
   TH1D *hEAdist[nPtBins][nEtaBins];
 
+  TH1D *hRhoDist[nEA][nEtaBins][nPtBins][nEtaBins];
+
+  for ( int ea=0; ea<nEA; ++ea ) {
+    for ( int bge=0; bge<nEtaBins; ++bge ) {
+      for ( int p=0; p<nPtBins; ++p ) {
+	for ( int je=0; je<nEtaBins; ++je ) {
+	  name = "hRho_" + EAstring[ea] + jetEtaBinName[je] + ptBinName[p] + etaBinName[bge];
+	  title = "Underlying Event" + EAstring[ea] + jetEtaBinName[je] + ptBinName[p] + etaBinName[bge] +";#rho (GeV)";
+	  hRhoDist[ea][bge][p][je]= new TH1D(name,title,120,0,30);
+	}
+      }
+    }
+  }
+    
   for ( int e=0; e<nEtaBins; ++e ) {
 
     name = "hBBCEastSum" + etaBinName[e];
@@ -98,13 +121,17 @@ void UEjetPlot(){
     hLeadEta[p]->SetMarkerColor( ptColor[p] );
   }
 
-
+  double rhoByEta[nEtaBins];
   double BBCEintegral;
   
   for ( int i=0; i<nEntries; ++i ) {
 
     jetTree->GetEntry(i);
 
+    rhoByEta[0] = chgEastRho + neuEastRho;
+    rhoByEta[1] = chgMidRho + neuMidRho;
+    rhoByEta[2] = chgWestRho + neuWestRho;
+    
     chgRho = ( chgEastRho + chgMidRho + chgWestRho )/3;
     neuRho = ( neuEastRho + neuMidRho + neuWestRho )/3;
     rho = chgRho + neuRho;
@@ -127,23 +154,72 @@ void UEjetPlot(){
       hleadEta_HiEA->Fill(leadEta);
     }
 	
-    pval = 99;    eval = 99;
+    pval = 99;    jeval = 99;    eaval = 99;
     
+    for ( int ea=0; ea<3; ++ea ) {
+      if ( BbcAdcEastSum > BBCEsumLo[ea]  &&  BbcAdcEastSum < BBCEsumHi[ea] ) { eaval = ea; }
+    }    
     for ( int p=0; p<3; ++p ) {
       if ( leadPt >= ptLo[p]  &&  leadPt <= ptHi[p] ) { pval = p; }
     }
-    for ( int e=0; e<3; ++e ) {
-      if ( leadEta >= etaLo[e]  &&  leadEta <= etaHi[e] ) { eval = e; }
+    for ( int je=0; je<3; ++je ) {
+      if ( leadEta >= etaLo[je]  &&  leadEta <= etaHi[je] ) { jeval = je; }
     }
-    if ( pval==99 || eval==99 ) { cerr<<"UNABLE TO FIND PT OR ETA RANGE FOR LEAD JET"<<endl; }
-
-    hBBCEastSum[eval]->Fill( BbcAdcEastSum );
+    if ( eaval==99 ) { continue; }
+    if ( pval==99 || jeval==99 ) { cerr<<"UNABLE TO FIND PT OR ETA RANGE FOR LEAD JET"<<endl<<pval<<endl<<jeval<<endl<<bgeval<<endl<<leadEta<<endl<<endl; }
+    
+    for ( int bge=0; bge<nEtaBins; ++bge ) {
+      hRhoDist[eaval][bge][pval][jeval]->Fill( rhoByEta[bge] );
+    }
+  
+    hBBCEastSum[jeval]->Fill( BbcAdcEastSum );
     hLeadEta[pval]->Fill( leadEta );
-    hEAdist[pval][eval]->Fill( BbcAdcEastSum );
+    hEAdist[pval][jeval]->Fill( BbcAdcEastSum );
     
   }
 
+
+  double avgRho[nEA][nEtaBins][nPtBins][nEtaBins];
+  double stdevRho[nEA][nEtaBins][nPtBins][nEtaBins];
+  
+  for ( int ea=0; ea<nEA; ++ea ) {
+    for ( int bge=0; bge<nEtaBins; ++bge ) {
+      for ( int p=0; p<nPtBins; ++p ) {
+  	for ( int je=0; je<nEtaBins; ++je ) {
+  	  avgRho[ea][bge][p][je] = hRhoDist[ea][bge][p][je]->GetMean(1);
+  	  stdevRho[ea][bge][p][je] = hRhoDist[ea][bge][p][je]->GetMeanError(1);
+  	}
+      }
+    }
+  }
+
+  for ( int i=0; i<nEntries; ++i ) {
+    jetTree->GetEntry(i);
+    
+    for ( int ea=0; ea<nEA; ++ea ) {
+      if ( BbcAdcEastSum >= BBCEsumLo[ea]  &&  BbcAdcEastSum <= BBCEsumHi[ea] ) { eaval = ea; }
+    }    
+    for ( int p=0; p<nPtBins; ++p ) {
+      if ( leadPt >= ptLo[p]  &&  leadPt <= ptHi[p] ) { pval = p; }
+    }
+    for ( int je=0; je<nEtaBins; ++je ) {
+      if ( leadEta >= etaLo[je]  &&  leadEta <= etaHi[je] ) { jeval = je; }
+    }
+    if ( pval==99 || jeval==99 || bgeval==99 ) { cerr<<"UNABLE TO FIND PT OR ETA RANGE FOR LEAD JET"<<endl; }
+    if ( eaval==99 ) { continue; }
+
+    double bsPt = leadPt - pi*(0.4)*(0.4)*avgRho[eaval][jeval][pval][jeval];
+    hLeadPtVsPtCorrected->Fill( leadPt, bsPt );
+    hPtCorrectedRatio->Fill( bsPt/leadPt );
+  }
+
+
+  
   TCanvas * c0 = new TCanvas( "c0" , "" ,700 ,500 );              // CANVAS 0
+
+  hPtCorrectedRatio->Scale(1./hPtCorrectedRatio->GetEntries());
+  hPtCorrectedRatio->Draw();
+  c0->SaveAs( "plots/UE/correctedPtRatio.pdf" , "PDF" );
 
   hLeadPhi->Scale(1./hLeadPhi->Integral("WIDTH"));
   hLeadPhi->Draw();
@@ -151,6 +227,10 @@ void UEjetPlot(){
 
   c0->SetLogz();
 
+  hLeadPtVsPtCorrected->Scale(1./hLeadPtVsPtCorrected->Integral("WIDTH"));
+  hLeadPtVsPtCorrected->Draw("COLZ");
+  c0->SaveAs( "plots/UE/leadPtVsPtCorrected.pdf" , "PDF" );
+  
   hBGchg->Scale(1./hBGchg->Integral("WIDTH"));
   hBGchg->Draw("COLZ");
   c0->SaveAs( "plots/UE/chgBgEtaPhi.pdf" , "PDF" );
@@ -272,7 +352,7 @@ void UEjetPlot(){
 
 
 
-// LO: 4107-11503
+  // LO: 4107-11503
   jetTree->Draw("leadPt:((chgEastRho+neuEastRho)+(chgMidRho+neuMidRho)+(chgWestRho+neuWestRho))/3>>hRho2d_LO","BbcAdcEastSum>4107 && BbcAdcEastSum<11503","COLZ");
   TH2D *hRho2d_LO = (TH2D*)gDirectory->Get("hRho2d_LO");
   c1->SetLogy();
@@ -356,6 +436,148 @@ void UEjetPlot(){
   }
   leg4->Draw();
   c1->SaveAs("plots/UE/rhoByLeadPt_HIEA.pdf","PDF");
+
+
+
+
+
+
+
+  
+  //  corrected lead pt
+  
+  jetTree->Draw("leadPtCorrected:((chgEastRho+neuEastRho)+(chgMidRho+neuMidRho)+(chgWestRho+neuWestRho))/3>>hRhoCorr2d","","COLZ");
+  TH2D *hRhoCorr2d = (TH2D*)gDirectory->Get("hRhoCorr2d");
+  c1->SetLogy();
+  TLegend *leg12 = new TLegend(0.65, 0.65, 0.9, 0.9,NULL,"brNDC");    // LEGEND 0
+  leg12->SetBorderSize(1);   leg12->SetLineColor(1);   leg12->SetLineStyle(1);   leg12->SetLineWidth(1);   leg12->SetFillColor(0);   leg12->SetFillStyle(1001);
+  leg12->SetNColumns(3);
+  leg12->AddEntry((TObject*)0,"#bf{p_{T}^{corrected}}", "");
+  leg12->AddEntry((TObject*)0,"#bf{<#rho>}", "");
+  leg12->AddEntry((TObject*)0,"#bf{<#sigma>}", "");
+
+  TH1D *hCorrPtRho[nPtBins];
+  TH2D *sCorrPtRho = new TH2D( "sCorrPtRho", "Underlying Event by Corrected Lead Jet p_{T};#rho (GeV)", 20,0,8, 10,0.000001,1 );
+  sCorrPtRho->SetStats(0);
+  sCorrPtRho->Draw();
+  for ( int p=0; p<nPtBins; ++p ) {
+    hRhoCorr2d->GetYaxis()->SetRangeUser( ptLo[p], ptHi[p] );
+    hCorrPtRho[p] = (TH1D*) hRhoCorr2d->ProjectionX();
+    name = "hUE" + ptBinName[p];
+    title =  ptBinString[p];
+    hCorrPtRho[p]->SetNameTitle( name, title );
+    hCorrPtRho[p]->SetLineColor( ptColor[p] );
+    hCorrPtRho[p]->SetMarkerColor( ptColor[p] );
+    hCorrPtRho[p]->SetMarkerStyle( 20 );
+    hCorrPtRho[p]->Scale(1./hCorrPtRho[p]->GetEntries());
+    hCorrPtRho[p]->SetStats(0);
+    hCorrPtRho[p]->Draw("SAME");
+
+    avg = "";
+    avg+=hCorrPtRho[p]->GetMean(1);
+    avg = avg(0,5);
+    sigma="";
+    sigma+=hCorrPtRho[p]->GetStdDev(1);
+    sigma = sigma(0,5);
+    leg12->AddEntry( name, title, "lpf" );                            // ADD TO LEGEND
+    leg12->AddEntry((TObject*)0,avg, "");
+    leg12->AddEntry((TObject*)0,sigma, "");
+  }
+  leg12->Draw();
+  c1->SaveAs("plots/UE/rhoByLeadPt_correctedPt.pdf","PDF");
+
+
+
+
+
+  // LO: 4107-11503
+  jetTree->Draw("leadPtCorrected:((chgEastRho+neuEastRho)+(chgMidRho+neuMidRho)+(chgWestRho+neuWestRho))/3>>hRhoCorr2d_LO","BbcAdcEastSum>4107 && BbcAdcEastSum<11503","COLZ");
+  TH2D *hRhoCorr2d_LO = (TH2D*)gDirectory->Get("hRhoCorr2d_LO");
+  c1->SetLogy();
+  TLegend *leg13 = new TLegend(0.65, 0.65, 0.9, 0.9,NULL,"brNDC");    // LEGEND 0
+  leg13->SetBorderSize(1);   leg13->SetLineColor(1);   leg13->SetLineStyle(1);   leg13->SetLineWidth(1);   leg13->SetFillColor(0);   leg13->SetFillStyle(1001);
+  leg13->SetNColumns(3);
+  leg13->AddEntry((TObject*)0,"#bf{p_{T}^{corrected}}", "");
+  leg13->AddEntry((TObject*)0,"#bf{<#rho>}", "");
+  leg13->AddEntry((TObject*)0,"#bf{<#sigma>}", "");
+
+  TH1D *hCorrPtRho_LO[nPtBins];
+  TH2D *sCorrPtRho_LO = new TH2D( "sCorrPtRho_LO", "Low EA: Underlying Event by Corrected Lead Jet p_{T};#rho (GeV)", 20,0,8, 10,0.000001,1 );
+  sCorrPtRho_LO->SetStats(0);
+  sCorrPtRho_LO->Draw();
+  for ( int p=0; p<nPtBins; ++p ) {
+    hRhoCorr2d_LO->GetYaxis()->SetRangeUser( ptLo[p], ptHi[p] );
+    hCorrPtRho_LO[p] = (TH1D*) hRhoCorr2d_LO->ProjectionX();
+    name = "hUE" + ptBinName[p];
+    title =  ptBinString[p];
+    hCorrPtRho_LO[p]->SetNameTitle( name, title );
+    hCorrPtRho_LO[p]->SetLineColor( ptColor[p] );
+    hCorrPtRho_LO[p]->SetMarkerColor( ptColor[p] );
+    hCorrPtRho_LO[p]->SetMarkerStyle( 20 );
+    hCorrPtRho_LO[p]->Scale(1./hCorrPtRho_LO[p]->GetEntries());
+    hCorrPtRho_LO[p]->SetStats(0);
+    hCorrPtRho_LO[p]->Draw("SAME");
+
+    avg = "";
+    avg+=hCorrPtRho_LO[p]->GetMean(1);
+    avg = avg(0,5);
+    sigma="";
+    sigma+=hCorrPtRho_LO[p]->GetStdDev(1);
+    sigma = sigma(0,5);
+    leg13->AddEntry( name, title, "lpf" );                            // ADD TO LEGEND
+    leg13->AddEntry((TObject*)0,avg, "");
+    leg13->AddEntry((TObject*)0,sigma, "");
+  }
+  leg13->Draw();
+  c1->SaveAs("plots/UE/rhoByLeadPt_LOEA_correctedPt.pdf","PDF");
+
+
+
+
+  // HI: 28537+
+  jetTree->Draw("leadPtCorrected:((chgEastRho+neuEastRho)+(chgMidRho+neuMidRho)+(chgWestRho+neuWestRho))/3>>hRhoCorr2d_HI","BbcAdcEastSum>28537","COLZ");
+  TH2D *hRhoCorr2d_HI = (TH2D*)gDirectory->Get("hRhoCorr2d_HI");
+  c1->SetLogy();
+  TLegend *leg14 = new TLegend(0.65, 0.65, 0.9, 0.9,NULL,"brNDC");    // LEGEND 0
+  leg14->SetBorderSize(1);   leg14->SetLineColor(1);   leg14->SetLineStyle(1);   leg14->SetLineWidth(1);   leg14->SetFillColor(0);   leg14->SetFillStyle(1001);
+  leg14->SetNColumns(3);
+  leg14->AddEntry((TObject*)0,"#bf{p_{T}^{corrected}}", "");
+  leg14->AddEntry((TObject*)0,"#bf{<#rho>}", "");
+  leg14->AddEntry((TObject*)0,"#bf{<#sigma>}", "");
+
+  TH1D *hCorrPtRho_HI[nPtBins];
+  TH2D *sCorrPtRho_HI = new TH2D( "sCorrPtRho_HI", "High EA: Underlying Event by Corrected Lead Jet p_{T};#rho (GeV)", 20,0,8, 10,0.000001,1 );
+  sCorrPtRho_HI->SetStats(0);
+  sCorrPtRhoyyyyyy_HI->Draw();
+  for ( int p=0; p<nPtBins; ++p ) {
+    hRhoCorr2d_HI->GetYaxis()->SetRangeUser( ptLo[p], ptHi[p] );
+    hCorrPtRho_HI[p] = (TH1D*) hRhoCorr2d_HI->ProjectionX();
+    name = "hUE" + ptBinName[p];
+    title =  ptBinString[p];
+    hCorrPtRho_HI[p]->SetNameTitle( name, title );
+    hCorrPtRho_HI[p]->SetLineColor( ptColor[p] );
+    hCorrPtRho_HI[p]->SetMarkerColor( ptColor[p] );
+    hCorrPtRho_HI[p]->SetMarkerStyle( 20 );
+    hCorrPtRho_HI[p]->Scale(1./hCorrPtRho_HI[p]->GetEntries());
+    hCorrPtRho_HI[p]->SetStats(0);
+    hCorrPtRho_HI[p]->Draw("SAME");
+
+    avg = "";
+    avg+=hCorrPtRho_HI[p]->GetMean(1);
+    avg = avg(0,5);
+    sigma="";
+    sigma+=hCorrPtRho_HI[p]->GetStdDev(1);
+    sigma = sigma(0,5);
+    leg14->AddEntry( name, title, "lpf" );                            // ADD TO LEGEND
+    leg14->AddEntry((TObject*)0,avg, "");
+    leg14->AddEntry((TObject*)0,sigma, "");
+  }
+  leg14->Draw();
+  c1->SaveAs("plots/UE/rhoByLeadPt_HIEA_correctedPt.pdf","PDF");
+
+
+
+
 
   c1->SetLogy();
 
