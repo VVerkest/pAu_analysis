@@ -68,7 +68,8 @@ int main ( int argc, const char** argv ) {         // funcions and cuts specifie
     
     Vz = header->GetPrimaryVertexZ();
     if ( UseEvent( header, event, vzCut, Vz ) == false ) { continue; }   //  Skip events based on: Run#, vz cut, BBCEastSum;    only accept HT Trigger events
-
+    if ( header->GetBbcAdcSumEast() < 4107 ) { continue; }     //  neglect 0-10% event activity
+    
     GatherParticles( container, rawParticles );
     // ClusterSequence jetCluster( rawParticles, jet_def );           //  CLUSTER ALL JETS
 
