@@ -151,27 +151,29 @@ void UEjetTreeEditor(){
 
     if ( leadEta >= etaLo[0]  &&  leadEta <= etaHi[0] ) {  //EAST
       for ( int j=0; j<nEastProfBins; ++j ) {
-	double BBCElo = hEastRhoProfile->GetBinContent(j);
+	double BBCElo = hEastRhoProfile->GetBinLowEdge(j);
 	double BBCEhi = BBCElo + hEastRhoProfile->GetBinWidth(j);
 	if ( BbcAdcEastSum >= BBCElo &&  BbcAdcEastSum <= BBCEhi ) { rhoValue = hEastRhoProfile->GetBinContent(j); }
       }
     }
     else if ( leadEta >= etaLo[1]  &&  leadEta <= etaHi[1] ) {  //MID
       for ( int j=0; j<nMidProfBins; ++j ) {
-	double BBCElo = hMidRhoProfile->GetBinContent(j);
+	double BBCElo = hMidRhoProfile->GetBinLowEdge(j);
 	double BBCEhi = BBCElo + hMidRhoProfile->GetBinWidth(j);
 	if ( BbcAdcEastSum >= BBCElo &&  BbcAdcEastSum <= BBCEhi ) { rhoValue = hMidRhoProfile->GetBinContent(j); }
       }
     }
     else if ( leadEta >= etaLo[2]  &&  leadEta <= etaHi[2] ) {  //WEST
       for ( int j=0; j<nWestProfBins; ++j ) {
-	double BBCElo = hWestRhoProfile->GetBinContent(j);
+	double BBCElo = hWestRhoProfile->GetBinLowEdge(j);
 	double BBCEhi = BBCElo + hWestRhoProfile->GetBinWidth(j);
 	if ( BbcAdcEastSum >= BBCElo &&  BbcAdcEastSum <= BBCEhi ) { rhoValue = hWestRhoProfile->GetBinContent(j); }
       }
     }
     else { cerr<<"error with finding lead jet eta"<<endl; }
 
+    cout<<rhoValue<<endl;
+    
     leadPtCorrected = leadPt - leadArea*rhoValue;
     
     // leadPtCorrected = leadPt - leadArea*avgRho[eaval][jeval][pval][jeval];
