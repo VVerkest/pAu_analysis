@@ -59,79 +59,122 @@ void UEjetTreeEditor(){
   
   int nEntries = jetTree->GetEntries();
 
-  double rhoByEta[nEtaBins];
+  // double rhoByEta[nEtaBins];
 
-  TH1D *hRhoDist[nEA][nEtaBins][nPtBins][nEtaBins];
+  // TH1D *hRhoDist[nEA][nEtaBins][nPtBins][nEtaBins];
   
-  for ( int ea=0; ea<nEA; ++ea ) {
-    for ( int bge=0; bge<nEtaBins; ++bge ) {
-      for ( int p=0; p<nPtBins; ++p ) {
-	for ( int je=0; je<nEtaBins; ++je ) {
-	  name = "hRho_" + EAstring[ea] + jetEtaBinName[je] + ptBinName[p] + etaBinName[bge];
-	  title = "Underlying Event" + EAstring[ea] + jetEtaBinName[je] + ptBinName[p] + etaBinName[bge] +";#rho (GeV)";
-	  hRhoDist[ea][bge][p][je]= new TH1D(name,title,120,0,30);
-	}
-      }
-    }
-  }
+  // for ( int ea=0; ea<nEA; ++ea ) {
+  //   for ( int bge=0; bge<nEtaBins; ++bge ) {
+  //     for ( int p=0; p<nPtBins; ++p ) {
+  // 	for ( int je=0; je<nEtaBins; ++je ) {
+  // 	  name = "hRho_" + EAstring[ea] + jetEtaBinName[je] + ptBinName[p] + etaBinName[bge];
+  // 	  title = "Underlying Event" + EAstring[ea] + jetEtaBinName[je] + ptBinName[p] + etaBinName[bge] +";#rho (GeV)";
+  // 	  hRhoDist[ea][bge][p][je]= new TH1D(name,title,120,0,30);
+  // 	}
+  //     }
+  //   }
+  // }
   
+  // for ( int i=0; i<nEntries; ++i ) {
+
+  //   jetTree->GetEntry(i);
+
+  //   rhoByEta[0] = chgEastRho + neuEastRho;
+  //   rhoByEta[1] = chgMidRho + neuMidRho;
+  //   rhoByEta[2] = chgWestRho + neuWestRho;
+    
+  //   pval = 99;    jeval = 99;    eaval = 99;
+    
+  //   for ( int ea=0; ea<3; ++ea ) {
+  //     if ( BbcAdcEastSum > BBCEsumLo[ea]  &&  BbcAdcEastSum < BBCEsumHi[ea] ) { eaval = ea; }
+  //   }    
+  //   for ( int p=0; p<3; ++p ) {
+  //     if ( leadPt >= ptLo[p]  &&  leadPt <= ptHi[p] ) { pval = p; }
+  //   }
+  //   for ( int je=0; je<3; ++je ) {
+  //     if ( leadEta >= etaLo[je]  &&  leadEta <= etaHi[je] ) { jeval = je; }
+  //   }
+  //   if ( eaval==99 ) { continue; }
+  //   if ( pval==99 || jeval==99 ) { cerr<<"UNABLE TO FIND PT OR ETA RANGE FOR LEAD JET"<<endl<<pval<<endl<<jeval<<endl<<bgeval<<endl<<leadEta<<endl<<endl; }
+    
+  //   for ( int bge=0; bge<nEtaBins; ++bge ) {
+  //     hRhoDist[eaval][bge][pval][jeval]->Fill( rhoByEta[bge] );
+  //   }
+  // }
+
+
+  // double avgRho[nEA][nEtaBins][nPtBins][nEtaBins];
+  
+  // for ( int ea=0; ea<nEA; ++ea ) {
+  //   for ( int bge=0; bge<nEtaBins; ++bge ) {
+  //     for ( int p=0; p<nPtBins; ++p ) {
+  // 	for ( int je=0; je<nEtaBins; ++je ) {
+  // 	  avgRho[ea][bge][p][je] = hRhoDist[ea][bge][p][je]->GetMean(1);
+  // 	}
+  //     }
+  //   }
+  // }
+
+
+  jetTree->Draw("(chgEastRho+neuEastRho):BbcAdcEastSum>>hEastRhoByBBCEsum","BbcAdcEastSum>4107","COLZ");
+  TH2D* hEastRhoByBBCEsum = (TH2D*)gDirectory->Get("hEastRhoByBBCEsum");
+  TH1D* hEastRhoProfile = (TH1D*)hEastRhoByBBCEsum->ProfileX();
+  int nEastProfBins = hEastRhoProfile->GetNbinsX();
+  jetTree->Draw("(chgMidRho+neuMidRho):BbcAdcEastSum>>hMidRhoByBBCEsum","BbcAdcEastSum>4107","COLZ");
+  TH2D* hMidRhoByBBCEsum = (TH2D*)gDirectory->Get("hMidRhoByBBCEsum");
+  TH1D* hMidRhoProfile = (TH1D*)hMidRhoByBBCEsum->ProfileX();
+  int nMidProfBins = hMidRhoProfile->GetNbinsX();
+  jetTree->Draw("(chgWestRho+neuWestRho):BbcAdcEastSum>>hWestRhoByBBCEsum","BbcAdcEastSum>4107","COLZ");
+  TH2D* hWestRhoByBBCEsum = (TH2D*)gDirectory->Get("hWestRhoByBBCEsum");
+  TH1D* hWestRhoProfile = (TH1D*)hWestRhoByBBCEsum->ProfileX();
+  int nWestProfBins = hWestRhoProfile->GetNbinsX();
+
   for ( int i=0; i<nEntries; ++i ) {
-
     jetTree->GetEntry(i);
-
-    rhoByEta[0] = chgEastRho + neuEastRho;
-    rhoByEta[1] = chgMidRho + neuMidRho;
-    rhoByEta[2] = chgWestRho + neuWestRho;
-    
-    pval = 99;    jeval = 99;    eaval = 99;
-    
-    for ( int ea=0; ea<3; ++ea ) {
-      if ( BbcAdcEastSum > BBCEsumLo[ea]  &&  BbcAdcEastSum < BBCEsumHi[ea] ) { eaval = ea; }
-    }    
-    for ( int p=0; p<3; ++p ) {
-      if ( leadPt >= ptLo[p]  &&  leadPt <= ptHi[p] ) { pval = p; }
-    }
-    for ( int je=0; je<3; ++je ) {
-      if ( leadEta >= etaLo[je]  &&  leadEta <= etaHi[je] ) { jeval = je; }
-    }
-    if ( eaval==99 ) { continue; }
-    if ( pval==99 || jeval==99 ) { cerr<<"UNABLE TO FIND PT OR ETA RANGE FOR LEAD JET"<<endl<<pval<<endl<<jeval<<endl<<bgeval<<endl<<leadEta<<endl<<endl; }
-    
-    for ( int bge=0; bge<nEtaBins; ++bge ) {
-      hRhoDist[eaval][bge][pval][jeval]->Fill( rhoByEta[bge] );
-    }
-  }
-
-
-  double avgRho[nEA][nEtaBins][nPtBins][nEtaBins];
-  
-  for ( int ea=0; ea<nEA; ++ea ) {
-    for ( int bge=0; bge<nEtaBins; ++bge ) {
-      for ( int p=0; p<nPtBins; ++p ) {
-  	for ( int je=0; je<nEtaBins; ++je ) {
-  	  avgRho[ea][bge][p][je] = hRhoDist[ea][bge][p][je]->GetMean(1);
-  	}
-      }
-    }
-  }
-
-  for ( int i=0; i<nEntries; ++i ) {
-    jetTree->GetEntry(i);
-    pval=99; jeval=99;
-    for ( int ea=0; ea<nEA; ++ea ) {
-      if ( BbcAdcEastSum >= BBCEsumLo[ea]  &&  BbcAdcEastSum <= BBCEsumHi[ea] ) { eaval = ea; }
-    }    
-    for ( int p=0; p<nPtBins; ++p ) {
-      if ( leadPt >= ptLo[p]  &&  leadPt <= ptHi[p] ) { pval = p; }
-    }
-    for ( int je=0; je<nEtaBins; ++je ) {
-      if ( leadEta >= etaLo[je]  &&  leadEta <= etaHi[je] ) { jeval = je; }
-    }
-    if ( pval==99 || jeval==99 ) { cerr<<"UNABLE TO FIND PT OR ETA RANGE FOR LEAD JET"<<endl; }
-    if ( eaval==99 ) { continue; }
 
     leadArea = pi*(0.4)*(0.4);
-    leadPtCorrected = leadPt - leadArea*avgRho[eaval][jeval][pval][jeval];
+    
+    // pval=99; jeval=99;
+    // for ( int ea=0; ea<nEA; ++ea ) {
+    //   if ( BbcAdcEastSum >= BBCEsumLo[ea]  &&  BbcAdcEastSum <= BBCEsumHi[ea] ) { eaval = ea; }
+    // }    
+    // for ( int p=0; p<nPtBins; ++p ) {
+    //   if ( leadPt >= ptLo[p]  &&  leadPt <= ptHi[p] ) { pval = p; }
+    // }
+    // for ( int je=0; je<nEtaBins; ++je ) {
+    //   if ( leadEta >= etaLo[je]  &&  leadEta <= etaHi[je] ) { jeval = je; }
+    // }
+    // if ( pval==99 || jeval==99 ) { cerr<<"UNABLE TO FIND PT OR ETA RANGE FOR LEAD JET"<<endl; }
+    // if ( eaval==99 ) { continue; }
+
+    double rhoValue;
+
+    if ( leadEta >= etaLo[0]  &&  leadEta <= etaHi[0] ) {  //EAST
+      for ( int j=0; j<nEastProfBins; ++j ) {
+	double BBCElo = hEastRhoProfile->GetBinContent(j);
+	double BBCEhi = BBCElo + hEastRhoProfile->GetBinWidth(j);
+	if ( BbcAdcEastSum >= BBCElo &&  BbcAdcEastSum <= BBCEhi ) { rhoValue = hEastRhoProfile->GetBinContent(j); }
+      }
+    }
+    else if ( leadEta >= etaLo[1]  &&  leadEta <= etaHi[1] ) {  //MID
+      for ( int j=0; j<nMidProfBins; ++j ) {
+	double BBCElo = hMidRhoProfile->GetBinContent(j);
+	double BBCEhi = BBCElo + hMidRhoProfile->GetBinWidth(j);
+	if ( BbcAdcEastSum >= BBCElo &&  BbcAdcEastSum <= BBCEhi ) { rhoValue = hMidRhoProfile->GetBinContent(j); }
+      }
+    }
+    else if ( leadEta >= etaLo[2]  &&  leadEta <= etaHi[2] ) {  //WEST
+      for ( int j=0; j<nWestProfBins; ++j ) {
+	double BBCElo = hWestRhoProfile->GetBinContent(j);
+	double BBCEhi = BBCElo + hWestRhoProfile->GetBinWidth(j);
+	if ( BbcAdcEastSum >= BBCElo &&  BbcAdcEastSum <= BBCEhi ) { rhoValue = hWestRhoProfile->GetBinContent(j); }
+      }
+    }
+    else { cerr<<"error with finding lead jet eta"<<endl; }
+
+    leadPtCorrected = leadPt - leadArea*rhoValue;
+    
+    // leadPtCorrected = leadPt - leadArea*avgRho[eaval][jeval][pval][jeval];
     leadPtCorrectedBranch->Fill();
     leadAreaBranch->Fill();
   }
