@@ -1,7 +1,7 @@
 // Veronica Verkest
-// December 9, 2019
+// December 17, 2019
 
-void UEjetTreeEditor(){
+void UEdijetTreeEditor(){
 
   TH1::SetDefaultSumw2();  TH2::SetDefaultSumw2();  TH3::SetDefaultSumw2();
 
@@ -38,41 +38,43 @@ void UEjetTreeEditor(){
   TString name, saveName, title, avg, sigma;
   double chgRho, neuRho, rho;
   
-  TString fileName = "out/UE/pAuHTjetUE.root";
+  TString fileName = "out/UE/pAuHTdijetUE.root";
   TFile* inFile = new TFile( fileName, "UPDATE" );
 
-  TTree *jetTree = (TTree*) inFile->Get("HTjetTree");
+  TTree *dijetTree = (TTree*) inFile->Get("HTdijetTree");
 
   int RunID, EventID, nTowers, nPrimary, nGlobal, nVertices, refMult, gRefMult;  //  Tree variables
-  double Vz, BbcAdcEastSum, leadPt, leadEta, leadPhi, chgEastRho, chgMidRho, chgWestRho, neuEastRho, neuMidRho, neuWestRho, leadArea, eastRho, midRho, westRho, leadPtCorrected;
+  double Vz, BbcAdcEastSum, leadPt, leadEta, leadPhi, chgEastRho, chgMidRho, chgWestRho, neuEastRho, neuMidRho, neuWestRho, leadArea, recoArea, eastRho, midRho, westRho,
+    leadPtCorrected, recoPtCorrected;
 
-  jetTree->SetBranchAddress( "RunID", &RunID );      	       	jetTree->SetBranchAddress( "EventID", &EventID );					jetTree->SetBranchAddress( "nTowers", &nTowers );
-  jetTree->SetBranchAddress( "nPrimary", &nPrimary );       	jetTree->SetBranchAddress( "nGlobal", &nGlobal );					jetTree->SetBranchAddress( "nVertices", &nVertices );
-  jetTree->SetBranchAddress( "refMult", &refMult );		jetTree->SetBranchAddress( "gRefMult", &gRefMult );		       		jetTree->SetBranchAddress( "Vz", &Vz );
-  jetTree->SetBranchAddress( "leadPt", &leadPt );	       		jetTree->SetBranchAddress( "BbcAdcEastSum", &BbcAdcEastSum );	jetTree->SetBranchAddress( "leadEta", &leadEta );
-  jetTree->SetBranchAddress( "leadPhi", &leadPhi );	       	jetTree->SetBranchAddress( "chgEastRho", &chgEastRho );	       		jetTree->SetBranchAddress( "chgMidRho", &chgMidRho );
-  jetTree->SetBranchAddress( "chgWestRho", &chgWestRho );	jetTree->SetBranchAddress( "neuEastRho", &neuEastRho );		jetTree->SetBranchAddress( "neuMidRho", &neuMidRho );
-  jetTree->SetBranchAddress( "neuWestRho", &neuWestRho );	jetTree->SetBranchAddress( "leadArea", &leadArea );			//jetTree->Branch( "leadPtCorrected", &leadPtCorrected );
+  dijetTree->SetBranchAddress( "RunID", &RunID );      	       	dijetTree->SetBranchAddress( "EventID", &EventID );					dijetTree->SetBranchAddress( "nTowers", &nTowers );
+  dijetTree->SetBranchAddress( "nPrimary", &nPrimary );       	dijetTree->SetBranchAddress( "nGlobal", &nGlobal );					dijetTree->SetBranchAddress( "nVertices", &nVertices );
+  dijetTree->SetBranchAddress( "refMult", &refMult );		dijetTree->SetBranchAddress( "gRefMult", &gRefMult );		       		dijetTree->SetBranchAddress( "Vz", &Vz );
+  dijetTree->SetBranchAddress( "leadPt", &leadPt );	       		dijetTree->SetBranchAddress( "BbcAdcEastSum", &BbcAdcEastSum );	dijetTree->SetBranchAddress( "leadEta", &leadEta );
+  dijetTree->SetBranchAddress( "leadPhi", &leadPhi );	       	dijetTree->SetBranchAddress( "chgEastRho", &chgEastRho );	       		dijetTree->SetBranchAddress( "chgMidRho", &chgMidRho );
+  dijetTree->SetBranchAddress( "chgWestRho", &chgWestRho );	dijetTree->SetBranchAddress( "neuEastRho", &neuEastRho );		dijetTree->SetBranchAddress( "neuMidRho", &neuMidRho );
+  dijetTree->SetBranchAddress( "neuWestRho", &neuWestRho );	dijetTree->SetBranchAddress( "leadArea", &leadArea );			dijetTree->SetBranchAddress( "recoArea", &recoArea );
 
-  auto leadPtCorrectedBranch = jetTree->Branch("leadPtCorrected", &leadPtCorrected, "leadPtCorrected/D");
+  auto leadPtCorrectedBranch = dijetTree->Branch("leadPtCorrected", &leadPtCorrected, "leadPtCorrected/D");
+  auto recoPtCorrectedBranch = dijetTree->Branch("recoPtCorrected", &recoPtCorrected, "recoPtCorrected/D");
   
-  int nEntries = jetTree->GetEntries();
+  int nEntries = dijetTree->GetEntries();
 
-  jetTree->Draw("(chgEastRho+neuEastRho):BbcAdcEastSum>>hEastRhoByBBCEsum","BbcAdcEastSum>4107  &&  BbcAdcEastSum<64000  &&  leadEta<-0.3","COLZ");
+  dijetTree->Draw("(chgEastRho+neuEastRho):BbcAdcEastSum>>hEastRhoByBBCEsum","BbcAdcEastSum>4107  &&  BbcAdcEastSum<64000  &&  leadEta<-0.3","COLZ");
   TH2D* hEastRhoByBBCEsum = (TH2D*)gDirectory->Get("hEastRhoByBBCEsum");
   TH1D* hEastRhoProfile = (TH1D*)hEastRhoByBBCEsum->ProfileX();
   int nEastProfBins = hEastRhoProfile->GetNbinsX();
-  jetTree->Draw("(chgMidRho+neuMidRho):BbcAdcEastSum>>hMidRhoByBBCEsum","BbcAdcEastSum>4107  &&  BbcAdcEastSum<64000  &&  leadEta>=-0.3  &&  leadEta<=0.3","COLZ");
+  dijetTree->Draw("(chgMidRho+neuMidRho):BbcAdcEastSum>>hMidRhoByBBCEsum","BbcAdcEastSum>4107  &&  BbcAdcEastSum<64000  &&  leadEta>=-0.3  &&  leadEta<=0.3","COLZ");
   TH2D* hMidRhoByBBCEsum = (TH2D*)gDirectory->Get("hMidRhoByBBCEsum");
   TH1D* hMidRhoProfile = (TH1D*)hMidRhoByBBCEsum->ProfileX();
   int nMidProfBins = hMidRhoProfile->GetNbinsX();
-  jetTree->Draw("(chgWestRho+neuWestRho):BbcAdcEastSum>>hWestRhoByBBCEsum","BbcAdcEastSum>4107  &&  BbcAdcEastSum<64000  &&  leadEta>0.3","COLZ");
+  dijetTree->Draw("(chgWestRho+neuWestRho):BbcAdcEastSum>>hWestRhoByBBCEsum","BbcAdcEastSum>4107  &&  BbcAdcEastSum<64000  &&  leadEta>0.3","COLZ");
   TH2D* hWestRhoByBBCEsum = (TH2D*)gDirectory->Get("hWestRhoByBBCEsum");
   TH1D* hWestRhoProfile = (TH1D*)hWestRhoByBBCEsum->ProfileX();
   int nWestProfBins = hWestRhoProfile->GetNbinsX();
 
   for ( int i=0; i<nEntries; ++i ) {
-    jetTree->GetEntry(i);
+    dijetTree->GetEntry(i);
 
     double rhoValue;
 
@@ -100,9 +102,11 @@ void UEjetTreeEditor(){
     else { cerr<<"error with finding lead jet eta"<<endl; }
     
     leadPtCorrected = leadPt - leadArea*rhoValue;
+    recoPtCorrected = recoPt - recoArea*rhoValue;
     
     leadPtCorrectedBranch->Fill();
+    recoPtCorrectedBranch->Fill();
   }
 
-  jetTree->Write("", TObject::kOverwrite);
+  dijetTree->Write("", TObject::kOverwrite);
 }
