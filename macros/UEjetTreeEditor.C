@@ -52,69 +52,11 @@ void UEjetTreeEditor(){
   jetTree->SetBranchAddress( "leadPt", &leadPt );	       		jetTree->SetBranchAddress( "BbcAdcEastSum", &BbcAdcEastSum );	jetTree->SetBranchAddress( "leadEta", &leadEta );
   jetTree->SetBranchAddress( "leadPhi", &leadPhi );	       	jetTree->SetBranchAddress( "chgEastRho", &chgEastRho );	       		jetTree->SetBranchAddress( "chgMidRho", &chgMidRho );
   jetTree->SetBranchAddress( "chgWestRho", &chgWestRho );	jetTree->SetBranchAddress( "neuEastRho", &neuEastRho );		jetTree->SetBranchAddress( "neuMidRho", &neuMidRho );
-  jetTree->SetBranchAddress( "neuWestRho", &neuWestRho );	//jetTree->Branch( "leadArea", &leadArea );					jetTree->Branch( "leadPtCorrected", &leadPtCorrected );
+  jetTree->SetBranchAddress( "neuWestRho", &neuWestRho );	jetTree->SetBranchAddress( "leadArea", &leadArea );			//jetTree->Branch( "leadPtCorrected", &leadPtCorrected );
 
-  auto leadAreaBranch = jetTree->Branch("leadArea", &leadArea, "leadArea/D");
   auto leadPtCorrectedBranch = jetTree->Branch("leadPtCorrected", &leadPtCorrected, "leadPtCorrected/D");
   
   int nEntries = jetTree->GetEntries();
-
-  // double rhoByEta[nEtaBins];
-
-  // TH1D *hRhoDist[nEA][nEtaBins][nPtBins][nEtaBins];
-  
-  // for ( int ea=0; ea<nEA; ++ea ) {
-  //   for ( int bge=0; bge<nEtaBins; ++bge ) {
-  //     for ( int p=0; p<nPtBins; ++p ) {
-  // 	for ( int je=0; je<nEtaBins; ++je ) {
-  // 	  name = "hRho_" + EAstring[ea] + jetEtaBinName[je] + ptBinName[p] + etaBinName[bge];
-  // 	  title = "Underlying Event" + EAstring[ea] + jetEtaBinName[je] + ptBinName[p] + etaBinName[bge] +";#rho (GeV)";
-  // 	  hRhoDist[ea][bge][p][je]= new TH1D(name,title,120,0,30);
-  // 	}
-  //     }
-  //   }
-  // }
-  
-  // for ( int i=0; i<nEntries; ++i ) {
-
-  //   jetTree->GetEntry(i);
-
-  //   rhoByEta[0] = chgEastRho + neuEastRho;
-  //   rhoByEta[1] = chgMidRho + neuMidRho;
-  //   rhoByEta[2] = chgWestRho + neuWestRho;
-    
-  //   pval = 99;    jeval = 99;    eaval = 99;
-    
-  //   for ( int ea=0; ea<3; ++ea ) {
-  //     if ( BbcAdcEastSum > BBCEsumLo[ea]  &&  BbcAdcEastSum < BBCEsumHi[ea] ) { eaval = ea; }
-  //   }    
-  //   for ( int p=0; p<3; ++p ) {
-  //     if ( leadPt >= ptLo[p]  &&  leadPt <= ptHi[p] ) { pval = p; }
-  //   }
-  //   for ( int je=0; je<3; ++je ) {
-  //     if ( leadEta >= etaLo[je]  &&  leadEta <= etaHi[je] ) { jeval = je; }
-  //   }
-  //   if ( eaval==99 ) { continue; }
-  //   if ( pval==99 || jeval==99 ) { cerr<<"UNABLE TO FIND PT OR ETA RANGE FOR LEAD JET"<<endl<<pval<<endl<<jeval<<endl<<bgeval<<endl<<leadEta<<endl<<endl; }
-    
-  //   for ( int bge=0; bge<nEtaBins; ++bge ) {
-  //     hRhoDist[eaval][bge][pval][jeval]->Fill( rhoByEta[bge] );
-  //   }
-  // }
-
-
-  // double avgRho[nEA][nEtaBins][nPtBins][nEtaBins];
-  
-  // for ( int ea=0; ea<nEA; ++ea ) {
-  //   for ( int bge=0; bge<nEtaBins; ++bge ) {
-  //     for ( int p=0; p<nPtBins; ++p ) {
-  // 	for ( int je=0; je<nEtaBins; ++je ) {
-  // 	  avgRho[ea][bge][p][je] = hRhoDist[ea][bge][p][je]->GetMean(1);
-  // 	}
-  //     }
-  //   }
-  // }
-
 
   jetTree->Draw("(chgEastRho+neuEastRho):BbcAdcEastSum>>hEastRhoByBBCEsum","BbcAdcEastSum>4107","COLZ");
   TH2D* hEastRhoByBBCEsum = (TH2D*)gDirectory->Get("hEastRhoByBBCEsum");
@@ -131,21 +73,6 @@ void UEjetTreeEditor(){
 
   for ( int i=0; i<nEntries; ++i ) {
     jetTree->GetEntry(i);
-
-    leadArea = pi*(0.4)*(0.4);
-    
-    // pval=99; jeval=99;
-    // for ( int ea=0; ea<nEA; ++ea ) {
-    //   if ( BbcAdcEastSum >= BBCEsumLo[ea]  &&  BbcAdcEastSum <= BBCEsumHi[ea] ) { eaval = ea; }
-    // }    
-    // for ( int p=0; p<nPtBins; ++p ) {
-    //   if ( leadPt >= ptLo[p]  &&  leadPt <= ptHi[p] ) { pval = p; }
-    // }
-    // for ( int je=0; je<nEtaBins; ++je ) {
-    //   if ( leadEta >= etaLo[je]  &&  leadEta <= etaHi[je] ) { jeval = je; }
-    // }
-    // if ( pval==99 || jeval==99 ) { cerr<<"UNABLE TO FIND PT OR ETA RANGE FOR LEAD JET"<<endl; }
-    // if ( eaval==99 ) { continue; }
 
     double rhoValue;
 
@@ -171,14 +98,10 @@ void UEjetTreeEditor(){
       }
     }
     else { cerr<<"error with finding lead jet eta"<<endl; }
-
-    cout<<rhoValue<<endl;
     
     leadPtCorrected = leadPt - leadArea*rhoValue;
     
-    // leadPtCorrected = leadPt - leadArea*avgRho[eaval][jeval][pval][jeval];
     leadPtCorrectedBranch->Fill();
-    leadAreaBranch->Fill();
   }
 
   jetTree->Write("", TObject::kOverwrite);
