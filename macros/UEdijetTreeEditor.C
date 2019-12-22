@@ -59,54 +59,62 @@ void UEdijetTreeEditor(){
   auto recoPtCorrectedBranch = dijetTree->Branch("recoPtCorrected", &recoPtCorrected, "recoPtCorrected/D");
   
   int nEntries = dijetTree->GetEntries();
+  
+  TString eastmidwest[nEtaBins] = { "East", "Mid", "West" };
+  TString rhoVal[nEtaBins] = { "(chgEastRho+neuEastRho)", "(chgMidRho+neuMidRho)", "(chgWestRho+neuWestRho)" };
+  TString ptSelection[nPtBins] = { "leadPt>10.0 && leadPt<15.0", "leadPt>=15.0 && leadPt<=20.0", "leadPt>20.0 && leadPt<30.0" };
+  TString correctedPtSelection[nPtBins] = {"leadPtCorrected>10.0&&leadPtCorrected<15.0", "leadPtCorrected>=15.0&&leadPtCorrected<=20.0", "leadPtCorrected>20.0&&leadPtCorrected<30.0"};
+  TString etaSelection[nEtaBins] = { "leadEta<-0.3", "leadEta>=-0.3 && leadEta<=0.3", "leadEta>0.3" };
 
-  dijetTree->Draw("(chgEastRho+neuEastRho):BbcAdcEastSum>>hEastRhoByBBCEsum","BbcAdcEastSum>4107  &&  BbcAdcEastSum<64000  &&  leadEta<-0.3","COLZ");
-  TH2D* hEastRhoByBBCEsum = (TH2D*)gDirectory->Get("hEastRhoByBBCEsum");
-  TH1D* hEastRhoProfile = (TH1D*)hEastRhoByBBCEsum->ProfileX();
-  int nEastProfBins = hEastRhoProfile->GetNbinsX();
-  dijetTree->Draw("(chgMidRho+neuMidRho):BbcAdcEastSum>>hMidRhoByBBCEsum","BbcAdcEastSum>4107  &&  BbcAdcEastSum<64000  &&  leadEta>=-0.3  &&  leadEta<=0.3","COLZ");
-  TH2D* hMidRhoByBBCEsum = (TH2D*)gDirectory->Get("hMidRhoByBBCEsum");
-  TH1D* hMidRhoProfile = (TH1D*)hMidRhoByBBCEsum->ProfileX();
-  int nMidProfBins = hMidRhoProfile->GetNbinsX();
-  dijetTree->Draw("(chgWestRho+neuWestRho):BbcAdcEastSum>>hWestRhoByBBCEsum","BbcAdcEastSum>4107  &&  BbcAdcEastSum<64000  &&  leadEta>0.3","COLZ");
-  TH2D* hWestRhoByBBCEsum = (TH2D*)gDirectory->Get("hWestRhoByBBCEsum");
-  TH1D* hWestRhoProfile = (TH1D*)hWestRhoByBBCEsum->ProfileX();
-  int nWestProfBins = hWestRhoProfile->GetNbinsX();
+  TH2D *hRho[nEtaBins][nEtaBins];
+  TH1D *hRhoProfile[nEtaBins][nEtaBins];
+  TString hname[nEtaBins][nEtaBins];
+  int nBins[je][bge];
 
-  for ( int i=0; i<nEntries; ++i ) {
+  for ( int je=0; je<nEtaBins; ++je ) {   //  create rhoVsBBCEsum profiles!
+    for ( int bge=0; bge<nEtaBins; ++bge ) {
+      hname[je][bge] = "hRho" + eastmidwest[bge] + jetEtaBinName[je];
+      TString drawString = rhoVal[bge] + ":BbcAdcEastSum>>" + hname[je][bge];
+      TString selectionString = "BbcAdcEastSum>4107  &&  BbcAdcEastSum<64000  &&  " + etaSelection[je];
+      dijetTree->Draw( drawString, drawSelection, "COLZ" );
+      hRho[je][bge] = (TH2D*)gDirectory->Get( hname[je][bge] );
+      hRhoProfile[je][bge] = (TH1D*)hRho[je][bge]->ProfileX();
+      nBins[je][bge] = hRho[je][bge]->GetNbinsX();
+    }
+  }
+
+
+  for ( int i=0; i<nEntries; ++i ) {    // loop over tree and add corrected pt values
     dijetTree->GetEntry(i);
 
-    double rhoValue;
+    double leadRhoValue = 99;    int le = 99;   // lead eta value
+    double recoRhoValue = 99;    int re = 99;   // reco eta value
 
-    if ( leadEta >= etaLo[0]  &&  leadEta <= etaHi[0] ) {  //EAST
-      for ( int j=0; j<nEastProfBins; ++j ) {
-	double BBCElo = hEastRhoProfile->GetBinLowEdge(j);
-	double BBCEhi = BBCElo + hEastRhoProfile->GetBinWidth(j);
-	if ( BbcAdcEastSum >= BBCElo &&  BbcAdcEastSum <= BBCEhi ) { rhoValue = hEastRhoProfile->GetBinContent(j); }
-      }
+    for ( int e=0; e<nEtaBins; ++e ) {
+      if ( leadEta >= etaLo[e]  &&  leadEta <= etaHi[e] ) { le = e }
+      if ( recoEta >= etaLo[e]  &&  recoEta <= etaHi[e] ) { re = e }
     }
-    else if ( leadEta >= etaLo[1]  &&  leadEta <= etaHi[1] ) {  //MID
-      for ( int j=0; j<nMidProfBins; ++j ) {
-	double BBCElo = hMidRhoProfile->GetBinLowEdge(j);
-	double BBCEhi = BBCElo + hMidRhoProfile->GetBinWidth(j);
-	if ( BbcAdcEastSum >= BBCElo &&  BbcAdcEastSum <= BBCEhi ) { rhoValue = hMidRhoProfile->GetBinContent(j); }
-      }
+    if ( le == 99  ||  re == 99 ) { cerr<<"error with finding lead or reco jet eta"<<endl; }
+
+    for ( int j=0; j<nBins[le][le]; ++j ) { //  lead jet
+      double BBCElo = hRhoProfile[le][le]->GetBinLowEdge(j);
+      double BBCEhi = BBCElo + hRhoProfile[le][le]->GetBinWidth(j);
+      if ( BbcAdcEastSum >= BBCElo &&  BbcAdcEastSum <= BBCEhi ) { leadRhoValue = hRhoProfile[le][le]->GetBinContent(j); }
     }
-    else if ( leadEta >= etaLo[2]  &&  leadEta <= etaHi[2] ) {  //WEST
-      for ( int j=0; j<nWestProfBins; ++j ) {
-	double BBCElo = hWestRhoProfile->GetBinLowEdge(j);
-	double BBCEhi = BBCElo + hWestRhoProfile->GetBinWidth(j);
-	if ( BbcAdcEastSum >= BBCElo &&  BbcAdcEastSum <= BBCEhi ) { rhoValue = hWestRhoProfile->GetBinContent(j); }
-      }
-    }
-    else { cerr<<"error with finding lead jet eta"<<endl; }
     
-    leadPtCorrected = leadPt - leadArea*rhoValue;
-    recoPtCorrected = recoPt - recoArea*rhoValue;
+    for ( int j=0; j<nBins[le][re]; ++j ) { //  recoil jet
+      double BBCElo = hRhoProfile[le][re]->GetBinLowEdge(j);
+      double BBCEhi = BBCElo + hRhoProfile[le][re]->GetBinWidth(j);
+      if ( BbcAdcEastSum >= BBCElo &&  BbcAdcEastSum <= BBCEhi ) { recoRhoValue = hRhoProfile[le][re]->GetBinContent(j); }
+    }    
+  
+    leadPtCorrected = leadPt - leadArea*leadRhoValue;
+    recoPtCorrected = recoPt - recoArea*recoRhoValue;
     
     leadPtCorrectedBranch->Fill();
     recoPtCorrectedBranch->Fill();
   }
+  
 
-  dijetTree->Write("", TObject::kOverwrite);
+  dijetTree->Write("", TObject::kOverwrite);   // only write new version of the tree!
 }
