@@ -8,7 +8,7 @@
 set ExecPath = `pwd`
 set execute = './bin/pAuHTdijetUE'
 set numevents = -1
-set base = /wsu/home/el/el98/el9852/physics/analysis/pAu_analysis/production_pAu200_2015_oldTrees/HT/pAu_2015_200_HT
+set base = /tier2/home/groups/rhi/STAR/Data/P16Id/production_pAu200_2015_oldTrees/HT/pAu_2015_200_HT
 set outDir = UE
 set outFile = HTdijetUE
 
