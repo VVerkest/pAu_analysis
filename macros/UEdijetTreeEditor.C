@@ -69,7 +69,7 @@ void UEdijetTreeEditor(){
   TH2D *hRho[nEtaBins][nEtaBins];
   TH1D *hRhoProfile[nEtaBins][nEtaBins];
   TString hname[nEtaBins][nEtaBins];
-  int nBins[je][bge];
+  int nBins[nEtaBins][nEtaBins];
 
   for ( int je=0; je<nEtaBins; ++je ) {   //  create rhoVsBBCEsum profiles!
     for ( int bge=0; bge<nEtaBins; ++bge ) {
@@ -91,8 +91,8 @@ void UEdijetTreeEditor(){
     double recoRhoValue = 99;    int re = 99;   // reco eta value
 
     for ( int e=0; e<nEtaBins; ++e ) {
-      if ( leadEta >= etaLo[e]  &&  leadEta <= etaHi[e] ) { le = e }
-      if ( recoEta >= etaLo[e]  &&  recoEta <= etaHi[e] ) { re = e }
+      if ( leadEta >= etaLo[e]  &&  leadEta <= etaHi[e] ) { le = e; }
+      if ( recoEta >= etaLo[e]  &&  recoEta <= etaHi[e] ) { re = e; }
     }
     if ( le == 99  ||  re == 99 ) { cerr<<"error with finding lead or reco jet eta"<<endl; }
 
