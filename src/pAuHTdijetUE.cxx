@@ -25,7 +25,7 @@ int main ( int argc, const char** argv ) {         // funcions and cuts specifie
   
   //  Tree variables
   int RunID, EventID, nTowers, nPrimary, nGlobal, nVertices, refMult, gRefMult, eval, pval;
-  double Vz, BbcAdcEastSum, leadPt, recoPt, leadEta, leadPhi, chgEastRho, chgMidRho, chgWestRho, neuEastRho, neuMidRho, neuWestRho, leadArea, recoArea;
+  double Vz, BbcAdcEastSum, leadPt, recoPt, leadEta, recoEta, leadPhi, recoPhi, chgEastRho, chgMidRho, chgWestRho, neuEastRho, neuMidRho, neuWestRho, leadArea, recoArea;
 
   HTdijetTree->Branch( "RunID", &RunID );			HTdijetTree->Branch( "EventID", &EventID );				HTdijetTree->Branch( "nTowers", &nTowers );
   HTdijetTree->Branch( "nPrimary", &nPrimary );	       	HTdijetTree->Branch( "nGlobal", &nGlobal );				HTdijetTree->Branch( "nVertices", &nVertices );
@@ -34,7 +34,7 @@ int main ( int argc, const char** argv ) {         // funcions and cuts specifie
   HTdijetTree->Branch( "leadPhi", &leadPhi );			HTdijetTree->Branch( "chgEastRho", &chgEastRho );		HTdijetTree->Branch( "chgMidRho", &chgMidRho );
   HTdijetTree->Branch( "chgWestRho", &chgWestRho );	HTdijetTree->Branch( "neuEastRho", &neuEastRho );		HTdijetTree->Branch( "neuMidRho", &neuMidRho );
   HTdijetTree->Branch( "neuWestRho", &neuWestRho );	HTdijetTree->Branch( "leadArea", &leadArea );			HTdijetTree->Branch( "recoArea", &recoArea );
-  HTdijetTree->Branch( "recoPt", &recoPt );
+  HTdijetTree->Branch( "recoPt", &recoPt );			HTdijetTree->Branch( "recoEta", &recoEta );				HTdijetTree->Branch( "recoPhi", &recoPhi );
   
   TH2D *hChgBgEtaPhi = new TH2D( "hChgBgEtaPhi", "Charged Background #phi vs. #eta;#eta;#phi", 40,-1.0,1.0, 120,0.0,2*pi );
   TH2D *hNeuBgEtaPhi = new TH2D( "hNeuBgEtaPhi", "Neutral Background #phi vs. #eta;#eta;#phi", 40,-1.0,1.0, 120,0.0,2*pi );
@@ -135,6 +135,8 @@ int main ( int argc, const char** argv ) {         // funcions and cuts specifie
     leadPhi = leadJet.phi();
     leadArea = leadJet.area();
     recoPt = recoJet.pt();
+    recoEta = recoJet.eta();
+    recoPhi = recoJet.phi();
     recoArea = recoJet.area();
 
     //  BACKGROUND ESTIMATION
