@@ -25,12 +25,15 @@ int main ( int argc, const char** argv ) {         // funcions and cuts specifie
   
   //  Tree variables
   int RunID, EventID, nTowers, nPrimary, nGlobal, nVertices, refMult, gRefMult;
-  double Vz, BbcAdcEastSum, leadPt, leadEta, leadPhi, chgEastRho, chgMidRho, chgWestRho, neuEastRho, neuMidRho, neuWestRho, leadArea;
+  double Vz, BbcAdcEastSum, BbcAdcSumEast, BbcAdcSumEastOuter, BbcAdcSumWest, BbcAdcSumWestOuter, leadPt, leadEta, leadPhi,
+    chgEastRho, chgMidRho, chgWestRho, neuEastRho, neuMidRho, neuWestRho, leadArea;
 
   HTjetTree->Branch( "RunID", &RunID );				HTjetTree->Branch( "EventID", &EventID );				HTjetTree->Branch( "nTowers", &nTowers );
   HTjetTree->Branch( "nPrimary", &nPrimary );	       	HTjetTree->Branch( "nGlobal", &nGlobal );				HTjetTree->Branch( "nVertices", &nVertices );
   HTjetTree->Branch( "refMult", &refMult );			HTjetTree->Branch( "gRefMult", &gRefMult );				HTjetTree->Branch( "Vz", &Vz );
-  HTjetTree->Branch( "leadPt", &leadPt );				HTjetTree->Branch( "BbcAdcEastSum", &BbcAdcEastSum );	HTjetTree->Branch( "leadEta", &leadEta );
+  HTjetTree->Branch( "leadPt", &leadPt );				HTjetTree->Branch( "leadEta", &leadEta );
+  HTjetTree->Branch( "BbcAdcEastSum", &BbcAdcEastSum );			HTjetTree->Branch( "BbcAdcEastSumOuter", &BbcAdcEastSumOuter );
+  HTjetTree->Branch( "BbcAdcWestSum", &BbcAdcWestSum );		HTjetTree->Branch( "BbcAdcWestSumOuter", &BbcAdcWestSumOuter );
   HTjetTree->Branch( "leadPhi", &leadPhi );			HTjetTree->Branch( "chgEastRho", &chgEastRho );			HTjetTree->Branch( "chgMidRho", &chgMidRho );
   HTjetTree->Branch( "chgWestRho", &chgWestRho );	HTjetTree->Branch( "neuEastRho", &neuEastRho );			HTjetTree->Branch( "neuMidRho", &neuMidRho );
   HTjetTree->Branch( "neuWestRho", &neuWestRho );	HTjetTree->Branch( "leadArea", &leadArea );
@@ -92,6 +95,9 @@ int main ( int argc, const char** argv ) {         // funcions and cuts specifie
     refMult = header->GetReferenceMultiplicity();
     gRefMult = header->GetGReferenceMultiplicity();
     BbcAdcEastSum = header->GetBbcAdcSumEast();
+    BbcAdcEastSumOuter = header->GetBbcAdcSumEastOuter();
+    BbcAdcWestSum = header->GetBbcAdcSumWest();
+    BbcAdcWestSumOuter = header->GetBbcAdcSumWestOuter();
     leadPt = leadJet.pt();
     leadEta = leadJet.eta();
     leadPhi = leadJet.phi();

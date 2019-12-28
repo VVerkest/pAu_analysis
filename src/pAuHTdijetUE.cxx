@@ -25,12 +25,15 @@ int main ( int argc, const char** argv ) {         // funcions and cuts specifie
   
   //  Tree variables
   int RunID, EventID, nTowers, nPrimary, nGlobal, nVertices, refMult, gRefMult, eval, pval;
-  double Vz, BbcAdcEastSum, leadPt, recoPt, leadEta, recoEta, leadPhi, recoPhi, chgEastRho, chgMidRho, chgWestRho, neuEastRho, neuMidRho, neuWestRho, leadArea, recoArea;
+  double Vz, BbcAdcEastSum, BbcAdcSumEast, BbcAdcSumEastOuter, BbcAdcSumWest, BbcAdcSumWestOuter, leadPt, recoPt, leadEta, recoEta, leadPhi, recoPhi,
+    chgEastRho, chgMidRho, chgWestRho, neuEastRho, neuMidRho, neuWestRho, leadArea, recoArea;
 
   HTdijetTree->Branch( "RunID", &RunID );			HTdijetTree->Branch( "EventID", &EventID );				HTdijetTree->Branch( "nTowers", &nTowers );
   HTdijetTree->Branch( "nPrimary", &nPrimary );	       	HTdijetTree->Branch( "nGlobal", &nGlobal );				HTdijetTree->Branch( "nVertices", &nVertices );
   HTdijetTree->Branch( "refMult", &refMult );			HTdijetTree->Branch( "gRefMult", &gRefMult );			HTdijetTree->Branch( "Vz", &Vz );
-  HTdijetTree->Branch( "leadPt", &leadPt );			HTdijetTree->Branch( "BbcAdcEastSum", &BbcAdcEastSum );	HTdijetTree->Branch( "leadEta", &leadEta );
+  HTdijetTree->Branch( "leadPt", &leadPt );			HTdijetTree->Branch( "leadEta", &leadEta );
+  HTdijetTree->Branch( "BbcAdcEastSum", &BbcAdcEastSum );			HTdijetTree->Branch( "BbcAdcEastSumOuter", &BbcAdcEastSumOuter );
+  HTdijetTree->Branch( "BbcAdcWestSum", &BbcAdcWestSum );			HTdijetTree->Branch( "BbcAdcWestSumOuter", &BbcAdcWestSumOuter );
   HTdijetTree->Branch( "leadPhi", &leadPhi );			HTdijetTree->Branch( "chgEastRho", &chgEastRho );		HTdijetTree->Branch( "chgMidRho", &chgMidRho );
   HTdijetTree->Branch( "chgWestRho", &chgWestRho );	HTdijetTree->Branch( "neuEastRho", &neuEastRho );		HTdijetTree->Branch( "neuMidRho", &neuMidRho );
   HTdijetTree->Branch( "neuWestRho", &neuWestRho );	HTdijetTree->Branch( "leadArea", &leadArea );			HTdijetTree->Branch( "recoArea", &recoArea );
@@ -130,6 +133,9 @@ int main ( int argc, const char** argv ) {         // funcions and cuts specifie
     refMult = header->GetReferenceMultiplicity();
     gRefMult = header->GetGReferenceMultiplicity();
     BbcAdcEastSum = header->GetBbcAdcSumEast();
+    BbcAdcEastSumOuter = header->GetBbcAdcSumEastOuter();
+    BbcAdcWestSum = header->GetBbcAdcSumWest();
+    BbcAdcWestSumOuter = header->GetBbcAdcSumWestOuter();
     leadPt = leadJet.pt();
     leadEta = leadJet.eta();
     leadPhi = leadJet.phi();
