@@ -216,9 +216,10 @@ void UEdijetPlot(){
   for ( int p=0; p<nPtBins; ++p ) {
     hLeadEta[p]->SetStats(0);
 
-    for (int j=1;j<15;++j)   {double val=hLeadEta[p]->GetBinContent(j); hLeadEta[p]->SetBinContent(j,val/0.3);}
-    for (int j=15;j<27;++j) {double val=hLeadEta[p]->GetBinContent(j); hLeadEta[p]->SetBinContent(j,val/0.6);}
-    for (int j=27;j<40;++j) {double val=hLeadEta[p]->GetBinContent(j); hLeadEta[p]->SetBinContent(j,val/0.3);}    
+    // for (int j=1;j<15;++j)   {double val=hLeadEta[p]->GetBinContent(j); hLeadEta[p]->SetBinContent(j,val/0.3);}     //  UNCOMMENT WHEN REQUIRING THE RECOIL JET BE IN THE
+    // for (int j=15;j<27;++j) {double val=hLeadEta[p]->GetBinContent(j); hLeadEta[p]->SetBinContent(j,val/0.6);}     //  SAME ETA RANGE AS THE LEADING JET (NORMALIZATION!)
+    // for (int j=27;j<40;++j) {double val=hLeadEta[p]->GetBinContent(j); hLeadEta[p]->SetBinContent(j,val/0.3);} 
+    
     
     hLeadEta[p]->Scale(1./hLeadEta[p]->Integral("WIDTH"));
     hLeadEta[p]->SetMarkerStyle( 20 );
