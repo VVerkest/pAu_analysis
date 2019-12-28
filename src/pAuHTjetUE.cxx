@@ -2,7 +2,7 @@
 //  Veronica Verkest		November 8, 2019
 
 #include "pAuFunctions.hh"
-#include "pAu_HT_jetParameters.hh"
+#include "pAu_HT_jetParameters.hh"      //  BbcAdcEastSum VS. BbcAdcSumEast!!
 
 using namespace std;
 using namespace fastjet;
@@ -25,7 +25,7 @@ int main ( int argc, const char** argv ) {         // funcions and cuts specifie
   
   //  Tree variables
   int RunID, EventID, nTowers, nPrimary, nGlobal, nVertices, refMult, gRefMult;
-  double Vz, BbcAdcEastSum, BbcAdcSumEast, BbcAdcSumEastOuter, BbcAdcSumWest, BbcAdcSumWestOuter, leadPt, leadEta, leadPhi,
+  double Vz, BbcAdcEastSum, BbcAdcEastSumOuter, BbcAdcWestSum, BbcAdcWestSumOuter, leadPt, leadEta, leadPhi,
     chgEastRho, chgMidRho, chgWestRho, neuEastRho, neuMidRho, neuWestRho, leadArea;
 
   HTjetTree->Branch( "RunID", &RunID );				HTjetTree->Branch( "EventID", &EventID );				HTjetTree->Branch( "nTowers", &nTowers );
@@ -71,7 +71,7 @@ int main ( int argc, const char** argv ) {         // funcions and cuts specifie
     
     Vz = header->GetPrimaryVertexZ();
     if ( UseEvent( header, event, vzCut, Vz ) == false ) { continue; }   //  Skip events based on: Run#, vz cut, BBCEastSum;    only accept HT Trigger events
-    if ( header->GetBbcAdcSumEast() < 4107 ) { continue; }     //  neglect 0-10% event activity
+    if ( header->GetBbcAdcEastSum() < 4107 ) { continue; }     //  neglect 0-10% event activity
     
     GatherParticles( container, rawParticles );
     // ClusterSequence jetCluster( rawParticles, jet_def );           //  CLUSTER ALL JETS
@@ -94,10 +94,10 @@ int main ( int argc, const char** argv ) {         // funcions and cuts specifie
     nVertices = header->GetNumberOfVertices();
     refMult = header->GetReferenceMultiplicity();
     gRefMult = header->GetGReferenceMultiplicity();
-    BbcAdcEastSum = header->GetBbcAdcSumEast();
-    BbcAdcEastSumOuter = header->GetBbcAdcSumEastOuter();
-    BbcAdcWestSum = header->GetBbcAdcSumWest();
-    BbcAdcWestSumOuter = header->GetBbcAdcSumWestOuter();
+    BbcAdcEastSum = header->GetBbcAdcEastSum();
+    BbcAdcEastSumOuter = header->GetBbcAdcEastSumOuter();
+    BbcAdcWestSum = header->GetBbcAdcWestSum();
+    BbcAdcWestSumOuter = header->GetBbcAdcWestSumOuter();
     leadPt = leadJet.pt();
     leadEta = leadJet.eta();
     leadPhi = leadJet.phi();
