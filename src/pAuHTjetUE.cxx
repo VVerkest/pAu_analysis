@@ -25,15 +25,15 @@ int main ( int argc, const char** argv ) {         // funcions and cuts specifie
   
   //  Tree variables
   int RunID, EventID, nTowers, nPrimary, nGlobal, nVertices, refMult, gRefMult;
-  double Vz, BbcAdcEastSum, BbcAdcEastSumOuter, BbcAdcWestSum, BbcAdcWestSumOuter, leadPt, leadEta, leadPhi,
+  double Vz, BbcAdcSumEast, BbcAdcSumEastOuter, BbcAdcWestSum, BbcAdcWestSumOuter, leadPt, leadEta, leadPhi,
     chgEastRho, chgMidRho, chgWestRho, neuEastRho, neuMidRho, neuWestRho, leadArea;
 
   HTjetTree->Branch( "RunID", &RunID );				HTjetTree->Branch( "EventID", &EventID );				HTjetTree->Branch( "nTowers", &nTowers );
   HTjetTree->Branch( "nPrimary", &nPrimary );	       	HTjetTree->Branch( "nGlobal", &nGlobal );				HTjetTree->Branch( "nVertices", &nVertices );
   HTjetTree->Branch( "refMult", &refMult );			HTjetTree->Branch( "gRefMult", &gRefMult );				HTjetTree->Branch( "Vz", &Vz );
   HTjetTree->Branch( "leadPt", &leadPt );				HTjetTree->Branch( "leadEta", &leadEta );
-  HTjetTree->Branch( "BbcAdcEastSum", &BbcAdcEastSum );			HTjetTree->Branch( "BbcAdcEastSumOuter", &BbcAdcEastSumOuter );
-  HTjetTree->Branch( "BbcAdcWestSum", &BbcAdcWestSum );		HTjetTree->Branch( "BbcAdcWestSumOuter", &BbcAdcWestSumOuter );
+  HTjetTree->Branch( "BbcAdcSumEast", &BbcAdcSumEast );			HTjetTree->Branch( "BbcAdcSumEastOuter", &BbcAdcSumEastOuter );
+  HTjetTree->Branch( "BbcAdcSumWest", &BbcAdcSumWest );		HTjetTree->Branch( "BbcAdcSumWestOuter", &BbcAdcSumWestOuter );
   HTjetTree->Branch( "leadPhi", &leadPhi );			HTjetTree->Branch( "chgEastRho", &chgEastRho );			HTjetTree->Branch( "chgMidRho", &chgMidRho );
   HTjetTree->Branch( "chgWestRho", &chgWestRho );	HTjetTree->Branch( "neuEastRho", &neuEastRho );			HTjetTree->Branch( "neuMidRho", &neuMidRho );
   HTjetTree->Branch( "neuWestRho", &neuWestRho );	HTjetTree->Branch( "leadArea", &leadArea );
@@ -70,8 +70,8 @@ int main ( int argc, const char** argv ) {         // funcions and cuts specifie
     container = Reader.GetOutputContainer();
     
     Vz = header->GetPrimaryVertexZ();
-    if ( UseEvent( header, event, vzCut, Vz ) == false ) { continue; }   //  Skip events based on: Run#, vz cut, BBCEastSum;    only accept HT Trigger events
-    if ( header->GetBbcAdcEastSum() < 4107 ) { continue; }     //  neglect 0-10% event activity
+    if ( UseEvent( header, event, vzCut, Vz ) == false ) { continue; }   //  Skip events based on: Run#, vz cut, BBCSumEast;    only accept HT Trigger events
+    if ( header->GetBbcAdcSumEast() < 4107 ) { continue; }     //  neglect 0-10% event activity
     
     GatherParticles( container, rawParticles );
     // ClusterSequence jetCluster( rawParticles, jet_def );           //  CLUSTER ALL JETS
@@ -94,10 +94,10 @@ int main ( int argc, const char** argv ) {         // funcions and cuts specifie
     nVertices = header->GetNumberOfVertices();
     refMult = header->GetReferenceMultiplicity();
     gRefMult = header->GetGReferenceMultiplicity();
-    BbcAdcEastSum = header->GetBbcAdcEastSum();
-    BbcAdcEastSumOuter = header->GetBbcAdcEastSumOuter();
-    BbcAdcWestSum = header->GetBbcAdcWestSum();
-    BbcAdcWestSumOuter = header->GetBbcAdcWestSumOuter();
+    BbcAdcSumEast = header->GetBbcAdcSumEast();
+    BbcAdcSumEastOuter = header->GetBbcAdcSumEastOuter();
+    BbcAdcSumWest = header->GetBbcAdcSumWest();
+    BbcAdcSumWestOuter = header->GetBbcAdcSumWestOuter();
     leadPt = leadJet.pt();
     leadEta = leadJet.eta();
     leadPhi = leadJet.phi();
