@@ -25,7 +25,7 @@ int main ( int argc, const char** argv ) {         // funcions and cuts specifie
   
   //  Tree variables
   int RunID, EventID, nTowers, nPrimary, nGlobal, nVertices, refMult, gRefMult;
-  double Vz, BbcAdcSumEast, BbcAdcSumEastOuter, BbcAdcWestSum, BbcAdcWestSumOuter, leadPt, leadEta, leadPhi,
+  double Vz, BbcAdcSumEast, BbcAdcSumEastOuter, BbcAdcSumWest, BbcAdcSumWestOuter, leadPt, leadEta, leadPhi,
     chgEastRho, chgMidRho, chgWestRho, neuEastRho, neuMidRho, neuWestRho, leadArea;
 
   HTjetTree->Branch( "RunID", &RunID );				HTjetTree->Branch( "EventID", &EventID );				HTjetTree->Branch( "nTowers", &nTowers );
