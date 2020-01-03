@@ -3,7 +3,7 @@ os = $(shell uname -s)
 INCFLAGS      = -I$(shell root-config --incdir) $(shell fastjet-config --cxxflags) -I$(STARPICOPATH) -I$(FJCONTRIB)/RecursiveTools -I/opt/local/include
 
 ifeq ($(os),Linux)
-CXXFLAGS      = -std=c++17
+CXXFLAGS      = -std=c++1z
 else
 CXXFLAGS      = -O -std=c++11 -fPIC -pipe -Wall -Wno-deprecated-writable-strings -Wno-unused-variable -Wno-unused-private-field -Wno-gnu-static-float-init
 ## for debugging:
