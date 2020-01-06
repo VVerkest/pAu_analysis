@@ -44,13 +44,13 @@ void UEdijetTreeEditor(){
   TTree *dijetTree = (TTree*) inFile->Get("HTdijetTree");
 
   int RunID, EventID, nTowers, nPrimary, nGlobal, nVertices, refMult, gRefMult;  //  Tree variables
-  double Vz, BbcAdcEastSum, leadPt, leadEta, leadPhi, recoPt, recoEta, recoPhi, chgEastRho, chgMidRho, chgWestRho, neuEastRho, neuMidRho, neuWestRho, leadArea, recoArea, eastRho, midRho, westRho,
-    leadPtCorrected, recoPtCorrected;
+  double Vz, BbcAdcSumEast, leadPt, leadEta, leadPhi, recoPt, recoEta, recoPhi, chgEastRho, chgMidRho, chgWestRho, neuEastRho, neuMidRho, neuWestRho, leadArea, recoArea,
+    eastRho, midRho, westRho, leadPtCorrected, recoPtCorrected;
 
   dijetTree->SetBranchAddress( "RunID", &RunID );      	       	dijetTree->SetBranchAddress( "EventID", &EventID );		       		dijetTree->SetBranchAddress( "nTowers", &nTowers );
   dijetTree->SetBranchAddress( "nPrimary", &nPrimary );       	dijetTree->SetBranchAddress( "nGlobal", &nGlobal );	       			dijetTree->SetBranchAddress( "nVertices", &nVertices );
   dijetTree->SetBranchAddress( "refMult", &refMult );		dijetTree->SetBranchAddress( "gRefMult", &gRefMult );		       		dijetTree->SetBranchAddress( "Vz", &Vz );
-  dijetTree->SetBranchAddress( "leadPt", &leadPt );	       		dijetTree->SetBranchAddress( "BbcAdcEastSum", &BbcAdcEastSum );	dijetTree->SetBranchAddress( "leadEta", &leadEta );
+  dijetTree->SetBranchAddress( "leadPt", &leadPt );	       		dijetTree->SetBranchAddress( "BbcAdcSumEast", &BbcAdcSumEast );	dijetTree->SetBranchAddress( "leadEta", &leadEta );
   dijetTree->SetBranchAddress( "leadPhi", &leadPhi );	       	dijetTree->SetBranchAddress( "chgEastRho", &chgEastRho );	       		dijetTree->SetBranchAddress( "chgMidRho", &chgMidRho );
   dijetTree->SetBranchAddress( "chgWestRho", &chgWestRho );	dijetTree->SetBranchAddress( "neuEastRho", &neuEastRho );		dijetTree->SetBranchAddress( "neuMidRho", &neuMidRho );
   dijetTree->SetBranchAddress( "neuWestRho", &neuWestRho );	dijetTree->SetBranchAddress( "leadArea", &leadArea );			dijetTree->SetBranchAddress( "recoArea", &recoArea );
@@ -75,8 +75,8 @@ void UEdijetTreeEditor(){
   for ( int je=0; je<nEtaBins; ++je ) {   //  create rhoVsBBCEsum profiles!
     for ( int bge=0; bge<nEtaBins; ++bge ) {
       hname[je][bge] = "hRho" + eastmidwest[bge] + jetEtaBinName[je];
-      TString drawString = rhoVal[bge] + ":BbcAdcEastSum>>" + hname[je][bge];
-      TString selectionString = "BbcAdcEastSum>4107  &&  BbcAdcEastSum<64000  &&  " + etaSelection[je];
+      TString drawString = rhoVal[bge] + ":BbcAdcSumEast>>" + hname[je][bge];
+      TString selectionString = "BbcAdcSumEast>4107  &&  BbcAdcSumEast<64000  &&  " + etaSelection[je];
       dijetTree->Draw( drawString, selectionString, "COLZ" );
       hRho[je][bge] = (TH2D*)gDirectory->Get( hname[je][bge] );
       hRhoProfile[je][bge] = (TH1D*)hRho[je][bge]->ProfileX();
@@ -100,13 +100,13 @@ void UEdijetTreeEditor(){
     for ( int j=0; j<nBins[le][le]; ++j ) { //  lead jet
       double BBCElo = hRhoProfile[le][le]->GetBinLowEdge(j);
       double BBCEhi = BBCElo + hRhoProfile[le][le]->GetBinWidth(j);
-      if ( BbcAdcEastSum >= BBCElo &&  BbcAdcEastSum <= BBCEhi ) { leadRhoValue = hRhoProfile[le][le]->GetBinContent(j); }
+      if ( BbcAdcSumEast >= BBCElo &&  BbcAdcSumEast <= BBCEhi ) { leadRhoValue = hRhoProfile[le][le]->GetBinContent(j); }
     }
     
     for ( int j=0; j<nBins[le][re]; ++j ) { //  recoil jet
       double BBCElo = hRhoProfile[le][re]->GetBinLowEdge(j);
       double BBCEhi = BBCElo + hRhoProfile[le][re]->GetBinWidth(j);
-      if ( BbcAdcEastSum >= BBCElo &&  BbcAdcEastSum <= BBCEhi ) { recoRhoValue = hRhoProfile[le][re]->GetBinContent(j); }
+      if ( BbcAdcSumEast >= BBCElo &&  BbcAdcSumEast <= BBCEhi ) { recoRhoValue = hRhoProfile[le][re]->GetBinContent(j); }
     }    
   
     leadPtCorrected = leadPt - leadArea*leadRhoValue;

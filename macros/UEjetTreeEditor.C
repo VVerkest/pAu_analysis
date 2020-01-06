@@ -44,12 +44,12 @@ void UEjetTreeEditor(){
   TTree *jetTree = (TTree*) inFile->Get("HTjetTree");
 
   int RunID, EventID, nTowers, nPrimary, nGlobal, nVertices, refMult, gRefMult;  //  Tree variables
-  double Vz, BbcAdcEastSum, leadPt, leadEta, leadPhi, chgEastRho, chgMidRho, chgWestRho, neuEastRho, neuMidRho, neuWestRho, leadArea, eastRho, midRho, westRho, leadPtCorrected;
+  double Vz, BbcAdcSumEast, leadPt, leadEta, leadPhi, chgEastRho, chgMidRho, chgWestRho, neuEastRho, neuMidRho, neuWestRho, leadArea, eastRho, midRho, westRho, leadPtCorrected;
 
   jetTree->SetBranchAddress( "RunID", &RunID );      	       	jetTree->SetBranchAddress( "EventID", &EventID );					jetTree->SetBranchAddress( "nTowers", &nTowers );
   jetTree->SetBranchAddress( "nPrimary", &nPrimary );       	jetTree->SetBranchAddress( "nGlobal", &nGlobal );					jetTree->SetBranchAddress( "nVertices", &nVertices );
   jetTree->SetBranchAddress( "refMult", &refMult );		jetTree->SetBranchAddress( "gRefMult", &gRefMult );		       		jetTree->SetBranchAddress( "Vz", &Vz );
-  jetTree->SetBranchAddress( "leadPt", &leadPt );	       		jetTree->SetBranchAddress( "BbcAdcEastSum", &BbcAdcEastSum );	jetTree->SetBranchAddress( "leadEta", &leadEta );
+  jetTree->SetBranchAddress( "leadPt", &leadPt );	       		jetTree->SetBranchAddress( "BbcAdcSumEast", &BbcAdcSumEast );	jetTree->SetBranchAddress( "leadEta", &leadEta );
   jetTree->SetBranchAddress( "leadPhi", &leadPhi );	       	jetTree->SetBranchAddress( "chgEastRho", &chgEastRho );	       		jetTree->SetBranchAddress( "chgMidRho", &chgMidRho );
   jetTree->SetBranchAddress( "chgWestRho", &chgWestRho );	jetTree->SetBranchAddress( "neuEastRho", &neuEastRho );		jetTree->SetBranchAddress( "neuMidRho", &neuMidRho );
   jetTree->SetBranchAddress( "neuWestRho", &neuWestRho );	jetTree->SetBranchAddress( "leadArea", &leadArea );			//jetTree->Branch( "leadPtCorrected", &leadPtCorrected );
@@ -58,15 +58,15 @@ void UEjetTreeEditor(){
   
   int nEntries = jetTree->GetEntries();
 
-  jetTree->Draw("(chgEastRho+neuEastRho):BbcAdcEastSum>>hEastRhoByBBCEsum","BbcAdcEastSum>4107  &&  BbcAdcEastSum<64000  &&  leadEta<-0.3","COLZ");
+  jetTree->Draw("(chgEastRho+neuEastRho):BbcAdcSumEast>>hEastRhoByBBCEsum","BbcAdcSumEast>4107  &&  BbcAdcSumEast<64000  &&  leadEta<-0.3","COLZ");
   TH2D* hEastRhoByBBCEsum = (TH2D*)gDirectory->Get("hEastRhoByBBCEsum");
   TH1D* hEastRhoProfile = (TH1D*)hEastRhoByBBCEsum->ProfileX();
   int nEastProfBins = hEastRhoProfile->GetNbinsX();
-  jetTree->Draw("(chgMidRho+neuMidRho):BbcAdcEastSum>>hMidRhoByBBCEsum","BbcAdcEastSum>4107  &&  BbcAdcEastSum<64000  &&  leadEta>=-0.3  &&  leadEta<=0.3","COLZ");
+  jetTree->Draw("(chgMidRho+neuMidRho):BbcAdcSumEast>>hMidRhoByBBCEsum","BbcAdcSumEast>4107  &&  BbcAdcSumEast<64000  &&  leadEta>=-0.3  &&  leadEta<=0.3","COLZ");
   TH2D* hMidRhoByBBCEsum = (TH2D*)gDirectory->Get("hMidRhoByBBCEsum");
   TH1D* hMidRhoProfile = (TH1D*)hMidRhoByBBCEsum->ProfileX();
   int nMidProfBins = hMidRhoProfile->GetNbinsX();
-  jetTree->Draw("(chgWestRho+neuWestRho):BbcAdcEastSum>>hWestRhoByBBCEsum","BbcAdcEastSum>4107  &&  BbcAdcEastSum<64000  &&  leadEta>0.3","COLZ");
+  jetTree->Draw("(chgWestRho+neuWestRho):BbcAdcSumEast>>hWestRhoByBBCEsum","BbcAdcSumEast>4107  &&  BbcAdcSumEast<64000  &&  leadEta>0.3","COLZ");
   TH2D* hWestRhoByBBCEsum = (TH2D*)gDirectory->Get("hWestRhoByBBCEsum");
   TH1D* hWestRhoProfile = (TH1D*)hWestRhoByBBCEsum->ProfileX();
   int nWestProfBins = hWestRhoProfile->GetNbinsX();
@@ -80,21 +80,21 @@ void UEjetTreeEditor(){
       for ( int j=0; j<nEastProfBins; ++j ) {
 	double BBCElo = hEastRhoProfile->GetBinLowEdge(j);
 	double BBCEhi = BBCElo + hEastRhoProfile->GetBinWidth(j);
-	if ( BbcAdcEastSum >= BBCElo &&  BbcAdcEastSum <= BBCEhi ) { rhoValue = hEastRhoProfile->GetBinContent(j); }
+	if ( BbcAdcSumEast >= BBCElo &&  BbcAdcSumEast <= BBCEhi ) { rhoValue = hEastRhoProfile->GetBinContent(j); }
       }
     }
     else if ( leadEta >= etaLo[1]  &&  leadEta <= etaHi[1] ) {  //MID
       for ( int j=0; j<nMidProfBins; ++j ) {
 	double BBCElo = hMidRhoProfile->GetBinLowEdge(j);
 	double BBCEhi = BBCElo + hMidRhoProfile->GetBinWidth(j);
-	if ( BbcAdcEastSum >= BBCElo &&  BbcAdcEastSum <= BBCEhi ) { rhoValue = hMidRhoProfile->GetBinContent(j); }
+	if ( BbcAdcSumEast >= BBCElo &&  BbcAdcSumEast <= BBCEhi ) { rhoValue = hMidRhoProfile->GetBinContent(j); }
       }
     }
     else if ( leadEta >= etaLo[2]  &&  leadEta <= etaHi[2] ) {  //WEST
       for ( int j=0; j<nWestProfBins; ++j ) {
 	double BBCElo = hWestRhoProfile->GetBinLowEdge(j);
 	double BBCEhi = BBCElo + hWestRhoProfile->GetBinWidth(j);
-	if ( BbcAdcEastSum >= BBCElo &&  BbcAdcEastSum <= BBCEhi ) { rhoValue = hWestRhoProfile->GetBinContent(j); }
+	if ( BbcAdcSumEast >= BBCElo &&  BbcAdcSumEast <= BBCEhi ) { rhoValue = hWestRhoProfile->GetBinContent(j); }
       }
     }
     else { cerr<<"error with finding lead jet eta"<<endl; }
