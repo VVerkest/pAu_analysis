@@ -50,9 +50,8 @@ int main ( int argc, const char** argv ) {         // funcions and cuts specifie
     header = event->GetHeader();
     
     Vz = header->GetPrimaryVertexZ();
-    //if ( UseEvent( header, event, vzCut, Vz, trigOpt ) == false ) { cout<<"skip"<<endl; continue; }   //  Skip events based on: Run#, vz cut, BBCSumEast;    only accept MB events
+    if ( UseEvent( header, event, vzCut, Vz, trigOpt ) == false ) { continue; }   //  Skip events based on: Run#, vz cut, BBCSumEast;    only accept MB events
     
-    cout<<"0"<<endl;
     RunID = header->GetRunId();
     EventID = Reader.GetNOfCurrentEvent();
     BbcAdcSumEast = header->GetBbcAdcSumEast();
@@ -66,6 +65,8 @@ int main ( int argc, const char** argv ) {         // funcions and cuts specifie
   TFile *EAdistFile = new TFile( outFile.c_str() ,"RECREATE");
   hEAdist->Write();
   EAtree->Write();
+
+  EAdistFile->Close();
   
   return 0;
 }
