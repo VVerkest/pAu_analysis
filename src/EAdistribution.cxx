@@ -43,8 +43,6 @@ int main ( int argc, const char** argv ) {         // funcions and cuts specifie
 
   // ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~  BEGIN EVENT LOOP!  ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~
   while ( Reader.NextEvent() ) {
-
-    cout<<"0"<<endl;
     
     Reader.PrintStatus(10);
 
@@ -54,6 +52,7 @@ int main ( int argc, const char** argv ) {         // funcions and cuts specifie
     Vz = header->GetPrimaryVertexZ();
     if ( UseEvent( header, event, vzCut, Vz, trigOpt ) == false ) { continue; }   //  Skip events based on: Run#, vz cut, BBCSumEast;    only accept MB events
     
+    cout<<"0"<<endl;
     RunID = header->GetRunId();
     EventID = Reader.GetNOfCurrentEvent();
     BbcAdcSumEast = header->GetBbcAdcSumEast();
