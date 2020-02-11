@@ -35,7 +35,7 @@ int main ( int argc, const char** argv ) {         // funcions and cuts specifie
   TChain* Chain = new TChain( "JetTree" );
   Chain->Add( inFile.c_str() );
   TStarJetPicoReader Reader;
-  int numEvents = number_of_events;        // total events in MB:
+  int numEvents = number_of_events;        // total events in MB: 56,855,250
   InitReader( Reader, Chain, numEvents );
   
   TStarJetPicoEventHeader* header;
@@ -44,6 +44,8 @@ int main ( int argc, const char** argv ) {         // funcions and cuts specifie
   // ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~  BEGIN EVENT LOOP!  ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~
   while ( Reader.NextEvent() ) {
 
+    cout<<"0"<<endl;
+    
     Reader.PrintStatus(10);
 
     event = Reader.GetEvent();
