@@ -56,7 +56,6 @@ int main ( int argc, const char** argv ) {         // funcions and cuts specifie
     RunID = header->GetRunId();
     EventID = Reader.GetNOfCurrentEvent();
     BbcAdcSumEast = header->GetBbcAdcSumEast();
-    BbcAdcSumEastOuter = header->GetBbcAdcSumEastOuter();
 
     EAtree->Fill();
     hEAdist->Fill( BbcAdcSumEast );
