@@ -263,7 +263,7 @@ namespace pAuAnalysis {
     // HT2*BBCMB : 500205, 500215		JP2 : 500401, 500411		BBCMB : 500008, 500018		VPDMB :  500904
     
     if ( !( triggerOption=="HT" || triggerOption=="JP" || triggerOption=="MB")) {
-      std::cerr<<"INVALID TRIGGER OPTION! OPTIONS ARE: HT, JP, MB"<<stl::endl;
+      std::cerr<<"INVALID TRIGGER OPTION! OPTIONS ARE: HT, JP, MB"<<std::endl;
     }
     else if ( triggerOption=="HT" && !(Header->HasTriggerId(500205) || Header->HasTriggerId(500215))) {return false;}   //  ONLY SELECT HT TRIGGER EVENTS
     else if ( triggerOption=="MB" && !(Header->HasTriggerId(500008) || Header->HasTriggerId(500018))) {return false;}   //  ONLY SELECT MB TRIGGER EVENTS
