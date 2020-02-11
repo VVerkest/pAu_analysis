@@ -25,10 +25,10 @@ int main ( int argc, const char** argv ) {         // funcions and cuts specifie
   
   //  Tree variables
   int RunID, EventID;
-  double Vz, BbcAdcSumEast, BbcAdcSumEastOuter;
+  double Vz, BbcAdcSumEast;
 
   EAtree->Branch( "RunID", &RunID );				EAtree->Branch( "EventID", &EventID );				EAtree->Branch( "Vz", &Vz );
-  EAtree->Branch( "BbcAdcSumEast", &BbcAdcSumEast );			EAtree->Branch( "BbcAdcSumEastOuter", &BbcAdcSumEastOuter );
+  EAtree->Branch( "BbcAdcSumEast", &BbcAdcSumEast );
 
   string trigOpt = "MB";
   
