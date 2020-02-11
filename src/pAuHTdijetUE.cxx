@@ -53,6 +53,8 @@ int main ( int argc, const char** argv ) {         // funcions and cuts specifie
   TStarJetPicoEvent* event;
   TStarJetVectorContainer<TStarJetVector> * container;
   
+  string trigOpt = "HT";
+
   TChain* Chain = new TChain( "JetTree" );
   Chain->Add( inFile.c_str() );
   TStarJetPicoReader Reader;
@@ -71,7 +73,7 @@ int main ( int argc, const char** argv ) {         // funcions and cuts specifie
     container = Reader.GetOutputContainer();
     
     Vz = header->GetPrimaryVertexZ();
-    if ( UseEvent( header, event, vzCut, Vz ) == false ) { continue; }   //  Skip events based on: Run#, vz cut, BBCSumEast;    only accept HT Trigger events
+    if ( UseEvent( header, event, vzCut, Vz, trigOpt ) == false ) { continue; }   //  Skip events based on: Run#, vz cut, BBCSumEast;    only accept HT Trigger events
     if ( header->GetBbcAdcSumEast() < 4107 ) { continue; }     //  neglect 0-10% event activity
 
     GatherParticles( container, rawParticles );
