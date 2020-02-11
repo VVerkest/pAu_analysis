@@ -45,6 +45,9 @@ int main ( int argc, const char** argv ) {         // funcions and cuts specifie
   while ( Reader.NextEvent() ) {
 
     Reader.PrintStatus(10);
+
+    event = Reader.GetEvent();
+    header = event->GetHeader();
     
     Vz = header->GetPrimaryVertexZ();
     if ( UseEvent( header, event, vzCut, Vz, trigOpt ) == false ) { continue; }   //  Skip events based on: Run#, vz cut, BBCSumEast;    only accept MB events
