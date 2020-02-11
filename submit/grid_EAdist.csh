@@ -9,7 +9,7 @@ set ExecPath = `pwd`
 set execute = './bin/EAdistribution'
 set numevents = -1
 set base = /wsu/home/el/el98/el9852/physics/analysis/pAu_analysis/production_pAu200_2015/MB/pAu_2015_200_MB
-set outDir = UE
+set outDir = EAdist
 set outFile = EAdist
 
 # Create the folder name for output
