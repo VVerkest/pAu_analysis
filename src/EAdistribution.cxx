@@ -19,7 +19,7 @@ int main ( int argc, const char** argv ) {         // funcions and cuts specifie
 
   TH1::SetDefaultSumw2();  TH2::SetDefaultSumw2();  TH3::SetDefaultSumw2();
 
-  TH1D *hEAdist = new TH1D( "hEAdist", "BBC Inner East Sum;BBCEsum", 1000,0,100000 );
+  TH1D *hEAdist = new TH1D( "hEAdist", "BBC Inner East Sum;BBCEsum", 70000,0,70000 );
   
   TTree *EAtree = new TTree( "EAtree", "EA_Tree" );
   
@@ -27,8 +27,8 @@ int main ( int argc, const char** argv ) {         // funcions and cuts specifie
   int RunID, EventID;
   double Vz, BbcAdcSumEast;
 
-  EAtree->Branch( "RunID", &RunID );				EAtree->Branch( "EventID", &EventID );				EAtree->Branch( "Vz", &Vz );
-  EAtree->Branch( "BbcAdcSumEast", &BbcAdcSumEast );
+  EAtree->Branch( "RunID", &RunID );				EAtree->Branch( "EventID", &EventID );
+  EAtree->Branch( "Vz", &Vz );						EAtree->Branch( "BbcAdcSumEast", &BbcAdcSumEast );
 
   string trigOpt = "MB";
   
