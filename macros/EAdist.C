@@ -10,7 +10,7 @@ void EAdist(){
   
   TTree *eatree = (TTree*) EAfile->Get("EAtree");
 
-  int RunID, EventID;		double Vz, BbcAdcSumEast, ps, tenth;
+  int RunID, EventID;		double Vz, BbcAdcSumEast, ps;
   eatree->SetBranchAddress( "RunID", &RunID );	eatree->SetBranchAddress( "EventID", &EventID );
   eatree->SetBranchAddress( "Vz", &Vz );		eatree->SetBranchAddress( "BbcAdcSumEast", &BbcAdcSumEast );
 
