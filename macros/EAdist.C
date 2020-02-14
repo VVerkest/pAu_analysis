@@ -36,7 +36,7 @@ void EAdist(){
   
   file << 0.00 << ", ";
   for (int i=0;i<9;++i) {file << deciles[i] << ", ";}
-  file << deciles[10]; //writes that element
+  file << deciles[9]; //writes that element
   
   file.close();
   cout << "Closed bad_towers_pAu2015.list" << endl;
