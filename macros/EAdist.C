@@ -14,7 +14,7 @@ void EAdist(){
   eatree->SetBranchAddress( "RunID", &RunID );	eatree->SetBranchAddress( "EventID", &EventID );
   eatree->SetBranchAddress( "Vz", &Vz );		eatree->SetBranchAddress( "BbcAdcSumEast", &BbcAdcSumEast );
 
-  int nBins = hEAdist->GetNbinsX();
+  int nBins = hBBCdist->GetNbinsX();
   TH1D *hBBCint = new TH1D("hBBCint","BBCEsum Dis. Integral",70000,0,70000);
 
   for (int i=0;i<nBins;++i) {
