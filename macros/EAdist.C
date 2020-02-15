@@ -7,7 +7,7 @@ void EAdist(){
   TFile *EAfile = new TFile("out/EAdist/pAu_2015_EAdist.root","READ");
 
   TH1D *hBBCdist = (TH1D*) EAfile->Get("hEAdist");
-  hBBCdist->Scale(1./hBBCdist->Integral("width"));
+  hBBCdist->Scale(1./hBBCdist->Integral());
   
   TTree *eatree = (TTree*) EAfile->Get("EAtree");
 
@@ -19,6 +19,7 @@ void EAdist(){
   TH1D *hBBCint = new TH1D("hBBCint","BBCEsum Distribution Integral",280000,0,70000);
 
   for (int i=0;i<nBins;++i) {
+    if ( (i/40000)==1 || (i/40000)==2 || (i/40000)==3 || (i/40000)==4 || (i/40000)==5 || (i/40000)==6 || (i/40000)==7 ) { cout<<"int[0,"<<(i*40000)<<"]"<<endl; }
     ps = hBBCdist->Integral(0,i);  //partial sum
     hBBCint->SetBinContent(i,ps);
   }
