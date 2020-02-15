@@ -26,7 +26,7 @@ void EAdist(){
   double tenth = 0.10000000000000;
   double deciles[10];
   for (int i=0;i<10;++i) {
-    cout<<"Finding Decile: " + i + "0-" + (i+1) + "0%"<<endl;
+    cout<<"Finding Decile: "<<i<<"0-"<<(i+1)<<"0%"<<endl;
     double min = (i+1)*tenth;
     int bin = hBBCint->FindFirstBinAbove(min);
     deciles[i] = hBBCint->GetBinCenter(bin);
