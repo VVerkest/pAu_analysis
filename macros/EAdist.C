@@ -11,7 +11,7 @@ void EAdist(){
   
   TTree *eatree = (TTree*) EAfile->Get("EAtree");
 
-  int RunID, EventID;		double Vz, BbcAdcSumEast, ps;
+  int RunID, EventID;		double Vz, BbcAdcSumEast, ps, temp;
   eatree->SetBranchAddress( "RunID", &RunID );	eatree->SetBranchAddress( "EventID", &EventID );
   eatree->SetBranchAddress( "Vz", &Vz );		eatree->SetBranchAddress( "BbcAdcSumEast", &BbcAdcSumEast );
 
@@ -20,7 +20,8 @@ void EAdist(){
 
   for (int i=0;i<nBins;++i) {
     if ( (i==40000*1) || (i==40000*2) || (i==40000*3) || (i==40000*4) || (i==40000*5) || (i==40000*6) || (i==40000*7) ) { cout<<"int[0,"<<(i/40000)<<"]"<<endl; }
-    ps = hBBCdist->Integral(0,i);  //partial sum
+    temp = hBBCdist->Integral(i,i);  //partial sum
+    ps += temp;
     hBBCint->SetBinContent(i,ps);
   }
 
