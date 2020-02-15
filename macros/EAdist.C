@@ -31,7 +31,7 @@ void EAdist(){
     cout<<"Finding Decile: "<<i<<"0-"<<(i+1)<<"0%"<<endl;
     double min = (i+1)*tenth;
     int bin = hBBCint->FindFirstBinAbove(min);
-    deciles[i] = hBBCint->GetBinLowEdge(bin);
+    deciles[i] = hBBCint->GetBinCenter(bin);
   }
 
   fstream file("src/EAdeciles.txt", fstream::in | fstream::out | fstream::trunc);
