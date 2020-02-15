@@ -50,7 +50,7 @@ int main ( int argc, const char** argv ) {         // funcions and cuts specifie
     header = event->GetHeader();
     
     Vz = header->GetPrimaryVertexZ();
-    if ( UseEvent( header, event, vzCut, Vz, trigOpt ) == false ) { continue; }   //  Skip events based on: Run#, vz cut, BBCSumEast;    only accept MB events
+    if ( UseEvent( header, event, vzCut, Vz, trigOpt ) == false ) { continue; }   //  Skip events based on: Run#, vz cut, BBCSumEast; only MB events
     
     RunID = header->GetRunId();
     EventID = Reader.GetNOfCurrentEvent();
