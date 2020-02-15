@@ -12,7 +12,7 @@ void EAdist(){
   TTree *eatree = (TTree*) EAfile->Get("EAtree");
 
   int RunID, EventID;		double Vz, BbcAdcSumEast, ps, temp;
-  eatree->SetBranhAddress( "RunID", &RunID );	eatree->SetBranchAddress( "EventID", &EventID );
+  eatree->SetBranchAddress( "RunID", &RunID );	eatree->SetBranchAddress( "EventID", &EventID );
   eatree->SetBranchAddress( "Vz", &Vz );		eatree->SetBranchAddress( "BbcAdcSumEast", &BbcAdcSumEast );
 
   int nBins = hBBCdist->GetNbinsX();
