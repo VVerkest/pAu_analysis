@@ -15,7 +15,7 @@ void EAdist(){
   eatree->SetBranchAddress( "Vz", &Vz );		eatree->SetBranchAddress( "BbcAdcSumEast", &BbcAdcSumEast );
 
   int nBins = hBBCdist->GetNbinsX();
-  TH1D *hBBCint = new TH1D("hBBCint","BBCEsum Distribution Integral",700000,0,70000);
+  TH1D *hBBCint = new TH1D("hBBCint","BBCEsum Distribution Integral",280000,0,70000);
 
   for (int i=0;i<nBins;++i) {
     ps = hBBCdist->Integral(0,i);  //partial sum
