@@ -1,5 +1,6 @@
 //  Veronica Verkest		February 14, 2020
-//  macro for normalizing BBCEsum distribution & calculating EA deciles
+//  ~macro for normalizing BBCEsum distribution & calculating EA deciles
+//  ~uses output file from EAdistribution.cxx
 
 void EAdist(){
 
@@ -17,7 +18,8 @@ void EAdist(){
   int nBins = hBBCdist->GetNbinsX();
   TH1D *hBBCint = new TH1D("hBBCint","BBCEsum Distribution Integral",280000,0,70000);
 
-  for (int i=0;i<nBins;++i) {
+  // for (int i=0;i<nBins;++i) {
+  for (int i=0;i<10000;++i) {
     ps = hBBCdist->Integral(0,i);  //partial sum
     hBBCint->SetBinContent(i,ps);
   }
