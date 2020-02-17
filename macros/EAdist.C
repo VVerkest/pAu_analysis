@@ -28,15 +28,19 @@ void EAdist(){
     hBBCint->SetBinContent(i,ps);
   }
 
+  int bin = 0;
   double tenth = (double) 1.0/10.0;
   double deciles[10];
   for (int i=0;i<10;++i) {
     double min = (i+1)*tenth;
-    int bin = hBBCint->FindFirstBinAbove(min);
+    bin = hBBCint->FindFirstBinAbove(min);
     deciles[i] = hBBCint->GetBinCenter(bin);
     hBBCdist->SetBinError(bin,9999);
   }
 
+  bin = 64000*4;
+  hBBCdist->SetBinError(bin,9999);
+  
   fstream file("src/EAdeciles.txt", fstream::in | fstream::out | fstream::trunc);
   if (!file) {    cerr << "Error in creating file!!!" << endl; exit(1);  }
   else {    cout << "src/EAdeciles.txt created successfully." << endl;  }
