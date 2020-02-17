@@ -29,10 +29,11 @@ void EAdist(){
   }
 
   double tenth = 1/10;
+  cout<<tenth;
   double deciles[10];
   for (int i=0;i<10;++i) {
     double min = (i+1)*tenth;
-    cout<<min<<", ";
+    //cout<<min<<", ";
     int bin = hBBCint->FindFirstBinAbove(min);
     deciles[i] = hBBCint->GetBinCenter(bin);
     //cout<<deciles[i]<<", ";
