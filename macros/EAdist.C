@@ -4,6 +4,8 @@
 
 void EAdist(){
 
+  TH1::SetDefaultSumw2();  TH2::SetDefaultSumw2();  TH3::SetDefaultSumw2();
+
   TFile *EAfile = new TFile("out/EAdist/pAu_2015_EAdist.root","UPDATE");
 
   TH1D *hBBCdist = (TH1D*) EAfile->Get("hEAdist");
