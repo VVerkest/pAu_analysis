@@ -34,6 +34,7 @@ void EAdist(){
     double min = (i+1)*tenth;
     int bin = hBBCint->FindFirstBinAbove(min);
     deciles[i] = hBBCint->GetBinCenter(bin);
+    cout<<deciles[i]<<", ";
     //hBBCdist->SetBinError(i,9999);
   }
 
