@@ -53,7 +53,8 @@ void EAdist(){
 
   TCanvas * c0 = new TCanvas( "c0" , "" ,0 ,23 ,1280 ,350 );              // CANVAS
   c0->SetLogy();
-  hBBCdist->Rebin(100);
+  hBBCdist->GetYaxis()->SetRangeUser(0.000001, 0.0001);
+  hBBCdist->Rebin(200);
   hBBCdist->Draw();
   c0->SaveAs("plots/EAdist.pdf","PDF");
   
