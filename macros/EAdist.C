@@ -20,8 +20,9 @@ void EAdist(){
   int nBins = hBBCdist->GetNbinsX();
   TH1D *hBBCint = new TH1D("hBBCint","BBCEsum Distribution Integral",280000,0,70000);
 
+  temp = 0;
+  ps = 0;
   for (int i=0;i<nBins;++i) {
-    if ( (i==40000*1)||(i==40000*2)||(i==40000*3)||(i==40000*4)||(i==40000*5)||(i==40000*6)||(i==40000*7) ) { cout<<"int[0,"<<(i/40000)<<"000]"<<endl; }
     temp = hBBCdist->Integral(i,i);  //partial sum
     ps += temp;
     hBBCint->SetBinContent(i,ps);
@@ -30,7 +31,6 @@ void EAdist(){
   double tenth = 1/10;
   double deciles[10];
   for (int i=0;i<10;++i) {
-    cout<<"Finding Decile: "<<i<<"0-"<<(i+1)<<"0%"<<endl;
     double min = (i+1)*tenth;
     int bin = hBBCint->FindFirstBinAbove(min);
     deciles[i] = hBBCint->GetBinCenter(bin);
