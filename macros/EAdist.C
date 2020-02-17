@@ -37,7 +37,7 @@ void EAdist(){
     int bin = hBBCint->FindFirstBinAbove(min);
     deciles[i] = hBBCint->GetBinCenter(bin);
     //cout<<deciles[i]<<", ";
-    //hBBCdist->SetBinError(i,9999);
+    hBBCdist->SetBinError(i,9999);
   }
 
   fstream file("src/EAdeciles.txt", fstream::in | fstream::out | fstream::trunc);
