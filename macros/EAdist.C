@@ -39,7 +39,7 @@ void EAdist(){
   }
 
   bin = 64000*4;
-  hBBCdist->SetBinContent(bin,0.00001);
+  hBBCdist->SetBinContent(bin,0.000001);
   hBBCdist->SetBinError(bin,9999);
   
   fstream file("src/EAdeciles.txt", fstream::in | fstream::out | fstream::trunc);
