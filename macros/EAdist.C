@@ -28,7 +28,7 @@ void EAdist(){
     hBBCint->SetBinContent(i,ps);
   }
 
-  double tenth = 1/10;
+  double tenth = (double) 1.0/10.0;
   cout<<tenth;
   double deciles[10];
   for (int i=0;i<10;++i) {
