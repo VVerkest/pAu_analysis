@@ -4,7 +4,7 @@
 
 void EAdist(){
 
-  TFile *EAfile = new TFile("out/EAdist/pAu_2015_EAdist.root","UPDATE");
+  TFile *EAfile = new TFile("out/EAdist/pAu_2015_EAdist.root","OPEN");
 
   TH1D *hBBCdist = (TH1D*) EAfile->Get("hEAdist");
   hBBCdist->Scale(1./hBBCdist->Integral());
@@ -46,6 +46,10 @@ void EAdist(){
   file.close();
   cout << "Closed bad_towers_pAu2015.list" << endl;
 
-  hBBCdist->Write();
+  TCanvas * c0 = new TCanvas( "c0" , "" ,0 ,23 ,1280 ,350 );              // CANVAS
+  c0->SetLogy();
+  hBBCdist->Draw();
+  c0->SaveAs("plots/EAdist.pdf","PDF");
   
+  EAfile->Close();
 }
