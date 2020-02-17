@@ -4,7 +4,7 @@
 
 void EAdist(){
 
-  TFile *EAfile = new TFile("out/EAdist/pAu_2015_EAdist.root","OPEN");
+  TFile *EAfile = new TFile("out/EAdist/pAu_2015_EAdist.root","UPDATE");
 
   TH1D *hBBCdist = (TH1D*) EAfile->Get("hEAdist");
   hBBCdist->Scale(1./hBBCdist->Integral());
