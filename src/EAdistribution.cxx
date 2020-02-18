@@ -25,11 +25,12 @@ int main ( int argc, const char** argv ) {         // funcions and cuts specifie
   
   //  Tree variables
   int RunID, EventID;
-  double Vz, BbcAdcSumEast;
+  double Vz, ZDCx, BbcAdcSumEast;
 
   EAtree->Branch( "RunID", &RunID );				EAtree->Branch( "EventID", &EventID );
   EAtree->Branch( "Vz", &Vz );						EAtree->Branch( "BbcAdcSumEast", &BbcAdcSumEast );
-
+  EAtree->Branch( "ZDCx", &ZDCx );
+  
   string trigOpt = "MB";
   
   TChain* Chain = new TChain( "JetTree" );
@@ -55,6 +56,7 @@ int main ( int argc, const char** argv ) {         // funcions and cuts specifie
     RunID = header->GetRunId();
     EventID = Reader.GetNOfCurrentEvent();
     BbcAdcSumEast = header->GetBbcAdcSumEast();
+    ZDCx = header->GetZdcCoincidenceRate();
 
     EAtree->Fill();
     hEAdist->Fill( BbcAdcSumEast );

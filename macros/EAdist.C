@@ -13,9 +13,11 @@ void EAdist(){
   
   TTree *eatree = (TTree*) EAfile->Get("EAtree");
 
-  int RunID, EventID;		double Vz, BbcAdcSumEast, ps, temp;
-  eatree->SetBranchAddress( "RunID", &RunID );	eatree->SetBranchAddress( "EventID", &EventID );
+  double ps, temp;
+  int RunID, EventID;		double Vz, BbcAdcSumEast, ZDCx;
+  eatree->SetBranchAddress( "RunID", &RunID );		eatree->SetBranchAddress( "EventID", &EventID );
   eatree->SetBranchAddress( "Vz", &Vz );		eatree->SetBranchAddress( "BbcAdcSumEast", &BbcAdcSumEast );
+  eatree->SetBranchAddress( "ZDCx", &ZDCx );
 
   int nBins = hBBCdist->GetNbinsX();
   TH1D *hBBCint = new TH1D("hBBCint","BBCEsum Distribution Integral",280000,0,70000);
