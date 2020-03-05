@@ -29,7 +29,7 @@ namespace pAuAnalysis {
     chgPart.clear();
     
     for (int i=0; i<uncorrPart.size(); ++i) {
-      if (  (uncorrPart[i].pt()<2.0) || (uncorrPart[i].pt()>15.0)  ) {
+      if (  (uncorrPart[i].pt()<0.2) || (uncorrPart[i].pt()>15.0)  ) {
 	std::cerr<<"Charged Track pT = "<<uncorrPart[i].pt()<<"   --  setting to 0.0"<<std::endl;
       }
       else {
@@ -39,7 +39,7 @@ namespace pAuAnalysis {
 	e = uncorrPart[i].e();
 
 	for ( int j=0; j<nBins; ++j ) {     // find efficiency histogram corresponding to track eta
-	  if ( (eta>etaLo[j]) && (eta<etaHi[j]) ) { etaBin = j; }
+	  if ( (eta>=etaLo[j]) && (eta<=etaHi[j]) ) { etaBin = j; }
 	  else { std::cerr<<"error finding charged track eta bin"<<std::endl; }
 	}
 	for ( int j=0; j<72; ++j ) { ptBin = hEffic[etaBin]->FindBin( pt ); }    // find histogram bin corresponding to track pt
