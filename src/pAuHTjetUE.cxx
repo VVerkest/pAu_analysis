@@ -87,7 +87,6 @@ int main ( int argc, const char** argv ) {         // funcions and cuts specifie
     
     Vz = header->GetPrimaryVertexZ();
     if ( UseEvent( header, event, vzCut, Vz, trigOpt ) == false ) { continue; } // Skip events based on: Run#, vz cut, BBCSumE; only accept HT events
-    cout<<"using event \t";
     if ( header->GetBbcAdcSumEast() < 4107 ) { continue; }     //  neglect 0-10% event activity
     
     GatherParticles( container, rawParticles );
