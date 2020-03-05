@@ -18,7 +18,7 @@ namespace pAuAnalysis {
 
     TH1D *hEffic[nBins];
     
-    TFile *ef = new TFile( efficiencyFile.c_str, "READ" );
+    TFile *ef = new TFile( efficiencyFile.c_str(), "READ" );
     
     for ( int j=0; j<nBins; ++j ) {   // pull in efficiency histograms
       TString name = prefix + (j+1) + "_" + (j+1) + "_eta";
