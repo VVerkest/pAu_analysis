@@ -50,12 +50,12 @@ void UEjetPlot(){
 
   //  Tree variables
   int RunID, EventID, nTowers, nPrimary, nGlobal, nVertices, refMult, gRefMult;
-  double Vz, BbcAdcEastSum, leadPt, leadEta, leadPhi, chgEastRho, chgMidRho, chgWestRho, neuEastRho, neuMidRho, neuWestRho, leadArea, eastRho, midRho, westRho, leadPtCorrected;
+  double Vz, BbcAdcSumEast, leadPt, leadEta, leadPhi, chgEastRho, chgMidRho, chgWestRho, neuEastRho, neuMidRho, neuWestRho, leadArea, eastRho, midRho, westRho, leadPtCorrected;
 
   jetTree->SetBranchAddress( "RunID", &RunID );      	       	jetTree->SetBranchAddress( "EventID", &EventID );					jetTree->SetBranchAddress( "nTowers", &nTowers );
   jetTree->SetBranchAddress( "nPrimary", &nPrimary );       	jetTree->SetBranchAddress( "nGlobal", &nGlobal );					jetTree->SetBranchAddress( "nVertices", &nVertices );
   jetTree->SetBranchAddress( "refMult", &refMult );		jetTree->SetBranchAddress( "gRefMult", &gRefMult );		       		jetTree->SetBranchAddress( "Vz", &Vz );
-  jetTree->SetBranchAddress( "leadPt", &leadPt );	       		jetTree->SetBranchAddress( "BbcAdcEastSum", &BbcAdcEastSum );	jetTree->SetBranchAddress( "leadEta", &leadEta );
+  jetTree->SetBranchAddress( "leadPt", &leadPt );	       		jetTree->SetBranchAddress( "BbcAdcSumEast", &BbcAdcSumEast );	jetTree->SetBranchAddress( "leadEta", &leadEta );
   jetTree->SetBranchAddress( "leadPhi", &leadPhi );	       	jetTree->SetBranchAddress( "chgEastRho", &chgEastRho );	       		jetTree->SetBranchAddress( "chgMidRho", &chgMidRho );
   jetTree->SetBranchAddress( "chgWestRho", &chgWestRho );	jetTree->SetBranchAddress( "neuEastRho", &neuEastRho );		jetTree->SetBranchAddress( "neuMidRho", &neuMidRho );
   jetTree->SetBranchAddress( "neuWestRho", &neuWestRho );	jetTree->SetBranchAddress( "leadArea", &leadArea );			jetTree->SetBranchAddress( "leadPtCorrected", &leadPtCorrected );
@@ -154,23 +154,23 @@ void UEjetPlot(){
     hTowersVsRho->Fill(rho,nTowers);
     hLeadJetPtRhoEta->Fill(leadPt,rho,leadEta);
     hLeadPtEtaPhi->Fill(leadPt,leadEta,leadPhi);
-    hPt_UE_BBCsumE->Fill(leadPt,rho,BbcAdcEastSum);
-    hBBCsumE->Fill(BbcAdcEastSum);
+    hPt_UE_BBCsumE->Fill(leadPt,rho,BbcAdcSumEast);
+    hBBCsumE->Fill(BbcAdcSumEast);
     BBCEintegral = hBBCsumE->Integral(0,i);
     hBBCsumE_integral->Fill( BBCEintegral );
   
-    if ( BbcAdcEastSum>4107 && BbcAdcEastSum<11503 ) { // LO: 4107-11503;  HI: 28537+
+    if ( BbcAdcSumEast>4107 && BbcAdcSumEast<11503 ) { // LO: 4107-11503;  HI: 28537+
       hleadEta_LoEA->Fill(leadEta);
     }
 
-    if ( BbcAdcEastSum>28537 ) {
+    if ( BbcAdcSumEast>28537 ) {
       hleadEta_HiEA->Fill(leadEta);
     }
 	
     pval = 99;    jeval = 99;    eaval = 99;
     
     for ( int ea=0; ea<3; ++ea ) {
-      if ( BbcAdcEastSum > BBCEsumLo[ea]  &&  BbcAdcEastSum < BBCEsumHi[ea] ) { eaval = ea; }
+      if ( BbcAdcSumEast > BBCEsumLo[ea]  &&  BbcAdcSumEast < BBCEsumHi[ea] ) { eaval = ea; }
     }    
     for ( int p=0; p<3; ++p ) {
       if ( leadPt >= ptLo[p]  &&  leadPt <= ptHi[p] ) { pval = p; }
@@ -182,16 +182,16 @@ void UEjetPlot(){
     if ( pval==99 || jeval==99 ) { cerr<<"UNABLE TO FIND PT OR ETA RANGE FOR LEAD JET"<<endl<<pval<<endl<<jeval<<endl<<bgeval<<endl<<leadEta<<endl<<endl; }
 
   
-    hBBCEastSum_byEta[jeval]->Fill( BbcAdcEastSum );
-    hBBCEastSum_byPt[pval]->Fill( BbcAdcEastSum );
+    hBBCEastSum_byEta[jeval]->Fill( BbcAdcSumEast );
+    hBBCEastSum_byPt[pval]->Fill( BbcAdcSumEast );
     hLeadEta[pval]->Fill( leadEta );
-    hEAdist[pval][jeval]->Fill( BbcAdcEastSum );
+    hEAdist[pval][jeval]->Fill( BbcAdcSumEast );
 
     pval = 99;
     for ( int p=0; p<3; ++p ) {      if ( leadPtCorrected >= ptLo[p]  &&  leadPtCorrected <= ptHi[p] ) { pval = p; }    }
     if ( pval==99 ) { continue; }
-    hBBCEastSum_byPtCorrected[pval]->Fill( BbcAdcEastSum );
-    hEAdistCORRECTED[pval][jeval]->Fill( BbcAdcEastSum );
+    hBBCEastSum_byPtCorrected[pval]->Fill( BbcAdcSumEast );
+    hEAdistCORRECTED[pval][jeval]->Fill( BbcAdcSumEast );
   }
 
 
@@ -405,7 +405,7 @@ void UEjetPlot(){
 
 
   // LO: 4107-11503
-  jetTree->Draw("leadPt:((chgEastRho+neuEastRho)+(chgMidRho+neuMidRho)+(chgWestRho+neuWestRho))/3>>hRho2d_LO","BbcAdcEastSum>4107 && BbcAdcEastSum<11503","COLZ");
+  jetTree->Draw("leadPt:((chgEastRho+neuEastRho)+(chgMidRho+neuMidRho)+(chgWestRho+neuWestRho))/3>>hRho2d_LO","BbcAdcSumEast>4107 && BbcAdcSumEast<11503","COLZ");
   TH2D *hRho2d_LO = (TH2D*)gDirectory->Get("hRho2d_LO");
   c1->SetLogy();
   TLegend *leg3 = new TLegend(0.65, 0.65, 0.9, 0.9,NULL,"brNDC");    // LEGEND 0
@@ -449,7 +449,7 @@ void UEjetPlot(){
 
 
   // HI: 28537+
-  jetTree->Draw("leadPt:((chgEastRho+neuEastRho)+(chgMidRho+neuMidRho)+(chgWestRho+neuWestRho))/3>>hRho2d_HI","BbcAdcEastSum>28537","COLZ");
+  jetTree->Draw("leadPt:((chgEastRho+neuEastRho)+(chgMidRho+neuMidRho)+(chgWestRho+neuWestRho))/3>>hRho2d_HI","BbcAdcSumEast>28537","COLZ");
   TH2D *hRho2d_HI = (TH2D*)gDirectory->Get("hRho2d_HI");
   c1->SetLogy();
   TLegend *leg4 = new TLegend(0.65, 0.65, 0.9, 0.9,NULL,"brNDC");    // LEGEND 0
@@ -543,7 +543,7 @@ void UEjetPlot(){
 
 
   // LO: 4107-11503
-  jetTree->Draw("leadPtCorrected:((chgEastRho+neuEastRho)+(chgMidRho+neuMidRho)+(chgWestRho+neuWestRho))/3>>hRhoCorr2d_LO","BbcAdcEastSum>4107 && BbcAdcEastSum<11503","COLZ");
+  jetTree->Draw("leadPtCorrected:((chgEastRho+neuEastRho)+(chgMidRho+neuMidRho)+(chgWestRho+neuWestRho))/3>>hRhoCorr2d_LO","BbcAdcSumEast>4107 && BbcAdcSumEast<11503","COLZ");
   TH2D *hRhoCorr2d_LO = (TH2D*)gDirectory->Get("hRhoCorr2d_LO");
   c1->SetLogy();
   TLegend *leg13 = new TLegend(0.65, 0.65, 0.9, 0.9,NULL,"brNDC");    // LEGEND 0
@@ -587,7 +587,7 @@ void UEjetPlot(){
 
 
   // HI: 28537+
-  jetTree->Draw("leadPtCorrected:((chgEastRho+neuEastRho)+(chgMidRho+neuMidRho)+(chgWestRho+neuWestRho))/3>>hRhoCorr2d_HI","BbcAdcEastSum>28537","COLZ");
+  jetTree->Draw("leadPtCorrected:((chgEastRho+neuEastRho)+(chgMidRho+neuMidRho)+(chgWestRho+neuWestRho))/3>>hRhoCorr2d_HI","BbcAdcSumEast>28537","COLZ");
   TH2D *hRhoCorr2d_HI = (TH2D*)gDirectory->Get("hRhoCorr2d_HI");
   c1->SetLogy();
   TLegend *leg14 = new TLegend(0.65, 0.65, 0.9, 0.9,NULL,"brNDC");    // LEGEND 0
