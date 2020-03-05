@@ -40,7 +40,7 @@ namespace pAuAnalysis {
 
 	for ( int j=0; j<nBins; ++j ) {     // find efficiency histogram corresponding to track eta
 	  if ( (eta>=etaLo[j]) && (eta<=etaHi[j]) ) { etaBin = j; }
-	  else { std::cerr<<"error finding charged track eta bin"<<std::endl; }
+	  else { std::cerr<<"error finding charged track eta bin; eta = "<<eta<<std::endl; }
 	}
 	for ( int j=0; j<72; ++j ) { ptBin = hEffic[etaBin]->FindBin( pt ); }    // find histogram bin corresponding to track pt
 
