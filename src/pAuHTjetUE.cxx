@@ -88,6 +88,8 @@ int main ( int argc, const char** argv ) {         // funcions and cuts specifie
     Vz = header->GetPrimaryVertexZ();
     if ( UseEvent( header, event, vzCut, Vz, trigOpt ) == false ) { continue; } // Skip events based on: Run#, vz cut, BBCSumE; only accept HT events
     if ( header->GetBbcAdcSumEast() < 4107 ) { continue; }     //  neglect 0-10% event activity
+
+    cout<<"using event \t";
     
     GatherParticles( container, rawParticles );
     // ClusterSequence jetCluster( rawParticles, jet_def );           //  CLUSTER ALL JETS
@@ -100,6 +102,8 @@ int main ( int argc, const char** argv ) {         // funcions and cuts specifie
     rawJets = sorted_by_pt( leadJetSelector( jetCluster.inclusive_jets() ) );     // EXTRACT ALL JETS IN 10-30 GeV RANGE
     if ( rawJets.size()>0 ) { leadJet = rawJets[0]; }
     else { continue; }
+
+    cout<<"found lead jet \t";
 
     RunID = header->GetRunId();
     EventID = Reader.GetNOfCurrentEvent();
