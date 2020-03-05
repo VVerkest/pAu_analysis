@@ -20,7 +20,8 @@ int main ( int argc, const char** argv ) {         // funcions and cuts specifie
   TH1::SetDefaultSumw2();  TH2::SetDefaultSumw2();  TH3::SetDefaultSumw2();
 
   TTree *HTjetTree = new TTree( "HTjetTree", "HT_JetTree" );
-  
+  string efficFile = "src/trackeffic.root";
+
   double chgEastSum, chgMidSum, chgWestSum, neuEastSum, neuMidSum, neuWestSum;
   
   //  Tree variables
@@ -28,15 +29,29 @@ int main ( int argc, const char** argv ) {         // funcions and cuts specifie
   double Vz, BbcAdcSumEast, BbcAdcSumEastOuter, BbcAdcSumWest, BbcAdcSumWestOuter, leadPt, leadEta, leadPhi,
     chgEastRho, chgMidRho, chgWestRho, neuEastRho, neuMidRho, neuWestRho, leadArea;
 
-  HTjetTree->Branch( "RunID", &RunID );				HTjetTree->Branch( "EventID", &EventID );				HTjetTree->Branch( "nTowers", &nTowers );
-  HTjetTree->Branch( "nPrimary", &nPrimary );	       	HTjetTree->Branch( "nGlobal", &nGlobal );				HTjetTree->Branch( "nVertices", &nVertices );
-  HTjetTree->Branch( "refMult", &refMult );			HTjetTree->Branch( "gRefMult", &gRefMult );				HTjetTree->Branch( "Vz", &Vz );
-  HTjetTree->Branch( "leadPt", &leadPt );				HTjetTree->Branch( "leadEta", &leadEta );
-  HTjetTree->Branch( "BbcAdcSumEast", &BbcAdcSumEast );			HTjetTree->Branch( "BbcAdcSumEastOuter", &BbcAdcSumEastOuter );
-  HTjetTree->Branch( "BbcAdcSumWest", &BbcAdcSumWest );		HTjetTree->Branch( "BbcAdcSumWestOuter", &BbcAdcSumWestOuter );
-  HTjetTree->Branch( "leadPhi", &leadPhi );			HTjetTree->Branch( "chgEastRho", &chgEastRho );			HTjetTree->Branch( "chgMidRho", &chgMidRho );
-  HTjetTree->Branch( "chgWestRho", &chgWestRho );	HTjetTree->Branch( "neuEastRho", &neuEastRho );			HTjetTree->Branch( "neuMidRho", &neuMidRho );
-  HTjetTree->Branch( "neuWestRho", &neuWestRho );	HTjetTree->Branch( "leadArea", &leadArea );
+  HTjetTree->Branch( "RunID", &RunID );
+  HTjetTree->Branch( "EventID", &EventID );
+  HTjetTree->Branch( "nTowers", &nTowers );
+  HTjetTree->Branch( "nPrimary", &nPrimary );
+  HTjetTree->Branch( "nGlobal", &nGlobal );
+  HTjetTree->Branch( "nVertices", &nVertices );
+  HTjetTree->Branch( "refMult", &refMult );
+  HTjetTree->Branch( "gRefMult", &gRefMult );
+  HTjetTree->Branch( "Vz", &Vz );
+  HTjetTree->Branch( "leadPt", &leadPt );
+  HTjetTree->Branch( "leadEta", &leadEta );
+  HTjetTree->Branch( "BbcAdcSumEast", &BbcAdcSumEast );
+  HTjetTree->Branch( "BbcAdcSumEastOuter", &BbcAdcSumEastOuter );
+  HTjetTree->Branch( "BbcAdcSumWest", &BbcAdcSumWest );
+  HTjetTree->Branch( "BbcAdcSumWestOuter", &BbcAdcSumWestOuter );
+  HTjetTree->Branch( "leadPhi", &leadPhi );
+  HTjetTree->Branch( "chgEastRho", &chgEastRho );
+  HTjetTree->Branch( "chgMidRho", &chgMidRho );
+  HTjetTree->Branch( "chgWestRho", &chgWestRho );
+  HTjetTree->Branch( "neuEastRho", &neuEastRho );
+  HTjetTree->Branch( "neuMidRho", &neuMidRho );
+  HTjetTree->Branch( "neuWestRho", &neuWestRho );
+  HTjetTree->Branch( "leadArea", &leadArea );
 	
   TH2D *hChgBgEtaPhi = new TH2D( "hChgBgEtaPhi", "Charged Background #phi vs. #eta;#eta;#phi", 40,-1.0,1.0, 120,0.0,2*pi );
   TH2D *hNeuBgEtaPhi = new TH2D( "hNeuBgEtaPhi", "Neutral Background #phi vs. #eta;#eta;#phi", 40,-1.0,1.0, 120,0.0,2*pi );
@@ -71,7 +86,7 @@ int main ( int argc, const char** argv ) {         // funcions and cuts specifie
     container = Reader.GetOutputContainer();
     
     Vz = header->GetPrimaryVertexZ();
-    if ( UseEvent( header, event, vzCut, Vz, trigOpt ) == false ) { continue; }   //  Skip events based on: Run#, vz cut, BBCSumEast;    only accept HT Trigger events
+    if ( UseEvent( header, event, vzCut, Vz, trigOpt ) == false ) { continue; } // Skip events based on: Run#, vz cut, BBCSumE; only accept HT events
     if ( header->GetBbcAdcSumEast() < 4107 ) { continue; }     //  neglect 0-10% event activity
     
     GatherParticles( container, rawParticles );
@@ -105,8 +120,11 @@ int main ( int argc, const char** argv ) {         // funcions and cuts specifie
     leadArea = leadJet.area();
 
     //  BACKGROUND ESTIMATION
-    GatherChargedBG( leadJet, container, chgParticles );
+    GatherChargedBG( leadJet, container, chgParticles );   // gather BG
     GatherNeutralBG( leadJet, container, neuParticles );
+
+    ApplyTrackingEfficiency( chgParticles, efficFile );
+    
     chgEastSum = 0;            chgMidSum = 0;            chgWestSum = 0;            neuEastSum = 0;            neuMidSum = 0;            neuWestSum = 0;
     CalculateRhoByChargeAndEta( chgParticles, neuParticles, chgEastSum, chgMidSum, chgWestSum, neuEastSum, neuMidSum, neuWestSum, hChgBgEtaPhi, hNeuBgEtaPhi ); 
     chgEastRho = chgEastSum/eastArea;

@@ -6,6 +6,59 @@
 
 namespace pAuAnalysis {
 
+  void ApplyTrackingEfficiency( std::vector<fastjet::PseudoJet> chgPart, std::string efficiencyFile ) {
+
+    int ptBin, etaBin;
+    const int nBins = 10;
+    double pt, eta, phi, e, px, py, pz, effic, corrPt;
+    TString prefix = "eff_s_bin_1_10_bbc__";
+
+    double etaLo[nBins] = { -1.0, -0.8, -0.6, -0.4, -0.2, 0.0, 0.2, 0.4, 0.6, 0.8 };
+    double etaHi[nBins] = { -0.8, -0.6, -0.4, -0.2, 0.0, 0.2, 0.4, 0.6, 0.8, 1.0 };
+
+    TH1D *hEffic[nBins];
+    
+    TFile *ef = new TFile( efficiencyFile.c_str, "READ" );
+    
+    for ( int j=0; j<nBins; ++j ) {   // pull in efficiency histograms
+      TString name = prefix + (j+1) + "_" + (j+1) + "_eta";
+      hEffic[j] = (TH1D*)ef->Get( name );
+    }
+    
+    std::vector<fastjet::PseudoJet> uncorrPart = chgPart;  // move uncorrected BG particles to new PJ vector
+    chgPart.clear();
+    
+    for (int i=0; i<uncorrPart.size(); ++i) {
+      if (  (uncorrPart[i].pt()<2.0) || (uncorrPart[i].pt()>15.0)  ) {
+	std::cerr<<"Charged Track pT = "<<uncorrPart[i].pt()<<"   --  setting to 0.0"<<std::endl;
+      }
+      else {
+	pt = uncorrPart[i].pt();
+	eta = uncorrPart[i].eta();
+	phi = uncorrPart[i].phi();
+	e = uncorrPart[i].e();
+
+	for ( int j=0; j<nBins; ++j ) {     // find efficiency histogram corresponding to track eta
+	  if ( (eta>etaLo[j]) && (eta<etaHi[j]) ) { etaBin = j; }
+	  else { std::cerr<<"error finding charged track eta bin"<<std::endl; }
+	}
+	for ( int j=0; j<72; ++j ) { ptBin = hEffic[etaBin]->FindBin( pt ); }    // find histogram bin corresponding to track pt
+
+	effic = hEffic[etaBin]->GetBinContent( ptBin );
+	corrPt = pt/effic;
+
+	px = corrPt*cos( phi );
+	py = corrPt*sin( phi );
+	pz = corrPt*cosh( eta );
+
+	fastjet::PseudoJet corrPart = fastjet::PseudoJet( px, py, pz, e );
+
+	chgPart.push_back( corrPart );
+      }
+    }    
+  }
+  
+  
   void BackGroundEstimationAndPlots( std::vector<fastjet::PseudoJet> chgPart, std::vector<fastjet::PseudoJet> neuPart, fastjet::PseudoJet leadJet,
 				     TH3D *PartPtDEtaDPhi, TH3D *PartPtEtaPhi, TH3D *BG, double &chgSum, double &neuSum ) {
 
