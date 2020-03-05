@@ -321,7 +321,7 @@ namespace pAuAnalysis {
 
     else if ( triggerOption=="HT" && !(Header->HasTriggerId(500205) || Header->HasTriggerId(500215))) {
       return false;
-      std::cout<<"no HT trigger"<<endl;
+      std::cout<<"no HT trigger"<<std::endl;
     }   //  ONLY SELECT HT TRIGGER EVENTS
     else if ( triggerOption=="MB" && !(Header->HasTriggerId(500008) || Header->HasTriggerId(500018))) {return false;}   //  ONLY SELECT MB TRIGGER EVENTS
     else if ( triggerOption=="JP" && !(Header->HasTriggerId(500401) || Header->HasTriggerId(500411))) {return false;}   //  ONLY SELECT JP TRIGGER EVENTS
