@@ -48,12 +48,12 @@ void UEdijetPlot(){
 
   //  Tree variables
   int RunID, EventID, nTowers, nPrimary, nGlobal, nVertices, refMult, gRefMult;
-  double Vz, BbcAdcEastSum, leadPt, leadEta, leadPhi, chgEastRho, chgMidRho, chgWestRho, neuEastRho, neuMidRho, neuWestRho, leadArea;
+  double Vz, BbcAdcSumEast, leadPt, leadEta, leadPhi, chgEastRho, chgMidRho, chgWestRho, neuEastRho, neuMidRho, neuWestRho, leadArea;
 
   dijetTree->SetBranchAddress( "RunID", &RunID );      	       	dijetTree->SetBranchAddress( "EventID", &EventID );		       		dijetTree->SetBranchAddress( "nTowers", &nTowers );
   dijetTree->SetBranchAddress( "nPrimary", &nPrimary );       	dijetTree->SetBranchAddress( "nGlobal", &nGlobal );		       		dijetTree->SetBranchAddress( "nVertices", &nVertices );
   dijetTree->SetBranchAddress( "refMult", &refMult );	       	dijetTree->SetBranchAddress( "gRefMult", &gRefMult );		       		dijetTree->SetBranchAddress( "Vz", &Vz );
-  dijetTree->SetBranchAddress( "leadPt", &leadPt );	       	       	dijetTree->SetBranchAddress( "BbcAdcEastSum", &BbcAdcEastSum );	dijetTree->SetBranchAddress( "leadEta", &leadEta );
+  dijetTree->SetBranchAddress( "leadPt", &leadPt );	       	       	dijetTree->SetBranchAddress( "BbcAdcSumEast", &BbcAdcSumEast );	dijetTree->SetBranchAddress( "leadEta", &leadEta );
   dijetTree->SetBranchAddress( "leadPhi", &leadPhi );	       	dijetTree->SetBranchAddress( "chgEastRho", &chgEastRho );	       		dijetTree->SetBranchAddress( "chgMidRho", &chgMidRho );
   dijetTree->SetBranchAddress( "chgWestRho", &chgWestRho );	dijetTree->SetBranchAddress( "neuEastRho", &neuEastRho );     	dijetTree->SetBranchAddress( "neuMidRho", &neuMidRho );
   dijetTree->SetBranchAddress( "neuWestRho", &neuWestRho );	dijetTree->Branch( "leadArea", &leadArea );
@@ -119,14 +119,14 @@ void UEdijetPlot(){
     hTowersVsRho->Fill(rho,nTowers);
     hLeadJetPtRhoEta->Fill(leadPt,rho,leadEta);
     hLeadPtEtaPhi->Fill(leadPt,leadEta,leadPhi);
-    hPt_UE_BBCsumE->Fill(leadPt,rho,BbcAdcEastSum);
-    hBBCsumE->Fill(BbcAdcEastSum);
+    hPt_UE_BBCsumE->Fill(leadPt,rho,BbcAdcSumEast);
+    hBBCsumE->Fill(BbcAdcSumEast);
 
-    if ( BbcAdcEastSum>8000 && BbcAdcEastSum<16000 ) {
+    if ( BbcAdcSumEast>8000 && BbcAdcSumEast<16000 ) {
       hleadEta_LoEA->Fill(leadEta);
     }
 
-    if ( BbcAdcEastSum>30000 ) {
+    if ( BbcAdcSumEast>30000 ) {
       hleadEta_HiEA->Fill(leadEta);
     }
 	
@@ -140,9 +140,9 @@ void UEdijetPlot(){
     }
     if ( pval==99 || eval==99 ) { cerr<<"UNABLE TO FIND PT OR ETA RANGE FOR LEAD JET"<<endl; }
 
-    hBBCEastSum[eval]->Fill( BbcAdcEastSum );
+    hBBCEastSum[eval]->Fill( BbcAdcSumEast );
     hLeadEta[pval]->Fill( leadEta );
-    hEAdist[pval][eval]->Fill( BbcAdcEastSum );
+    hEAdist[pval][eval]->Fill( BbcAdcSumEast );
     
   }
 
@@ -150,28 +150,28 @@ void UEdijetPlot(){
 
   hLeadPhi->Scale(1./hLeadPhi->Integral("WIDTH"));
   hLeadPhi->Draw();
-  c0->SaveAs( "plots/UE/dijet_leadPhi.pdf" , "PDF" );
+  c0->SaveAs( "plots/UE/trackEff/dijet_leadPhi.pdf" , "PDF" );
 
   c0->SetLogz();
 
   hBGchg->Scale(1./hBGchg->Integral("WIDTH"));
   hBGchg->Draw("COLZ");
-  c0->SaveAs( "plots/UE/dijet_chgBgEtaPhi.pdf" , "PDF" );
+  c0->SaveAs( "plots/UE/trackEff/dijet_chgBgEtaPhi.pdf" , "PDF" );
   
   hBGneu->Scale(1./hBGneu->Integral("WIDTH"));
   hBGneu->Draw("COLZ");
-  c0->SaveAs( "plots/UE/dijet_neuBgEtaPhi.pdf" , "PDF" );
+  c0->SaveAs( "plots/UE/trackEff/dijet_neuBgEtaPhi.pdf" , "PDF" );
 
   hTowersVsRho->Scale(1./hTowersVsRho->Integral("WIDTH"));
   hTowersVsRho->GetZaxis()->SetRangeUser(0.0001,1);
   hTowersVsRho->Draw("COLZ");
-  c0->SaveAs( "plots/UE/dijet_towersVsRho.pdf" , "PDF" );
+  c0->SaveAs( "plots/UE/trackEff/dijet_towersVsRho.pdf" , "PDF" );
 
   c0->SetLogy();
 
   hRho->Scale(1./hRho->Integral("WIDTH"));
   hRho->Draw();
-  c0->SaveAs( "plots/UE/dijet_rho.pdf" , "PDF" );
+  c0->SaveAs( "plots/UE/trackEff/dijet_rho.pdf" , "PDF" );
 
 
   TCanvas * c1 = new TCanvas( "c1" , "" ,700 ,500 );              // CANVAS 1
@@ -199,7 +199,7 @@ void UEdijetPlot(){
 
   }
   leg0->Draw();
-  c1->SaveAs( "plots/UE/dijet_BBCEastSum_by_eta.pdf" , "PDF" );
+  c1->SaveAs( "plots/UE/trackEff/dijet_BBCEastSum_by_eta.pdf" , "PDF" );
   c1->SetLogy(0);
 
 
@@ -234,7 +234,7 @@ void UEdijetPlot(){
 
   }
   leg1->Draw();
-  c1->SaveAs( "plots/UE/dijet_LeadEta_by_pt.pdf" , "PDF" );
+  c1->SaveAs( "plots/UE/trackEff/dijet_LeadEta_by_pt.pdf" , "PDF" );
 
 
   dijetTree->Draw("leadPt:((chgEastRho+neuEastRho)+(chgMidRho+neuMidRho)+(chgWestRho+neuWestRho))/3>>hRho2d","","COLZ");
@@ -275,11 +275,11 @@ void UEdijetPlot(){
     leg2->AddEntry((TObject*)0,sigma, "");
   }
   leg2->Draw();
-  c1->SaveAs("plots/UE/dijet_rhoByLeadPt.pdf","PDF");
+  c1->SaveAs("plots/UE/trackEff/dijet_rhoByLeadPt.pdf","PDF");
 
 
   // LO: 4107-11503
-  dijetTree->Draw("leadPt:((chgEastRho+neuEastRho)+(chgMidRho+neuMidRho)+(chgWestRho+neuWestRho))/3>>hRho2d_LO","BbcAdcEastSum>4107 && BbcAdcEastSum<11503","COLZ");
+  dijetTree->Draw("leadPt:((chgEastRho+neuEastRho)+(chgMidRho+neuMidRho)+(chgWestRho+neuWestRho))/3>>hRho2d_LO","BbcAdcSumEast>4107 && BbcAdcSumEast<11503","COLZ");
   TH2D *hRho2d_LO = (TH2D*)gDirectory->Get("hRho2d_LO");
   c1->SetLogy();
   TLegend *leg3 = new TLegend(0.65, 0.65, 0.9, 0.9,NULL,"brNDC");    // LEGEND 0
@@ -317,13 +317,13 @@ void UEdijetPlot(){
     leg3->AddEntry((TObject*)0,sigma, "");
   }
   leg3->Draw();
-  c1->SaveAs("plots/UE/dijetrhoByLeadPt_LOEA.pdf","PDF");
+  c1->SaveAs("plots/UE/trackEff/dijetrhoByLeadPt_LOEA.pdf","PDF");
 
 
 
 
   // HI: 28537+
-  dijetTree->Draw("leadPt:((chgEastRho+neuEastRho)+(chgMidRho+neuMidRho)+(chgWestRho+neuWestRho))/3>>hRho2d_HI","BbcAdcEastSum>28537","COLZ");
+  dijetTree->Draw("leadPt:((chgEastRho+neuEastRho)+(chgMidRho+neuMidRho)+(chgWestRho+neuWestRho))/3>>hRho2d_HI","BbcAdcSumEast>28537","COLZ");
   TH2D *hRho2d_HI = (TH2D*)gDirectory->Get("hRho2d_HI");
   c1->SetLogy();
   TLegend *leg4 = new TLegend(0.65, 0.65, 0.9, 0.9,NULL,"brNDC");    // LEGEND 0
@@ -361,7 +361,7 @@ void UEdijetPlot(){
     leg4->AddEntry((TObject*)0,sigma, "");
   }
   leg4->Draw();
-  c1->SaveAs("plots/UE/dijetrhoByLeadPt_HIEA.pdf","PDF");
+  c1->SaveAs("plots/UE/trackEff/dijetrhoByLeadPt_HIEA.pdf","PDF");
 
 
   TCanvas * c2 = new TCanvas( "c2" , "" ,700 ,500 );              // CANVAS 1
@@ -394,7 +394,7 @@ void UEdijetPlot(){
 
     }
     leg5[p]->Draw();
-    saveName = "plots/UE/dijetBBCEastSum_by_eta" + ptBinName[p] +".pdf";
+    saveName = "plots/UE/trackEff/dijetBBCEastSum_by_eta" + ptBinName[p] +".pdf";
     c2->SaveAs( saveName , "PDF" );
   }
 
