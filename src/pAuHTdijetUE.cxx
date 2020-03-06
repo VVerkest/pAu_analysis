@@ -71,8 +71,6 @@ int main ( int argc, const char** argv ) {         // funcions and cuts specifie
   TStarJetPicoEvent* event;
   TStarJetVectorContainer<TStarJetVector> * container;
   
-  string trigOpt = "HT";
-
   TChain* Chain = new TChain( "JetTree" );
   Chain->Add( inFile.c_str() );
   TStarJetPicoReader Reader;
@@ -92,11 +90,10 @@ int main ( int argc, const char** argv ) {         // funcions and cuts specifie
     container = Reader.GetOutputContainer();
     
     Vz = header->GetPrimaryVertexZ();
-    if ( UseEvent( header, event, vzCut, Vz, trigOpt ) == false ) { continue; } // Skip events based on: Run#, vz cut, BBCSumE; only accept HT events
+    if ( UseHTevent( header, event, vzCut, Vz ) == false ) { continue; } // Skip events based on: Run#, vz cut, BBCSumE; only accept HT events
     if ( header->GetBbcAdcSumEast() < 4107 ) { continue; }     //  neglect 0-10% event activity
 
     GatherParticles( container, rawParticles );
-    // ClusterSequence jetCluster( rawParticles, jet_def );           //  CLUSTER ALL JETS
 
     GhostedAreaSpec gAreaSpec( 1.0, 1, 0.01 );
     AreaDefinition area_def(active_area_explicit_ghosts, gAreaSpec);

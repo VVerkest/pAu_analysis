@@ -98,7 +98,9 @@ namespace pAuAnalysis {
 
   void InitReader( TStarJetPicoReader & reader, TChain* chain, int nEvents );
 
-  bool UseEvent( TStarJetPicoEventHeader* Header, TStarJetPicoEvent* Event, double vz_cut, double vz, std::string triggerOption );
+  bool UseHTevent( TStarJetPicoEventHeader* Header, TStarJetPicoEvent* Event, double vz_cut, double vz );
+
+  bool UseMBevent( TStarJetPicoEventHeader* Header, TStarJetPicoEvent* Event, double vz_cut, double vz );
 
   bool UseTriggerTower( int TriggerTowerId );
 

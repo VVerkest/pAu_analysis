@@ -30,9 +30,7 @@ int main ( int argc, const char** argv ) {         // funcions and cuts specifie
   EAtree->Branch( "RunID", &RunID );				EAtree->Branch( "EventID", &EventID );
   EAtree->Branch( "Vz", &Vz );						EAtree->Branch( "BbcAdcSumEast", &BbcAdcSumEast );
   EAtree->Branch( "ZDCx", &ZDCx );
-  
-  string trigOpt = "MB";
-  
+    
   TChain* Chain = new TChain( "JetTree" );
   Chain->Add( inFile.c_str() );
   TStarJetPicoReader Reader;
@@ -51,7 +49,7 @@ int main ( int argc, const char** argv ) {         // funcions and cuts specifie
     header = event->GetHeader();
     
     Vz = header->GetPrimaryVertexZ();
-    if ( UseEvent( header, event, vzCut, Vz, trigOpt ) == false ) { continue; }   //  Skip events based on: Run#, vz cut, BBCSumEast; only MB events
+    if ( UseMBevent( header, event, vzCut, Vz ) == false ) { continue; }   //  Skip events based on: Run#, vz cut, BBCSumEast; only MB events
     
     RunID = header->GetRunId();
     EventID = Reader.GetNOfCurrentEvent();

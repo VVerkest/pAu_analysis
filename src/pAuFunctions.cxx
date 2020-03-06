@@ -308,65 +308,59 @@ namespace pAuAnalysis {
   }
 
 
-  bool UseEvent( TStarJetPicoEventHeader* Header, TStarJetPicoEvent* Event, double vz_cut, double vz, std::string triggerOption ) {
-    if ( !( triggerOption=="HT" || triggerOption=="JP" || triggerOption=="MB" || triggerOption=="none" ) ) {
-      std::cerr<<"Incorrect command-line argument for 'trigger_option': "<<triggerOption<<std::endl<<"Options:  {\"HT\",\"none\"}";
-      return false;
-    }
+  bool UseHTevent( TStarJetPicoEventHeader* Header, TStarJetPicoEvent* Event, double vz_cut, double vz ) {
     if (Header->GetRunId() >= 16142059 && Header->GetRunId() <= 16149001) { return false; }    //TEMPORARILY SKIPPING THESE RUNS
     else if (Header->GetRunId() == 16135031 || Header->GetRunId() == 16135032) { return false; }
     else if ( abs(vz) > vz_cut ) { return false; }
-    
-    // for pAu, need to ask if the event has the trigger. The trigger IDs are:
-    // HT2*BBCMB : 500205, 500215		JP2 : 500401, 500411		BBCMB : 500008, 500018		VPDMB :  500904
-
-    // else if ( triggerOption=="HT" && !(Header->HasTriggerId(500205) || Header->HasTriggerId(500215))) {return false;}   //  ONLY SELECT HT TRIGGER EVENTS
-    // else if ( triggerOption=="MB" && !(Header->HasTriggerId(500008) || Header->HasTriggerId(500018))) {return false;}   //  ONLY SELECT MB TRIGGER EVENTS
-    // else if ( triggerOption=="JP" && !(Header->HasTriggerId(500401) || Header->HasTriggerId(500411))) {return false;}   //  ONLY SELECT JP TRIGGER EVENTS
-
     else if (!(Header->HasTriggerId(500205) || Header->HasTriggerId(500215))) {return false;}   //  ONLY SELECT HT TRIGGER EVENTS
-    
     else if ( Header->GetBbcAdcSumEast() > 64000 ) { return false; }
 
-    //if ( triggerOption=="HT" ) {
-      TStarJetPicoTriggerInfo *trig;
-      double trigTowEt;
+    TStarJetPicoTriggerInfo *trig;
+    double trigTowEt;
 
-      int trigTow = 0;
-      for ( int i=0; i<Event->GetTrigObjs()->GetEntries(); ++i ) {
-	trig = (TStarJetPicoTriggerInfo *)Event->GetTrigObj(i);
+    int trigTow = 0;
+    for ( int i=0; i<Event->GetTrigObjs()->GetEntries(); ++i ) {
+      trig = (TStarJetPicoTriggerInfo *)Event->GetTrigObj(i);
       
-	if ( trig->isBHT2() ) {
+      if ( trig->isBHT2() ) {
 	
-	  int trigTowId = trig->GetId();
+	int trigTowId = trig->GetId();
 
-	  if ( !UseTriggerTower( trigTowId) ) { continue; }
+	if ( !UseTriggerTower( trigTowId) ) { continue; }
 	
-	  else {
-	    for ( int j=0; j<Event->GetTowers()->GetEntries(); ++j ) {  // USE GetTowers TO FIND TOWER INFO ASSOCIATED WITH TRIGGER!
-	      if ( Event->GetTower(j)->GetId() == trigTowId && Event->GetTower(j)->GetEt()>=5.40  && Event->GetTower(j)->GetEt()<30.00 ) {
+	else {
+	  for ( int j=0; j<Event->GetTowers()->GetEntries(); ++j ) {  // USE GetTowers TO FIND TOWER INFO ASSOCIATED WITH TRIGGER!
+	    if ( Event->GetTower(j)->GetId() == trigTowId && Event->GetTower(j)->GetEt()>=5.40  && Event->GetTower(j)->GetEt()<30.00 ) {
 
-		if ( trigTow==0 ) {
-		  trigTowEt = Event->GetTower(j)->GetEt();
-		  trigTow+=1;
-		}
-		else {
-		  if ( Event->GetTower(j)->GetEt() > trigTowEt ) { trigTowEt = Event->GetTower(j)->GetEt(); }
-		}
-	      
+	      if ( trigTow==0 ) {
+		trigTowEt = Event->GetTower(j)->GetEt();
+		trigTow+=1;
 	      }
+	      else {
+		if ( Event->GetTower(j)->GetEt() > trigTowEt ) { trigTowEt = Event->GetTower(j)->GetEt(); }
+	      }
+	      
 	    }
-	  
 	  }
+	  
 	}
       }
-      if ( trigTow==0 ) { return false; }
-      //}
-
+    }
+    if ( trigTow==0 ) { return false; }
     
     else return true;
   }
 
+  
+  bool UseMBevent( TStarJetPicoEventHeader* Header, TStarJetPicoEvent* Event, double vz_cut, double vz ) {
+    if (Header->GetRunId() >= 16142059 && Header->GetRunId() <= 16149001) { return false; }    //TEMPORARILY SKIPPING THESE RUNS
+    else if (Header->GetRunId() == 16135031 || Header->GetRunId() == 16135032) { return false; }
+    else if ( abs(vz) > vz_cut ) { return false; }
+    else if ( !(Header->HasTriggerId(500008) || Header->HasTriggerId(500018))) {return false;}   //  ONLY SELECT MB TRIGGER EVENT
+    else if ( Header->GetBbcAdcSumEast() > 64000 ) { return false; }    
+    else return true;
+  }
+  
 
   bool UseTriggerTower( int TriggerTowerId ) {
     
