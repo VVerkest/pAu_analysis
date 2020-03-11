@@ -72,7 +72,7 @@ namespace pAuAnalysis {
 
   const double AREA = 4*(fastjet::pi - 2);   // (  2 in eta  ) X (  2*( pi-1 - 1 ) in phi  )
 
-  void ApplyTrackingEfficiency( std::vector<fastjet::PseudoJet> chgPart, std::string efficiencyFile );
+  void ApplyTrackingEfficiency( std::vector<fastjet::PseudoJet> chgPart, std::string efficiencyFile );  //BAD!!
   
   void BackGroundEstimationAndPlots( std::vector<fastjet::PseudoJet> chgPart, std::vector<fastjet::PseudoJet> neuPart, fastjet::PseudoJet leadJet,
 				     TH3D *PartPtDEtaDPhi, TH3D *PartPtEtaPhi, TH3D *BG, double &chgSum, double &neuSum );
@@ -85,6 +85,8 @@ namespace pAuAnalysis {
 
   std::vector<fastjet::PseudoJet> GatherCharged ( TStarJetVectorContainer<TStarJetVector> * container , std::vector<fastjet::PseudoJet> & rawParticles );
 
+  std::vector<fastjet::PseudoJet> GatherChargedBGwithEfficiency ( fastjet::PseudoJet trigJet, TStarJetVectorContainer<TStarJetVector> * container , std::vector<fastjet::PseudoJet> & chgParticles,  std::string efficiencyFile );
+  
   std::vector<fastjet::PseudoJet> GatherNeutral ( TStarJetVectorContainer<TStarJetVector> * container , std::vector<fastjet::PseudoJet> & rawParticles );
     
   std::vector<fastjet::PseudoJet> GatherParticles ( TStarJetVectorContainer<TStarJetVector> * container , std::vector<fastjet::PseudoJet> & rawParticles );

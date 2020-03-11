@@ -6,7 +6,7 @@
 
 namespace pAuAnalysis {
 
-  void ApplyTrackingEfficiency( std::vector<fastjet::PseudoJet> chgPart, std::string efficiencyFile ) {
+  void ApplyTrackingEfficiency( std::vector<fastjet::PseudoJet> chgPart, std::string efficiencyFile ) {  // BAD!! DO NOT USE!!
 
     int ptBin, etaBin;
     const int nBins = 10;
@@ -220,6 +220,70 @@ namespace pAuAnalysis {
 
       current.set_user_index( sv->GetCharge() );
 
+      chgParticles.push_back(current);
+    }
+    return chgParticles;
+  }
+
+
+  std::vector<fastjet::PseudoJet> GatherChargedBGwithEfficiency ( fastjet::PseudoJet trigJet, TStarJetVectorContainer<TStarJetVector> * container , std::vector<fastjet::PseudoJet> & chgParticles,  std::string efficiencyFile ){
+
+    int ptBin, etaBin;
+    const int nBins = 10;
+    double pt, eta, effic;
+    TString prefix = "eff_s_bin_1_10_bbc__";
+
+    double etaLo[nBins] = { -1.0, -0.8, -0.6, -0.4, -0.2, 0.0, 0.2, 0.4, 0.6, 0.8 };
+    double etaHi[nBins] = { -0.8, -0.6, -0.4, -0.2, 0.0, 0.2, 0.4, 0.6, 0.8, 1.0 };
+
+    TH1D *hEffic[nBins];
+    
+    TFile *ef = new TFile( efficiencyFile.c_str(), "READ" );
+    
+    for ( int j=0; j<nBins; ++j ) {   // pull in efficiency histograms
+      TString name = prefix + (j+1) + "_" + (j+1) + "_eta";
+      hEffic[j] = (TH1D*)ef->Get( name );
+    }
+    
+    for ( int i=0; i < container->GetEntries() ; ++i ) {
+      TStarJetVector* sv = container->Get(i);
+      fastjet::PseudoJet current = fastjet::PseudoJet( *sv );
+      if ( sv->GetCharge() == 0 ) { continue; }
+
+      double absDeltaPhi = fabs( current.delta_phi_to( trigJet ) );
+      if ( absDeltaPhi < 1.0  ||  absDeltaPhi > 2.14159265 ) { continue; }       //  1 < delta phi < ( pi - 1 )
+      
+      if ( std::abs(current.eta()) > etaCut )      { continue; }  // removes particles with |eta|>1
+      if ( current.pt() < partMinPt )      { continue; }  // removes particles with pt<0.2GeV
+
+      current.set_user_index( sv->GetCharge() );
+
+
+
+      if (  (current.pt()<0.2) || (current.pt()>15.0)  ) {
+	std::cerr<<"Charged Track pT = "<<current.pt()<<"   --  setting to 0.0"<<std::endl;
+      }
+      else {
+	pt = current.pt();
+	eta = current.eta();
+
+	etaBin = 999;
+	for ( int j=0; j<nBins; ++j ) {     // find efficiency histogram corresponding to track eta
+	  if ( (eta>=etaLo[j]) && (eta<=etaHi[j]) ) { etaBin = j; continue; }
+	}
+	if ( etaBin==999 ) { std::cerr<<"error finding charged track eta bin; eta = "<<eta<<std::endl; continue; }
+	for ( int j=0; j<72; ++j ) { ptBin = hEffic[etaBin]->FindBin( pt ); }    // find histogram bin corresponding to track pt
+
+	effic = hEffic[etaBin]->GetBinContent( ptBin );
+      }
+
+
+      std::cout<<"pT: "<<current.pt()<<"  effic="<<effic;
+      
+      current/=effic;
+
+      std::cout<<"    corr pT:"<<current.pt()<<std::endl;  //debug
+      
       chgParticles.push_back(current);
     }
     return chgParticles;

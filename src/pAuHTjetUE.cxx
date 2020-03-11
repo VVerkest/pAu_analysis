@@ -14,7 +14,7 @@ int main ( int argc, const char** argv ) {         // funcions and cuts specifie
   
   vector<string> arguments( argv+1, argv+argc );
   if ( argc ==  4 ) {    inFile = arguments[0];    outFile = arguments[1];    number_of_events = atoi(arguments[2].c_str()); }
-  else if ( argc==1 ) { inFile="production_pAu200_2015/HT/pAu_2015_200_HT*.root"; outFile="out/UE/pAuHTjetUE.root"; number_of_events=100000; }
+  else if ( argc==1 ) { inFile="production_pAu200_2015/HT/pAu_2015_200_HT*.root"; outFile="out/UE/pAuHTjetUE.root"; number_of_events=1000; }
   else { cerr<< "incorrect number of command line arguments"; return -1; }
 
   TH1::SetDefaultSumw2();  TH2::SetDefaultSumw2();  TH3::SetDefaultSumw2();
@@ -120,13 +120,11 @@ int main ( int argc, const char** argv ) {         // funcions and cuts specifie
     leadArea = leadJet.area();
 
     //  BACKGROUND ESTIMATION
-    GatherChargedBG( leadJet, container, chgParticles );   // gather BG
+    GatherChargedBGwithEfficiency( leadJet, container, chgParticles, efficFile );   // gather BG
     GatherNeutralBG( leadJet, container, neuParticles );
 
     nBGpart_chg = chgParticles.size();
     nBGpart_neu = neuParticles.size();
-
-    ApplyTrackingEfficiency( chgParticles, efficFile );
     
     chgEastSum = 0;            chgMidSum = 0;            chgWestSum = 0;            neuEastSum = 0;            neuMidSum = 0;            neuWestSum = 0;
     CalculateRhoByChargeAndEta(chgParticles,neuParticles,chgEastSum,chgMidSum,chgWestSum,neuEastSum,neuMidSum,neuWestSum,hChgBgPtEtaPhi,hNeuBgPtEtaPhi);
