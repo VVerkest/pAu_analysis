@@ -46,11 +46,10 @@ void UEjetPlot(){
   TH3D *hBGchg3D = (TH3D*) inFile->Get("hChgBgEtaPhi");
   TH3D *hBGneu3D = (TH3D*) inFile->Get("hNeuBgEtaPhi");
 
-  TH2D *hBGchg, *hBGneu;
+  TH2D *hBGchg = (TH2D*)hBGchg3D->Project3D("ZY");
+  TH2D *hBGneu = (TH2D*)hBGneu3D->Project3D("ZY");
   hBGchg->SetName("hBGchg");
   hBGneu->SetName("hBGneu");
-  hBGchg = (TH2D*)hBGchg3D->Project3D("ZY");
-  hBGneu = (TH2D*)hBGneu3D->Project3D("ZY");
   
   TTree *jetTree = (TTree*) inFile->Get("HTjetTree");
 
