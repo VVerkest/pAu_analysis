@@ -43,8 +43,8 @@ void UEjetPlot(){
   TString fileName = "out/UE/pAuHTjetUE_trackEffic.root";
   TFile* inFile = new TFile( fileName, "READ" );
 
-  TH3D *hBGchg3D = (TH3D*) inFile->Get("hChgBgEtaPhi");
-  TH3D *hBGneu3D = (TH3D*) inFile->Get("hNeuBgEtaPhi");
+  TH3D *hBGchg3D = (TH3D*) inFile->Get("hChgBgPtEtaPhi");
+  TH3D *hBGneu3D = (TH3D*) inFile->Get("hNeuBgPtEtaPhi");
 
   TH2D *hBGchg = (TH2D*)hBGchg3D->Project3D("ZY");
   TH2D *hBGneu = (TH2D*)hBGneu3D->Project3D("ZY");
