@@ -52,17 +52,33 @@ void UEjetPlot(){
   int RunID, EventID, nTowers, nPrimary, nGlobal, nVertices, refMult, gRefMult;
   double Vz, BbcAdcSumEast, leadPt, leadEta, leadPhi, chgEastRho, chgMidRho, chgWestRho, neuEastRho, neuMidRho, neuWestRho, leadArea, eastRho, midRho, westRho, leadPtCorrected;
 
-  jetTree->SetBranchAddress( "RunID", &RunID );      	       	jetTree->SetBranchAddress( "EventID", &EventID );					jetTree->SetBranchAddress( "nTowers", &nTowers );
-  jetTree->SetBranchAddress( "nPrimary", &nPrimary );       	jetTree->SetBranchAddress( "nGlobal", &nGlobal );					jetTree->SetBranchAddress( "nVertices", &nVertices );
-  jetTree->SetBranchAddress( "refMult", &refMult );		jetTree->SetBranchAddress( "gRefMult", &gRefMult );		       		jetTree->SetBranchAddress( "Vz", &Vz );
-  jetTree->SetBranchAddress( "leadPt", &leadPt );	       		jetTree->SetBranchAddress( "BbcAdcSumEast", &BbcAdcSumEast );	jetTree->SetBranchAddress( "leadEta", &leadEta );
-  jetTree->SetBranchAddress( "leadPhi", &leadPhi );	       	jetTree->SetBranchAddress( "chgEastRho", &chgEastRho );	       		jetTree->SetBranchAddress( "chgMidRho", &chgMidRho );
-  jetTree->SetBranchAddress( "chgWestRho", &chgWestRho );	jetTree->SetBranchAddress( "neuEastRho", &neuEastRho );		jetTree->SetBranchAddress( "neuMidRho", &neuMidRho );
-  jetTree->SetBranchAddress( "neuWestRho", &neuWestRho );	jetTree->SetBranchAddress( "leadArea", &leadArea );			jetTree->SetBranchAddress( "leadPtCorrected", &leadPtCorrected );
+  jetTree->SetBranchAddress( "RunID", &RunID );
+  jetTree->SetBranchAddress( "EventID", &EventID );
+  jetTree->SetBranchAddress( "nTowers", &nTowers );
+  jetTree->SetBranchAddress( "nPrimary", &nPrimary );
+  jetTree->SetBranchAddress( "nGlobal", &nGlobal );
+  jetTree->SetBranchAddress( "nVertices", &nVertices );
+  jetTree->SetBranchAddress( "refMult", &refMult );
+  jetTree->SetBranchAddress( "gRefMult", &gRefMult );
+  jetTree->SetBranchAddress( "Vz", &Vz );
+  jetTree->SetBranchAddress( "leadPt", &leadPt );
+  jetTree->SetBranchAddress( "BbcAdcSumEast", &BbcAdcSumEast );
+  jetTree->SetBranchAddress( "leadEta", &leadEta );
+  jetTree->SetBranchAddress( "leadPhi", &leadPhi );
+  jetTree->SetBranchAddress( "chgEastRho", &chgEastRho );
+  jetTree->SetBranchAddress( "chgMidRho", &chgMidRho );
+  jetTree->SetBranchAddress( "chgWestRho", &chgWestRho );
+  jetTree->SetBranchAddress( "neuEastRho", &neuEastRho );
+  jetTree->SetBranchAddress( "neuMidRho", &neuMidRho );
+  jetTree->SetBranchAddress( "neuWestRho", &neuWestRho );
+  jetTree->SetBranchAddress( "leadArea", &leadArea );
+  jetTree->SetBranchAddress( "leadPtCorrected", &leadPtCorrected );
+  jetTree->SetBranchAddress( "nBGpart_chg", &nBGpart_chg );
+  jetTree->SetBranchAddress( "nBGpart_neu", &nBGpart_neu );
 
   int nEntries = jetTree->GetEntries();
 
-  TH1D *hRho = new TH1D("hRho","Underlying Event;#rho (GeV)",120,0,30);
+  TH1D *hRho = new TH1D("hRho","Underlying Event;#rho (GeV)",120,0,12);
   TH1D *hRho_HI = new TH1D("hRho_HI","High EA Underlying Event;#rho (GeV)",120,0,30);
   TH1D *hRho_LO = new TH1D("hRho_LO","Low EA Underlying Event;#rho (GeV)",120,0,30);
   TH1D *hLeadPhi = new TH1D("hLeadPhi","Lead Jet #phi;#phi_{lead}",12,0,2*pi);
