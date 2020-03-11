@@ -277,12 +277,9 @@ namespace pAuAnalysis {
 	effic = hEffic[etaBin]->GetBinContent( ptBin );
       }
 
-
-      std::cout<<"pT: "<<current.pt()<<"  effic="<<effic;
-      
+      //std::cout<<"pT: "<<current.pt()<<"  effic="<<effic;
       current/=effic;
-
-      std::cout<<"    corr pT:"<<current.pt()<<std::endl;  //debug
+      //std::cout<<"    corr pT:"<<current.pt()<<std::endl;  //debug
       
       chgParticles.push_back(current);
     }
