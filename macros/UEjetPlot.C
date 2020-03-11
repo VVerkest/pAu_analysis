@@ -43,9 +43,12 @@ void UEjetPlot(){
   TString fileName = "out/UE/pAuHTjetUE_trackEffic.root";
   TFile* inFile = new TFile( fileName, "READ" );
 
-  TH2D *hBGchg = (TH2D*) inFile->Get("hChgBgEtaPhi");
-  TH2D *hBGneu = (TH2D*) inFile->Get("hNeuBgEtaPhi");
+  TH3D *hBGchg3D = (TH3D*) inFile->Get("hChgBgEtaPhi");
+  TH3D *hBGneu3D = (TH3D*) inFile->Get("hNeuBgEtaPhi");
 
+  TH2D *hBGchg = (TH2D*)hBGchg3D->Project3D("YZ");
+  TH2D *hBGneu = (TH2D*)hBGneu3D->Project3D("YZ");
+  
   TTree *jetTree = (TTree*) inFile->Get("HTjetTree");
 
   //  Tree variables
