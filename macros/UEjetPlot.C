@@ -40,7 +40,7 @@ void UEjetPlot(){
   TString name, saveName, title, avg, sigma;
   double chgRho, neuRho, rho;
   
-  TString fileName = "out/UE/pAuHTjetUE.root";
+  TString fileName = "out/UE/pAuHTjetUE_trackEffic.root";
   TFile* inFile = new TFile( fileName, "READ" );
 
   TH2D *hBGchg = (TH2D*) inFile->Get("hChgBgEtaPhi");
@@ -49,7 +49,7 @@ void UEjetPlot(){
   TTree *jetTree = (TTree*) inFile->Get("HTjetTree");
 
   //  Tree variables
-  int RunID, EventID, nTowers, nPrimary, nGlobal, nVertices, refMult, gRefMult;
+  int RunID, EventID, nTowers, nPrimary, nGlobal, nVertices, refMult, gRefMult, nBGpart_chg, nBGpart_neu;
   double Vz, BbcAdcSumEast, leadPt, leadEta, leadPhi, chgEastRho, chgMidRho, chgWestRho, neuEastRho, neuMidRho, neuWestRho, leadArea, eastRho, midRho, westRho, leadPtCorrected;
 
   jetTree->SetBranchAddress( "RunID", &RunID );
