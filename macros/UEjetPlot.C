@@ -758,6 +758,7 @@ void UEjetPlot(){
   TCanvas * c3 = new TCanvas( "c3" , "" ,500 ,700 );
   TPad *pad1 = new TPad("pad1", "pad1", 0, 0.3, 1, 1.0);
   pad1->SetBottomMargin(0);
+  pad1->Draw();
   pad1->cd();
   hpt->Draw("P");
   hptc->Draw("PSAME");
