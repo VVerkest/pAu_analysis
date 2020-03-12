@@ -107,8 +107,8 @@ void UEjetPlot(){
   TH1D *hEAdist[nPtBins][nEtaBins];
   TH1D *hEAdistCORRECTED[nPtBins][nEtaBins];
 
-  TH1D *hpt = new TH1D("hpt",";p_{T} (GeV)",30,15,30);
-  TH1D *hptc = new TH1D("hptc",";p_{T} (GeV)",30,15,30);
+  TH1D *hpt = new TH1D("hpt",";p_{T} (GeV)",35,5,30);
+  TH1D *hptc = new TH1D("hptc",";p_{T} (GeV)",35,5,30);
   hpt->SetStats(0);
   hptc->SetStats(0);  
 
