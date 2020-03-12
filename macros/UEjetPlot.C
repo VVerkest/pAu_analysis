@@ -107,8 +107,8 @@ void UEjetPlot(){
   TH1D *hEAdist[nPtBins][nEtaBins];
   TH1D *hEAdistCORRECTED[nPtBins][nEtaBins];
 
-  TH1D *hpt = new TH1D("hpt",";p_{T} (GeV)",35,5,30);
-  TH1D *hptc = new TH1D("hptc",";p_{T} (GeV)",35,5,30);
+  TH1D *hpt = new TH1D("hpt",";p_{T} (GeV)",70,5,30);
+  TH1D *hptc = new TH1D("hptc",";p_{T} (GeV)",70,5,30);
   hpt->SetStats(0);
   hptc->SetStats(0);  
 
@@ -746,6 +746,9 @@ void UEjetPlot(){
   }
   */
 
+  hpt->SetLabel("p_{T}");
+  hptc->SetLabel("p_{T}^{corrected}");
+  
   hpt->Scale(1./hpt->Integral());
   hpt->SetLineColor(kBlue);
   hpt->SetMarkerColor(kBlue);
@@ -755,7 +758,7 @@ void UEjetPlot(){
   hptc->SetMarkerColor(kRed);
   hptc->SetMarkerStyle(20);
   
-  TCanvas * c3 = new TCanvas( "c3" , "" ,500 ,500 );
+  TCanvas * c3 = new TCanvas( "c3" , "" ,500 ,600 );
   TPad *pad1 = new TPad("pad1", "pad1", 0, 0.3, 1, 1.0);
   pad1->SetLogy();
   pad1->SetBottomMargin(0);
