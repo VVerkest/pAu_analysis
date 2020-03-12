@@ -166,8 +166,6 @@ int main ( int argc, const char** argv ) {         // funcions and cuts specifie
     //  BACKGROUND ESTIMATION
     GatherChargedBG( leadJet, container, chgParticles );   // gather BG
     GatherNeutralBG( leadJet, container, neuParticles );
-
-    ApplyTrackingEfficiency( chgParticles, efficFile );
     
     chgEastSum = 0;            chgMidSum = 0;            chgWestSum = 0;            neuEastSum = 0;            neuMidSum = 0;            neuWestSum = 0;
     CalculateRhoByChargeAndEta( chgParticles, neuParticles, chgEastSum, chgMidSum, chgWestSum, neuEastSum, neuMidSum, neuWestSum, hChgBgEtaPhi, hNeuBgEtaPhi ); 

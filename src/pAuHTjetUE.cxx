@@ -120,7 +120,8 @@ int main ( int argc, const char** argv ) {         // funcions and cuts specifie
     leadArea = leadJet.area();
 
     //  BACKGROUND ESTIMATION
-    GatherChargedBGwithEfficiency( leadJet, container, chgParticles, efficFile );   // gather BG
+    //GatherChargedBGwithEfficiency( leadJet, container, chgParticles, efficFile );   // gather BG
+    GatherChargedBG( leadJet, container, chgParticles );
     GatherNeutralBG( leadJet, container, neuParticles );
 
     nBGpart_chg = chgParticles.size();
