@@ -764,7 +764,7 @@ void UEjetPlot(){
   hptc->Draw("PSAME");
 
   TH1D *hPtRatio = (TH1D*) hpt->Clone("hPtRatio");
-  hPtRatio->Divide("hptc");
+  hPtRatio->Divide(hptc);
   hPtRatio->SetStats(0);
   hPtRatio->SetLineColor(kBlack);
   hPtRatio->SetMarkerColor(kBlack);
