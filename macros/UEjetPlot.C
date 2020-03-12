@@ -107,8 +107,8 @@ void UEjetPlot(){
   TH1D *hEAdist[nPtBins][nEtaBins];
   TH1D *hEAdistCORRECTED[nPtBins][nEtaBins];
 
-  TH1D *hpt = new TH1D("hpt",";p_{T} (GeV)",60,0,30);
-  TH1D *hptc = new TH1D("hptc",";p_{T} (GeV)",60,0,30);
+  TH1D *hpt = new TH1D("hpt",";p_{T} (GeV)",30,15,30);
+  TH1D *hptc = new TH1D("hptc",";p_{T} (GeV)",30,15,30);
   hpt->SetStats(0);
   hptc->SetStats(0);  
 
@@ -757,6 +757,7 @@ void UEjetPlot(){
   
   TCanvas * c3 = new TCanvas( "c3" , "" ,500 ,700 );
   TPad *pad1 = new TPad("pad1", "pad1", 0, 0.3, 1, 1.0);
+  pad1->SetLogy();
   pad1->SetBottomMargin(0);
   pad1->Draw();
   pad1->cd();
@@ -764,6 +765,7 @@ void UEjetPlot(){
   hptc->Draw("PSAME");
 
   TH1D *hPtRatio = (TH1D*) hpt->Clone("hPtRatio");
+  hPtRatio->GetYaxis()->SetRangeUser(0.9,1.15);
   hPtRatio->Divide(hptc);
   hPtRatio->SetStats(0);
   hPtRatio->SetLineColor(kBlack);
