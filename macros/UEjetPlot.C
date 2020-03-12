@@ -268,7 +268,7 @@ void UEjetPlot(){
   hRho->Draw();
   c0->SaveAs( "plots/UE/rho.pdf" , "PDF" );
 
-
+  /*
   TCanvas * c1 = new TCanvas( "c1" , "" ,700 ,500 );              // CANVAS 1
   
   TLegend *leg0 = new TLegend(0.65, 0.65, 0.9, 0.9,NULL,"brNDC");    // LEGEND 0
@@ -744,7 +744,7 @@ void UEjetPlot(){
     saveName = "plots/UE/BBCEastSum_by_eta" + ptBinName[p] +"_corrected.pdf";
     c2->SaveAs( saveName , "PDF" );
   }
-
+  */
 
   hpt->Scale(1./hpt->Integral());
   hpt->SetLineColor(kBlue);
@@ -764,6 +764,7 @@ void UEjetPlot(){
   hptc->Draw("PSAME");
 
   TH1D *hPtRatio = (TH1D*) hpt->Clone("hPtRatio");
+  hPtRatio->Divide("hptc");
   hPtRatio->SetStats(0);
   hPtRatio->SetLineColor(kBlack);
   hPtRatio->SetMarkerColor(kBlack);
