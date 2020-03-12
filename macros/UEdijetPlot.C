@@ -41,8 +41,13 @@ void UEdijetPlot(){
   // TString fileName = "out/UE/pAuHTdijetUE_noRecoEtaMatchReq.root";
   TFile* inFile = new TFile( fileName, "READ" );
 
-  TH2D *hBGchg = (TH2D*) inFile->Get("hChgBgEtaPhi");
-  TH2D *hBGneu = (TH2D*) inFile->Get("hNeuBgEtaPhi");
+  TH3D *hBGchg3D = (TH3D*) inFile->Get("hChgBgPtEtaPhi");
+  TH3D *hBGneu3D = (TH3D*) inFile->Get("hNeuBgPtEtaPhi");
+
+  TH2D *hBGchg = (TH2D*)hBGchg3D->Project3D("ZY");
+  TH2D *hBGneu = (TH2D*)hBGneu3D->Project3D("ZY");
+  hBGchg->SetName("hBGchg");
+  hBGneu->SetName("hBGneu");
 
   TTree *dijetTree = (TTree*) inFile->Get("HTdijetTree");
 
