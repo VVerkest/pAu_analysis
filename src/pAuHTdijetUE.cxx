@@ -25,7 +25,7 @@ int main ( int argc, const char** argv ) {         // funcions and cuts specifie
   double chgEastSum, chgMidSum, chgWestSum, neuEastSum, neuMidSum, neuWestSum;
   
   //  Tree variables
-  int RunID, EventID, nTowers, nPrimary, nGlobal, nVertices, refMult, gRefMult, eval, pval;
+  int RunID, EventID, nTowers, nPrimary, nGlobal, nVertices, refMult, gRefMult, eval, pval, nBGpart_chg, nBGpart_neu;
   double Vz, BbcAdcSumEast, BbcAdcSumEastOuter, BbcAdcSumWest, BbcAdcSumWestOuter, leadPt, recoPt, leadEta, recoEta, leadPhi, recoPhi,
     chgEastRho, chgMidRho, chgWestRho, neuEastRho, neuMidRho, neuWestRho, leadArea, recoArea;
 
@@ -56,9 +56,11 @@ int main ( int argc, const char** argv ) {         // funcions and cuts specifie
   HTdijetTree->Branch( "recoPt", &recoPt );
   HTdijetTree->Branch( "recoEta", &recoEta );
   HTdijetTree->Branch( "recoPhi", &recoPhi );
+  HTdijetTree->Branch( "nBGpart_chg", &nBGpart_chg );
+  HTdijetTree->Branch( "nBGpart_neu", &nBGpart_neu );
   
-  TH2D *hChgBgEtaPhi = new TH2D( "hChgBgEtaPhi", "Charged Background #phi vs. #eta;#eta;#phi", 40,-1.0,1.0, 120,0.0,2*pi );
-  TH2D *hNeuBgEtaPhi = new TH2D( "hNeuBgEtaPhi", "Neutral Background #phi vs. #eta;#eta;#phi", 40,-1.0,1.0, 120,0.0,2*pi );
+  TH3D *hChgBgPtEtaPhi = new TH3D( "hChgBgPtEtaPhi", "Charged Background #phi vs. #eta;p_{T} (GeV);#eta;#phi", 40,0,20, 40,-1.0,1.0, 120,0.0,2*pi );
+  TH3D *hNeuBgPtEtaPhi = new TH3D( "hNeuBgPtEtaPhi", "Neutral Background #phi vs. #eta;p_{T} (GeV);#eta;#phi", 40,0,20, 40,-1.0,1.0, 120,0.0,2*pi );
 
   JetDefinition jet_def(antikt_algorithm, R);     //  JET DEFINITION
   Selector jetEtaSelector = SelectorAbsEtaMax( 1.0-R );
@@ -167,8 +169,11 @@ int main ( int argc, const char** argv ) {         // funcions and cuts specifie
     GatherChargedBG( leadJet, container, chgParticles );   // gather BG
     GatherNeutralBG( leadJet, container, neuParticles );
     
+    nBGpart_chg = chgParticles.size();
+    nBGpart_neu = neuParticles.size();
+
     chgEastSum = 0;            chgMidSum = 0;            chgWestSum = 0;            neuEastSum = 0;            neuMidSum = 0;            neuWestSum = 0;
-    CalculateRhoByChargeAndEta( chgParticles, neuParticles, chgEastSum, chgMidSum, chgWestSum, neuEastSum, neuMidSum, neuWestSum, hChgBgEtaPhi, hNeuBgEtaPhi ); 
+    CalculateRhoByChargeAndEta(chgParticles,neuParticles,chgEastSum,chgMidSum,chgWestSum,neuEastSum,neuMidSum,neuWestSum,hChgBgPtEtaPhi,hNeuBgPtEtaPhi);
     chgEastRho = chgEastSum/eastArea;
     chgMidRho = chgMidSum/midArea;
     chgWestRho = chgWestSum/westArea;
@@ -182,8 +187,8 @@ int main ( int argc, const char** argv ) {         // funcions and cuts specifie
 
   TFile *pAuFile = new TFile( outFile.c_str() ,"RECREATE");
 
-  hChgBgEtaPhi->Write();  //  WRITE HISTOGRAMS & TREE
-  hNeuBgEtaPhi->Write();
+  hChgBgPtEtaPhi->Write();  //  WRITE HISTOGRAMS & TREE
+  hNeuBgPtEtaPhi->Write();
   HTdijetTree->Write();  
 
   pAuFile->Write();
