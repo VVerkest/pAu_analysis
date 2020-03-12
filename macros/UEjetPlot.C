@@ -106,7 +106,12 @@ void UEjetPlot(){
   TH1D *hBBCEastSum_byPtCorrected[nPtBins];
   TH1D *hEAdist[nPtBins][nEtaBins];
   TH1D *hEAdistCORRECTED[nPtBins][nEtaBins];
-    
+
+  TH1D *hpt = new TH1D("hpt",";p_{T} (GeV)",60,0,30);
+  TH1D *hptc = new TH1D("hptc",";p_{T} (GeV)",60,0,30);
+  hpt->SetStats(0);
+  hptc->SetStats(0);  
+
   for ( int e=0; e<nEtaBins; ++e ) {
 
     name = "hBBCEastSum_byEta" + etaBinName[e];
@@ -180,7 +185,10 @@ void UEjetPlot(){
     hBBCsumE->Fill(BbcAdcSumEast);
     BBCEintegral = hBBCsumE->Integral(0,i);
     hBBCsumE_integral->Fill( BBCEintegral );
-  
+
+    hpt->Fill(leadPt);
+    hptc->Fill(leadPtCorrected);
+
     if ( BbcAdcSumEast>3559.12 && BbcAdcSumEast<10126.1 ) { // LO: 3559.12-10126.1;  HI: 26718.1+
       hleadEta_LoEA->Fill(leadEta);
     }
@@ -738,6 +746,33 @@ void UEjetPlot(){
   }
 
 
+  hpt->Scale(1./hpt->Integral());
+  hpt->SetLineColor(kBlue);
+  hpt->SetMarkerColor(kBlue);
+  hpt->SetMarkerStyle(20);
+  hptc->Scale(1./hptc->Integral());
+  hptc->SetLineColor(kRed);
+  hptc->SetMarkerColor(kRed);
+  hptc->SetMarkerStyle(20);
+  
+  TCanvas * c3 = new TCanvas( "c3" , "" ,500 ,700 );
+  TPad *pad1 = new TPad("pad1", "pad1", 0, 0.3, 1, 1.0);
+  pad1->SetBottomMargin(0);
+  pad1->cd();
+  hpt->Draw("P");
+  hptc->Draw("PSAME");
 
+  TH1D *hPtRatio = (TH1D*) hpt->Clone("hPtRatio");
+  hPtRatio->SetStats(0);
+  hPtRatio->SetLineColor(kBlack);
+  hPtRatio->SetMarkerColor(kBlack);
+
+  c3->cd();
+  TPad *pad2 = new TPad("pad2", "pad2", 0, 0.05, 1, 0.3);
+  pad2->SetTopMargin(0);
+  pad2->SetBottomMargin(0.2);
+  pad2->Draw();
+  pad2->cd();
+  hPtRatio->Draw("P");
   
 }
