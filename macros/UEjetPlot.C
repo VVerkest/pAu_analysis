@@ -746,9 +746,6 @@ void UEjetPlot(){
   }
   */
 
-  hpt->SetLabel("p_{T}");
-  hptc->SetLabel("p_{T}^{corrected}");
-  
   hpt->Scale(1./hpt->Integral());
   hpt->SetLineColor(kBlue);
   hpt->SetMarkerColor(kBlue);
