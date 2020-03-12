@@ -755,7 +755,7 @@ void UEjetPlot(){
   hptc->SetMarkerColor(kRed);
   hptc->SetMarkerStyle(20);
   
-  TCanvas * c3 = new TCanvas( "c3" , "" ,500 ,700 );
+  TCanvas * c3 = new TCanvas( "c3" , "" ,500 ,500 );
   TPad *pad1 = new TPad("pad1", "pad1", 0, 0.3, 1, 1.0);
   pad1->SetLogy();
   pad1->SetBottomMargin(0);
