@@ -181,11 +181,11 @@ void UEjetPlot(){
     BBCEintegral = hBBCsumE->Integral(0,i);
     hBBCsumE_integral->Fill( BBCEintegral );
   
-    if ( BbcAdcSumEast>4107 && BbcAdcSumEast<11503 ) { // LO: 4107-11503;  HI: 28537+
+    if ( BbcAdcSumEast>3559.12 && BbcAdcSumEast<10126.1 ) { // LO: 3559.12-10126.1;  HI: 26718.1+
       hleadEta_LoEA->Fill(leadEta);
     }
 
-    if ( BbcAdcSumEast>28537 ) {
+    if ( BbcAdcSumEast>26718.1 ) {
       hleadEta_HiEA->Fill(leadEta);
     }
 	
@@ -426,8 +426,8 @@ void UEjetPlot(){
 
 
 
-  // LO: 4107-11503
-  jetTree->Draw("leadPt:((chgEastRho+neuEastRho)+(chgMidRho+neuMidRho)+(chgWestRho+neuWestRho))/3>>hRho2d_LO","BbcAdcSumEast>4107 && BbcAdcSumEast<11503","COLZ");
+  // LO: 3559.12-10126.1
+  jetTree->Draw("leadPt:((chgEastRho+neuEastRho)+(chgMidRho+neuMidRho)+(chgWestRho+neuWestRho))/3>>hRho2d_LO","BbcAdcSumEast>3559.12 && BbcAdcSumEast<10126.1","COLZ");
   TH2D *hRho2d_LO = (TH2D*)gDirectory->Get("hRho2d_LO");
   c1->SetLogy();
   TLegend *leg3 = new TLegend(0.65, 0.65, 0.9, 0.9,NULL,"brNDC");    // LEGEND 0
@@ -470,8 +470,8 @@ void UEjetPlot(){
 
 
 
-  // HI: 28537+
-  jetTree->Draw("leadPt:((chgEastRho+neuEastRho)+(chgMidRho+neuMidRho)+(chgWestRho+neuWestRho))/3>>hRho2d_HI","BbcAdcSumEast>28537","COLZ");
+  // HI: 26718.1+
+  jetTree->Draw("leadPt:((chgEastRho+neuEastRho)+(chgMidRho+neuMidRho)+(chgWestRho+neuWestRho))/3>>hRho2d_HI","BbcAdcSumEast>26718.1","COLZ");
   TH2D *hRho2d_HI = (TH2D*)gDirectory->Get("hRho2d_HI");
   c1->SetLogy();
   TLegend *leg4 = new TLegend(0.65, 0.65, 0.9, 0.9,NULL,"brNDC");    // LEGEND 0
@@ -564,8 +564,8 @@ void UEjetPlot(){
 
 
 
-  // LO: 4107-11503
-  jetTree->Draw("leadPtCorrected:((chgEastRho+neuEastRho)+(chgMidRho+neuMidRho)+(chgWestRho+neuWestRho))/3>>hRhoCorr2d_LO","BbcAdcSumEast>4107 && BbcAdcSumEast<11503","COLZ");
+  // LO: 3559.12-10126.1
+  jetTree->Draw("leadPtCorrected:((chgEastRho+neuEastRho)+(chgMidRho+neuMidRho)+(chgWestRho+neuWestRho))/3>>hRhoCorr2d_LO","BbcAdcSumEast>3559.12 && BbcAdcSumEast<10126.1","COLZ");
   TH2D *hRhoCorr2d_LO = (TH2D*)gDirectory->Get("hRhoCorr2d_LO");
   c1->SetLogy();
   TLegend *leg13 = new TLegend(0.65, 0.65, 0.9, 0.9,NULL,"brNDC");    // LEGEND 0
@@ -608,8 +608,8 @@ void UEjetPlot(){
 
 
 
-  // HI: 28537+
-  jetTree->Draw("leadPtCorrected:((chgEastRho+neuEastRho)+(chgMidRho+neuMidRho)+(chgWestRho+neuWestRho))/3>>hRhoCorr2d_HI","BbcAdcSumEast>28537","COLZ");
+  // HI: 26718.1+
+  jetTree->Draw("leadPtCorrected:((chgEastRho+neuEastRho)+(chgMidRho+neuMidRho)+(chgWestRho+neuWestRho))/3>>hRhoCorr2d_HI","BbcAdcSumEast>26718.1","COLZ");
   TH2D *hRhoCorr2d_HI = (TH2D*)gDirectory->Get("hRhoCorr2d_HI");
   c1->SetLogy();
   TLegend *leg14 = new TLegend(0.65, 0.65, 0.9, 0.9,NULL,"brNDC");    // LEGEND 0
@@ -655,18 +655,17 @@ void UEjetPlot(){
 
   c1->SetLogy();
 
-  hBBCsumE->SetBinError(4107,100000);
-  hBBCsumE->SetBinError(4107,100000000000);
-  hBBCsumE->SetBinError(7802,100000000000);
-  hBBCsumE->SetBinError(11503,100000000000);
-  hBBCsumE->SetBinError(15399,100000000000);
-  hBBCsumE->SetBinError(19525,100000000000);;
-  hBBCsumE->SetBinError(23781,100000000000);
-  hBBCsumE->SetBinError(28537,100000000000);
-  hBBCsumE->SetBinError(34082,100000000000);
-  hBBCsumE->SetBinError(41108,100000000000);
-  hBBCsumE->SetBinError(63974,100000000000);
-  hBBCsumE->Draw();
+  // hBBCsumE->SetBinError(3559.12,100000000000);
+  // hBBCsumE->SetBinError(7802,100000000000);
+  // hBBCsumE->SetBinError(10126.1,100000000000);
+  // hBBCsumE->SetBinError(15399,100000000000);
+  // hBBCsumE->SetBinError(19525,100000000000);;
+  // hBBCsumE->SetBinError(23781,100000000000);
+  // hBBCsumE->SetBinError(26718.1,100000000000);
+  // hBBCsumE->SetBinError(34082,100000000000);
+  // hBBCsumE->SetBinError(41108,100000000000);
+  // hBBCsumE->SetBinError(63974,100000000000);
+  // hBBCsumE->Draw();
 
   TCanvas * c2 = new TCanvas( "c2" , "" ,700 ,500 );              // CANVAS 1
   

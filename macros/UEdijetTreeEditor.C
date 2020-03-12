@@ -31,8 +31,8 @@ void UEdijetTreeEditor(){
   
   const int nEA = 3;
   const TString EAstring[nEA] = { "low", "mid", "high" };
-  const double BBCEsumLo[nEA] = { 4107, 11503, 28537 };   // LO: 4107-11503;  HI: 28537+
-  const double BBCEsumHi[nEA] = { 11503, 28537, 64000 };
+  const double BBCEsumLo[nEA] = { 3559.12, 10126.1, 26718.1 };   // LO: 3559.12-10126.1;  HI: 26718.1+
+  const double BBCEsumHi[nEA] = { 10126.1, 26718.1, 64000.0 };  // 0, 3559.12, 6735.12, 10126.1, 13752.1, 17669.1, 21948.1, 26718.1, 32283.1, 39473.1, 64000
   
   int jeval, bgeval, pval, eaval;
   TString name, saveName, title, avg, sigma;
@@ -76,7 +76,7 @@ void UEdijetTreeEditor(){
     for ( int bge=0; bge<nEtaBins; ++bge ) {
       hname[je][bge] = "hRho" + eastmidwest[bge] + jetEtaBinName[je];
       TString drawString = rhoVal[bge] + ":BbcAdcSumEast>>" + hname[je][bge];
-      TString selectionString = "BbcAdcSumEast>4107  &&  BbcAdcSumEast<64000  &&  " + etaSelection[je];
+      TString selectionString = "BbcAdcSumEast>3559.12  &&  BbcAdcSumEast<64000  &&  " + etaSelection[je];
       dijetTree->Draw( drawString, selectionString, "COLZ" );
       hRho[je][bge] = (TH2D*)gDirectory->Get( hname[je][bge] );
       hRhoProfile[je][bge] = (TH1D*)hRho[je][bge]->ProfileX();

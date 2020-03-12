@@ -122,11 +122,11 @@ void UEdijetPlot(){
     hPt_UE_BBCsumE->Fill(leadPt,rho,BbcAdcSumEast);
     hBBCsumE->Fill(BbcAdcSumEast);
 
-    if ( BbcAdcSumEast>8000 && BbcAdcSumEast<16000 ) {
+    if ( BbcAdcSumEast>3559.12 && BbcAdcSumEast<10126.1 ) {
       hleadEta_LoEA->Fill(leadEta);
     }
 
-    if ( BbcAdcSumEast>30000 ) {
+    if ( BbcAdcSumEast>26718.1 ) {
       hleadEta_HiEA->Fill(leadEta);
     }
 	
@@ -278,8 +278,7 @@ void UEdijetPlot(){
   c1->SaveAs("plots/UE/trackEff/dijet_rhoByLeadPt.pdf","PDF");
 
 
-  // LO: 4107-11503
-  dijetTree->Draw("leadPt:((chgEastRho+neuEastRho)+(chgMidRho+neuMidRho)+(chgWestRho+neuWestRho))/3>>hRho2d_LO","BbcAdcSumEast>4107 && BbcAdcSumEast<11503","COLZ");
+  dijetTree->Draw("leadPt:((chgEastRho+neuEastRho)+(chgMidRho+neuMidRho)+(chgWestRho+neuWestRho))/3>>hRho2d_LO","BbcAdcSumEast>3559.12 && BbcAdcSumEast<10126.1","COLZ");
   TH2D *hRho2d_LO = (TH2D*)gDirectory->Get("hRho2d_LO");
   c1->SetLogy();
   TLegend *leg3 = new TLegend(0.65, 0.65, 0.9, 0.9,NULL,"brNDC");    // LEGEND 0
@@ -322,8 +321,8 @@ void UEdijetPlot(){
 
 
 
-  // HI: 28537+
-  dijetTree->Draw("leadPt:((chgEastRho+neuEastRho)+(chgMidRho+neuMidRho)+(chgWestRho+neuWestRho))/3>>hRho2d_HI","BbcAdcSumEast>28537","COLZ");
+  // HI: 26718.1+
+  dijetTree->Draw("leadPt:((chgEastRho+neuEastRho)+(chgMidRho+neuMidRho)+(chgWestRho+neuWestRho))/3>>hRho2d_HI","BbcAdcSumEast>26718.1","COLZ");
   TH2D *hRho2d_HI = (TH2D*)gDirectory->Get("hRho2d_HI");
   c1->SetLogy();
   TLegend *leg4 = new TLegend(0.65, 0.65, 0.9, 0.9,NULL,"brNDC");    // LEGEND 0

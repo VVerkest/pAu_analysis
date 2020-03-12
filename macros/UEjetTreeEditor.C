@@ -31,8 +31,8 @@ void UEjetTreeEditor(){
   
   const int nEA = 3;
   const TString EAstring[nEA] = { "low", "mid", "high" };
-  const double BBCEsumLo[nEA] = { 4107, 11503, 28537 };   // LO: 4107-11503;  HI: 28537+
-  const double BBCEsumHi[nEA] = { 11503, 28537, 64000 };
+  const double BBCEsumLo[nEA] = { 3559.12, 10126.1, 26718.1 };   // LO: 3559.12-10126.1;  HI: 26718.1+
+  const double BBCEsumHi[nEA] = { 10126.1, 26718.1, 64000.0 };  // 0, 3559.12, 6735.12, 10126.1, 13752.1, 17669.1, 21948.1, 26718.1, 32283.1, 39473.1, 64000
   
   int jeval, bgeval, pval, eaval;
   TString name, saveName, title, avg, sigma;
@@ -58,15 +58,15 @@ void UEjetTreeEditor(){
   
   int nEntries = jetTree->GetEntries();
 
-  jetTree->Draw("(chgEastRho+neuEastRho):BbcAdcSumEast>>hEastRhoByBBCEsum","BbcAdcSumEast>4107  &&  BbcAdcSumEast<64000  &&  leadEta<-0.3","COLZ");
+  jetTree->Draw("(chgEastRho+neuEastRho):BbcAdcSumEast>>hEastRhoByBBCEsum","BbcAdcSumEast>3559.12  &&  BbcAdcSumEast<64000  &&  leadEta<-0.3","COLZ");
   TH2D* hEastRhoByBBCEsum = (TH2D*)gDirectory->Get("hEastRhoByBBCEsum");
   TH1D* hEastRhoProfile = (TH1D*)hEastRhoByBBCEsum->ProfileX();
   int nEastProfBins = hEastRhoProfile->GetNbinsX();
-  jetTree->Draw("(chgMidRho+neuMidRho):BbcAdcSumEast>>hMidRhoByBBCEsum","BbcAdcSumEast>4107  &&  BbcAdcSumEast<64000  &&  leadEta>=-0.3  &&  leadEta<=0.3","COLZ");
+  jetTree->Draw("(chgMidRho+neuMidRho):BbcAdcSumEast>>hMidRhoByBBCEsum","BbcAdcSumEast>3559.12  &&  BbcAdcSumEast<64000  &&  leadEta>=-0.3  &&  leadEta<=0.3","COLZ");
   TH2D* hMidRhoByBBCEsum = (TH2D*)gDirectory->Get("hMidRhoByBBCEsum");
   TH1D* hMidRhoProfile = (TH1D*)hMidRhoByBBCEsum->ProfileX();
   int nMidProfBins = hMidRhoProfile->GetNbinsX();
-  jetTree->Draw("(chgWestRho+neuWestRho):BbcAdcSumEast>>hWestRhoByBBCEsum","BbcAdcSumEast>4107  &&  BbcAdcSumEast<64000  &&  leadEta>0.3","COLZ");
+  jetTree->Draw("(chgWestRho+neuWestRho):BbcAdcSumEast>>hWestRhoByBBCEsum","BbcAdcSumEast>3559.12  &&  BbcAdcSumEast<64000  &&  leadEta>0.3","COLZ");
   TH2D* hWestRhoByBBCEsum = (TH2D*)gDirectory->Get("hWestRhoByBBCEsum");
   TH1D* hWestRhoProfile = (TH1D*)hWestRhoByBBCEsum->ProfileX();
   int nWestProfBins = hWestRhoProfile->GetNbinsX();
