@@ -107,8 +107,8 @@ void UEjetPlot(){
   TH1D *hEAdist[nPtBins][nEtaBins];
   TH1D *hEAdistCORRECTED[nPtBins][nEtaBins];
 
-  TH1D *hpt = new TH1D("hpt",";p_{T} (GeV)",70,5,30);
-  TH1D *hptc = new TH1D("hptc",";p_{T} (GeV)",70,5,30);
+  TH1D *hpt = new TH1D("hpt",";p_{T} (GeV)",50,8,30);
+  TH1D *hptc = new TH1D("hptc",";p_{T} (GeV)",50,8,30);
   hpt->SetStats(0);
   hptc->SetStats(0);  
 
@@ -771,6 +771,7 @@ void UEjetPlot(){
   hPtRatio->GetYaxis()->SetTitle("p_{T}^{corrected}/p_{T}");
   hPtRatio->GetXaxis()->SetTitle("p_{T}");
   hPtRatio->GetXaxis()->SetTitleSize(0.1);
+  hPtRatio->GetYaxis()->SetTitleSize(0.1);
   hPtRatio->Divide(hptc);
   hPtRatio->SetStats(0);
   hPtRatio->SetLineColor(kBlack);
