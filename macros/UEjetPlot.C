@@ -765,7 +765,11 @@ void UEjetPlot(){
   hptc->Draw("PSAME");
 
   TH1D *hPtRatio = (TH1D*) hpt->Clone("hPtRatio");
-  hPtRatio->GetYaxis()->SetRangeUser(0.9,1.15);
+  hPtRatio->GetYaxis()->SetRangeUser(0.9,1.1);
+  hPtRatio->GetYaxis()->SetLabelSize(0.1);
+  hPtRatio->GetXaxis()->SetLabelSize(0.1);
+  hPtRatio->GetXaxis()->SetTitle("p_{T}^{corrected}/p_{T}");
+  hPtRatio->GetXaxis()->SetTitleSize(0.1);
   hPtRatio->Divide(hptc);
   hPtRatio->SetStats(0);
   hPtRatio->SetLineColor(kBlack);
