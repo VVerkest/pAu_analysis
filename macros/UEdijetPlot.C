@@ -37,8 +37,8 @@ void UEdijetPlot(){
   TString name, saveName, title, avg, sigma;
   double chgRho, neuRho, midRho, eastRho, westRho, rho;
   
-  TString fileName = "out/UE/pAuHTdijetUE.root";
-  // TString fileName = "out/UE/pAuHTdijetUE_noRecoEtaMatchReq.root";
+  //TString fileName = "out/UE/pAuHTdijetUE.root";
+  TString fileName = "out/UE/pAuHTdijetUE_trackEffic.root";
   TFile* inFile = new TFile( fileName, "READ" );
 
   TH3D *hBGchg3D = (TH3D*) inFile->Get("hChgBgPtEtaPhi");
@@ -53,19 +53,33 @@ void UEdijetPlot(){
 
   //  Tree variables
   int RunID, EventID, nTowers, nPrimary, nGlobal, nVertices, refMult, gRefMult;
-  double Vz, BbcAdcSumEast, leadPt, leadEta, leadPhi, chgEastRho, chgMidRho, chgWestRho, neuEastRho, neuMidRho, neuWestRho, leadArea;
+  double Vz, BbcAdcSumEast, leadPt, leadEta, leadPhi, chgEastRho, chgMidRho, chgWestRho, neuEastRho, neuMidRho, neuWestRho, leadArea, leadPtCorrected;
 
-  dijetTree->SetBranchAddress( "RunID", &RunID );      	       	dijetTree->SetBranchAddress( "EventID", &EventID );		       		dijetTree->SetBranchAddress( "nTowers", &nTowers );
-  dijetTree->SetBranchAddress( "nPrimary", &nPrimary );       	dijetTree->SetBranchAddress( "nGlobal", &nGlobal );		       		dijetTree->SetBranchAddress( "nVertices", &nVertices );
-  dijetTree->SetBranchAddress( "refMult", &refMult );	       	dijetTree->SetBranchAddress( "gRefMult", &gRefMult );		       		dijetTree->SetBranchAddress( "Vz", &Vz );
-  dijetTree->SetBranchAddress( "leadPt", &leadPt );	       	       	dijetTree->SetBranchAddress( "BbcAdcSumEast", &BbcAdcSumEast );	dijetTree->SetBranchAddress( "leadEta", &leadEta );
-  dijetTree->SetBranchAddress( "leadPhi", &leadPhi );	       	dijetTree->SetBranchAddress( "chgEastRho", &chgEastRho );	       		dijetTree->SetBranchAddress( "chgMidRho", &chgMidRho );
-  dijetTree->SetBranchAddress( "chgWestRho", &chgWestRho );	dijetTree->SetBranchAddress( "neuEastRho", &neuEastRho );     	dijetTree->SetBranchAddress( "neuMidRho", &neuMidRho );
-  dijetTree->SetBranchAddress( "neuWestRho", &neuWestRho );	dijetTree->Branch( "leadArea", &leadArea );
+  dijetTree->SetBranchAddress( "RunID", &RunID );
+  dijetTree->SetBranchAddress( "EventID", &EventID );
+  dijetTree->SetBranchAddress( "nTowers", &nTowers );
+  dijetTree->SetBranchAddress( "nPrimary", &nPrimary );
+  dijetTree->SetBranchAddress( "nGlobal", &nGlobal );
+  dijetTree->SetBranchAddress( "nVertices", &nVertices );
+  dijetTree->SetBranchAddress( "refMult", &refMult );
+  dijetTree->SetBranchAddress( "gRefMult", &gRefMult );
+  dijetTree->SetBranchAddress( "Vz", &Vz );
+  dijetTree->SetBranchAddress( "leadPt", &leadPt );
+  dijetTree->SetBranchAddress( "BbcAdcSumEast", &BbcAdcSumEast );
+  dijetTree->SetBranchAddress( "leadEta", &leadEta );
+  dijetTree->SetBranchAddress( "leadPhi", &leadPhi );
+  dijetTree->SetBranchAddress( "chgEastRho", &chgEastRho );
+  dijetTree->SetBranchAddress( "chgMidRho", &chgMidRho );
+  dijetTree->SetBranchAddress( "chgWestRho", &chgWestRho );
+  dijetTree->SetBranchAddress( "neuEastRho", &neuEastRho );
+  dijetTree->SetBranchAddress( "neuMidRho", &neuMidRho );
+  dijetTree->SetBranchAddress( "neuWestRho", &neuWestRho );
+  dijetTree->SetBranchAddress( "leadArea", &leadArea );
+  dijetTree->SetBranchAddress( "leadPtCorrected", &leadPtCorrected );
 
   int nEntries = dijetTree->GetEntries();
 
-  TH1D *hRho = new TH1D("hRho","Underlying Event;#rho (GeV)",120,0,30);
+  TH1D *hRho = new TH1D("hRho","Underlying Event;#rho (GeV)",120,0,12);
   TH1D *hRho_HI = new TH1D("hRho_HI","High EA Underlying Event;#rho (GeV)",120,0,30);
   TH1D *hRho_LO = new TH1D("hRho_LO","Low EA Underlying Event;#rho (GeV)",120,0,30);
   TH1D *hLeadPhi = new TH1D("hLeadPhi","Lead Jet #phi;#phi_{lead}",12,0,2*pi);
@@ -82,8 +96,8 @@ void UEdijetPlot(){
   TH1D *hBBCEastSum[nEtaBins];
   TH1D *hEAdist[nPtBins][nEtaBins];
 
-  TH1D *hpt = new TH1D("hpt",";p_{T} (GeV)",60,0,30);
-  TH1D *hptc = new TH1D("hptc",";p_{T} (GeV)",60,0,30);
+  TH1D *hpt = new TH1D("hpt",";p_{T} (GeV)",50,8,30);
+  TH1D *hptc = new TH1D("hptc",";p_{T} (GeV)",50,8,30);
   hpt->SetStats(0);
   hptc->SetStats(0);
   
@@ -423,12 +437,22 @@ void UEdijetPlot(){
   
   TCanvas * c3 = new TCanvas( "c3" , "" ,500 ,700 );
   TPad *pad1 = new TPad("pad1", "pad1", 0, 0.3, 1, 1.0);
+  pad1->SetLogy();
   pad1->SetBottomMargin(0);
+  pad1->Draw();
   pad1->cd();
   hpt->Draw("P");
   hptc->Draw("PSAME");
 
   TH1D *hPtRatio = (TH1D*) hpt->Clone("hPtRatio");
+  hPtRatio->GetYaxis()->SetRangeUser(0.8,1.4);
+  hPtRatio->GetYaxis()->SetLabelSize(0.1);
+  hPtRatio->GetXaxis()->SetLabelSize(0.1);
+  hPtRatio->GetYaxis()->SetTitle("p_{T}^{corrected}/p_{T}");
+  hPtRatio->GetXaxis()->SetTitle("p_{T}");
+  hPtRatio->GetXaxis()->SetTitleSize(0.1);
+  hPtRatio->GetYaxis()->SetTitleSize(0.1);
+  hPtRatio->Divide(hptc);
   hPtRatio->SetStats(0);
   hPtRatio->SetLineColor(kBlack);
   hPtRatio->SetMarkerColor(kBlack);
