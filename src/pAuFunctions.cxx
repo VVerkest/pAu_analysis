@@ -396,10 +396,12 @@ namespace pAuAnalysis {
 	      // FIND TOWER ASSOCIATED WITH TRIGGER AND ENSURE TRIG TOWER HAS 5.40 <= Et <= 30
 	      if ( trigTow==0 ) {
 		trigTowEt = Event->GetTower(j)->GetEt();  // once FIRST trig tower is found, assign it's Et to "trigTowEt"
-		trigTow+=1;                               // (add to counter)
 	      }
 	      else {                         // FOR ALL SUBSEQUENT TOWERS, if its Et is greater than "trigTowEt", set "trigTowEt" to
-		if ( Event->GetTower(j)->GetEt() > trigTowEt ) { trigTowEt = Event->GetTower(j)->GetEt(); }  // this tower's Et
+		if ( Event->GetTower(j)->GetEt() > trigTowEt ) {
+		  trigTowEt = Event->GetTower(j)->GetEt();
+		  trigTow+=1;                               // (add to counter)
+		}  // this tower's Et
 	      }
 	      
 	    }
