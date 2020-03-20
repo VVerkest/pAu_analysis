@@ -390,6 +390,7 @@ namespace pAuAnalysis {
 	if ( !UseTriggerTower( trigTowId ) ) { continue; }        // check trig tower against bad tower list
 	
 	else {
+	  trigTow = 0;
 	  for ( int j=0; j<Event->GetTowers()->GetEntries(); ++j ) {  // USE GetTowers TO FIND TOWER INFO ASSOCIATED WITH TRIGGER!
 	    if ( Event->GetTower(j)->GetId() == trigTowId && Event->GetTower(j)->GetEt()>=5.40  && Event->GetTower(j)->GetEt()<30.00 ) {
 	      // FIND TOWER ASSOCIATED WITH TRIGGER AND ENSURE TRIG TOWER HAS 5.40 <= Et <= 30

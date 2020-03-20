@@ -135,28 +135,33 @@ int main ( int argc, const char** argv ) {         // funcions and cuts specifie
 
     TStarJetPicoTriggerInfo *trig;
     double trigTowEt;
+    string triggerString;
     
     int trigTow = 0;
     for ( int i=0; i<event->GetTrigObjs()->GetEntries(); ++i ) {  // loop through all triggers
       trig = (TStarJetPicoTriggerInfo *)event->GetTrigObj(i);
       if ( trig->isBHT2() ) {                                    // check if trig is BHT2
 	int trigTowId = trig->GetId();                           // get ID of trigger tower
-	if ( !UseTriggerTower( trigTowId ) ) { continue; }        // check trig tower against bad tower list
+	if ( !UseTriggerTower( trigTowId ) ) { continue; }       // check trig tower against bad tower list
 	else {
+	  trigTow = 0;
 	  for ( int j=0; j<event->GetTowers()->GetEntries(); ++j ) {  // USE GetTowers TO FIND TOWER INFO ASSOCIATED WITH TRIGGER!
 	    if ( event->GetTower(j)->GetId() == trigTowId && event->GetTower(j)->GetEt()>=5.40  && event->GetTower(j)->GetEt()<30.00 ) {
 	      // FIND TOWER ASSOCIATED WITH TRIGGER AND ENSURE TRIG TOWER HAS 5.40 <= Et <= 30
 	      if ( trigTow==0 ) {
 		trigTowEt = event->GetTower(j)->GetEt();  // once FIRST trig tower is found, assign it's Et to "trigTowEt"
 		trigTow+=1;                               // (add to counter)
+		triggerString = "";    triggerString += event->GetTower(j)->GetId();
 	      }
-	      else {                         // FOR ALL SUBSEQUENT TOWERS, if its Et is greater than "trigTowEt", set "trigTowEt" to
+	      else {                       // FOR ALL SUBSEQUENT TOWERS, if its Et is greater than "trigTowEt", set "trigTowEt" to
 		if ( event->GetTower(j)->GetEt() > trigTowEt ) {  // this tower's Et
 		  if ( trigTow==1 ) {
-		    cerr<<"Run #"<<RunID<<"  Event #"<<EventID<<endl;
+		    cerr<<"Run #"<<RunID<<"        Event #"<<EventID<<"        Trigger Tower #"<<trigTowId<<endl;
 		    cerr<<"Trigger tower #"<<trigTowId<<":  "<<trigTowEt<<" GeV"<<endl;
 		  }
 		  trigTowEt = event->GetTower(j)->GetEt();
+		  triggerString = "";    triggerString += event->GetTower(j)->GetId();
+		  trigTow+=1;
 		  cerr<<"Trigger tower #"<<trigTowId<<":  "<<trigTowEt<<" GeV"<<endl;
 		}
 	      }
