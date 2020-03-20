@@ -380,25 +380,25 @@ namespace pAuAnalysis {
     double trigTowEt;
 
     int trigTow = 0;
-    for ( int i=0; i<Event->GetTrigObjs()->GetEntries(); ++i ) {
+    for ( int i=0; i<Event->GetTrigObjs()->GetEntries(); ++i ) {  // loop through all triggers
       trig = (TStarJetPicoTriggerInfo *)Event->GetTrigObj(i);
       
-      if ( trig->isBHT2() ) {
+      if ( trig->isBHT2() ) {                                    // check if trig is BHT2
 	
-	int trigTowId = trig->GetId();
+	int trigTowId = trig->GetId();                           // get ID of trigger tower
 
-	if ( !UseTriggerTower( trigTowId) ) { continue; }
+	if ( !UseTriggerTower( trigTowId ) ) { continue; }        // check trig tower against bad tower list
 	
 	else {
 	  for ( int j=0; j<Event->GetTowers()->GetEntries(); ++j ) {  // USE GetTowers TO FIND TOWER INFO ASSOCIATED WITH TRIGGER!
 	    if ( Event->GetTower(j)->GetId() == trigTowId && Event->GetTower(j)->GetEt()>=5.40  && Event->GetTower(j)->GetEt()<30.00 ) {
-
+	      // FIND TOWER ASSOCIATED WITH TRIGGER AND ENSURE TRIG TOWER HAS 5.40 <= Et <= 30
 	      if ( trigTow==0 ) {
-		trigTowEt = Event->GetTower(j)->GetEt();
-		trigTow+=1;
+		trigTowEt = Event->GetTower(j)->GetEt();  // once FIRST trig tower is found, assign it's Et to "trigTowEt"
+		trigTow+=1;                               // (add to counter)
 	      }
-	      else {
-		if ( Event->GetTower(j)->GetEt() > trigTowEt ) { trigTowEt = Event->GetTower(j)->GetEt(); }
+	      else {                         // FOR ALL SUBSEQUENT TOWERS, if its Et is greater than "trigTowEt", set "trigTowEt" to
+		if ( Event->GetTower(j)->GetEt() > trigTowEt ) { trigTowEt = Event->GetTower(j)->GetEt(); }  // this tower's Et
 	      }
 	      
 	    }
@@ -407,7 +407,7 @@ namespace pAuAnalysis {
 	}
       }
     }
-    if ( trigTow==0 ) { return false; }
+    if ( trigTow==0 ) { return false; }  // if no triggers meet requirements, do not use event!
     
     else return true;
   }
