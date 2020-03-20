@@ -165,7 +165,7 @@ int main ( int argc, const char** argv ) {         // funcions and cuts specifie
 	}
       }
     }
-    if ( trigTow>0 ) { cerr<<endl; }
+    if ( trigTow>1 ) { cerr<<endl; }
 
     
 
