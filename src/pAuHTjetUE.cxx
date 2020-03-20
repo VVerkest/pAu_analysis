@@ -25,7 +25,7 @@ int main ( int argc, const char** argv ) {         // funcions and cuts specifie
   double chgEastSum, chgMidSum, chgWestSum, neuEastSum, neuMidSum, neuWestSum;
   
   //  Tree variables
-  int RunID, EventID, nTowers, nPrimary, nGlobal, nVertices, refMult, gRefMult, nBGpart_chg, nBGpart_neu;
+  int RunID, EventID, nTowers, nPrimary, nGlobal, nVertices, refMult, gRefMult, nBGpart_chg, nBGpart_neu, nJetsAbove5;
   double Vz, BbcAdcSumEast, BbcAdcSumEastOuter, BbcAdcSumWest, BbcAdcSumWestOuter, leadPt, leadEta, leadPhi,
     chgEastRho, chgMidRho, chgWestRho, neuEastRho, neuMidRho, neuWestRho, leadArea;
 
@@ -54,9 +54,11 @@ int main ( int argc, const char** argv ) {         // funcions and cuts specifie
   HTjetTree->Branch( "leadArea", &leadArea );
   HTjetTree->Branch( "nBGpart_chg", &nBGpart_chg );
   HTjetTree->Branch( "nBGpart_neu", &nBGpart_neu );
+  HTjetTree->Branch( "nJetsAbove5", &nJetsAbove5 );
        
   TH3D *hChgBgPtEtaPhi = new TH3D( "hChgBgPtEtaPhi", "Charged Background #phi vs. #eta;p_{T} (GeV);#eta;#phi", 40,0,20, 40,-1.0,1.0, 120,0.0,2*pi );
   TH3D *hNeuBgPtEtaPhi = new TH3D( "hNeuBgPtEtaPhi", "Neutral Background #phi vs. #eta;p_{T} (GeV);#eta;#phi", 40,0,20, 40,-1.0,1.0, 120,0.0,2*pi );
+  TH3D *hAllJets = new TH3D( "hAllJets", "All jets p_{T}>=5.0 GeV;p_{T} (GeV);#eta;#phi", 60,0,30, 40,-1.0,1.0, 120,0.0,2*pi );
 
   JetDefinition jet_def(antikt_algorithm, R);     //  JET DEFINITION
   Selector jetEtaSelector = SelectorAbsEtaMax( 1.0-R );
@@ -64,7 +66,7 @@ int main ( int argc, const char** argv ) {         // funcions and cuts specifie
   Selector leadJetSelector = jetEtaSelector && leadPtMinSelector;
   Selector ptMaxSelector = SelectorPtMax( 30.0 );
 
-  PseudoJet leadJet;  vector<PseudoJet> rawParticles, rawJets, chgParticles, neuParticles, BGparticles;
+  PseudoJet leadJet;  vector<PseudoJet> rawParticles, rawJets, allJets, chgParticles, neuParticles, BGparticles;
   TStarJetPicoEventHeader* header;
   TStarJetPicoEvent* event;
   TStarJetVectorContainer<TStarJetVector> * container;
@@ -80,7 +82,7 @@ int main ( int argc, const char** argv ) {         // funcions and cuts specifie
   while ( Reader.NextEvent() ) {
 
     Reader.PrintStatus(10);
-    rawParticles.clear();            chgParticles.clear();            neuParticles.clear();            rawJets.clear();            //  CLEAR VECTORS
+    rawParticles.clear();    chgParticles.clear();    neuParticles.clear();    rawJets.clear();    allJets.clear();    //  CLEAR VECTORS
 
     event = Reader.GetEvent();
     header = event->GetHeader();
@@ -98,9 +100,18 @@ int main ( int argc, const char** argv ) {         // funcions and cuts specifie
 
     leadJetSelector = leadPtMinSelector && ptMaxSelector && jetEtaSelector;
     rawJets = sorted_by_pt( leadJetSelector( jetCluster.inclusive_jets() ) );     // EXTRACT ALL JETS IN 10-30 GeV RANGE
+    
     if ( rawJets.size()>0 ) { leadJet = rawJets[0]; }
     else { continue; }
 
+    selector allJetSelector = SelectorPtMin(5.0) && ptMaxSelector && jetEtaSelector;
+    allJets = sorted_by_pt( allJetSelector( jetCluster.inclusive_jets() ) );     // EXTRACT ALL JETS IN 5-30 GeV RANGE
+    
+    nJetsAbove5 = allJets.size();
+    for ( int i=0; i<allJets.size(); ++i ) {
+      hAllJets->Fill( allJets[i].pt(), allJets[i].eta(), allJets[i].phi() );
+    }
+    
     RunID = header->GetRunId();
     EventID = Reader.GetNOfCurrentEvent();
     TList *SelectedTowers = Reader.GetListOfSelectedTowers();
@@ -118,6 +129,45 @@ int main ( int argc, const char** argv ) {         // funcions and cuts specifie
     leadEta = leadJet.eta();
     leadPhi = leadJet.phi();
     leadArea = leadJet.area();
+
+
+
+
+    TStarJetPicoTriggerInfo *trig;
+    double trigTowEt;
+    
+    int trigTow = 0;
+    for ( int i=0; i<event->GetTrigObjs()->GetEntries(); ++i ) {  // loop through all triggers
+      trig = (TStarJetPicoTriggerInfo *)event->GetTrigObj(i);
+      if ( trig->isBHT2() ) {                                    // check if trig is BHT2
+	int trigTowId = trig->GetId();                           // get ID of trigger tower
+	if ( !UseTriggerTower( trigTowId ) ) { continue; }        // check trig tower against bad tower list
+	else {
+	  for ( int j=0; j<event->GetTowers()->GetEntries(); ++j ) {  // USE GetTowers TO FIND TOWER INFO ASSOCIATED WITH TRIGGER!
+	    if ( event->GetTower(j)->GetId() == trigTowId && event->GetTower(j)->GetEt()>=5.40  && event->GetTower(j)->GetEt()<30.00 ) {
+	      // FIND TOWER ASSOCIATED WITH TRIGGER AND ENSURE TRIG TOWER HAS 5.40 <= Et <= 30
+	      if ( trigTow==0 ) {
+		trigTowEt = event->GetTower(j)->GetEt();  // once FIRST trig tower is found, assign it's Et to "trigTowEt"
+		trigTow+=1;                               // (add to counter)
+	      }
+	      else {                         // FOR ALL SUBSEQUENT TOWERS, if its Et is greater than "trigTowEt", set "trigTowEt" to
+		if ( event->GetTower(j)->GetEt() > trigTowEt ) {  // this tower's Et
+		  if ( trigTow==1 ) {
+		    cerr<<"Run #"<<RunID<<"  Event #"<<EventID<<endl;
+		    cerr<<"Trigger tower #"<<trigTowId<<":  "trigTowEt<<" GeV"<<endl;
+		  }
+		  trigTowEt = event->GetTower(j)->GetEt();
+		  cerr<<"Trigger tower #"<<trigTowId<<":  "trigTowEt<<" GeV"<<endl;
+		}
+	      }
+	    }
+	  }
+	}
+      }
+    }
+    if ( trigTow>0 ) { cerr<<endl; }
+
+    
 
     //  BACKGROUND ESTIMATION
     //GatherChargedBGwithEfficiency( leadJet, container, chgParticles, efficFile );   // gather BG
@@ -144,6 +194,7 @@ int main ( int argc, const char** argv ) {         // funcions and cuts specifie
 
   hChgBgPtEtaPhi->Write();  //  WRITE HISTOGRAMS & TREE
   hNeuBgPtEtaPhi->Write();
+  hAllJets->Write();
   HTjetTree->Write();  
 
   pAuFile->Write();
