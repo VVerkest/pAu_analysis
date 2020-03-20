@@ -104,7 +104,7 @@ int main ( int argc, const char** argv ) {         // funcions and cuts specifie
     if ( rawJets.size()>0 ) { leadJet = rawJets[0]; }
     else { continue; }
 
-    selector allJetSelector = SelectorPtMin(5.0) && ptMaxSelector && jetEtaSelector;
+    Selector allJetSelector = SelectorPtMin(5.0) && ptMaxSelector && jetEtaSelector;
     allJets = sorted_by_pt( allJetSelector( jetCluster.inclusive_jets() ) );     // EXTRACT ALL JETS IN 5-30 GeV RANGE
     
     nJetsAbove5 = allJets.size();
@@ -154,10 +154,10 @@ int main ( int argc, const char** argv ) {         // funcions and cuts specifie
 		if ( event->GetTower(j)->GetEt() > trigTowEt ) {  // this tower's Et
 		  if ( trigTow==1 ) {
 		    cerr<<"Run #"<<RunID<<"  Event #"<<EventID<<endl;
-		    cerr<<"Trigger tower #"<<trigTowId<<":  "trigTowEt<<" GeV"<<endl;
+		    cerr<<"Trigger tower #"<<trigTowId<<":  "<<trigTowEt<<" GeV"<<endl;
 		  }
 		  trigTowEt = event->GetTower(j)->GetEt();
-		  cerr<<"Trigger tower #"<<trigTowId<<":  "trigTowEt<<" GeV"<<endl;
+		  cerr<<"Trigger tower #"<<trigTowId<<":  "<<trigTowEt<<" GeV"<<endl;
 		}
 	      }
 	    }
