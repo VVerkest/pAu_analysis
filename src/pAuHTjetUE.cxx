@@ -141,13 +141,13 @@ int main ( int argc, const char** argv ) {         // funcions and cuts specifie
       }
     }
     if ( trigTow>0 ) { cerr<<endl; }
-    else {
-      cerr<<"Run #"<<header->GetRunId()<<"        Event #"<<Reader.GetNOfCurrentEvent()<<"        Trigger Tower #"<<trigTowId<<endl;
-      for ( int j=0; j<event->GetTowers()->GetEntries(); ++j ) {  // USE GetTowers TO FIND TOWER INFO ASSOCIATED WITH TRIGGER!
-	tow = (TStarJetPicoTower*)SelectedTowers->At(j);
-	cerr<<"Trigger tower #"<<tow->GetId()<<":  "<<trigTowEt<<" GeV"<<endl;
-      }
-    }
+    // else {
+    //   cerr<<"Run #"<<header->GetRunId()<<"        Event #"<<Reader.GetNOfCurrentEvent()<<"        Trigger Tower #"<<trigTowId<<endl;
+    //   for ( int j=0; j<event->GetTowers()->GetEntries(); ++j ) {  // USE GetTowers TO FIND TOWER INFO ASSOCIATED WITH TRIGGER!
+    // 	tow = (TStarJetPicoTower*)SelectedTowers->At(j);
+    // 	cerr<<"Trigger tower #"<<tow->GetId()<<":  "<<trigTowEt<<" GeV"<<endl;
+    //   }
+    // }
     
     
     Vz = header->GetPrimaryVertexZ();
