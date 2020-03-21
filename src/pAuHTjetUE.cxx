@@ -77,6 +77,8 @@ int main ( int argc, const char** argv ) {         // funcions and cuts specifie
   int numEvents = number_of_events;        // total events in HT: 152,007,032
   InitReader( Reader, Chain, numEvents );
 
+
+  Reader.NextEvent();
   // ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~  BEGIN EVENT LOOP!  ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~
   while ( Reader.NextEvent() ) {
 
