@@ -77,7 +77,6 @@ int main ( int argc, const char** argv ) {         // funcions and cuts specifie
   int numEvents = number_of_events;        // total events in HT: 152,007,032
   InitReader( Reader, Chain, numEvents );
 
-  int count =0;
   // ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~  BEGIN EVENT LOOP!  ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~
   while ( Reader.NextEvent() ) {
 
@@ -87,51 +86,7 @@ int main ( int argc, const char** argv ) {         // funcions and cuts specifie
     event = Reader.GetEvent();
     header = event->GetHeader();
     container = Reader.GetOutputContainer();
-    
-    Vz = header->GetPrimaryVertexZ();
-    if ( UseHTevent( header, event, vzCut, Vz ) == false ) { continue; } // Skip events based on: Run#, vz cut, BBCSumE; only accept HT events
-    if ( header->GetBbcAdcSumEast() < 3559.12 ) { continue; }     //  neglect 0-10% event activity
 
-    count+=1;
-    cout<<count<<endl;
-    
-    GatherParticles( container, rawParticles );
-
-    GhostedAreaSpec gAreaSpec( 1.0, 1, 0.01 );
-    AreaDefinition area_def(active_area_explicit_ghosts, gAreaSpec);
-    ClusterSequenceArea jetCluster( rawParticles, jet_def, area_def); 
-
-    leadJetSelector = leadPtMinSelector && ptMaxSelector && jetEtaSelector;
-    rawJets = sorted_by_pt( leadJetSelector( jetCluster.inclusive_jets() ) );     // EXTRACT ALL JETS IN 10-30 GeV RANGE
-    
-    if ( rawJets.size()>0 ) { leadJet = rawJets[0]; }
-    else { continue; }
-
-    Selector allJetSelector = SelectorPtMin(5.0) && ptMaxSelector && jetEtaSelector;
-    allJets = sorted_by_pt( allJetSelector( jetCluster.inclusive_jets() ) );     // EXTRACT ALL JETS IN 5-30 GeV RANGE
-    
-    nJetsAbove5 = allJets.size();
-    for ( int i=0; i<allJets.size(); ++i ) {
-      hAllJets->Fill( allJets[i].pt(), allJets[i].eta(), allJets[i].phi() );
-    }
-    
-    RunID = header->GetRunId();
-    EventID = Reader.GetNOfCurrentEvent();
-    TList *SelectedTowers = Reader.GetListOfSelectedTowers();
-    nTowers = CountTowers( SelectedTowers );
-    nPrimary = header->GetNOfPrimaryTracks();
-    nGlobal = header->GetNGlobalTracks();
-    nVertices = header->GetNumberOfVertices();
-    refMult = header->GetReferenceMultiplicity();
-    gRefMult = header->GetGReferenceMultiplicity();
-    BbcAdcSumEast = header->GetBbcAdcSumEast();
-    BbcAdcSumEastOuter = header->GetBbcAdcSumEastOuter();
-    BbcAdcSumWest = header->GetBbcAdcSumWest();
-    BbcAdcSumWestOuter = header->GetBbcAdcSumWestOuter();
-    leadPt = leadJet.pt();
-    leadEta = leadJet.eta();
-    leadPhi = leadJet.phi();
-    leadArea = leadJet.area();
 
 
 
@@ -182,6 +137,48 @@ int main ( int argc, const char** argv ) {         // funcions and cuts specifie
       }
     }
     
+    
+    Vz = header->GetPrimaryVertexZ();
+    if ( UseHTevent( header, event, vzCut, Vz ) == false ) { continue; } // Skip events based on: Run#, vz cut, BBCSumE; only accept HT events
+    if ( header->GetBbcAdcSumEast() < 3559.12 ) { continue; }     //  neglect 0-10% event activity
+
+    GatherParticles( container, rawParticles );
+
+    GhostedAreaSpec gAreaSpec( 1.0, 1, 0.01 );
+    AreaDefinition area_def(active_area_explicit_ghosts, gAreaSpec);
+    ClusterSequenceArea jetCluster( rawParticles, jet_def, area_def); 
+
+    leadJetSelector = leadPtMinSelector && ptMaxSelector && jetEtaSelector;
+    rawJets = sorted_by_pt( leadJetSelector( jetCluster.inclusive_jets() ) );     // EXTRACT ALL JETS IN 10-30 GeV RANGE
+    
+    if ( rawJets.size()>0 ) { leadJet = rawJets[0]; }
+    else { continue; }
+
+    Selector allJetSelector = SelectorPtMin(5.0) && ptMaxSelector && jetEtaSelector;
+    allJets = sorted_by_pt( allJetSelector( jetCluster.inclusive_jets() ) );     // EXTRACT ALL JETS IN 5-30 GeV RANGE
+    
+    nJetsAbove5 = allJets.size();
+    for ( int i=0; i<allJets.size(); ++i ) {
+      hAllJets->Fill( allJets[i].pt(), allJets[i].eta(), allJets[i].phi() );
+    }
+    
+    RunID = header->GetRunId();
+    EventID = Reader.GetNOfCurrentEvent();
+    TList *SelectedTowers = Reader.GetListOfSelectedTowers();
+    nTowers = CountTowers( SelectedTowers );
+    nPrimary = header->GetNOfPrimaryTracks();
+    nGlobal = header->GetNGlobalTracks();
+    nVertices = header->GetNumberOfVertices();
+    refMult = header->GetReferenceMultiplicity();
+    gRefMult = header->GetGReferenceMultiplicity();
+    BbcAdcSumEast = header->GetBbcAdcSumEast();
+    BbcAdcSumEastOuter = header->GetBbcAdcSumEastOuter();
+    BbcAdcSumWest = header->GetBbcAdcSumWest();
+    BbcAdcSumWestOuter = header->GetBbcAdcSumWestOuter();
+    leadPt = leadJet.pt();
+    leadEta = leadJet.eta();
+    leadPhi = leadJet.phi();
+    leadArea = leadJet.area();
 
     //  BACKGROUND ESTIMATION
     //GatherChargedBGwithEfficiency( leadJet, container, chgParticles, efficFile );   // gather BG
