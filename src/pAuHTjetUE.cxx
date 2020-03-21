@@ -77,7 +77,7 @@ int main ( int argc, const char** argv ) {         // funcions and cuts specifie
   int numEvents = number_of_events;        // total events in HT: 152,007,032
   InitReader( Reader, Chain, numEvents );
 
-
+  int count =0;
   // ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~  BEGIN EVENT LOOP!  ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~
   while ( Reader.NextEvent() ) {
 
@@ -91,6 +91,9 @@ int main ( int argc, const char** argv ) {         // funcions and cuts specifie
     Vz = header->GetPrimaryVertexZ();
     if ( UseHTevent( header, event, vzCut, Vz ) == false ) { continue; } // Skip events based on: Run#, vz cut, BBCSumE; only accept HT events
     if ( header->GetBbcAdcSumEast() < 3559.12 ) { continue; }     //  neglect 0-10% event activity
+
+    count+=1;
+    cout<<count<<endl;
     
     GatherParticles( container, rawParticles );
 
