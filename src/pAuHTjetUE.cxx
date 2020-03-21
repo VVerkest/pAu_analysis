@@ -96,6 +96,7 @@ int main ( int argc, const char** argv ) {         // funcions and cuts specifie
     string triggerString;
     int trigTowId;
     TStarJetPicoTower *tow;
+    TStarJetPicoTower *t0;
 
     TList *SelectedTowers = Reader.GetListOfSelectedTowers();
     nTowers = CountTowers( SelectedTowers );
@@ -107,10 +108,11 @@ int main ( int argc, const char** argv ) {         // funcions and cuts specifie
 	trigTowId = trig->GetId();                           // get ID of trigger tower
 	if ( !UseTriggerTower( trigTowId ) ) { continue; }       // check trig tower against bad tower list
 	else {
+	  
 	  trigTow = 0;
 	  for ( int j=0; j<nTowers; ++j ) {  // USE GetTowers TO FIND TOWER INFO ASSOCIATED WITH TRIGGER!
-	    TStarJetPicoTower *t0 = (TStarJetPicoTower*)SelectedTowers->At(j);
-	    if ( t0->GetId() == trigTowId && t0->GetEt()>=5.40  && t0->GetEt()<30.00 ) {
+	    t0 = (TStarJetPicoTower*)SelectedTowers->At(j);
+	    if ( (int)t0->GetId() == trigTowId && t0->GetEt()>=5.40  && t0->GetEt()<30.00 ) {
 	      // FIND TOWER ASSOCIATED WITH TRIGGER AND ENSURE TRIG TOWER HAS 5.40 <= Et <= 30
 	      if ( trigTow==0 ) {
 		tow = (TStarJetPicoTower*)SelectedTowers->At(j);
@@ -119,7 +121,7 @@ int main ( int argc, const char** argv ) {         // funcions and cuts specifie
 		triggerString = "";    triggerString += tow->GetId();
 	      }
 	      else {                       // FOR ALL SUBSEQUENT TOWERS, if its Et is greater than "trigTowEt", set "trigTowEt" to
-		if ( tow->GetEt() > trigTowEt ) {  // this tower's Et
+		if ( t0->GetEt() > trigTowEt ) {  // this tower's Et
 		  if ( trigTow==1 ) {
 		    cerr<<"Run #"<<header->GetRunId()<<"        Event #"<<EventID<<"        Trigger Tower #"<<trigTowId<<endl;
 		    cerr<<"Trigger tower #"<<trigTowId<<":  "<<trigTowEt<<" GeV"<<endl;
