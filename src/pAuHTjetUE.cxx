@@ -133,7 +133,7 @@ int main ( int argc, const char** argv ) {         // funcions and cuts specifie
     else {
       cerr<<"Run #"<<RunID<<"        Event #"<<EventID<<"        Trigger Tower #"<<trigTowId<<endl;
       for ( int j=0; j<event->GetTowers()->GetEntries(); ++j ) {  // USE GetTowers TO FIND TOWER INFO ASSOCIATED WITH TRIGGER!
-	cerr<<"Trigger tower #"<<trigTowId<<":  "<<trigTowEt<<" GeV"<<endl;
+	cerr<<"Trigger tower #"<<event->GetTower(j)->GetId()<<":  "<<trigTowEt<<" GeV"<<endl;
       }
     }
     
