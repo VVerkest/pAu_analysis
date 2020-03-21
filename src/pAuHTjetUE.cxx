@@ -95,6 +95,7 @@ int main ( int argc, const char** argv ) {         // funcions and cuts specifie
     double trigTowEt;
     string triggerString;
     int trigTowId;
+    TStarJetPicoTower *tow;
 
     TList *SelectedTowers = Reader.GetListOfSelectedTowers();
     nTowers = CountTowers( SelectedTowers );
@@ -108,21 +109,23 @@ int main ( int argc, const char** argv ) {         // funcions and cuts specifie
 	else {
 	  trigTow = 0;
 	  for ( int j=0; j<nTowers; ++j ) {  // USE GetTowers TO FIND TOWER INFO ASSOCIATED WITH TRIGGER!
-	    if ( SelectedTowers->At(i)->GetId() == trigTowId && SelectedTowers->At(j)->GetEt()>=5.40  && SelectedTowers->At(j)->GetEt()<30.00 ) {
+	    TStarJetPicoTower *t0 = SelectedTowers->At(j);
+	    if ( t0->GetId() == trigTowId && t0->GetEt()>=5.40  && t0->GetEt()<30.00 ) {
 	      // FIND TOWER ASSOCIATED WITH TRIGGER AND ENSURE TRIG TOWER HAS 5.40 <= Et <= 30
 	      if ( trigTow==0 ) {
-		trigTowEt = SelectedTowers->At(j)->GetEt();  // once FIRST trig tower is found, assign it's Et to "trigTowEt"
+		tow = SelectedTowers->At(j);
+		trigTowEt = tow->GetEt();  // once FIRST trig tower is found, assign it's Et to "trigTowEt"
 		trigTow+=1;                               // (add to counter)
-		triggerString = "";    triggerString += SelectedTowers->At(j)->GetId();
+		triggerString = "";    triggerString += tow->GetId();
 	      }
 	      else {                       // FOR ALL SUBSEQUENT TOWERS, if its Et is greater than "trigTowEt", set "trigTowEt" to
-		if ( SelectedTowers->At(j)->GetEt() > trigTowEt ) {  // this tower's Et
+		if ( tow->GetEt() > trigTowEt ) {  // this tower's Et
 		  if ( trigTow==1 ) {
 		    cerr<<"Run #"<<header->GetRunId()<<"        Event #"<<EventID<<"        Trigger Tower #"<<trigTowId<<endl;
 		    cerr<<"Trigger tower #"<<trigTowId<<":  "<<trigTowEt<<" GeV"<<endl;
 		  }
-		  trigTowEt = SelectedTowers->At(j)->GetEt();
-		  triggerString = "";    triggerString += SelectedTowers->At(j)->GetId();
+		  trigTowEt = tow->GetEt();
+		  triggerString = "";    triggerString += tow->GetId();
 		  trigTow+=1;
 		  cerr<<"Trigger tower #"<<trigTowId<<":  "<<trigTowEt<<" GeV"<<endl;
 		}
@@ -136,7 +139,7 @@ int main ( int argc, const char** argv ) {         // funcions and cuts specifie
     else {
       cerr<<"Run #"<<RunID<<"        Event #"<<EventID<<"        Trigger Tower #"<<trigTowId<<endl;
       for ( int j=0; j<event->GetTowers()->GetEntries(); ++j ) {  // USE GetTowers TO FIND TOWER INFO ASSOCIATED WITH TRIGGER!
-	cerr<<"Trigger tower #"<<SelectedTowers->At(j)->GetId()<<":  "<<trigTowEt<<" GeV"<<endl;
+	cerr<<"Trigger tower #"<<tow->GetId()<<":  "<<trigTowEt<<" GeV"<<endl;
       }
     }
     
