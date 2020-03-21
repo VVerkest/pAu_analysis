@@ -136,12 +136,13 @@ int main ( int argc, const char** argv ) {         // funcions and cuts specifie
     TStarJetPicoTriggerInfo *trig;
     double trigTowEt;
     string triggerString;
+    int trigTowId;
     
     int trigTow = 0;
     for ( int i=0; i<event->GetTrigObjs()->GetEntries(); ++i ) {  // loop through all triggers
       trig = (TStarJetPicoTriggerInfo *)event->GetTrigObj(i);
       if ( trig->isBHT2() ) {                                    // check if trig is BHT2
-	int trigTowId = trig->GetId();                           // get ID of trigger tower
+	trigTowId = trig->GetId();                           // get ID of trigger tower
 	if ( !UseTriggerTower( trigTowId ) ) { continue; }       // check trig tower against bad tower list
 	else {
 	  trigTow = 0;
