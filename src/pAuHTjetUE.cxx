@@ -109,11 +109,11 @@ int main ( int argc, const char** argv ) {         // funcions and cuts specifie
 	else {
 	  trigTow = 0;
 	  for ( int j=0; j<nTowers; ++j ) {  // USE GetTowers TO FIND TOWER INFO ASSOCIATED WITH TRIGGER!
-	    TStarJetPicoTower *t0 = SelectedTowers->At(j);
+	    TStarJetPicoTower *t0 = (TStarJetPicoTower*)SelectedTowers->At(j);
 	    if ( t0->GetId() == trigTowId && t0->GetEt()>=5.40  && t0->GetEt()<30.00 ) {
 	      // FIND TOWER ASSOCIATED WITH TRIGGER AND ENSURE TRIG TOWER HAS 5.40 <= Et <= 30
 	      if ( trigTow==0 ) {
-		tow = SelectedTowers->At(j);
+		tow = (TStarJetPicoTower*)SelectedTowers->At(j);
 		trigTowEt = tow->GetEt();  // once FIRST trig tower is found, assign it's Et to "trigTowEt"
 		trigTow+=1;                               // (add to counter)
 		triggerString = "";    triggerString += tow->GetId();
