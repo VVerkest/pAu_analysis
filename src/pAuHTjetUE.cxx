@@ -132,7 +132,7 @@ int main ( int argc, const char** argv ) {         // funcions and cuts specifie
 		  }
 		  tow = (TStarJetPicoTower*)SelectedTowers->At(j);
 		  trigTowEt = tow->GetEt();
-		  triggerString = "";    triggerString += tow->GetId();
+		  //triggerString = "";    triggerString += tow->GetId();
 		  trigTow+=1;
 		  cerr<<"Trigger tower #"<<trigTowId<<":  "<<trigTowEt<<" GeV"<<endl;
 		}
