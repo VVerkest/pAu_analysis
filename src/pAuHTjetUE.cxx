@@ -171,8 +171,8 @@ int main ( int argc, const char** argv ) {         // funcions and cuts specifie
 	}
       }
     }
-    if ( trigTow>=1 ) { cerr<<endl; }
-    if ( trigTow==0 ) {
+    if ( trigTow>0 ) { cerr<<endl; }
+    else {
       cerr<<"Run #"<<RunID<<"        Event #"<<EventID<<"        Trigger Tower #"<<trigTowId<<endl;
       for ( int j=0; j<event->GetTowers()->GetEntries(); ++j ) {  // USE GetTowers TO FIND TOWER INFO ASSOCIATED WITH TRIGGER!
 	cerr<<"Trigger tower #"<<trigTowId<<":  "<<trigTowEt<<" GeV"<<endl;
