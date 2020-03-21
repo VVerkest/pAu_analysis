@@ -113,7 +113,8 @@ int main ( int argc, const char** argv ) {         // funcions and cuts specifie
 	  for ( int j=0; j<nTowers; ++j ) {  // USE GetTowers TO FIND TOWER INFO ASSOCIATED WITH TRIGGER!
 	    t0 = (TStarJetPicoTower*)SelectedTowers->At(j);
 	    int tempint = t0->GetId();
-	    if ( tempint == trigTowId && t0->GetEt()>=5.40  && t0->GetEt()<30.00 ) {
+	    double tempet = t0->GetEt();
+	    if ( tempint == trigTowId && tempet>=5.40  && tempet<30.00 ) {
 	      // FIND TOWER ASSOCIATED WITH TRIGGER AND ENSURE TRIG TOWER HAS 5.40 <= Et <= 30
 	      if ( trigTow==0 ) {
 		tow = (TStarJetPicoTower*)SelectedTowers->At(j);
@@ -127,6 +128,7 @@ int main ( int argc, const char** argv ) {         // funcions and cuts specifie
 		    cerr<<"Run #"<<header->GetRunId()<<"        Event #"<<Reader.GetNOfCurrentEvent()<<"        Trigger Tower #"<<trigTowId<<endl;
 		    cerr<<"Trigger tower #"<<trigTowId<<":  "<<trigTowEt<<" GeV"<<endl;
 		  }
+		  tow = (TStarJetPicoTower*)SelectedTowers->At(j);
 		  trigTowEt = tow->GetEt();
 		  triggerString = "";    triggerString += tow->GetId();
 		  trigTow+=1;
@@ -149,7 +151,7 @@ int main ( int argc, const char** argv ) {         // funcions and cuts specifie
     
     
     Vz = header->GetPrimaryVertexZ();
-    if ( UseHTevent( header, event, vzCut, Vz ) == false ) { continue; } // Skip events based on: Run#, vz cut, BBCSumE; only accept HT events
+    //if ( UseHTevent( header, event, vzCut, Vz ) == false ) { continue; } // Skip events based on: Run#, vz cut, BBCSumE; only accept HT events
     if ( header->GetBbcAdcSumEast() < 3559.12 ) { continue; }     //  neglect 0-10% event activity
 
     GatherParticles( container, rawParticles );
