@@ -391,6 +391,7 @@ namespace pAuAnalysis {
 	
 	else {
 	  trigTow = 0;
+	  trigTowEt = 0;
 	  for ( int j=0; j<Event->GetTowers()->GetEntries(); ++j ) {  // USE GetTowers TO FIND TOWER INFO ASSOCIATED WITH TRIGGER!
 	    if ( Event->GetTower(j)->GetId() == trigTowId && Event->GetTower(j)->GetEt()>=5.40  && Event->GetTower(j)->GetEt()<30.00 ) {
 	      // FIND TOWER ASSOCIATED WITH TRIGGER AND ENSURE TRIG TOWER HAS 5.40 <= Et <= 30
@@ -409,6 +410,7 @@ namespace pAuAnalysis {
 	  
 	}
       }
+      else { continue; }
     }
     if ( trigTow==0 ) { return false; }  // if no triggers meet requirements, do not use event!
     
