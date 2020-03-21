@@ -122,7 +122,7 @@ int main ( int argc, const char** argv ) {         // funcions and cuts specifie
 		tow = (TStarJetPicoTower*)SelectedTowers->At(j);
 		trigTowEt = tow->GetEt();  // once FIRST trig tower is found, assign it's Et to "trigTowEt"
 		trigTow+=1;                               // (add to counter)
-		triggerString = "";    triggerString += tow->GetId();
+		//triggerString = "";    triggerString += tow->GetId();
 	      }
 	      else {                       // FOR ALL SUBSEQUENT TOWERS, if its Et is greater than "trigTowEt", set "trigTowEt" to
 		if ( t0->GetEt() > trigTowEt ) {  // this tower's Et
