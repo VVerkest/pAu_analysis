@@ -114,6 +114,7 @@ int main ( int argc, const char** argv ) {         // funcions and cuts specifie
 	  trigTow = 0;
 	  for ( int j=0; j<nTowers; ++j ) {  // USE GetTowers TO FIND TOWER INFO ASSOCIATED WITH TRIGGER!
 	    t0 = (TStarJetPicoTower*)SelectedTowers->At(j);
+	    cout<<t0->GetId()<<endl;
 	    int tempint = t0->GetId();
 	    double tempet = t0->GetEt();
 	    if ( tempint == trigTowId && tempet>=5.40  && tempet<30.00 ) {
