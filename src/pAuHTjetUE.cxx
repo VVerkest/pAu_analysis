@@ -95,7 +95,6 @@ int main ( int argc, const char** argv ) {         // funcions and cuts specifie
 
     TStarJetPicoTriggerInfo *trig;
     double trigTowEt;
-    string triggerString;
     int trigTowId;
     TStarJetPicoTower *tow;
     TStarJetPicoTower *t0;
@@ -123,17 +122,15 @@ int main ( int argc, const char** argv ) {         // funcions and cuts specifie
 		tow = (TStarJetPicoTower*)SelectedTowers->At(j);
 		trigTowEt = tow->GetEt();  // once FIRST trig tower is found, assign it's Et to "trigTowEt"
 		trigTow+=1;                               // (add to counter)
-		//triggerString = "";    triggerString += tow->GetId();
 	      }
 	      else {                       // FOR ALL SUBSEQUENT TOWERS, if its Et is greater than "trigTowEt", set "trigTowEt" to
 		if ( t0->GetEt() > trigTowEt ) {  // this tower's Et
 		  if ( trigTow==1 ) {
 		    cerr<<"Run #"<<header->GetRunId()<<"        Event #"<<Reader.GetNOfCurrentEvent()<<"        Trigger Tower #"<<trigTowId<<endl;
-		    cerr<<"Trigger tower #"<<trigTowId<<":  "<<trigTowEt<<" GeV"<<endl;
+		    cerr<<"Trigger tower #"<<trigTowId<<":  "<<tow->GetId()<<" GeV"<<endl;
 		  }
 		  tow = (TStarJetPicoTower*)SelectedTowers->At(j);
 		  trigTowEt = tow->GetEt();
-		  //triggerString = "";    triggerString += tow->GetId();
 		  trigTow+=1;
 		  cerr<<"Trigger tower #"<<trigTowId<<":  "<<trigTowEt<<" GeV"<<endl;
 		}
