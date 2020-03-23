@@ -89,65 +89,31 @@ int main ( int argc, const char** argv ) {         // funcions and cuts specifie
     header = event->GetHeader();
     container = Reader.GetOutputContainer();
 
-
-
-
-
-    TStarJetPicoTriggerInfo *trig;
-    double trigTowEt;
-    int trigTowId;
-    TStarJetPicoTower *tow;
-    TStarJetPicoTower *t0;
-
     TList *SelectedTowers = Reader.GetListOfSelectedTowers();
     nTowers = CountTowers( SelectedTowers );
-    
-    int trigTow = 0;
-    for ( int i=0; i<event->GetTrigObjs()->GetEntries(); ++i ) {  // loop through all triggers
+
+    int trigTowId;
+    TStarJetPicoTriggerInfo *trig;
+    TStarJetPicoTower *tow;
+    std::vector<int> trigTowers, eventTowers, matchedTrigTow;
+    for (int i=0; i<nTowers; ++i){ eventTowers.push_back( SelectedTowers->At(i) ); }
+    for ( int i=0; i<event->GetTrigObjs()->GetEntries(); ++i ) {
       trig = (TStarJetPicoTriggerInfo *)event->GetTrigObj(i);
-      if ( trig->isBHT2() ) {                                    // check if trig is BHT2
-	trigTowId = trig->GetId();                           // get ID of trigger tower
-	if ( !UseTriggerTower( trigTowId ) ) { continue; }       // check trig tower against bad tower list
-	else {
-	  
-	  trigTow = 0;
-	  for ( int j=0; j<nTowers; ++j ) {  // USE GetTowers TO FIND TOWER INFO ASSOCIATED WITH TRIGGER!
-	    t0 = (TStarJetPicoTower*)SelectedTowers->At(j);
-	    int tempint = t0->GetId();
-	    double tempet = t0->GetEt();
-	    if ( tempint == trigTowId && tempet>=5.40  && tempet<30.00 ) {
-	      // FIND TOWER ASSOCIATED WITH TRIGGER AND ENSURE TRIG TOWER HAS 5.40 <= Et <= 30
-	      if ( trigTow==0 ) {
-		tow = (TStarJetPicoTower*)SelectedTowers->At(j);
-		trigTowEt = tow->GetEt();  // once FIRST trig tower is found, assign it's Et to "trigTowEt"
-		trigTow+=1;                               // (add to counter)
-	      }
-	      else {                       // FOR ALL SUBSEQUENT TOWERS, if its Et is greater than "trigTowEt", set "trigTowEt" to
-		if ( t0->GetEt() > trigTowEt ) {  // this tower's Et
-		  if ( trigTow==1 ) {
-		    cerr<<"Run #"<<header->GetRunId()<<"        Event #"<<Reader.GetNOfCurrentEvent()<<"        Trigger Tower #"<<trigTowId<<endl;
-		    cerr<<"Trigger tower #"<<trigTowId<<":  "<<tow->GetId()<<" GeV"<<endl;
-		  }
-		  tow = (TStarJetPicoTower*)SelectedTowers->At(j);
-		  trigTowEt = tow->GetEt();
-		  trigTow+=1;
-		  cerr<<"Trigger tower #"<<trigTowId<<":  "<<trigTowEt<<" GeV"<<endl;
-		}
-	      }
-	    }
-	  }
-	}
+      if ( trig->isBHT2() && UseTriggerTower( trig->GetId()) ) { trigTowers.push_back( trig->GetId() ); }
+    }
+    std::sort(trigTowers.begin(), trigTowers.end());
+    std::sort(eventTowers.begin(), eventTowers.end());
+    std::set_intersection(trigTowers.begin(), trigTowers.end(), eventTowers.begin(), eventTowers.end(), std::back_inserter(matchedTrigTow));
+    std::sort(matchedTrigTow.begin(), matchedTrigTow.end());
+
+    if ( matchedTrigTow.size()!=0 ) {
+      cout<<endl<<matchedTrigTow.size()<<endl;
+      for ( int i=0; i<matchedTrigTow.size(); ++i ) {
+	tow = (TStarJetPicoTower*)event->GetTower( matchedTrigTow.at(i) );
+	if ( tow->GetEt() >= 5.4 ) { cout<<"tower #"<<matchedTrigTow.at(i)<<"     "<<tow->GetEt()<<" GeV"<<endl;
       }
     }
-    if ( trigTow>0 ) { cerr<<endl; }
-    // else {
-    //   cerr<<"Run #"<<header->GetRunId()<<"        Event #"<<Reader.GetNOfCurrentEvent()<<"        Trigger Tower #"<<trigTowId<<endl;
-    //   for ( int j=0; j<event->GetTowers()->GetEntries(); ++j ) {  // USE GetTowers TO FIND TOWER INFO ASSOCIATED WITH TRIGGER!
-    // 	tow = (TStarJetPicoTower*)SelectedTowers->At(j);
-    // 	cerr<<"Trigger tower #"<<tow->GetId()<<":  "<<trigTowEt<<" GeV"<<endl;
-    //   }
-    // }
-    
+    else { continue; }
     
     Vz = header->GetPrimaryVertexZ();
     //if ( UseHTevent( header, event, vzCut, Vz ) == false ) { continue; } // Skip events based on: Run#, vz cut, BBCSumE; only accept HT events

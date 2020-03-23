@@ -40,6 +40,9 @@
 #include <sstream>
 #include <iomanip>
 #include <cmath>
+#include <vector>
+#include <algorithm>
+#include <iterator>
 
 #ifndef pAu_HT_jetParameters_hh
 #define pAu_HT_jetParameters_hh
