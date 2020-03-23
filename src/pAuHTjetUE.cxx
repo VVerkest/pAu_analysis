@@ -100,8 +100,11 @@ int main ( int argc, const char** argv ) {         // funcions and cuts specifie
       trig = (TStarJetPicoTriggerInfo *)event->GetTrigObj(i);
       if ( trig->isBHT2() && UseTriggerTower( trig->GetId()) ) { trigTowers.push_back( trig->GetId() ); }
     }
+    cout<<endl<<endl;
     std::sort(trigTowers.begin(), trigTowers.end());
-
+    for (int i=0; i<trigTowers.size(); ++i){ cout<<trigTowers.at(i)<<endl;}
+    cout<<endl;
+      
     for (int i=0; i<nTowers; ++i){
       tow = (TStarJetPicoTower*)SelectedTowers->At(i);
       if ( tow->GetEt()>=5.4 && std::count(trigTowers.begin(), trigTowers.end(), tow->GetId())) {
