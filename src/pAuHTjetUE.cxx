@@ -102,8 +102,6 @@ int main ( int argc, const char** argv ) {         // funcions and cuts specifie
     }
     cout<<endl<<endl;
     std::sort(trigTowers.begin(), trigTowers.end());
-    for (int i=0; i<trigTowers.size(); ++i){ cout<<trigTowers.at(i)<<endl;}
-    cout<<endl;
       
     for (int i=0; i<nTowers; ++i){
       tow = (TStarJetPicoTower*)SelectedTowers->At(i);
