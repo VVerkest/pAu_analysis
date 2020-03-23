@@ -21,7 +21,6 @@ int main ( int argc, const char** argv ) {         // funcions and cuts specifie
 
   TTree *HTjetTree = new TTree( "HTjetTree", "HT_JetTree" );
   string efficFile = "src/trackeffic.root";
-  TFile *pAuFile = new TFile( outFile.c_str() ,"RECREATE");
 
   double chgEastSum, chgMidSum, chgWestSum, neuEastSum, neuMidSum, neuWestSum;
   
@@ -61,9 +60,9 @@ int main ( int argc, const char** argv ) {         // funcions and cuts specifie
   HTjetTree->Branch( "nJetsAbove5", &nJetsAbove5 );
   HTjetTree->Branch( "nHTtrig", &nHTtrig );
        
-  TH3D *hChgBgPtEtaPhi = new TH3D( "hChgBgPtEtaPhi", "Charged Background #phi vs. #eta;p_{T} (GeV);#eta;#phi", 40,0,20, 40,-1.0,1.0, 120,0.0,2*pi );
-  TH3D *hNeuBgPtEtaPhi = new TH3D( "hNeuBgPtEtaPhi", "Neutral Background #phi vs. #eta;p_{T} (GeV);#eta;#phi", 40,0,20, 40,-1.0,1.0, 120,0.0,2*pi );
-  TH3D *hAllJets = new TH3D( "hAllJets", "All jets p_{T}>=5.0 GeV;p_{T} (GeV);#eta;#phi", 60,0,30, 40,-1.0,1.0, 120,0.0,2*pi );
+  TH3D *hChgBgPtEtaPhi = new TH3D( "hChgBgPtEtaPhi", "Charged Background #phi vs. #eta;p_{T} (GeV);#eta;#phi", 30,0,15, 20,-1.0,1.0, 60,0.0,2*pi );
+  TH3D *hNeuBgPtEtaPhi = new TH3D( "hNeuBgPtEtaPhi", "Neutral Background #phi vs. #eta;p_{T} (GeV);#eta;#phi", 30,0,15, 20,-1.0,1.0, 60,0.0,2*pi );
+  TH3D *hAllJets = new TH3D( "hAllJets", "All jets p_{T}>=5.0 GeV;p_{T} (GeV);#eta;#phi", 60,0,30, 20,-1.0,1.0, 60,0.0,2*pi );
 
   JetDefinition jet_def(antikt_algorithm, R);     //  JET DEFINITION
   Selector jetEtaSelector = SelectorAbsEtaMax( 1.0-R );
@@ -194,6 +193,8 @@ int main ( int argc, const char** argv ) {         // funcions and cuts specifie
     HTjetTree->Fill();
 
   }  // ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~  END EVENT LOOP!  ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~
+
+  TFile *pAuFile = new TFile( outFile.c_str() ,"RECREATE");
 
   hChgBgPtEtaPhi->Write();  //  WRITE HISTOGRAMS & TREE
   hNeuBgPtEtaPhi->Write();
