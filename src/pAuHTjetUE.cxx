@@ -96,7 +96,7 @@ int main ( int argc, const char** argv ) {         // funcions and cuts specifie
     TStarJetPicoTriggerInfo *trig;
     TStarJetPicoTower *tow;
     std::vector<int> trigTowers, eventTowers, matchedTrigTow;
-    for (int i=0; i<nTowers; ++i){ eventTowers.push_back( SelectedTowers->At(i) ); }
+    for (int i=0; i<nTowers; ++i){ eventTowers.push_back( SelectedTowers->At(i)->GetId() ); }
     for ( int i=0; i<event->GetTrigObjs()->GetEntries(); ++i ) {
       trig = (TStarJetPicoTriggerInfo *)event->GetTrigObj(i);
       if ( trig->isBHT2() && UseTriggerTower( trig->GetId()) ) { trigTowers.push_back( trig->GetId() ); }
