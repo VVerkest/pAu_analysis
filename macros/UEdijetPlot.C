@@ -12,6 +12,7 @@ void UEdijetPlot(){
   const double ptHi[nPtBins] = { 15.0, 20.0, 30.0 };
   const TString ptBinName[nPtBins] = { "_10_15GeV", "_15_20GeV", "_20_30GeV" };
   const TString ptBinString[nPtBins] = { "10<p_{T}^{lead}<15", "15<p_{T}^{lead}<20",  "20<p_{T}^{lead}<30" };
+  const TString ptCorrectedBinString[nPtBins] = { "10<p_{T}^{corrected}<15", "15<p_{T}^{corrected}<20",  "20<p_{T}^{corrected}<30" };
   const int ptColor[nPtBins] = { 797, 593, 892 };
 
   const int nEtaBins = 3;
@@ -37,8 +38,8 @@ void UEdijetPlot(){
   TString name, saveName, title, avg, sigma;
   double chgRho, neuRho, midRho, eastRho, westRho, rho;
   
-  //TString fileName = "out/UE/pAuHTdijetUE.root";
-  TString fileName = "out/UE/pAuHTdijetUE_trackEffic.root";
+  TString fileName = "out/UE/pAuHTdijetUE.root";
+  //TString fileName = "out/UE/pAuHTdijetUE_trackEffic.root";
   TFile* inFile = new TFile( fileName, "READ" );
 
   TH3D *hBGchg3D = (TH3D*) inFile->Get("hChgBgPtEtaPhi");
@@ -177,28 +178,28 @@ void UEdijetPlot(){
 
   hLeadPhi->Scale(1./hLeadPhi->Integral("WIDTH"));
   hLeadPhi->Draw();
-  c0->SaveAs( "plots/UE/trackEff/dijet_leadPhi.pdf" , "PDF" );
+  c0->SaveAs( "plots/UE/dijet_leadPhi.pdf" , "PDF" );
 
   c0->SetLogz();
 
   hBGchg->Scale(1./hBGchg->Integral("WIDTH"));
   hBGchg->Draw("COLZ");
-  c0->SaveAs( "plots/UE/trackEff/dijet_chgBgEtaPhi.pdf" , "PDF" );
+  c0->SaveAs( "plots/UE/dijet_chgBgEtaPhi.pdf" , "PDF" );
   
   hBGneu->Scale(1./hBGneu->Integral("WIDTH"));
   hBGneu->Draw("COLZ");
-  c0->SaveAs( "plots/UE/trackEff/dijet_neuBgEtaPhi.pdf" , "PDF" );
+  c0->SaveAs( "plots/UE/dijet_neuBgEtaPhi.pdf" , "PDF" );
 
   hTowersVsRho->Scale(1./hTowersVsRho->Integral("WIDTH"));
   hTowersVsRho->GetZaxis()->SetRangeUser(0.0001,1);
   hTowersVsRho->Draw("COLZ");
-  c0->SaveAs( "plots/UE/trackEff/dijet_towersVsRho.pdf" , "PDF" );
+  c0->SaveAs( "plots/UE/dijet_towersVsRho.pdf" , "PDF" );
 
   c0->SetLogy();
 
   hRho->Scale(1./hRho->Integral("WIDTH"));
   hRho->Draw();
-  c0->SaveAs( "plots/UE/trackEff/dijet_rho.pdf" , "PDF" );
+  c0->SaveAs( "plots/UE/dijet_rho.pdf" , "PDF" );
 
 
   TCanvas * c1 = new TCanvas( "c1" , "" ,700 ,500 );              // CANVAS 1
@@ -226,7 +227,7 @@ void UEdijetPlot(){
 
   }
   leg0->Draw();
-  c1->SaveAs( "plots/UE/trackEff/dijet_BBCEastSum_by_eta.pdf" , "PDF" );
+  c1->SaveAs( "plots/UE/dijet_BBCEastSum_by_eta.pdf" , "PDF" );
   c1->SetLogy(0);
 
 
@@ -261,7 +262,7 @@ void UEdijetPlot(){
 
   }
   leg1->Draw();
-  c1->SaveAs( "plots/UE/trackEff/dijet_LeadEta_by_pt.pdf" , "PDF" );
+  c1->SaveAs( "plots/UE/dijet_LeadEta_by_pt.pdf" , "PDF" );
 
 
   dijetTree->Draw("leadPt:((chgEastRho+neuEastRho)+(chgMidRho+neuMidRho)+(chgWestRho+neuWestRho))/3>>hRho2d","","COLZ");
@@ -302,7 +303,7 @@ void UEdijetPlot(){
     leg2->AddEntry((TObject*)0,sigma, "");
   }
   leg2->Draw();
-  c1->SaveAs("plots/UE/trackEff/dijet_rhoByLeadPt.pdf","PDF");
+  c1->SaveAs("plots/UE/dijet_rhoByLeadPt.pdf","PDF");
 
 
   dijetTree->Draw("leadPt:((chgEastRho+neuEastRho)+(chgMidRho+neuMidRho)+(chgWestRho+neuWestRho))/3>>hRho2d_LO","BbcAdcSumEast>3559.12 && BbcAdcSumEast<10126.1","COLZ");
@@ -343,7 +344,7 @@ void UEdijetPlot(){
     leg3->AddEntry((TObject*)0,sigma, "");
   }
   leg3->Draw();
-  c1->SaveAs("plots/UE/trackEff/dijetrhoByLeadPt_LOEA.pdf","PDF");
+  c1->SaveAs("plots/UE/dijetrhoByLeadPt_LOEA.pdf","PDF");
 
 
 
@@ -387,9 +388,61 @@ void UEdijetPlot(){
     leg4->AddEntry((TObject*)0,sigma, "");
   }
   leg4->Draw();
-  c1->SaveAs("plots/UE/trackEff/dijetrhoByLeadPt_HIEA.pdf","PDF");
+  c1->SaveAs("plots/UE/dijetrhoByLeadPt_HIEA.pdf","PDF");
 
 
+
+  //  corrected lead pt
+  
+  dijetTree->Draw("leadPtCorrected:((chgEastRho+neuEastRho)+(chgMidRho+neuMidRho)+(chgWestRho+neuWestRho))/3>>hRhoCorr2d","","COLZ");
+  TH2D *hRhoCorr2d = (TH2D*)gDirectory->Get("hRhoCorr2d");
+  c1->SetLogy();
+  TLegend *leg12 = new TLegend(0.65, 0.65, 0.9, 0.9,NULL,"brNDC");    // LEGEND 0
+  leg12->SetBorderSize(1);   leg12->SetLineColor(1);   leg12->SetLineStyle(1);   leg12->SetLineWidth(1);   leg12->SetFillColor(0);   leg12->SetFillStyle(1001);
+  leg12->SetNColumns(3);
+  leg12->AddEntry((TObject*)0,"#bf{p_{T}^{corrected}}", "");
+  leg12->AddEntry((TObject*)0,"#bf{<#rho>}", "");
+  leg12->AddEntry((TObject*)0,"#bf{<#sigma>}", "");
+
+  TH1D *hCorrPtRho[nPtBins];
+  TH2D *sCorrPtRho = new TH2D( "sCorrPtRho", "Underlying Event by Corrected Lead Jet p_{T};#rho (GeV)", 20,0,8, 10,0.0001,1 );
+  sCorrPtRho->SetStats(0);
+  sCorrPtRho->Draw();
+  for ( int p=0; p<nPtBins; ++p ) {
+    hRhoCorr2d->GetYaxis()->SetRangeUser( ptLo[p], ptHi[p] );
+    hCorrPtRho[p] = (TH1D*) hRhoCorr2d->ProjectionX();
+    name = "hUE" + ptBinName[p];
+    title =  ptCorrectedBinString[p];
+    hCorrPtRho[p]->SetNameTitle( name, title );
+    hCorrPtRho[p]->SetLineColor( ptColor[p] );
+    hCorrPtRho[p]->SetMarkerColor( ptColor[p] );
+    hCorrPtRho[p]->SetMarkerStyle( 20 );
+    hCorrPtRho[p]->Scale(1./hCorrPtRho[p]->GetEntries());
+    hCorrPtRho[p]->SetStats(0);
+    hCorrPtRho[p]->Draw("SAME");
+
+    avg = "";
+    avg+=hCorrPtRho[p]->GetMean(1);
+    avg = avg(0,5);
+    sigma="";
+    sigma+=hCorrPtRho[p]->GetStdDev(1);
+    sigma = sigma(0,5);
+    leg12->AddEntry( name, title, "lpf" );                            // ADD TO LEGEND
+    leg12->AddEntry((TObject*)0,avg, "");
+    leg12->AddEntry((TObject*)0,sigma, "");
+  }
+  leg12->Draw();
+  c1->SaveAs("plots/UE/dijetrhoByLeadPt_correctedPt.pdf","PDF");
+
+
+
+
+
+
+
+
+
+  
   TCanvas * c2 = new TCanvas( "c2" , "" ,700 ,500 );              // CANVAS 1
   
   TLegend *leg5[nPtBins];
@@ -420,7 +473,7 @@ void UEdijetPlot(){
 
     }
     leg5[p]->Draw();
-    saveName = "plots/UE/trackEff/dijetBBCEastSum_by_eta" + ptBinName[p] +".pdf";
+    saveName = "plots/UE/dijetBBCEastSum_by_eta" + ptBinName[p] +".pdf";
     c2->SaveAs( saveName , "PDF" );
   }
 
@@ -464,5 +517,10 @@ void UEdijetPlot(){
   pad2->Draw();
   pad2->cd();
   hPtRatio->Draw("P");
+
+  pad1->cd();
+  pad1->BuildLegend();
+
+  c3->SaveAs("plots/UE/dijetCorrectedPtRatioPlot.pdf","PDF");
 
 }
