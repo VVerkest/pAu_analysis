@@ -96,24 +96,33 @@ int main ( int argc, const char** argv ) {         // funcions and cuts specifie
     TStarJetPicoTriggerInfo *trig;
     TStarJetPicoTower *tow;
     std::vector<int> trigTowers, eventTowers, matchedTrigTow;
-    for (int i=0; i<nTowers; ++i){ tow = (TStarJetPicoTower*)SelectedTowers->At(i);    eventTowers.push_back( tow->GetId() ); }
     for ( int i=0; i<event->GetTrigObjs()->GetEntries(); ++i ) {
       trig = (TStarJetPicoTriggerInfo *)event->GetTrigObj(i);
       if ( trig->isBHT2() && UseTriggerTower( trig->GetId()) ) { trigTowers.push_back( trig->GetId() ); }
     }
+    for (int i=0; i<nTowers; ++i){
+      tow = (TStarJetPicoTower*)SelectedTowers->At(i);
+      eventTowers.push_back( tow->GetId() );
+    }
+    for (int i=0; i<eventTowers.size(); ++i) { cout<<eventTowers.at(i)<<"," }
+    cout<<endl;
     std::sort(trigTowers.begin(), trigTowers.end());
     std::sort(eventTowers.begin(), eventTowers.end());
+    for (int i=0; i<eventTowers.size(); ++i) { cout<<eventTowers.at(i)<<"," }
+    cout<<endl<<endl;
     std::set_intersection(trigTowers.begin(), trigTowers.end(), eventTowers.begin(), eventTowers.end(), std::back_inserter(matchedTrigTow));
     std::sort(matchedTrigTow.begin(), matchedTrigTow.end());
 
-    if ( matchedTrigTow.size()!=0 ) {
-      cout<<endl<<matchedTrigTow.size()<<endl;
-      for ( int i=0; i<matchedTrigTow.size(); ++i ) {
-	tow = (TStarJetPicoTower*)event->GetTower( matchedTrigTow.at(i) );
-	if ( tow->GetEt() >= 5.4 ) { cout<<"tower #"<<matchedTrigTow.at(i)<<"     "<<tow->GetEt()<<" GeV"<<endl; }
-      }
-    }
-    else { continue; }
+    
+    
+    // if ( matchedTrigTow.size()!=0 ) {
+    //   cout<<endl<<matchedTrigTow.size()<<endl;
+    //   for ( int i=0; i<matchedTrigTow.size(); ++i ) {
+    // 	tow = (TStarJetPicoTower*)event->GetTower( matchedTrigTow.at(i) );
+    // 	if ( tow->GetEt() >= 5.4 ) { cout<<"tower #"<<matchedTrigTow.at(i)<<"     "<<tow->GetEt()<<" GeV"<<endl; }
+    //   }
+    // }
+    // else { continue; }
     
     Vz = header->GetPrimaryVertexZ();
     //if ( UseHTevent( header, event, vzCut, Vz ) == false ) { continue; } // Skip events based on: Run#, vz cut, BBCSumE; only accept HT events
