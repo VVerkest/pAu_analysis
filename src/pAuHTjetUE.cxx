@@ -14,7 +14,7 @@ int main ( int argc, const char** argv ) {         // funcions and cuts specifie
   
   vector<string> arguments( argv+1, argv+argc );
   if ( argc ==  4 ) {    inFile = arguments[0];    outFile = arguments[1];    number_of_events = atoi(arguments[2].c_str()); }
-  else if ( argc==1 ) { inFile="production_pAu200_2015/HT/pAu_2015_200_HT*.root"; outFile="out/UE/pAuHTjetUE.root"; number_of_events=1000; }
+  else if ( argc==1 ) { inFile="production_pAu200_2015/HT/pAu_2015_200_HT*.root"; outFile="out/UE/pAuHTjetUE.root"; number_of_events=10000; }
   else { cerr<< "incorrect number of command line arguments"; return -1; }
 
   TH1::SetDefaultSumw2();  TH2::SetDefaultSumw2();  TH3::SetDefaultSumw2();
@@ -100,15 +100,17 @@ int main ( int argc, const char** argv ) {         // funcions and cuts specifie
       trig = (TStarJetPicoTriggerInfo *)event->GetTrigObj(i);
       if ( trig->isBHT2() && UseTriggerTower( trig->GetId()) ) { trigTowers.push_back( trig->GetId() ); }
     }
-    cout<<endl<<endl;
     std::sort(trigTowers.begin(), trigTowers.end());
-      
+
+    int nmatched = 0;
     for (int i=0; i<nTowers; ++i){
       tow = (TStarJetPicoTower*)SelectedTowers->At(i);
       if ( tow->GetEt()>=5.4 && std::count(trigTowers.begin(), trigTowers.end(), tow->GetId())) {
 	cout<<"tower #"<<tow->GetId()<<"     "<<tow->GetEt()<<" GeV"<<endl;
+	nmatched += 1;
       }
     }
+    if (nmatched!=0) {cout<<nmatched<<"HT trigger towers"<<endl<<endl;}
     //std::set_intersection(trigTowers.begin(), trigTowers.end(), eventTowers.begin(), eventTowers.end(), std::back_inserter(matchedTrigTow));
     //std::sort(matchedTrigTow.begin(), matchedTrigTow.end());
     
