@@ -14,7 +14,7 @@ int main ( int argc, const char** argv ) {         // funcions and cuts specifie
   
   vector<string> arguments( argv+1, argv+argc );
   if ( argc ==  4 ) {    inFile = arguments[0];    outFile = arguments[1];    number_of_events = atoi(arguments[2].c_str()); }
-  else if ( argc==1 ) { inFile="production_pAu200_2015/HT/pAu_2015_200_HT*.root"; outFile="out/UE/pAuHTjetUE.root"; number_of_events=10000; }
+  else if ( argc==1 ) { inFile="production_pAu200_2015/HT/pAu_2015_200_HT*.root"; outFile="out/UE/pAuHTjetUE.root"; number_of_events=-1; }
   else { cerr<< "incorrect number of command line arguments"; return -1; }
 
   TH1::SetDefaultSumw2();  TH2::SetDefaultSumw2();  TH3::SetDefaultSumw2();
@@ -106,11 +106,11 @@ int main ( int argc, const char** argv ) {         // funcions and cuts specifie
     for (int i=0; i<nTowers; ++i){
       tow = (TStarJetPicoTower*)SelectedTowers->At(i);
       if ( tow->GetEt()>=5.4 && std::count(trigTowers.begin(), trigTowers.end(), tow->GetId())) {
-	cout<<"tower #"<<tow->GetId()<<"     "<<tow->GetEt()<<" GeV"<<endl;
+	//cout<<"tower #"<<tow->GetId()<<"     "<<tow->GetEt()<<" GeV"<<endl;
 	nmatched += 1;
       }
     }
-    if (nmatched!=0) {cout<<nmatched<<"HT trigger towers"<<endl<<endl;}
+    if (nmatched>1) {cout<<nmatched<<"HT trigger towers"<<endl;}
     //std::set_intersection(trigTowers.begin(), trigTowers.end(), eventTowers.begin(), eventTowers.end(), std::back_inserter(matchedTrigTow));
     //std::sort(matchedTrigTow.begin(), matchedTrigTow.end());
     
@@ -123,7 +123,7 @@ int main ( int argc, const char** argv ) {         // funcions and cuts specifie
     //   }
     // }
     // else { continue; }
-    
+    /*
     Vz = header->GetPrimaryVertexZ();
     //if ( UseHTevent( header, event, vzCut, Vz ) == false ) { continue; } // Skip events based on: Run#, vz cut, BBCSumE; only accept HT events
     if ( header->GetBbcAdcSumEast() < 3559.12 ) { continue; }     //  neglect 0-10% event activity
@@ -184,7 +184,7 @@ int main ( int argc, const char** argv ) {         // funcions and cuts specifie
     neuWestRho = neuWestSum/westArea;
     
     HTjetTree->Fill();
-    
+    */
   }  // ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~  END EVENT LOOP!  ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~
 
   TFile *pAuFile = new TFile( outFile.c_str() ,"RECREATE");
