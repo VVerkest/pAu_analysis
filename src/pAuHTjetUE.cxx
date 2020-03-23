@@ -100,19 +100,16 @@ int main ( int argc, const char** argv ) {         // funcions and cuts specifie
       trig = (TStarJetPicoTriggerInfo *)event->GetTrigObj(i);
       if ( trig->isBHT2() && UseTriggerTower( trig->GetId()) ) { trigTowers.push_back( trig->GetId() ); }
     }
+    std::sort(trigTowers.begin(), trigTowers.end());
+
     for (int i=0; i<nTowers; ++i){
       tow = (TStarJetPicoTower*)SelectedTowers->At(i);
-      eventTowers.push_back( tow->GetId() );
+      if (std::count(trigTowers.begin(), trigTowers.end(), tow->GetId())) {
+	cout<<"tower #"<<tow->GetId()<<"     "<<tow->GetEt()<<" GeV"<<endl;
+      }
     }
-    for (int i=0; i<eventTowers.size(); ++i) { cout<<eventTowers.at(i)<<","; }
-    cout<<endl;
-    std::sort(trigTowers.begin(), trigTowers.end());
-    std::sort(eventTowers.begin(), eventTowers.end());
-    for (int i=0; i<eventTowers.size(); ++i) { cout<<eventTowers.at(i)<<","; }
-    cout<<endl<<endl;
-    std::set_intersection(trigTowers.begin(), trigTowers.end(), eventTowers.begin(), eventTowers.end(), std::back_inserter(matchedTrigTow));
-    std::sort(matchedTrigTow.begin(), matchedTrigTow.end());
-
+    //std::set_intersection(trigTowers.begin(), trigTowers.end(), eventTowers.begin(), eventTowers.end(), std::back_inserter(matchedTrigTow));
+    //std::sort(matchedTrigTow.begin(), matchedTrigTow.end());
     
     
     // if ( matchedTrigTow.size()!=0 ) {
