@@ -124,6 +124,7 @@ int main ( int argc, const char** argv ) {         // funcions and cuts specifie
 	}
       }
     }
+    if (nmatched==0) {continue;}
     nHTtrig = nmatched;
 
     Vz = header->GetPrimaryVertexZ();
