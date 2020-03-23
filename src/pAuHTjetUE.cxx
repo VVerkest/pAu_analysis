@@ -104,11 +104,11 @@ int main ( int argc, const char** argv ) {         // funcions and cuts specifie
       tow = (TStarJetPicoTower*)SelectedTowers->At(i);
       eventTowers.push_back( tow->GetId() );
     }
-    for (int i=0; i<eventTowers.size(); ++i) { cout<<eventTowers.at(i)<<"," }
+    for (int i=0; i<eventTowers.size(); ++i) { cout<<eventTowers.at(i)<<","; }
     cout<<endl;
     std::sort(trigTowers.begin(), trigTowers.end());
     std::sort(eventTowers.begin(), eventTowers.end());
-    for (int i=0; i<eventTowers.size(); ++i) { cout<<eventTowers.at(i)<<"," }
+    for (int i=0; i<eventTowers.size(); ++i) { cout<<eventTowers.at(i)<<","; }
     cout<<endl<<endl;
     std::set_intersection(trigTowers.begin(), trigTowers.end(), eventTowers.begin(), eventTowers.end(), std::back_inserter(matchedTrigTow));
     std::sort(matchedTrigTow.begin(), matchedTrigTow.end());
