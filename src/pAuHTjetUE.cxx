@@ -94,7 +94,9 @@ int main ( int argc, const char** argv ) {         // funcions and cuts specifie
     else if ( abs(Vz) > vzCut ) { return false; }
     else if (!(header->HasTriggerId(500205) || header->HasTriggerId(500215))) {return false;}   //  ONLY SELECT HT TRIGGER EVENTS
     else if ( header->GetBbcAdcSumEast() > 64000 ) { return false; }
-    
+
+    cout<<"RUN "<<header->GetRunId()<<"    EVENT:"<<Reader.GetNOfCurrentEvent()<<endl;
+
     TList *SelectedTowers = Reader.GetListOfSelectedTowers();
     nTowers = CountTowers( SelectedTowers );
 
