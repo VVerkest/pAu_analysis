@@ -21,6 +21,7 @@ int main ( int argc, const char** argv ) {         // funcions and cuts specifie
 
   TTree *HTjetTree = new TTree( "HTjetTree", "HT_JetTree" );
   string efficFile = "src/trackeffic.root";
+  TFile *pAuFile = new TFile( outFile.c_str() ,"RECREATE");
 
   double chgEastSum, chgMidSum, chgWestSum, neuEastSum, neuMidSum, neuWestSum;
   
@@ -193,8 +194,6 @@ int main ( int argc, const char** argv ) {         // funcions and cuts specifie
     HTjetTree->Fill();
 
   }  // ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~  END EVENT LOOP!  ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~
-
-  TFile *pAuFile = new TFile( outFile.c_str() ,"RECREATE");
 
   hChgBgPtEtaPhi->Write();  //  WRITE HISTOGRAMS & TREE
   hNeuBgPtEtaPhi->Write();
