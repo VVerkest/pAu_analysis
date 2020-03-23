@@ -89,6 +89,30 @@ namespace pAuAnalysis {
   }
 
   
+  void CalculateBGsubtractedChargedRho( std::vector<fastjet::PseudoJet> chgPart, double &chgEast_Sum, double &chgMid_Sum, double &chgWest_Sum ) {
+    double etaLoEast = -1.0;
+    double etaLoMid = -0.3;
+    double etaLoWest = 0.3;
+    double etaHiEast = -0.3;
+    double etaHiMid = 0.3;
+    double etaHiWest = 1.0;
+    double BGeta;
+
+    chgEast_Sum=0;
+    chgMid_Sum=0;
+    chgWest_Sum=0;
+
+    
+    for ( int i=0; i<chgPart.size(); ++i ) {
+      BGeta = chgPart[i].eta();
+      if ( BGeta>=etaLoMid && BGeta<etaHiMid ) { chgMid_Sum+= chgPart[i].pt(); }
+      else if ( BGeta>=etaLoEast && BGeta<=etaHiEast ) { chgEast_Sum+= chgPart[i].pt(); }
+      else if ( BGeta>etaLoWest && BGeta<=etaHiWest ) { chgWest_Sum+= chgPart[i].pt(); }
+      else { std::cerr<<"error with chg BG particle eta"<<std::endl; }
+    }
+  }
+  
+  
   void CalculateRhoByChargeAndEta( std::vector<fastjet::PseudoJet> chgPart, std::vector<fastjet::PseudoJet> neuPart, double &chgEast_Sum, double &chgMid_Sum, double &chgWest_Sum, double &neuEast_Sum, double &neuMid_Sum, double &neuWest_Sum, TH3D *hChg, TH3D *hNeu ) {
 
     double etaLoEast = -1.0;
@@ -388,10 +412,11 @@ namespace pAuAnalysis {
 	int trigTowId = trig->GetId();                           // get ID of trigger tower
 
 	if ( !UseTriggerTower( trigTowId ) ) { continue; }        // check trig tower against bad tower list
-	
 	else {
+
 	  trigTow = 0;
 	  trigTowEt = 0;
+	  
 	  for ( int j=0; j<Event->GetTowers()->GetEntries(); ++j ) {  // USE GetTowers TO FIND TOWER INFO ASSOCIATED WITH TRIGGER!
 	    if ( Event->GetTower(j)->GetId() == trigTowId && Event->GetTower(j)->GetEt()>=5.40  && Event->GetTower(j)->GetEt()<30.00 ) {
 	      // FIND TOWER ASSOCIATED WITH TRIGGER AND ENSURE TRIG TOWER HAS 5.40 <= Et <= 30
@@ -400,11 +425,11 @@ namespace pAuAnalysis {
 	      }
 	      else {                         // FOR ALL SUBSEQUENT TOWERS, if its Et is greater than "trigTowEt", set "trigTowEt" to
 		if ( Event->GetTower(j)->GetEt() > trigTowEt ) {
+		  //std::cerr<<
 		  trigTowEt = Event->GetTower(j)->GetEt();
 		  trigTow+=1;                               // (add to counter)
 		}  // this tower's Et
 	      }
-	      
 	    }
 	  }
 	  

@@ -25,9 +25,9 @@ int main ( int argc, const char** argv ) {         // funcions and cuts specifie
   double chgEastSum, chgMidSum, chgWestSum, neuEastSum, neuMidSum, neuWestSum;
   
   //  Tree variables
-  int RunID, EventID, nTowers, nPrimary, nGlobal, nVertices, refMult, gRefMult, nBGpart_chg, nBGpart_neu, nJetsAbove5;
+  int RunID, EventID, nTowers, nPrimary, nGlobal, nVertices, refMult, gRefMult, nBGpart_chg, nBGpart_neu, nJetsAbove5, nHTtrig;
   double Vz, BbcAdcSumEast, BbcAdcSumEastOuter, BbcAdcSumWest, BbcAdcSumWestOuter, leadPt, leadEta, leadPhi,
-    chgEastRho, chgMidRho, chgWestRho, neuEastRho, neuMidRho, neuWestRho, leadArea;
+    chgEastRho, chgMidRho, chgWestRho, chgEastRho_bs, chgMidRho_bs, chgWestRho_bs, neuEastRho, neuMidRho, neuWestRho, leadArea;
 
   HTjetTree->Branch( "RunID", &RunID );
   HTjetTree->Branch( "EventID", &EventID );
@@ -47,6 +47,9 @@ int main ( int argc, const char** argv ) {         // funcions and cuts specifie
   HTjetTree->Branch( "leadPhi", &leadPhi );
   HTjetTree->Branch( "chgEastRho", &chgEastRho );
   HTjetTree->Branch( "chgMidRho", &chgMidRho );
+  HTjetTree->Branch( "chgWestRho_bs", &chgWestRho_bs );
+  HTjetTree->Branch( "chgEastRho_bs", &chgEastRho_bs );
+  HTjetTree->Branch( "chgMidRho_bs", &chgMidRho_bs );
   HTjetTree->Branch( "chgWestRho", &chgWestRho );
   HTjetTree->Branch( "neuEastRho", &neuEastRho );
   HTjetTree->Branch( "neuMidRho", &neuMidRho );
@@ -55,6 +58,7 @@ int main ( int argc, const char** argv ) {         // funcions and cuts specifie
   HTjetTree->Branch( "nBGpart_chg", &nBGpart_chg );
   HTjetTree->Branch( "nBGpart_neu", &nBGpart_neu );
   HTjetTree->Branch( "nJetsAbove5", &nJetsAbove5 );
+  HTjetTree->Branch( "nHTtrig", &nHTtrig );
        
   TH3D *hChgBgPtEtaPhi = new TH3D( "hChgBgPtEtaPhi", "Charged Background #phi vs. #eta;p_{T} (GeV);#eta;#phi", 40,0,20, 40,-1.0,1.0, 120,0.0,2*pi );
   TH3D *hNeuBgPtEtaPhi = new TH3D( "hNeuBgPtEtaPhi", "Neutral Background #phi vs. #eta;p_{T} (GeV);#eta;#phi", 40,0,20, 40,-1.0,1.0, 120,0.0,2*pi );
@@ -100,8 +104,9 @@ int main ( int argc, const char** argv ) {         // funcions and cuts specifie
 
     int trigTowId;
     TStarJetPicoTriggerInfo *trig;
-    TStarJetPicoTower *tow;
-    std::vector<int> trigTowers, eventTowers, matchedTrigTow;
+    TStarJetPicoTower *tow, *triggerTower;
+    double trigTowEt = 0.0;
+    std::vector<int> trigTowers;
     for ( int i=0; i<event->GetTrigObjs()->GetEntries(); ++i ) {
       trig = (TStarJetPicoTriggerInfo *)event->GetTrigObj(i);
       if ( trig->isBHT2() && UseTriggerTower( trig->GetId()) ) { trigTowers.push_back( trig->GetId() ); }
@@ -112,24 +117,15 @@ int main ( int argc, const char** argv ) {         // funcions and cuts specifie
     for (int i=0; i<nTowers; ++i){
       tow = (TStarJetPicoTower*)SelectedTowers->At(i);
       if ( tow->GetEt()>=5.4 && std::count(trigTowers.begin(), trigTowers.end(), tow->GetId())) {
-	//cout<<"tower #"<<tow->GetId()<<"     "<<tow->GetEt()<<" GeV"<<endl;
-	nmatched += 1;
+	if ( nmatched>0 && (tow->GetEt()<trigTowEt) ) { continue; }
+	else {
+	  trigTowEt = tow->GetEt();
+	  nmatched += 1;
+	}
       }
     }
-    if (nmatched>1) cout<<"RUN "<<header->GetRunId()<<"    EVENT:"<<Reader.GetNOfCurrentEvent()<<"  ~  "<<nmatched<<" HT trigger towers"<<endl;
-    //std::set_intersection(trigTowers.begin(), trigTowers.end(), eventTowers.begin(), eventTowers.end(), std::back_inserter(matchedTrigTow));
-    //std::sort(matchedTrigTow.begin(), matchedTrigTow.end());
-    
-    
-    // if ( matchedTrigTow.size()!=0 ) {
-    //   cout<<endl<<matchedTrigTow.size()<<endl;
-    //   for ( int i=0; i<matchedTrigTow.size(); ++i ) {
-    // 	tow = (TStarJetPicoTower*)event->GetTower( matchedTrigTow.at(i) );
-    // 	if ( tow->GetEt() >= 5.4 ) { cout<<"tower #"<<matchedTrigTow.at(i)<<"     "<<tow->GetEt()<<" GeV"<<endl; }
-    //   }
-    // }
-    // else { continue; }
-    /*
+    nHTtrig = nmatched;
+
     Vz = header->GetPrimaryVertexZ();
     //if ( UseHTevent( header, event, vzCut, Vz ) == false ) { continue; } // Skip events based on: Run#, vz cut, BBCSumE; only accept HT events
     if ( header->GetBbcAdcSumEast() < 3559.12 ) { continue; }     //  neglect 0-10% event activity
@@ -173,14 +169,13 @@ int main ( int argc, const char** argv ) {         // funcions and cuts specifie
     leadArea = leadJet.area();
 
     //  BACKGROUND ESTIMATION
-    //GatherChargedBGwithEfficiency( leadJet, container, chgParticles, efficFile );   // gather BG
     GatherChargedBG( leadJet, container, chgParticles );
     GatherNeutralBG( leadJet, container, neuParticles );
 
     nBGpart_chg = chgParticles.size();
     nBGpart_neu = neuParticles.size();
     
-    chgEastSum = 0;            chgMidSum = 0;            chgWestSum = 0;            neuEastSum = 0;            neuMidSum = 0;            neuWestSum = 0;
+    chgEastSum = 0;  chgMidSum = 0;  chgWestSum = 0;  neuEastSum = 0;  neuMidSum = 0;  neuWestSum = 0;
     CalculateRhoByChargeAndEta(chgParticles,neuParticles,chgEastSum,chgMidSum,chgWestSum,neuEastSum,neuMidSum,neuWestSum,hChgBgPtEtaPhi,hNeuBgPtEtaPhi);
     chgEastRho = chgEastSum/eastArea;
     chgMidRho = chgMidSum/midArea;
@@ -188,9 +183,15 @@ int main ( int argc, const char** argv ) {         // funcions and cuts specifie
     neuEastRho = neuEastSum/eastArea;
     neuMidRho = neuMidSum/midArea;
     neuWestRho = neuWestSum/westArea;
+
+    GatherChargedBGwithEfficiency( leadJet, container, chgParticles, efficFile );   // gather BG
+    CalculateBGsubtractedChargedRho(chgParticles,chgEastSum,chgMidSum,chgWestSum);
+    chgEastRho_bs = chgEastSum/eastArea;
+    chgMidRho_bs = chgMidSum/midArea;
+    chgWestRho_bs = chgWestSum/westArea;
     
     HTjetTree->Fill();
-    */
+
   }  // ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~  END EVENT LOOP!  ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~
 
   TFile *pAuFile = new TFile( outFile.c_str() ,"RECREATE");
