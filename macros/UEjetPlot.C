@@ -202,20 +202,21 @@ void UEjetPlot(){
 	
     pval = 99;    jeval = 99;    eaval = 99;
     
-    for ( int ea=0; ea<3; ++ea ) {
-      if ( BbcAdcSumEast > BBCEsumLo[ea]  &&  BbcAdcSumEast < BBCEsumHi[ea] ) { eaval = ea; }
-    }    
-    for ( int p=0; p<3; ++p ) {
-      if ( leadPt < 10.0 ) {continue; } // only select 10-30 GeV jets
-      if ( leadPt >= ptLo[p]  &&  leadPt <= ptHi[p] ) { pval = p; }
-    }
-    for ( int je=0; je<3; ++je ) {
-      if ( leadEta >= etaLo[je]  &&  leadEta <= etaHi[je] ) { jeval = je; }
-    }
-    if ( eaval==99 ) { continue; }
-    if ( pval==99 || jeval==99 ) { cerr<<"UNABLE TO FIND PT OR ETA RANGE FOR LEAD JET"<<endl<<pval<<endl<<jeval<<endl<<bgeval<<endl<<leadEta<<endl<<endl; }
 
-  
+    if ( leadPt >= 10.0 ) {
+      for ( int ea=0; ea<3; ++ea ) {
+	if ( BbcAdcSumEast > BBCEsumLo[ea]  &&  BbcAdcSumEast < BBCEsumHi[ea] ) { eaval = ea; }
+      }    
+      for ( int p=0; p<3; ++p ) {
+	if ( leadPt >= ptLo[p]  &&  leadPt <= ptHi[p] ) { pval = p; }
+      }
+      for ( int je=0; je<3; ++je ) {
+	if ( leadEta >= etaLo[je]  &&  leadEta <= etaHi[je] ) { jeval = je; }
+      }
+      if ( eaval==99 ) { continue; }
+      if ( pval==99 || jeval==99 ) { cerr<<"UNABLE TO FIND PT OR ETA RANGE FOR LEAD JET"<<endl<<pval<<endl<<jeval<<endl<<bgeval<<endl<<leadEta<<endl<<endl; }
+    }
+    
     hBBCEastSum_byEta[jeval]->Fill( BbcAdcSumEast );
     hBBCEastSum_byPt[pval]->Fill( BbcAdcSumEast );
     hLeadEta[pval]->Fill( leadEta );
