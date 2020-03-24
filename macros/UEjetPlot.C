@@ -56,7 +56,7 @@ void UEjetPlot(){
 
   //  Tree variables
   int RunID, EventID, nTowers, nPrimary, nGlobal, nVertices, refMult, gRefMult, nBGpart_chg, nBGpart_neu;
-  double Vz, BbcAdcSumEast, leadPt, leadEta, leadPhi, chgEastRho, chgMidRho, chgWestRho, neuEastRho, neuMidRho, neuWestRho, leadArea, eastRho, midRho, westRho, leadPtCorrected;
+  double Vz, BbcAdcSumEast, leadPt, leadEta, leadPhi, chgEastRho, chgMidRho, chgWestRho, neuEastRho, neuMidRho, neuWestRho, leadArea, eastRho, midRho, westRho, leadPtCorrected, chgEastRho_te, chgMidRho_te, chgWestRho_te, rho, rho_te;
 
   jetTree->SetBranchAddress( "RunID", &RunID );
   jetTree->SetBranchAddress( "EventID", &EventID );
@@ -74,6 +74,9 @@ void UEjetPlot(){
   jetTree->SetBranchAddress( "chgEastRho", &chgEastRho );
   jetTree->SetBranchAddress( "chgMidRho", &chgMidRho );
   jetTree->SetBranchAddress( "chgWestRho", &chgWestRho );
+  jetTree->SetBranchAddress( "chgEastRho_te", &chgEastRho_te );
+  jetTree->SetBranchAddress( "chgMidRho_te", &chgMidRho_te );
+  jetTree->SetBranchAddress( "chgWestRho_te", &chgWestRho_te );
   jetTree->SetBranchAddress( "neuEastRho", &neuEastRho );
   jetTree->SetBranchAddress( "neuMidRho", &neuMidRho );
   jetTree->SetBranchAddress( "neuWestRho", &neuWestRho );
@@ -172,9 +175,9 @@ void UEjetPlot(){
     rhoByEta[1] = chgMidRho + neuMidRho;
     rhoByEta[2] = chgWestRho + neuWestRho;
     
-    chgRho = ( chgEastRho + chgMidRho + chgWestRho )/3;
-    neuRho = ( neuEastRho + neuMidRho + neuWestRho )/3;
-    rho = chgRho + neuRho;
+    // chgRho = ( chgEastRho + chgMidRho + chgWestRho )/3;
+    // neuRho = ( neuEastRho + neuMidRho + neuWestRho )/3;
+    // rho = chgRho + neuRho;
 
     hRho->Fill(rho);
     hLeadPhi->Fill(leadPhi);
