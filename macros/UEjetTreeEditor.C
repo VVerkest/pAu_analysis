@@ -44,7 +44,7 @@ void UEjetTreeEditor(){
   TTree *jetTree = (TTree*) inFile->Get("HTjetTree");
 
   int RunID, EventID, nTowers, nPrimary, nGlobal, nVertices, refMult, gRefMult;  //  Tree variables
-  double Vz, BbcAdcSumEast, leadPt, leadEta, leadPhi, chgEastRho, chgMidRho, chgWestRho, chgEastRho_bs, chgMidRho_bs, chgWestRho_bs, neuEastRho, neuMidRho, neuWestRho, leadArea, eastRho, midRho, westRho, leadPtCorrected, rho, rho_bs;
+  double Vz, BbcAdcSumEast, leadPt, leadEta, leadPhi, chgEastRho, chgMidRho, chgWestRho, chgEastRho_te, chgMidRho_te, chgWestRho_te, neuEastRho, neuMidRho, neuWestRho, leadArea, eastRho, midRho, westRho, leadPtCorrected, rho, rho_te;
 
   jetTree->SetBranchAddress( "RunID", &RunID );
   jetTree->SetBranchAddress( "EventID", &EventID );
@@ -62,9 +62,9 @@ void UEjetTreeEditor(){
   jetTree->SetBranchAddress( "chgEastRho", &chgEastRho );
   jetTree->SetBranchAddress( "chgMidRho", &chgMidRho );
   jetTree->SetBranchAddress( "chgWestRho", &chgWestRho );
-  jetTree->SetBranchAddress( "chgEastRho_bs", &chgEastRho_bs );
-  jetTree->SetBranchAddress( "chgMidRho_bs", &chgMidRho_bs );
-  jetTree->SetBranchAddress( "chgWestRho_bs", &chgWestRho_bs );
+  jetTree->SetBranchAddress( "chgEastRho_te", &chgEastRho_te );
+  jetTree->SetBranchAddress( "chgMidRho_te", &chgMidRho_te );
+  jetTree->SetBranchAddress( "chgWestRho_te", &chgWestRho_te );
   jetTree->SetBranchAddress( "neuEastRho", &neuEastRho );
   jetTree->SetBranchAddress( "neuMidRho", &neuMidRho );
   jetTree->SetBranchAddress( "neuWestRho", &neuWestRho );
@@ -72,7 +72,7 @@ void UEjetTreeEditor(){
 
   auto leadPtCorrectedBranch = jetTree->Branch("leadPtCorrected", &leadPtCorrected, "leadPtCorrected/D");
   auto rhoBranch = jetTree->Branch("rho", &rho, "rho/D");
-  auto rho_bsBranch = jetTree->Branch("rho_bs", &rho_bs, "rho/D");
+  auto rho_teBranch = jetTree->Branch("rho_te", &rho_te, "rho_te/D");
   
   int nEntries = jetTree->GetEntries();
 
@@ -119,11 +119,11 @@ void UEjetTreeEditor(){
     
     leadPtCorrected = leadPt - leadArea*rhoValue;
     rho = (chgEastRho+neuEastRho+chgMidRho+neuMidRho+chgWestRho+neuWestRho)/3;
-    rho_bs = (chgEastRho_bs+neuEastRho+chgMidRho_bs+neuMidRho+chgWestRho_bs+neuWestRho)/3;
+    rho_te = (chgEastRho_te+neuEastRho+chgMidRho_te+neuMidRho+chgWestRho_te+neuWestRho)/3;
     
     leadPtCorrectedBranch->Fill();
     rhoBranch->Fill();
-    rho_bsBranch->Fill();
+    rho_teBranch->Fill();
   }
 
   jetTree->Write("", TObject::kOverwrite);

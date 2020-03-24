@@ -27,7 +27,7 @@ int main ( int argc, const char** argv ) {         // funcions and cuts specifie
   //  Tree variables
   int RunID, EventID, nTowers, nPrimary, nGlobal, nVertices, refMult, gRefMult, nBGpart_chg, nBGpart_neu, nJetsAbove5, nHTtrig;
   double Vz, BbcAdcSumEast, BbcAdcSumEastOuter, BbcAdcSumWest, BbcAdcSumWestOuter, leadPt, leadEta, leadPhi,
-    chgEastRho, chgMidRho, chgWestRho, chgEastRho_bs, chgMidRho_bs, chgWestRho_bs, neuEastRho, neuMidRho, neuWestRho, leadArea;
+    chgEastRho, chgMidRho, chgWestRho, chgEastRho_te, chgMidRho_te, chgWestRho_te, neuEastRho, neuMidRho, neuWestRho, leadArea;
 
   HTjetTree->Branch( "RunID", &RunID );
   HTjetTree->Branch( "EventID", &EventID );
@@ -47,9 +47,9 @@ int main ( int argc, const char** argv ) {         // funcions and cuts specifie
   HTjetTree->Branch( "leadPhi", &leadPhi );
   HTjetTree->Branch( "chgEastRho", &chgEastRho );
   HTjetTree->Branch( "chgMidRho", &chgMidRho );
-  HTjetTree->Branch( "chgWestRho_bs", &chgWestRho_bs );
-  HTjetTree->Branch( "chgEastRho_bs", &chgEastRho_bs );
-  HTjetTree->Branch( "chgMidRho_bs", &chgMidRho_bs );
+  HTjetTree->Branch( "chgWestRho_te", &chgWestRho_te );
+  HTjetTree->Branch( "chgEastRho_te", &chgEastRho_te );
+  HTjetTree->Branch( "chgMidRho_te", &chgMidRho_te );
   HTjetTree->Branch( "chgWestRho", &chgWestRho );
   HTjetTree->Branch( "neuEastRho", &neuEastRho );
   HTjetTree->Branch( "neuMidRho", &neuMidRho );
@@ -62,7 +62,7 @@ int main ( int argc, const char** argv ) {         // funcions and cuts specifie
        
   TH3D *hChgBgPtEtaPhi = new TH3D( "hChgBgPtEtaPhi", "Charged Background #phi vs. #eta;p_{T} (GeV);#eta;#phi", 30,0,15, 20,-1.0,1.0, 60,0.0,2*pi );
   TH3D *hNeuBgPtEtaPhi = new TH3D( "hNeuBgPtEtaPhi", "Neutral Background #phi vs. #eta;p_{T} (GeV);#eta;#phi", 30,0,15, 20,-1.0,1.0, 60,0.0,2*pi );
-  TH3D *hAllJets = new TH3D( "hAllJets", "All jets p_{T}>=5.0 GeV;p_{T} (GeV);#eta;#phi", 60,0,30, 20,-1.0,1.0, 60,0.0,2*pi );
+  TH3D *hAllJets = new TH3D( "hAllJets", "All jets p_{T}>=5.0 GeV;p_{T} (GeV);#eta;#phi", 160,0,80, 20,-1.0,1.0, 60,0.0,2*pi );
 
   JetDefinition jet_def(antikt_algorithm, R);     //  JET DEFINITION
   Selector jetEtaSelector = SelectorAbsEtaMax( 1.0-R );
@@ -137,14 +137,14 @@ int main ( int argc, const char** argv ) {         // funcions and cuts specifie
     AreaDefinition area_def(active_area_explicit_ghosts, gAreaSpec);
     ClusterSequenceArea jetCluster( rawParticles, jet_def, area_def); 
 
-    leadJetSelector = leadPtMinSelector && ptMaxSelector && jetEtaSelector;
-    rawJets = sorted_by_pt( leadJetSelector( jetCluster.inclusive_jets() ) );     // EXTRACT ALL JETS IN 10-30 GeV RANGE
+    leadJetSelector = leadPtMinSelector && jetEtaSelector;
+    rawJets = sorted_by_pt( leadJetSelector( jetCluster.inclusive_jets() ) );     // EXTRACT ALL JETS IN >=10 GeV
     
     if ( rawJets.size()>0 ) { leadJet = rawJets[0]; }
     else { continue; }
 
-    Selector allJetSelector = SelectorPtMin(5.0) && ptMaxSelector && jetEtaSelector;
-    allJets = sorted_by_pt( allJetSelector( jetCluster.inclusive_jets() ) );     // EXTRACT ALL JETS IN 5-30 GeV RANGE
+    Selector allJetSelector = SelectorPtMin(2.0) && ptMaxSelector && jetEtaSelector;
+    allJets = sorted_by_pt( allJetSelector( jetCluster.inclusive_jets() ) );     // EXTRACT ALL JETS IN >=5 GeV
     
     nJetsAbove5 = allJets.size();
     for ( int i=0; i<allJets.size(); ++i ) {
@@ -187,9 +187,9 @@ int main ( int argc, const char** argv ) {         // funcions and cuts specifie
 
     GatherChargedBGwithEfficiency( leadJet, container, chgParticles, efficFile );   // gather BG
     CalculateBGsubtractedChargedRho(chgParticles,chgEastSum,chgMidSum,chgWestSum);
-    chgEastRho_bs = chgEastSum/eastArea;
-    chgMidRho_bs = chgMidSum/midArea;
-    chgWestRho_bs = chgWestSum/westArea;
+    chgEastRho_te = chgEastSum/eastArea;
+    chgMidRho_te = chgMidSum/midArea;
+    chgWestRho_te = chgWestSum/westArea;
     
     HTjetTree->Fill();
 
