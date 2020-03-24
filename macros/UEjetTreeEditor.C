@@ -36,7 +36,7 @@ void UEjetTreeEditor(){
   
   int jeval, bgeval, pval, eaval;
   TString name, saveName, title, avg, sigma;
-  double chgRho, neuRho, rho;
+  double chgRho, neuRho;
   
   TString fileName = "out/UE/pAuHTjetUE.root";
   TFile* inFile = new TFile( fileName, "UPDATE" );
@@ -44,17 +44,35 @@ void UEjetTreeEditor(){
   TTree *jetTree = (TTree*) inFile->Get("HTjetTree");
 
   int RunID, EventID, nTowers, nPrimary, nGlobal, nVertices, refMult, gRefMult;  //  Tree variables
-  double Vz, BbcAdcSumEast, leadPt, leadEta, leadPhi, chgEastRho, chgMidRho, chgWestRho, neuEastRho, neuMidRho, neuWestRho, leadArea, eastRho, midRho, westRho, leadPtCorrected;
+  double Vz, BbcAdcSumEast, leadPt, leadEta, leadPhi, chgEastRho, chgMidRho, chgWestRho, chgEastRho_bs, chgMidRho_bs, chgWestRho_bs, neuEastRho, neuMidRho, neuWestRho, leadArea, eastRho, midRho, westRho, leadPtCorrected, rho, rho_bs;
 
-  jetTree->SetBranchAddress( "RunID", &RunID );      	       	jetTree->SetBranchAddress( "EventID", &EventID );					jetTree->SetBranchAddress( "nTowers", &nTowers );
-  jetTree->SetBranchAddress( "nPrimary", &nPrimary );       	jetTree->SetBranchAddress( "nGlobal", &nGlobal );					jetTree->SetBranchAddress( "nVertices", &nVertices );
-  jetTree->SetBranchAddress( "refMult", &refMult );		jetTree->SetBranchAddress( "gRefMult", &gRefMult );		       		jetTree->SetBranchAddress( "Vz", &Vz );
-  jetTree->SetBranchAddress( "leadPt", &leadPt );	       		jetTree->SetBranchAddress( "BbcAdcSumEast", &BbcAdcSumEast );	jetTree->SetBranchAddress( "leadEta", &leadEta );
-  jetTree->SetBranchAddress( "leadPhi", &leadPhi );	       	jetTree->SetBranchAddress( "chgEastRho", &chgEastRho );	       		jetTree->SetBranchAddress( "chgMidRho", &chgMidRho );
-  jetTree->SetBranchAddress( "chgWestRho", &chgWestRho );	jetTree->SetBranchAddress( "neuEastRho", &neuEastRho );		jetTree->SetBranchAddress( "neuMidRho", &neuMidRho );
-  jetTree->SetBranchAddress( "neuWestRho", &neuWestRho );	jetTree->SetBranchAddress( "leadArea", &leadArea );			//jetTree->Branch( "leadPtCorrected", &leadPtCorrected );
+  jetTree->SetBranchAddress( "RunID", &RunID );
+  jetTree->SetBranchAddress( "EventID", &EventID );
+  jetTree->SetBranchAddress( "nTowers", &nTowers );
+  jetTree->SetBranchAddress( "nPrimary", &nPrimary );
+  jetTree->SetBranchAddress( "nGlobal", &nGlobal );
+  jetTree->SetBranchAddress( "nVertices", &nVertices );
+  jetTree->SetBranchAddress( "refMult", &refMult );
+  jetTree->SetBranchAddress( "gRefMult", &gRefMult );
+  jetTree->SetBranchAddress( "Vz", &Vz );
+  jetTree->SetBranchAddress( "leadPt", &leadPt );
+  jetTree->SetBranchAddress( "BbcAdcSumEast", &BbcAdcSumEast );
+  jetTree->SetBranchAddress( "leadEta", &leadEta );
+  jetTree->SetBranchAddress( "leadPhi", &leadPhi );
+  jetTree->SetBranchAddress( "chgEastRho", &chgEastRho );
+  jetTree->SetBranchAddress( "chgMidRho", &chgMidRho );
+  jetTree->SetBranchAddress( "chgWestRho", &chgWestRho );
+  jetTree->SetBranchAddress( "chgEastRho_bs", &chgEastRho_bs );
+  jetTree->SetBranchAddress( "chgMidRho_bs", &chgMidRho_bs );
+  jetTree->SetBranchAddress( "chgWestRho_bs", &chgWestRho_bs );
+  jetTree->SetBranchAddress( "neuEastRho", &neuEastRho );
+  jetTree->SetBranchAddress( "neuMidRho", &neuMidRho );
+  jetTree->SetBranchAddress( "neuWestRho", &neuWestRho );
+  jetTree->SetBranchAddress( "leadArea", &leadArea );
 
   auto leadPtCorrectedBranch = jetTree->Branch("leadPtCorrected", &leadPtCorrected, "leadPtCorrected/D");
+  auto rhoBranch = jetTree->Branch("rho", &rho, "rho/D");
+  auto rho_bsBranch = jetTree->Branch("rho_bs", &rho_bs, "rho/D");
   
   int nEntries = jetTree->GetEntries();
 
@@ -100,8 +118,12 @@ void UEjetTreeEditor(){
     else { cerr<<"error with finding lead jet eta"<<endl; }
     
     leadPtCorrected = leadPt - leadArea*rhoValue;
+    rho = (chgEastRho+neuEastRho+chgMidRho+neuMidRho+chgWestRho+neuWestRho)/3;
+    rho_bs = (chgEastRho_bs+neuEastRho+chgMidRho_bs+neuMidRho+chgWestRho_bs+neuWestRho)/3;
     
     leadPtCorrectedBranch->Fill();
+    rhoBranch->Fill();
+    rho_bsBranch->Fill();
   }
 
   jetTree->Write("", TObject::kOverwrite);
