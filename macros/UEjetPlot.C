@@ -84,6 +84,7 @@ void UEjetPlot(){
   jetTree->SetBranchAddress( "leadPtCorrected", &leadPtCorrected );
   jetTree->SetBranchAddress( "nBGpart_chg", &nBGpart_chg );
   jetTree->SetBranchAddress( "nBGpart_neu", &nBGpart_neu );
+  jetTree->SetBranchAddress( "rho", &rho );
 
   int nEntries = jetTree->GetEntries();
 
