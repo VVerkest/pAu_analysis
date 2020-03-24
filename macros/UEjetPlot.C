@@ -56,7 +56,7 @@ void UEjetPlot(){
 
   //  Tree variables
   int RunID, EventID, nTowers, nPrimary, nGlobal, nVertices, refMult, gRefMult, nBGpart_chg, nBGpart_neu;
-  double Vz, BbcAdcSumEast, leadPt, leadEta, leadPhi, chgEastRho, chgMidRho, chgWestRho, neuEastRho, neuMidRho, neuWestRho, leadArea, eastRho, midRho, westRho, leadPtCorrected, chgEastRho_te, chgMidRho_te, chgWestRho_te, rho, rho_te;
+  double Vz, BbcAdcSumEast, leadPt, leadEta, leadPhi, chgEastRho, chgMidRho, chgWestRho, neuEastRho, neuMidRho, neuWestRho, leadArea, eastRho, midRho, westRho, leadPtCorrected, chgEastRho_te, chgMidRho_te, chgWestRho_te, rho_te;
 
   jetTree->SetBranchAddress( "RunID", &RunID );
   jetTree->SetBranchAddress( "EventID", &EventID );
@@ -206,6 +206,7 @@ void UEjetPlot(){
       if ( BbcAdcSumEast > BBCEsumLo[ea]  &&  BbcAdcSumEast < BBCEsumHi[ea] ) { eaval = ea; }
     }    
     for ( int p=0; p<3; ++p ) {
+      if ( leadPt < 10.0 ) {continue; } // only select 10-30 GeV jets
       if ( leadPt >= ptLo[p]  &&  leadPt <= ptHi[p] ) { pval = p; }
     }
     for ( int je=0; je<3; ++je ) {
