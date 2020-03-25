@@ -204,7 +204,7 @@ void UEjetPlot(){
     pval = 99;    jeval = 99;    eaval = 99;
     
 
-    if ( leadPt >= 10.0 ) {
+    if ( leadPt >= 10.0 && leadPt <= 30.0 ) {
       for ( int ea=0; ea<3; ++ea ) {
 	if ( BbcAdcSumEast > BBCEsumLo[ea]  &&  BbcAdcSumEast < BBCEsumHi[ea] ) { eaval = ea; }
       }    
@@ -215,7 +215,7 @@ void UEjetPlot(){
 	if ( leadEta >= etaLo[je]  &&  leadEta <= etaHi[je] ) { jeval = je; }
       }
       if ( eaval==99 ) { continue; }
-      if ( pval==99 || jeval==99 ) { cerr<<"UNABLE TO FIND PT OR ETA RANGE FOR LEAD JET"<<endl<<pval<<endl<<jeval<<endl<<bgeval<<endl<<leadEta<<endl<<endl; }
+      if ( pval==99 || jeval==99 ) { cerr<<"UNABLE TO FIND PT OR ETA RANGE FOR LEAD JET"<<endl<<leadPt<<endl<<endl; }
     }
     
     hBBCEastSum_byEta[jeval]->Fill( BbcAdcSumEast );
