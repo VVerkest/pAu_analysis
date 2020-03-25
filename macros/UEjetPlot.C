@@ -85,13 +85,14 @@ void UEjetPlot(){
   jetTree->SetBranchAddress( "nBGpart_chg", &nBGpart_chg );
   jetTree->SetBranchAddress( "nBGpart_neu", &nBGpart_neu );
   jetTree->SetBranchAddress( "rho", &rho );
+  jetTree->SetBranchAddress( "rho_te", &rho_te );
 
   int nEntries = jetTree->GetEntries();
 
-  TH1D *hRho = new TH1D("hRho","Underlying Event;#rho (GeV)",120,0,12);
-  TH1D *hRho_HI = new TH1D("hRho_HI","High EA Underlying Event;#rho (GeV)",120,0,30);
+  TH1D *hRho = new TH1D("hRho","Underlying Event;#rho (GeV)",100,0,25);
+  TH1D *hRho_HI = new TH1D("hRho_HI","High EA Underlying Event;#rho (GeV)",120,0,40);
   TH1D *hRho_LO = new TH1D("hRho_LO","Low EA Underlying Event;#rho (GeV)",120,0,30);
-  TH2D *hTowersVsRho = new TH2D("hTowersVsRho","# of Towers vs. UE;#rho (GeV);# of Towers", 60,0,15, 200,0,200 );
+  TH2D *hTowersVsRho = new TH2D("hTowersVsRho","# of Towers vs. UE;#rho (GeV);# of Towers", 100,0,25, 200,0,200 );
   TH3D *hLeadJetPtRhoEta = new TH3D( "hLeadJetPtRhoEta", "Lead Jet p_{T}, #rho, #eta;Jet p_{T} (GeV);#rho;Jet #eta", 400,0.0,100.0, 100,0,25, 40,-1.0,1.0 );  
   TH3D *hLeadPtEtaPhi = new TH3D("hLeadPtEtaPhi","Lead Jet p_{T} vs. #eta vs. #phi;p_{T} (GeV);#eta;#phi", 280,0,70, 40,-1.0,1.0, 120,0,6.3);
   TH3D *hPt_UE_BBCsumE = new TH3D("hPt_UE_BBCsumE","UE vs. BBC ADC East Sum;Lead Jet p_{T} (GeV);Underlying Event (GeV);BBC ADC East Sum", 500,0,125, 50,0,25, 140,0,70000 );
@@ -255,7 +256,7 @@ void UEjetPlot(){
   c0->SaveAs( "plots/UE/neuBgEtaPhi.pdf" , "PDF" );
 
   hTowersVsRho->Scale(1./hTowersVsRho->Integral("WIDTH"));
-  hTowersVsRho->GetZaxis()->SetRangeUser(0.000001,1);
+  hTowersVsRho->GetZaxis()->SetRangeUser(0.0000001,1);
   hTowersVsRho->Draw("COLZ");
   c0->SaveAs( "plots/UE/towersVsRho.pdf" , "PDF" );
 
@@ -397,7 +398,7 @@ void UEjetPlot(){
   leg2->AddEntry((TObject*)0,"#bf{<#sigma>}", "");
 
   TH1D *hPtRho[nPtBins];
-  TH2D *sPtRho = new TH2D( "sPtRho", "Underlying Event by Lead Jet p_{T};#rho (GeV)", 20,0,8, 10,0.000001,1 );
+  TH2D *sPtRho = new TH2D( "sPtRho", "Underlying Event by Lead Jet p_{T};#rho (GeV)", 40,0,15, 10,0.000001,1 );
   sPtRho->SetStats(0);
   sPtRho->Draw();
   for ( int p=0; p<nPtBins; ++p ) {
@@ -442,7 +443,7 @@ void UEjetPlot(){
   leg3->AddEntry((TObject*)0,"#bf{<#sigma>}", "");
 
   TH1D *hPtRho_LO[nPtBins];
-  TH2D *sPtRho_LO = new TH2D( "sPtRho_LO", "Low EA: Underlying Event by Lead Jet p_{T};#rho (GeV)", 20,0,8, 10,0.000001,1 );
+  TH2D *sPtRho_LO = new TH2D( "sPtRho_LO", "Low EA: Underlying Event by Lead Jet p_{T};#rho (GeV)", 20,0,15, 10,0.000001,1 );
   sPtRho_LO->SetStats(0);
   sPtRho_LO->Draw();
   for ( int p=0; p<nPtBins; ++p ) {
@@ -486,7 +487,7 @@ void UEjetPlot(){
   leg4->AddEntry((TObject*)0,"#bf{<#sigma>}", "");
 
   TH1D *hPtRho_HI[nPtBins];
-  TH2D *sPtRho_HI = new TH2D( "sPtRho_HI", "High EA: Underlying Event by Lead Jet p_{T};#rho (GeV)", 20,0,8, 10,0.000001,1 );
+  TH2D *sPtRho_HI = new TH2D( "sPtRho_HI", "High EA: Underlying Event by Lead Jet p_{T};#rho (GeV)", 20,0,15, 10,0.000001,1 );
   sPtRho_HI->SetStats(0);
   sPtRho_HI->Draw();
   for ( int p=0; p<nPtBins; ++p ) {
@@ -535,7 +536,7 @@ void UEjetPlot(){
   leg12->AddEntry((TObject*)0,"#bf{<#sigma>}", "");
 
   TH1D *hCorrPtRho[nPtBins];
-  TH2D *sCorrPtRho = new TH2D( "sCorrPtRho", "Underlying Event by Corrected Lead Jet p_{T};#rho (GeV)", 20,0,8, 10,0.000001,1 );
+  TH2D *sCorrPtRho = new TH2D( "sCorrPtRho", "Underlying Event by Corrected Lead Jet p_{T};#rho (GeV)", 20,0,15, 10,0.000001,1 );
   sCorrPtRho->SetStats(0);
   sCorrPtRho->Draw();
   for ( int p=0; p<nPtBins; ++p ) {
@@ -580,7 +581,7 @@ void UEjetPlot(){
   leg13->AddEntry((TObject*)0,"#bf{<#sigma>}", "");
 
   TH1D *hCorrPtRho_LO[nPtBins];
-  TH2D *sCorrPtRho_LO = new TH2D( "sCorrPtRho_LO", "Low EA: Underlying Event by Corrected Lead Jet p_{T};#rho (GeV)", 20,0,8, 10,0.000001,1 );
+  TH2D *sCorrPtRho_LO = new TH2D( "sCorrPtRho_LO", "Low EA: Underlying Event by Corrected Lead Jet p_{T};#rho (GeV)", 20,0,15, 10,0.000001,1 );
   sCorrPtRho_LO->SetStats(0);
   sCorrPtRho_LO->Draw();
   for ( int p=0; p<nPtBins; ++p ) {
@@ -624,7 +625,7 @@ void UEjetPlot(){
   leg14->AddEntry((TObject*)0,"#bf{<#sigma>}", "");
 
   TH1D *hCorrPtRho_HI[nPtBins];
-  TH2D *sCorrPtRho_HI = new TH2D( "sCorrPtRho_HI", "High EA: Underlying Event by Corrected Lead Jet p_{T};#rho (GeV)", 20,0,8, 10,0.000001,1 );
+  TH2D *sCorrPtRho_HI = new TH2D( "sCorrPtRho_HI", "High EA: Underlying Event by Corrected Lead Jet p_{T};#rho (GeV)", 20,0,15, 10,0.000001,1 );
   sCorrPtRho_HI->SetStats(0);
   sCorrPtRho_HI->Draw();
   for ( int p=0; p<nPtBins; ++p ) {
