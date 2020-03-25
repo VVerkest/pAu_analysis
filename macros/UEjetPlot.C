@@ -214,6 +214,7 @@ void UEjetPlot(){
       if ( eaval==99 ) { continue; }
       if ( pval==99 || jeval==99 ) { cerr<<"UNABLE TO FIND PT OR ETA RANGE FOR LEAD JET"<<endl<<leadPt<<endl<<endl; }
     }
+    else {continue;}
     
     hBBCEastSum_byEta[jeval]->Fill( BbcAdcSumEast );
     hBBCEastSum_byPt[pval]->Fill( BbcAdcSumEast );
