@@ -91,7 +91,6 @@ void UEjetPlot(){
   TH1D *hRho = new TH1D("hRho","Underlying Event;#rho (GeV)",120,0,12);
   TH1D *hRho_HI = new TH1D("hRho_HI","High EA Underlying Event;#rho (GeV)",120,0,30);
   TH1D *hRho_LO = new TH1D("hRho_LO","Low EA Underlying Event;#rho (GeV)",120,0,30);
-  TH1D *hLeadPhi = new TH1D("hLeadPhi","Lead Jet #phi;#phi_{lead}",12,0,2*pi);
   TH2D *hTowersVsRho = new TH2D("hTowersVsRho","# of Towers vs. UE;#rho (GeV);# of Towers", 60,0,15, 200,0,200 );
   TH3D *hLeadJetPtRhoEta = new TH3D( "hLeadJetPtRhoEta", "Lead Jet p_{T}, #rho, #eta;Jet p_{T} (GeV);#rho;Jet #eta", 400,0.0,100.0, 100,0,25, 40,-1.0,1.0 );  
   TH3D *hLeadPtEtaPhi = new TH3D("hLeadPtEtaPhi","Lead Jet p_{T} vs. #eta vs. #phi;p_{T} (GeV);#eta;#phi", 280,0,70, 40,-1.0,1.0, 120,0,6.3);
@@ -102,7 +101,6 @@ void UEjetPlot(){
   TH1D *hleadEta_HiEA = new TH1D( "hleadEta_HiEA", "High Event Activity", 40,-1,1 );
 
   TH2D *hLeadPtVsPtCorrected = new TH2D("hLeadPtVsPtCorrected","Lead Jet p_{T} vs. Background-Subtracted p_{T} ;p_{T} (GeV);p_{T}^{corrected} (GeV)", 80,10,30, 120,0,30 );
-  TH1D *hPtCorrectedRatio = new TH1D("hPtCorrectedRatio","Lead Jet:   p_{T}^{corrected} / p_{T};p_{T}^{corrected}/p_{T}",10,0.9,1.0);
   
   TH1D *hLeadEta[nPtBins];
   TH1D *hBBCEastSum_byEta[nEtaBins];
@@ -176,12 +174,11 @@ void UEjetPlot(){
     rhoByEta[1] = chgMidRho + neuMidRho;
     rhoByEta[2] = chgWestRho + neuWestRho;
     
-    chgRho = ( chgEastRho + chgMidRho + chgWestRho )/3;
-    neuRho = ( neuEastRho + neuMidRho + neuWestRho )/3;
+    // chgRho = ( chgEastRho + chgMidRho + chgWestRho )/3;
+    // neuRho = ( neuEastRho + neuMidRho + neuWestRho )/3;
     // rho = chgRho + neuRho;
 
     hRho->Fill(rho);
-    hLeadPhi->Fill(leadPhi);
     hTowersVsRho->Fill(rho,nTowers);
     hLeadJetPtRhoEta->Fill(leadPt,rho,leadEta);
     hLeadPtEtaPhi->Fill(leadPt,leadEta,leadPhi);
@@ -234,20 +231,12 @@ void UEjetPlot(){
   for ( int i=0; i<nEntries; ++i ) {
     jetTree->GetEntry(i);
     hLeadPtVsPtCorrected->Fill( leadPt, leadPtCorrected );
-    hPtCorrectedRatio->Fill( leadPtCorrected/leadPt );
   }
 
 
   
   TCanvas * c0 = new TCanvas( "c0" , "" ,700 ,500 );              // CANVAS 0
 
-  hPtCorrectedRatio->Scale(1./hPtCorrectedRatio->GetEntries());
-  hPtCorrectedRatio->Draw();
-  c0->SaveAs( "plots/UE/correctedPtRatio.pdf" , "PDF" );
-
-  hLeadPhi->Scale(1./hLeadPhi->Integral("WIDTH"));
-  hLeadPhi->Draw();
-  c0->SaveAs( "plots/UE/leadPhi.pdf" , "PDF" );
 
   c0->SetLogz();
 
@@ -437,7 +426,7 @@ void UEjetPlot(){
 
 
 
-  // cout<<"beep"<<endl;
+
 
   // LO: 3559.12-10126.1
   jetTree->Draw("leadPt:((chgEastRho+neuEastRho)+(chgMidRho+neuMidRho)+(chgWestRho+neuWestRho))/3>>hRho2d_LO","BbcAdcSumEast>3559.12 && BbcAdcSumEast<10126.1","COLZ");
