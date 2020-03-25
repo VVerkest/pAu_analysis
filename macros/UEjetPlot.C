@@ -176,8 +176,8 @@ void UEjetPlot(){
     rhoByEta[1] = chgMidRho + neuMidRho;
     rhoByEta[2] = chgWestRho + neuWestRho;
     
-    // chgRho = ( chgEastRho + chgMidRho + chgWestRho )/3;
-    // neuRho = ( neuEastRho + neuMidRho + neuWestRho )/3;
+    chgRho = ( chgEastRho + chgMidRho + chgWestRho )/3;
+    neuRho = ( neuEastRho + neuMidRho + neuWestRho )/3;
     // rho = chgRho + neuRho;
 
     hRho->Fill(rho);
