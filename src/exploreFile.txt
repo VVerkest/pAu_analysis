@@ -36,8 +36,8 @@ int jeval, bgeval, pval, eaval;
 TString name, saveName, title, avg, sigma;
 double chgRho, neuRho, rho;
   
-//TString fileName = "out/UE/pAuHTjetUE_trackEffic.root";
-TString fileName = "out/UE/pAuHTjetUE.root";
+TString fileName = "out/UE/pAuHTjetUE_1HTtrig.root";
+//TString fileName = "out/UE/pAuHTjetUE.root";
 TFile* inFile = new TFile( fileName, "READ" );
 
 TH3D *hBGchg3D = (TH3D*) inFile->Get("hChgBgPtEtaPhi");
@@ -52,7 +52,7 @@ TTree *jetTree = (TTree*) inFile->Get("HTjetTree");
 
 //  Tree variables
 int RunID, EventID, nTowers, nPrimary, nGlobal, nVertices, refMult, gRefMult, nBGpart_chg, nBGpart_neu;
-double Vz, BbcAdcSumEast, leadPt, leadEta, leadPhi, chgEastRho, chgMidRho, chgWestRho, neuEastRho, neuMidRho, neuWestRho, leadArea, eastRho, midRho, westRho, leadPtCorrected, chgEastRho_te, chgMidRho_te, chgWestRho_te, rho_te;
+double Vz, BbcAdcSumEast, leadPt, leadEta, leadPhi, chgEastRho, chgMidRho, chgWestRho, neuEastRho, neuMidRho, neuWestRho, leadArea, eastRho, midRho, westRho, leadPtCorrected, chgEastRho_te, chgMidRho_te, chgWestRho_te, rho_te, trigPhi, trigEta;
 
 jetTree->SetBranchAddress( "RunID", &RunID );
 jetTree->SetBranchAddress( "EventID", &EventID );
@@ -82,8 +82,35 @@ jetTree->SetBranchAddress( "nBGpart_chg", &nBGpart_chg );
 jetTree->SetBranchAddress( "nBGpart_neu", &nBGpart_neu );
 jetTree->SetBranchAddress( "rho", &rho );
 jetTree->SetBranchAddress( "rho_te", &rho_te );
+jetTree->SetBranchAddress( "trigPhi", &trigPhi );
+jetTree->SetBranchAddress( "trigEta", &trigEta );
 
 
+
+TH1D *dR = new TH1D("dR","1 HT triggers: #Delta R (lead jet vs. HT trig)",70,-7,7);
+TH1D *hdPhi = new TH1D("hdPhi","1 HT triggers: #Delta #phi (lead jet vs. HT trig)",70,-7,7);
+
+for (int i=0;i<HTjetTree->GetEntries();++i) {
+  HTjetTree->GetEntry(i);
+  if (leadPt >= 10.0 && leadPt<=30.0){
+    double dPhi = fabs( leadPhi - (trigPhi + pi) );
+    if ( dPhi >= pi ) { dPhi -= pi; }
+    if ( dPhi >= pi ) { dPhi -= pi; }
+
+    hdPhi->Fill(dPhi);
+    double dEta = leadEta - trigEta;
+    double delta = sqrt( (dPhi*dPhi) + (dEta*dEta) );
+    if ( delta >= pi ) { delta -= pi; }
+    if ( delta >= pi ) { delta -= pi; }
+    dR->Fill(delta);
+  }
+ }
+
+dR->Draw();
+new TCanvas;
+hdPhi->Draw();
+
+/*
 TH1D *h1 = new TH1D("h1",";<#rho_{ch}> (GeV)",60,0,15);
 TH1D *h2 = new TH1D("h2",";<#rho_{ch}> (GeV)",60,0,15);
 TH1D *h3 = new TH1D("h3",";<#rho_{ch}> (GeV)",60,0,15);
@@ -119,3 +146,4 @@ h2->SetTitle("2 HT trig");
 h3->SetTitle("3 HT trig");
 
 c0->BuildLegend();
+*/
