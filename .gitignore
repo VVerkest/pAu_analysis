@@ -62,3 +62,4 @@ src/argcargv.cxx
 submit/csh_example.csh
 
 *.jpg
+src/exploreFile.txt
