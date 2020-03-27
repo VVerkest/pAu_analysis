@@ -27,7 +27,7 @@ int main ( int argc, const char** argv ) {         // funcions and cuts specifie
   //  Tree variables
   int RunID, EventID, nTowers, nPrimary, nGlobal, nVertices, refMult, gRefMult, nBGpart_chg, nBGpart_neu, nJetsAbove5, nHTtrig;
   double Vz, BbcAdcSumEast, BbcAdcSumEastOuter, BbcAdcSumWest, BbcAdcSumWestOuter, leadPt, leadEta, leadPhi,
-    chgEastRho, chgMidRho, chgWestRho, chgEastRho_te, chgMidRho_te, chgWestRho_te, neuEastRho, neuMidRho, neuWestRho, leadArea;
+    chgEastRho, chgMidRho, chgWestRho, chgEastRho_te, chgMidRho_te, chgWestRho_te, neuEastRho, neuMidRho, neuWestRho, leadArea, trigdphitolead, trigdetatolead;
 
   HTjetTree->Branch( "RunID", &RunID );
   HTjetTree->Branch( "EventID", &EventID );
@@ -59,6 +59,8 @@ int main ( int argc, const char** argv ) {         // funcions and cuts specifie
   HTjetTree->Branch( "nBGpart_neu", &nBGpart_neu );
   HTjetTree->Branch( "nJetsAbove5", &nJetsAbove5 );
   HTjetTree->Branch( "nHTtrig", &nHTtrig );
+  HTjetTree->Branch( "trigdphitolead", &trigdphitolead );
+  HTjetTree->Branch( "trigdetatolead", &trigdetatolead );
        
   TH3D *hChgBgPtEtaPhi = new TH3D( "hChgBgPtEtaPhi", "Charged Background #phi vs. #eta;p_{T} (GeV);#eta;#phi", 30,0,15, 20,-1.0,1.0, 60,0.0,2*pi );
   TH3D *hNeuBgPtEtaPhi = new TH3D( "hNeuBgPtEtaPhi", "Neutral Background #phi vs. #eta;p_{T} (GeV);#eta;#phi", 30,0,15, 20,-1.0,1.0, 60,0.0,2*pi );
@@ -94,10 +96,11 @@ int main ( int argc, const char** argv ) {         // funcions and cuts specifie
     container = Reader.GetOutputContainer();
 
     if (header->GetRunId() >= 16142059 && header->GetRunId() <= 16149001) { continue; }    //TEMPORARILY SKIPPING THESE RUNS
-    else if (header->GetRunId() == 16135031 || header->GetRunId() == 16135032) { continue; }
-    else if ( abs(Vz) > vzCut ) { continue; }
-    else if (!(header->HasTriggerId(500205) || header->HasTriggerId(500215))) {continue;}   //  ONLY SELECT HT TRIGGER EVENTS
-    else if ( header->GetBbcAdcSumEast() > 64000 ) { continue; }
+    if (header->GetRunId() == 16135031 || header->GetRunId() == 16135032) { continue; }
+    if ( abs(Vz) > vzCut ) { continue; }
+    if (!(header->HasTriggerId(500205) || header->HasTriggerId(500215))) {continue;}   //  ONLY SELECT HT TRIGGER EVENTS
+    if ( header->GetBbcAdcSumEast() > 64000 ) { continue; }
+    if ( header->GetBbcAdcSumEast() < 3559.12 ) { continue; }     //  neglect 0-10% event activity
 
     TList *SelectedTowers = Reader.GetListOfSelectedTowers();
     nTowers = CountTowers( SelectedTowers );
@@ -125,11 +128,11 @@ int main ( int argc, const char** argv ) {         // funcions and cuts specifie
       }
     }
     if (nmatched==0) {continue;}
+    if (nmatched!=2) {continue;}  // only accept events with 2 HT triggers
     nHTtrig = nmatched;
 
     Vz = header->GetPrimaryVertexZ();
     //if ( UseHTevent( header, event, vzCut, Vz ) == false ) { continue; } // Skip events based on: Run#, vz cut, BBCSumE; only accept HT events
-    if ( header->GetBbcAdcSumEast() < 3559.12 ) { continue; }     //  neglect 0-10% event activity
 
     GatherParticles( container, rawParticles );
 
@@ -150,7 +153,10 @@ int main ( int argc, const char** argv ) {         // funcions and cuts specifie
     for ( int i=0; i<allJets.size(); ++i ) {
       hAllJets->Fill( allJets[i].pt(), allJets[i].eta(), allJets[i].phi() );
     }
-    
+
+    trigdphitolead = leadJet.phi() - tow->GetPhi();
+    trigdetatolead = leadJet.eta() - tow->GetEta();
+
     RunID = header->GetRunId();
     EventID = Reader.GetNOfCurrentEvent();
     // TList *SelectedTowers = Reader.GetListOfSelectedTowers();
