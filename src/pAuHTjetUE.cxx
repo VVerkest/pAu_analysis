@@ -127,8 +127,8 @@ int main ( int argc, const char** argv ) {         // funcions and cuts specifie
 	}
       }
     }
-    if (nmatched==0) {continue;}
-    if (nmatched==2) {  // only accept events with 2 HT triggers
+    //if (nmatched==0) {continue;}
+    if (nmatched==1) {  // only accept events with 1 HT triggers
       nHTtrig = nmatched;
       
       Vz = header->GetPrimaryVertexZ();
