@@ -91,6 +91,8 @@ int main ( int argc, const char** argv ) {         // funcions and cuts specifie
   TFile *pAuFile = new TFile( outFile.c_str() ,"RECREATE");
 
   hTrigEtEtaPhi->Write();
+  hTowEtEtaPhi->Write();
+  hTrackPtEtaPhi->Write();
   hTrigEtId->Write();
   
   pAuFile->Close();
