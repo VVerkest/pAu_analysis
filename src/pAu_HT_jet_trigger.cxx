@@ -32,10 +32,10 @@ int main ( int argc, const char** argv ) {         // funcions and cuts specifie
   double Vz, leadPt, leadEta, leadPhi, eastRho, midRho, westRho, rho, ptSum;
   const double pi = 3.14159;
   
-  TH3D *hTrigEtEtaPhi = new TH3D("hTrigEtEtaPhi","Trigger E_{T} vs. #eta vs. #phi;E_{T} (GeV);#eta;#phi", 120,0,30, 40,-1.0,1.0, 120,-pi,pi);
-  TH3D *hTrackPtEtaPhi = new TH3D("hTrackPtEtaPhi","Track p_{T} vs. #eta vs. #phi;p_{T} (GeV);#eta;#phi", 120,0,30, 40,-1.0,1.0, 120,-pi,pi);
-  TH3D *hTowEtEtaPhi = new TH3D("hTowEtEtaPhi","Trigger E_{T} vs. #eta vs. #phi;E_{T} (GeV);#eta;#phi", 120,0,30, 40,-1.0,1.0, 120,-pi,pi);
-  TH2D *hTrigEtId = new TH2D("hTrigEtId","Trigger E_{T} vs. ID", 4800,0,4800, 120,0,30 );
+  TH3D *hTrigEtEtaPhi = new TH3D("hTrigEtEtaPhi","Trigger E_{T} vs. #eta vs. #phi;E_{T} (GeV);#eta;#phi", 120,0,60, 40,-1.0,1.0, 120,-pi,pi);
+  TH2D *hTrigEtId = new TH2D("hTrigEtId","Trigger E_{T} vs. ID", 4800,0,4800, 120,0,60 );
+  TH3D *hTrackPtEtaPhi = new TH3D("hTrackPtEtaPhi","Track p_{T} vs. #eta vs. #phi;p_{T} (GeV);#eta;#phi", 120,0,60, 40,-1.0,1.0, 120,-pi,pi);
+  TH3D *hTowEtEtaPhi = new TH3D("hTowEtEtaPhi","Tower E_{T} vs. #eta vs. #phi;E_{T} (GeV);#eta;#phi", 120,0,60, 40,-1.0,1.0, 120,-pi,pi);
 
   TStarJetPicoTriggerInfo *trig;
   TStarJetPicoTower *tow;
@@ -75,6 +75,7 @@ int main ( int argc, const char** argv ) {         // funcions and cuts specifie
 	  tow = (TStarJetPicoTower*)SelectedTowers->At(i);
 	  if ( tow->GetId()==trigTowId ){
 	    hTrigEtEtaPhi->Fill( tow->GetEt(), tow->GetEta(), tow->GetPhi() );
+	    hTrigEtId->Fill( trigTowId, tow->GetEt() );
 	  }
 	}
       }
