@@ -74,7 +74,7 @@ int main ( int argc, const char** argv ) {         // funcions and cuts specifie
 	for (int i=0; i<nTowers; ++i){
 	  tow = (TStarJetPicoTower*)SelectedTowers->At(i);
 	  if ( tow->GetId()==trigTowId ){
-	    hTrigEtEtaPhi->Fill( tow->GetEt(), tow->GetEta, tow->GetPhi() );
+	    hTrigEtEtaPhi->Fill( tow->GetEt(), tow->GetEta(), tow->GetPhi() );
 	  }
 	}
       }
