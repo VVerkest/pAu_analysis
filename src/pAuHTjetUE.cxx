@@ -128,77 +128,78 @@ int main ( int argc, const char** argv ) {         // funcions and cuts specifie
       }
     }
     if (nmatched==0) {continue;}
-    if (nmatched!=2) {continue;}  // only accept events with 2 HT triggers
-    nHTtrig = nmatched;
+    if (nmatched==2) {  // only accept events with 2 HT triggers
+      nHTtrig = nmatched;
+      
+      Vz = header->GetPrimaryVertexZ();
+      //if ( UseHTevent( header, event, vzCut, Vz ) == false ) { continue; } // Skip events based on: Run#, vz cut, BBCSumE; only accept HT events
+      
+      GatherParticles( container, rawParticles );
 
-    Vz = header->GetPrimaryVertexZ();
-    //if ( UseHTevent( header, event, vzCut, Vz ) == false ) { continue; } // Skip events based on: Run#, vz cut, BBCSumE; only accept HT events
-
-    GatherParticles( container, rawParticles );
-
-    GhostedAreaSpec gAreaSpec( 1.0, 1, 0.01 );
-    AreaDefinition area_def(active_area_explicit_ghosts, gAreaSpec);
-    ClusterSequenceArea jetCluster( rawParticles, jet_def, area_def); 
-
-    leadJetSelector = leadPtMinSelector && jetEtaSelector;
-    rawJets = sorted_by_pt( leadJetSelector( jetCluster.inclusive_jets() ) );     // EXTRACT ALL JETS IN >=10 GeV
+      GhostedAreaSpec gAreaSpec( 1.0, 1, 0.01 );
+      AreaDefinition area_def(active_area_explicit_ghosts, gAreaSpec);
+      ClusterSequenceArea jetCluster( rawParticles, jet_def, area_def); 
+      
+      leadJetSelector = leadPtMinSelector && jetEtaSelector;
+      rawJets = sorted_by_pt( leadJetSelector( jetCluster.inclusive_jets() ) );     // EXTRACT ALL JETS IN >=10 GeV
     
-    if ( rawJets.size()>0 ) { leadJet = rawJets[0]; }
-    else { continue; }
+      if ( rawJets.size()>0 ) { leadJet = rawJets[0]; }
+      else { continue; }
 
-    Selector allJetSelector = SelectorPtMin(2.0) && ptMaxSelector && jetEtaSelector;
-    allJets = sorted_by_pt( allJetSelector( jetCluster.inclusive_jets() ) );     // EXTRACT ALL JETS IN >=5 GeV
+      Selector allJetSelector = SelectorPtMin(2.0) && ptMaxSelector && jetEtaSelector;
+      allJets = sorted_by_pt( allJetSelector( jetCluster.inclusive_jets() ) );     // EXTRACT ALL JETS IN >=5 GeV
     
-    nJetsAbove5 = allJets.size();
-    for ( int i=0; i<allJets.size(); ++i ) {
-      hAllJets->Fill( allJets[i].pt(), allJets[i].eta(), allJets[i].phi() );
+      nJetsAbove5 = allJets.size();
+      for ( int i=0; i<allJets.size(); ++i ) {
+	hAllJets->Fill( allJets[i].pt(), allJets[i].eta(), allJets[i].phi() );
+      }
+
+      trigdphitolead = leadJet.phi() - tow->GetPhi();
+      trigdetatolead = leadJet.eta() - tow->GetEta();
+
+      RunID = header->GetRunId();
+      EventID = Reader.GetNOfCurrentEvent();
+      // TList *SelectedTowers = Reader.GetListOfSelectedTowers();
+      // nTowers = CountTowers( SelectedTowers );
+      nPrimary = header->GetNOfPrimaryTracks();
+      nGlobal = header->GetNGlobalTracks();
+      nVertices = header->GetNumberOfVertices();
+      refMult = header->GetReferenceMultiplicity();
+      gRefMult = header->GetGReferenceMultiplicity();
+      BbcAdcSumEast = header->GetBbcAdcSumEast();
+      BbcAdcSumEastOuter = header->GetBbcAdcSumEastOuter();
+      BbcAdcSumWest = header->GetBbcAdcSumWest();
+      BbcAdcSumWestOuter = header->GetBbcAdcSumWestOuter();
+      leadPt = leadJet.pt();
+      leadEta = leadJet.eta();
+      leadPhi = leadJet.phi();
+      leadArea = leadJet.area();
+
+      //  BACKGROUND ESTIMATION
+      GatherChargedBG( leadJet, container, chgParticles );
+      GatherNeutralBG( leadJet, container, neuParticles );
+
+      nBGpart_chg = chgParticles.size();
+      nBGpart_neu = neuParticles.size();
+    
+      chgEastSum = 0;  chgMidSum = 0;  chgWestSum = 0;  neuEastSum = 0;  neuMidSum = 0;  neuWestSum = 0;
+      CalculateRhoByChargeAndEta(chgParticles,neuParticles,chgEastSum,chgMidSum,chgWestSum,neuEastSum,neuMidSum,neuWestSum,hChgBgPtEtaPhi,hNeuBgPtEtaPhi);
+      chgEastRho = chgEastSum/eastArea;
+      chgMidRho = chgMidSum/midArea;
+      chgWestRho = chgWestSum/westArea;
+      neuEastRho = neuEastSum/eastArea;
+      neuMidRho = neuMidSum/midArea;
+      neuWestRho = neuWestSum/westArea;
+
+      GatherChargedBGwithEfficiency( leadJet, container, chgParticles, efficFile );   // gather BG
+      CalculateBGsubtractedChargedRho(chgParticles,chgEastSum,chgMidSum,chgWestSum);
+      chgEastRho_te = chgEastSum/eastArea;
+      chgMidRho_te = chgMidSum/midArea;
+      chgWestRho_te = chgWestSum/westArea;
+    
+      HTjetTree->Fill();
     }
-
-    trigdphitolead = leadJet.phi() - tow->GetPhi();
-    trigdetatolead = leadJet.eta() - tow->GetEta();
-
-    RunID = header->GetRunId();
-    EventID = Reader.GetNOfCurrentEvent();
-    // TList *SelectedTowers = Reader.GetListOfSelectedTowers();
-    // nTowers = CountTowers( SelectedTowers );
-    nPrimary = header->GetNOfPrimaryTracks();
-    nGlobal = header->GetNGlobalTracks();
-    nVertices = header->GetNumberOfVertices();
-    refMult = header->GetReferenceMultiplicity();
-    gRefMult = header->GetGReferenceMultiplicity();
-    BbcAdcSumEast = header->GetBbcAdcSumEast();
-    BbcAdcSumEastOuter = header->GetBbcAdcSumEastOuter();
-    BbcAdcSumWest = header->GetBbcAdcSumWest();
-    BbcAdcSumWestOuter = header->GetBbcAdcSumWestOuter();
-    leadPt = leadJet.pt();
-    leadEta = leadJet.eta();
-    leadPhi = leadJet.phi();
-    leadArea = leadJet.area();
-
-    //  BACKGROUND ESTIMATION
-    GatherChargedBG( leadJet, container, chgParticles );
-    GatherNeutralBG( leadJet, container, neuParticles );
-
-    nBGpart_chg = chgParticles.size();
-    nBGpart_neu = neuParticles.size();
     
-    chgEastSum = 0;  chgMidSum = 0;  chgWestSum = 0;  neuEastSum = 0;  neuMidSum = 0;  neuWestSum = 0;
-    CalculateRhoByChargeAndEta(chgParticles,neuParticles,chgEastSum,chgMidSum,chgWestSum,neuEastSum,neuMidSum,neuWestSum,hChgBgPtEtaPhi,hNeuBgPtEtaPhi);
-    chgEastRho = chgEastSum/eastArea;
-    chgMidRho = chgMidSum/midArea;
-    chgWestRho = chgWestSum/westArea;
-    neuEastRho = neuEastSum/eastArea;
-    neuMidRho = neuMidSum/midArea;
-    neuWestRho = neuWestSum/westArea;
-
-    GatherChargedBGwithEfficiency( leadJet, container, chgParticles, efficFile );   // gather BG
-    CalculateBGsubtractedChargedRho(chgParticles,chgEastSum,chgMidSum,chgWestSum);
-    chgEastRho_te = chgEastSum/eastArea;
-    chgMidRho_te = chgMidSum/midArea;
-    chgWestRho_te = chgWestSum/westArea;
-    
-    HTjetTree->Fill();
-
   }  // ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~  END EVENT LOOP!  ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~
 
   TFile *pAuFile = new TFile( outFile.c_str() ,"RECREATE");
