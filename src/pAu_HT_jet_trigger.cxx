@@ -70,15 +70,20 @@ int main ( int argc, const char** argv ) {         // funcions and cuts specifie
       
       for ( int i=0; i<event->GetTrigObjs()->GetEntries(); ++i ) {
 	trig = (TStarJetPicoTriggerInfo *)event->GetTrigObj(i);
-	if ( trig->isBHT2() && UseTriggerTower( trig->GetId()) ) {
-	  hTrigEtEtaPhi->Fill( trig->GetEt(), trig->GetEta, trig->GetPhi() );
+	int trigTowId = trig->GetId();
+	
+	for (int i=0; i<nTowers; ++i){
+	  tow = (TStarJetPicoTower*)SelectedTowers->At(i);
+	  if ( tow->GetId()==trigTowId ){
+	    hTrigEtEtaPhi->Fill( tow->GetEt(), trig->GetEta, trig->GetPhi() );
+	  }
 	}
       }
 
       nPrimary = header->GetNOfPrimaryTracks();
       for (int i=0; i<nPrimary; ++i) {
 	track = (TStarJetPicoPrimaryTrack*) event->GetPrimaryTrack(i);
-	hTrackPtEtaPhi->Fill( track->GetPt(), track->GetEta(); track->GetPhi() );
+	hTrackPtEtaPhi->Fill( track->GetPt(), track->GetEta(), track->GetPhi() );
       }
       
     }
