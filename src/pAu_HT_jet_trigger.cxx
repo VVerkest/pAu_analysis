@@ -23,7 +23,6 @@ int main ( int argc, const char** argv ) {         // funcions and cuts specifie
   TH1::SetDefaultSumw2();  TH2::SetDefaultSumw2();  TH3::SetDefaultSumw2();
 
   TStarJetPicoEventHeader* header;    TStarJetPicoEvent* event;    TStarJetVectorContainer<TStarJetVector> * container;
-  TStarJetPicoTriggerInfo *trig;
   
   TChain* Chain = new TChain( "JetTree" );          Chain->Add( inFile.c_str() );
   TStarJetPicoReader Reader;                                int numEvents = number_of_events;        // total events in HT: 152,007,032
@@ -75,7 +74,7 @@ int main ( int argc, const char** argv ) {         // funcions and cuts specifie
 	for (int i=0; i<nTowers; ++i){
 	  tow = (TStarJetPicoTower*)SelectedTowers->At(i);
 	  if ( tow->GetId()==trigTowId ){
-	    hTrigEtEtaPhi->Fill( tow->GetEt(), trig->GetEta, trig->GetPhi() );
+	    hTrigEtEtaPhi->Fill( tow->GetEt(), tow->GetEta, tow->GetPhi() );
 	  }
 	}
       }
