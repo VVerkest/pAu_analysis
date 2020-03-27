@@ -35,6 +35,7 @@ void UEjetPlot(){
   const TString EAstring[nEA] = { "low", "mid", "high" };
   const double BBCEsumLo[nEA] = { 3559.12, 10126.1, 26718.1 };   // LO: 3559.12-10126.1;  HI: 26718.1+
   const double BBCEsumHi[nEA] = { 10126.1, 26718.1, 64000.0 };  // 0, 3559.12, 6735.12, 10126.1, 13752.1, 17669.1, 21948.1, 26718.1, 32283.1, 39473.1, 64000
+  // { 0, 3559.12, 6735.12, 10126.1, 13752.1, 17669.1, 21948.1, 26718.1, 32283.1, 39473.1, 64000 }
   
   int jeval, bgeval, pval, eaval;
   TString name, saveName, title, avg, sigma;
