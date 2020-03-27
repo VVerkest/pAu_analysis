@@ -29,11 +29,18 @@ int main ( int argc, const char** argv ) {         // funcions and cuts specifie
   TStarJetPicoReader Reader;                                int numEvents = number_of_events;        // total events in HT: 152,007,032
   InitReader( Reader, Chain, numEvents );
 
-  int nTowers, nEvents;
+  int nTowers, nEvents, nPrimary;
   double Vz, leadPt, leadEta, leadPhi, eastRho, midRho, westRho, rho, ptSum;
   const double pi = 3.14159;
   
-  TH3D *hTrigEtEtaPhi = new TH3D("hTrigEtEtaPhi","Trigger E_{T} vs. #eta vs. #phi;p_{T} (GeV);#eta;#phi", 120,0,30, 40,-1.0,1.0, 120,-pi,pi);
+  TH3D *hTrigEtEtaPhi = new TH3D("hTrigEtEtaPhi","Trigger E_{T} vs. #eta vs. #phi;E_{T} (GeV);#eta;#phi", 120,0,30, 40,-1.0,1.0, 120,-pi,pi);
+  TH3D *hTrackPtEtaPhi = new TH3D("hTrackPtEtaPhi","Track p_{T} vs. #eta vs. #phi;p_{T} (GeV);#eta;#phi", 120,0,30, 40,-1.0,1.0, 120,-pi,pi);
+  TH3D *hTowEtEtaPhi = new TH3D("hTowEtEtaPhi","Trigger E_{T} vs. #eta vs. #phi;E_{T} (GeV);#eta;#phi", 120,0,30, 40,-1.0,1.0, 120,-pi,pi);
+  TH2D *hTrigEtId = new TH2D("hTrigEtId","Trigger E_{T} vs. ID", 4800,0,4800, 120,0,30 );
+
+  TStarJetPicoTriggerInfo *trig;
+  TStarJetPicoTower *tow;
+  TStarJetPicoPrimaryTrack *track;
 
   // ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~  BEGIN EVENT LOOP!  ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~
   while ( Reader.NextEvent() ) {
@@ -56,33 +63,23 @@ int main ( int argc, const char** argv ) {         // funcions and cuts specifie
 
       TList *SelectedTowers = Reader.GetListOfSelectedTowers();
       nTowers = CountTowers( SelectedTowers );
-      
-      int trigTowId;
-      TStarJetPicoTriggerInfo *trig;
-      TStarJetPicoTower *tow, *triggerTower;
-      double trigTowEt = 0.0;
-      std::vector<int> trigTowers;
-      for ( int i=0; i<event->GetTrigObjs()->GetEntries(); ++i ) {
-	trig = (TStarJetPicoTriggerInfo *)event->GetTrigObj(i);
-	if ( trig->isBHT2() && UseTriggerTower( trig->GetId()) ) { trigTowers.push_back( trig->GetId() ); }
-      }
-      std::sort(trigTowers.begin(), trigTowers.end());
-      
-      int nmatched = 0;
       for (int i=0; i<nTowers; ++i){
 	tow = (TStarJetPicoTower*)SelectedTowers->At(i);
-	if ( tow->GetEt()>=5.4 && std::count(trigTowers.begin(), trigTowers.end(), tow->GetId())) {
-
-	  hTrigEtEtaPhi->Fill( tow->GetEt(), tow->GetEta(), tow->GetPhi() );
-	  
-	  if ( nmatched>0 && (tow->GetEt()<trigTowEt) ) { continue; }
-	  else {
-	    trigTowEt = tow->GetEt();
-	    nmatched += 1;
-	  }
-	}
+	hTowEtEtaPhi->Fill( tow->GetEt(), tow->GetEta(), tow->GetPhi() );
       }
       
+      for ( int i=0; i<event->GetTrigObjs()->GetEntries(); ++i ) {
+	trig = (TStarJetPicoTriggerInfo *)event->GetTrigObj(i);
+	if ( trig->isBHT2() && UseTriggerTower( trig->GetId()) ) {
+	  hTrigEtEtaPhi->Fill( trig->GetEt(), trig->GetEta, trig->GetPhi() );
+	}
+      }
+
+      nPrimary = header->GetNOfPrimaryTracks();
+      for (int i=0; i<nPrimary; ++i) {
+	track = (TStarJetPicoPrimaryTrack*) event->GetPrimaryTrack(i);
+	hTrackPtEtaPhi->Fill( track->GetPt(), track->GetEta(); track->GetPhi() );
+      }
       
     }
   }  // ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~  END EVENT LOOP!  ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~
@@ -90,7 +87,8 @@ int main ( int argc, const char** argv ) {         // funcions and cuts specifie
   TFile *pAuFile = new TFile( outFile.c_str() ,"RECREATE");
 
   hTrigEtEtaPhi->Write();
-
+  hTrigEtId->Write();
+  
   pAuFile->Close();
 
   return 0;
