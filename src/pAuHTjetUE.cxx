@@ -27,7 +27,7 @@ int main ( int argc, const char** argv ) {         // funcions and cuts specifie
   //  Tree variables
   int RunID, EventID, nTowers, nPrimary, nGlobal, nVertices, refMult, gRefMult, nBGpart_chg, nBGpart_neu, nJetsAbove5, nHTtrig;
   double Vz, BbcAdcSumEast, BbcAdcSumEastOuter, BbcAdcSumWest, BbcAdcSumWestOuter, leadPt, leadEta, leadPhi,
-    chgEastRho, chgMidRho, chgWestRho, chgEastRho_te, chgMidRho_te, chgWestRho_te, neuEastRho, neuMidRho, neuWestRho, leadArea, trigdphitolead, trigdetatolead;
+    chgEastRho, chgMidRho, chgWestRho, chgEastRho_te, chgMidRho_te, chgWestRho_te, neuEastRho, neuMidRho, neuWestRho, leadArea, trigPhi, trigEta;
 
   HTjetTree->Branch( "RunID", &RunID );
   HTjetTree->Branch( "EventID", &EventID );
@@ -59,8 +59,8 @@ int main ( int argc, const char** argv ) {         // funcions and cuts specifie
   HTjetTree->Branch( "nBGpart_neu", &nBGpart_neu );
   HTjetTree->Branch( "nJetsAbove5", &nJetsAbove5 );
   HTjetTree->Branch( "nHTtrig", &nHTtrig );
-  HTjetTree->Branch( "trigdphitolead", &trigdphitolead );
-  HTjetTree->Branch( "trigdetatolead", &trigdetatolead );
+  HTjetTree->Branch( "trigPhi", &trigPhi );
+  HTjetTree->Branch( "trigEta", &trigEta );
        
   TH3D *hChgBgPtEtaPhi = new TH3D( "hChgBgPtEtaPhi", "Charged Background #phi vs. #eta;p_{T} (GeV);#eta;#phi", 30,0,15, 20,-1.0,1.0, 60,0.0,2*pi );
   TH3D *hNeuBgPtEtaPhi = new TH3D( "hNeuBgPtEtaPhi", "Neutral Background #phi vs. #eta;p_{T} (GeV);#eta;#phi", 30,0,15, 20,-1.0,1.0, 60,0.0,2*pi );
@@ -82,7 +82,7 @@ int main ( int argc, const char** argv ) {         // funcions and cuts specifie
   TStarJetPicoReader Reader;
   int numEvents = number_of_events;        // total events in HT: 152,007,032
   InitReader( Reader, Chain, numEvents );
-
+  double deltaR;
 
   Reader.NextEvent();
   // ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~  BEGIN EVENT LOOP!  ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~
@@ -128,78 +128,81 @@ int main ( int argc, const char** argv ) {         // funcions and cuts specifie
       }
     }
     //if (nmatched==0) {continue;}
-    if (nmatched==1) {  // only accept events with 1 HT triggers
-      nHTtrig = nmatched;
-      
-      Vz = header->GetPrimaryVertexZ();
-      //if ( UseHTevent( header, event, vzCut, Vz ) == false ) { continue; } // Skip events based on: Run#, vz cut, BBCSumE; only accept HT events
-      
-      GatherParticles( container, rawParticles );
+    if (nmatched==1) { // only accept events with 1 HT triggers
+      trigPhi = tow->GetPhi();
+      trigEta = tow->GetEta();
 
-      GhostedAreaSpec gAreaSpec( 1.0, 1, 0.01 );
-      AreaDefinition area_def(active_area_explicit_ghosts, gAreaSpec);
-      ClusterSequenceArea jetCluster( rawParticles, jet_def, area_def); 
-      
-      leadJetSelector = leadPtMinSelector && jetEtaSelector;
-      rawJets = sorted_by_pt( leadJetSelector( jetCluster.inclusive_jets() ) );     // EXTRACT ALL JETS IN >=10 GeV
-    
-      if ( rawJets.size()>0 ) { leadJet = rawJets[0]; }
-      else { continue; }
+      int yes = 1;
+      if ( yes==1 ) {
 
-      Selector allJetSelector = SelectorPtMin(2.0) && ptMaxSelector && jetEtaSelector;
-      allJets = sorted_by_pt( allJetSelector( jetCluster.inclusive_jets() ) );     // EXTRACT ALL JETS IN >=5 GeV
+	nHTtrig = nmatched;
+	
+	Vz = header->GetPrimaryVertexZ();
+	//if ( UseHTevent( header, event, vzCut, Vz ) == false ) { continue; } // Skip events based on: Run#, vz cut, BBCSumE; only accept HT events
+	
+	GatherParticles( container, rawParticles );
+
+	GhostedAreaSpec gAreaSpec( 1.0, 1, 0.01 );
+	AreaDefinition area_def(active_area_explicit_ghosts, gAreaSpec);
+	ClusterSequenceArea jetCluster( rawParticles, jet_def, area_def); 
+      
+	leadJetSelector = leadPtMinSelector && jetEtaSelector;
+	rawJets = sorted_by_pt( leadJetSelector( jetCluster.inclusive_jets() ) );     // EXTRACT ALL JETS IN >=10 GeV
     
-      nJetsAbove5 = allJets.size();
-      for ( int i=0; i<allJets.size(); ++i ) {
-	hAllJets->Fill( allJets[i].pt(), allJets[i].eta(), allJets[i].phi() );
+	if ( rawJets.size()>0 ) { leadJet = rawJets[0]; }
+	else { continue; }
+
+	Selector allJetSelector = SelectorPtMin(2.0) && ptMaxSelector && jetEtaSelector;
+	allJets = sorted_by_pt( allJetSelector( jetCluster.inclusive_jets() ) );     // EXTRACT ALL JETS IN >=5 GeV
+    
+	nJetsAbove5 = allJets.size();
+	for ( int i=0; i<allJets.size(); ++i ) {
+	  hAllJets->Fill( allJets[i].pt(), allJets[i].eta(), allJets[i].phi() );
+	}
+
+	RunID = header->GetRunId();
+	EventID = Reader.GetNOfCurrentEvent();
+	// TList *SelectedTowers = Reader.GetListOfSelectedTowers();
+	// nTowers = CountTowers( SelectedTowers );
+	nPrimary = header->GetNOfPrimaryTracks();
+	nGlobal = header->GetNGlobalTracks();
+	nVertices = header->GetNumberOfVertices();
+	refMult = header->GetReferenceMultiplicity();
+	gRefMult = header->GetGReferenceMultiplicity();
+	BbcAdcSumEast = header->GetBbcAdcSumEast();
+	BbcAdcSumEastOuter = header->GetBbcAdcSumEastOuter();
+	BbcAdcSumWest = header->GetBbcAdcSumWest();
+	BbcAdcSumWestOuter = header->GetBbcAdcSumWestOuter();
+	leadPt = leadJet.pt();
+	leadEta = leadJet.eta();
+	leadPhi = leadJet.phi();
+	leadArea = leadJet.area();
+
+	//  BACKGROUND ESTIMATION
+	GatherChargedBG( leadJet, container, chgParticles );
+	GatherNeutralBG( leadJet, container, neuParticles );
+
+	nBGpart_chg = chgParticles.size();
+	nBGpart_neu = neuParticles.size();
+    
+	chgEastSum = 0;  chgMidSum = 0;  chgWestSum = 0;  neuEastSum = 0;  neuMidSum = 0;  neuWestSum = 0;
+	CalculateRhoByChargeAndEta(chgParticles,neuParticles,chgEastSum,chgMidSum,chgWestSum,neuEastSum,neuMidSum,neuWestSum,hChgBgPtEtaPhi,hNeuBgPtEtaPhi);
+	chgEastRho = chgEastSum/eastArea;
+	chgMidRho = chgMidSum/midArea;
+	chgWestRho = chgWestSum/westArea;
+	neuEastRho = neuEastSum/eastArea;
+	neuMidRho = neuMidSum/midArea;
+	neuWestRho = neuWestSum/westArea;
+
+	GatherChargedBGwithEfficiency( leadJet, container, chgParticles, efficFile );   // gather BG
+	CalculateBGsubtractedChargedRho(chgParticles,chgEastSum,chgMidSum,chgWestSum);
+	chgEastRho_te = chgEastSum/eastArea;
+	chgMidRho_te = chgMidSum/midArea;
+	chgWestRho_te = chgWestSum/westArea;
+    
+	HTjetTree->Fill();
       }
-
-      trigdphitolead = leadJet.phi() - tow->GetPhi();
-      trigdetatolead = leadJet.eta() - tow->GetEta();
-
-      RunID = header->GetRunId();
-      EventID = Reader.GetNOfCurrentEvent();
-      // TList *SelectedTowers = Reader.GetListOfSelectedTowers();
-      // nTowers = CountTowers( SelectedTowers );
-      nPrimary = header->GetNOfPrimaryTracks();
-      nGlobal = header->GetNGlobalTracks();
-      nVertices = header->GetNumberOfVertices();
-      refMult = header->GetReferenceMultiplicity();
-      gRefMult = header->GetGReferenceMultiplicity();
-      BbcAdcSumEast = header->GetBbcAdcSumEast();
-      BbcAdcSumEastOuter = header->GetBbcAdcSumEastOuter();
-      BbcAdcSumWest = header->GetBbcAdcSumWest();
-      BbcAdcSumWestOuter = header->GetBbcAdcSumWestOuter();
-      leadPt = leadJet.pt();
-      leadEta = leadJet.eta();
-      leadPhi = leadJet.phi();
-      leadArea = leadJet.area();
-
-      //  BACKGROUND ESTIMATION
-      GatherChargedBG( leadJet, container, chgParticles );
-      GatherNeutralBG( leadJet, container, neuParticles );
-
-      nBGpart_chg = chgParticles.size();
-      nBGpart_neu = neuParticles.size();
-    
-      chgEastSum = 0;  chgMidSum = 0;  chgWestSum = 0;  neuEastSum = 0;  neuMidSum = 0;  neuWestSum = 0;
-      CalculateRhoByChargeAndEta(chgParticles,neuParticles,chgEastSum,chgMidSum,chgWestSum,neuEastSum,neuMidSum,neuWestSum,hChgBgPtEtaPhi,hNeuBgPtEtaPhi);
-      chgEastRho = chgEastSum/eastArea;
-      chgMidRho = chgMidSum/midArea;
-      chgWestRho = chgWestSum/westArea;
-      neuEastRho = neuEastSum/eastArea;
-      neuMidRho = neuMidSum/midArea;
-      neuWestRho = neuWestSum/westArea;
-
-      GatherChargedBGwithEfficiency( leadJet, container, chgParticles, efficFile );   // gather BG
-      CalculateBGsubtractedChargedRho(chgParticles,chgEastSum,chgMidSum,chgWestSum);
-      chgEastRho_te = chgEastSum/eastArea;
-      chgMidRho_te = chgMidSum/midArea;
-      chgWestRho_te = chgWestSum/westArea;
-    
-      HTjetTree->Fill();
     }
-    
   }  // ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~  END EVENT LOOP!  ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~
 
   TFile *pAuFile = new TFile( outFile.c_str() ,"RECREATE");
