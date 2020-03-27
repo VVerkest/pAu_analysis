@@ -43,9 +43,16 @@ int main ( int argc, const char** argv ) {         // funcions and cuts specifie
     event = Reader.GetEvent();
     header = event->GetHeader();
     container = Reader.GetOutputContainer();
-    
+
     Vz = header->GetPrimaryVertexZ();
-    if ( abs(Vz) <= vzCut ) {
+    
+    if (header->GetRunId() >= 16142059 && header->GetRunId() <= 16149001) { continue; }    //TEMPORARILY SKIPPING THESE RUNS
+    if (header->GetRunId() == 16135031 || header->GetRunId() == 16135032) { continue; }
+    if ( abs(Vz) > vzCut ) { continue; }
+    if (!(header->HasTriggerId(500205) || header->HasTriggerId(500215))) {continue;}   //  ONLY SELECT HT TRIGGER EVENTS
+    if ( header->GetBbcAdcSumEast() > 64000 ) { continue; }
+    if ( header->GetBbcAdcSumEast() < 3559.12 ) { continue; }     //  neglect 0-10% event activity
+    else {
 
       TList *SelectedTowers = Reader.GetListOfSelectedTowers();
       nTowers = CountTowers( SelectedTowers );
