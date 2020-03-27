@@ -82,7 +82,7 @@ int main ( int argc, const char** argv ) {         // funcions and cuts specifie
   TStarJetPicoReader Reader;
   int numEvents = number_of_events;        // total events in HT: 152,007,032
   InitReader( Reader, Chain, numEvents );
-  double deltaR;
+  double deltaR;       double trigTowEta, trigTowPhi;
 
   Reader.NextEvent();
   // ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~  BEGIN EVENT LOOP!  ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~
@@ -123,14 +123,16 @@ int main ( int argc, const char** argv ) {         // funcions and cuts specifie
 	if ( nmatched>0 && (tow->GetEt()<trigTowEt) ) { continue; }
 	else {
 	  trigTowEt = tow->GetEt();
+	  trigTowEta = tow->GetEta();
+	  trigTowPhi = tow->GetPhi();
 	  nmatched += 1;
 	}
       }
     }
     //if (nmatched==0) {continue;}
     if (nmatched==1) { // only accept events with 1 HT triggers
-      trigPhi = tow->GetPhi();
-      trigEta = tow->GetEta();
+      trigPhi = trigTowPhi;
+      trigEta = trigTowEta;
 
       nHTtrig = nmatched;
 	
