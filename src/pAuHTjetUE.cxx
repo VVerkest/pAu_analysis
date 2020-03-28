@@ -72,7 +72,7 @@ int main ( int argc, const char** argv ) {         // funcions and cuts specifie
   Selector leadJetSelector = jetEtaSelector && leadPtMinSelector;
   Selector ptMaxSelector = SelectorPtMax( 30.0 );
 
-  PseudoJet leadJet;  vector<PseudoJet> rawParticles, rawJets, allJets, chgParticles, neuParticles, BGparticles, trigTowerPJ;
+  PseudoJet leadJet, trigTowerPJ;  vector<PseudoJet> rawParticles, rawJets, allJets, chgParticles, neuParticles, BGparticles;
   TStarJetPicoEventHeader* header;
   TStarJetPicoEvent* event;
   TStarJetVectorContainer<TStarJetVector> * container;
