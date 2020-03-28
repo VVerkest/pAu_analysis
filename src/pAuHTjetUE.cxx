@@ -27,7 +27,7 @@ int main ( int argc, const char** argv ) {         // funcions and cuts specifie
   //  Tree variables
   int RunID, EventID, nTowers, nPrimary, nGlobal, nVertices, refMult, gRefMult, nBGpart_chg, nBGpart_neu, nJetsAbove5, nHTtrig;
   double Vz, BbcAdcSumEast, BbcAdcSumEastOuter, BbcAdcSumWest, BbcAdcSumWestOuter, leadPt, leadEta, leadPhi,
-    chgEastRho, chgMidRho, chgWestRho, chgEastRho_te, chgMidRho_te, chgWestRho_te, neuEastRho, neuMidRho, neuWestRho, leadArea, trigPhi, trigEta;
+    chgEastRho, chgMidRho, chgWestRho, chgEastRho_te, chgMidRho_te, chgWestRho_te, neuEastRho, neuMidRho, neuWestRho, leadArea, dPhiTrigLead, dRTrigLead;
 
   HTjetTree->Branch( "RunID", &RunID );
   HTjetTree->Branch( "EventID", &EventID );
@@ -59,8 +59,8 @@ int main ( int argc, const char** argv ) {         // funcions and cuts specifie
   HTjetTree->Branch( "nBGpart_neu", &nBGpart_neu );
   HTjetTree->Branch( "nJetsAbove5", &nJetsAbove5 );
   HTjetTree->Branch( "nHTtrig", &nHTtrig );
-  HTjetTree->Branch( "trigPhi", &trigPhi );
-  HTjetTree->Branch( "trigEta", &trigEta );
+  HTjetTree->Branch( "dPhiTrigLead", &dPhiTrigLead );
+  HTjetTree->Branch( "dRTrigLead", &dRTrigLead );
        
   TH3D *hChgBgPtEtaPhi = new TH3D( "hChgBgPtEtaPhi", "Charged Background #phi vs. #eta;p_{T} (GeV);#eta;#phi", 30,0,15, 20,-1.0,1.0, 60,0.0,2*pi );
   TH3D *hNeuBgPtEtaPhi = new TH3D( "hNeuBgPtEtaPhi", "Neutral Background #phi vs. #eta;p_{T} (GeV);#eta;#phi", 30,0,15, 20,-1.0,1.0, 60,0.0,2*pi );
@@ -72,7 +72,7 @@ int main ( int argc, const char** argv ) {         // funcions and cuts specifie
   Selector leadJetSelector = jetEtaSelector && leadPtMinSelector;
   Selector ptMaxSelector = SelectorPtMax( 30.0 );
 
-  PseudoJet leadJet;  vector<PseudoJet> rawParticles, rawJets, allJets, chgParticles, neuParticles, BGparticles;
+  PseudoJet leadJet;  vector<PseudoJet> rawParticles, rawJets, allJets, chgParticles, neuParticles, BGparticles, trigTowerPJ;
   TStarJetPicoEventHeader* header;
   TStarJetPicoEvent* event;
   TStarJetVectorContainer<TStarJetVector> * container;
@@ -123,16 +123,15 @@ int main ( int argc, const char** argv ) {         // funcions and cuts specifie
 	if ( nmatched>0 && (tow->GetEt()<trigTowEt) ) { continue; }
 	else {
 	  trigTowEt = tow->GetEt();
-	  trigTowEta = tow->GetEta();
-	  trigTowPhi = tow->GetPhi();
+	  trigTowerPJ.reset_PtYPhiM( tow->GetEt(), tow->GetEta(), tow->GetPhi, 0.0 );
 	  nmatched += 1;
 	}
       }
     }
     //if (nmatched==0) {continue;}
     if (nmatched==1) { // only accept events with 1 HT triggers
-      trigPhi = trigTowPhi;
-      trigEta = trigTowEta;
+      dPhiTrigLead = fabs( leadJet.delta_phi_to( trigTowerPJ ) );
+      dRTrigLead = leadJet.delta_R( trigTowerPJ );
 
       nHTtrig = nmatched;
 	
