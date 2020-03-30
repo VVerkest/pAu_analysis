@@ -130,9 +130,6 @@ int main ( int argc, const char** argv ) {         // funcions and cuts specifie
     }
     //if (nmatched==0) {continue;}
     if (nmatched==1) { // only accept events with 1 HT triggers
-      dPhiTrigLead = fabs( leadJet.delta_phi_to( trigTowerPJ ) );
-      dRTrigLead = leadJet.delta_R( trigTowerPJ );
-
       nHTtrig = nmatched;
 	
       Vz = header->GetPrimaryVertexZ();
@@ -157,7 +154,11 @@ int main ( int argc, const char** argv ) {         // funcions and cuts specifie
 	for ( int i=0; i<allJets.size(); ++i ) {
 	  hAllJets->Fill( allJets[i].pt(), allJets[i].eta(), allJets[i].phi() );
 	}
-	  
+
+	dPhiTrigLead = fabs( leadJet.delta_phi_to( trigTowerPJ ) );
+	dRTrigLead = leadJet.delta_R( trigTowerPJ );
+
+
 	RunID = header->GetRunId();
 	EventID = Reader.GetNOfCurrentEvent();
 	// TList *SelectedTowers = Reader.GetListOfSelectedTowers();
