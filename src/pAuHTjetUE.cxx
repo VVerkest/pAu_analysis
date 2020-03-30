@@ -123,7 +123,7 @@ int main ( int argc, const char** argv ) {         // funcions and cuts specifie
 	if ( nmatched>0 && (tow->GetEt()<trigTowEt) ) { continue; }
 	else {
 	  trigTowEt = tow->GetEt();
-	  trigTowerPJ.reset_momentum_PtYPhiM( tow->GetEt(), tow->GetEta(), tow->GetPhi(), 0.0 );
+	  trigTowerPJ.reset_PtYPhiM( tow->GetEt(), tow->GetEta(), tow->GetPhi(), 0.0 ); //reset_PtYPhiM!!
 	  nmatched += 1;
 	}
       }
