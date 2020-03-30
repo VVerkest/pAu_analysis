@@ -1,12 +1,12 @@
 //  specific parameters for pAu_HT_jets.cxx
 
-#include "PseudoJet.hh"
-#include "ClusterSequence.hh"
-#include "ClusterSequenceArea.hh"
-#include "AreaDefinition.hh"
-#include "Selector.hh"
-#include "tools/Filter.hh"
-#include "tools/Pruner.hh"
+#include "fastjet/PseudoJet.hh"
+#include "fastjet/ClusterSequence.hh"
+#include "fastjet/ClusterSequenceArea.hh"
+#include "fastjet/AreaDefinition.hh"
+#include "fastjet/Selector.hh"
+#include "fastjet/tools/Filter.hh"
+#include "fastjet/tools/Pruner.hh"
 
 #include "TROOT.h"
 #include "TRandom.h"
