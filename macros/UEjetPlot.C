@@ -41,8 +41,8 @@ void UEjetPlot(){
   TString name, saveName, title, avg, sigma;
   double chgRho, neuRho, rho;
   
-  //TString fileName = "out/UE/pAuHTjetUE_trackEffic.root";
-  TString fileName = "out/UE/pAuHTjetUE.root";
+  //  TString fileName = "out/UE/pAuHTjetUE.root";
+  TString fileName = "out/UE/pAuHTjetUE_1HTtrig_inLead.root";
   TFile* inFile = new TFile( fileName, "READ" );
 
   TH3D *hBGchg3D = (TH3D*) inFile->Get("hChgBgPtEtaPhi");

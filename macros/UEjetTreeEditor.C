@@ -38,7 +38,8 @@ void UEjetTreeEditor(){
   TString name, saveName, title, avg, sigma;
   double chgRho, neuRho;
   
-  TString fileName = "out/UE/pAuHTjetUE.root";
+  // TString fileName = "out/UE/pAuHTjetUE.root";
+  TString fileName = "out/UE/pAuHTjetUE_1HTtrig_inLead.root";
   TFile* inFile = new TFile( fileName, "UPDATE" );
 
   TTree *jetTree = (TTree*) inFile->Get("HTjetTree");
