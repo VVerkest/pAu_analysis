@@ -62,7 +62,7 @@ void UEdiffRho(){
   TString BBCselection[nEAbins] = { "BbcAdcSumEast>3559.12 && BbcAdcSumEast<11503", "BbcAdcSumEast>26718.1" };
 
   //TH1D *hRho_pt[nPtBins][nEtaBins][nEAbins];
-  array<array<array<TH1D*,nEAbins>,nEtaBins>,nPtBins> hRho_pt;
+  array<array<array<TH1D*,nPtBins>,nEtaBins>,nEAbins> hRho_pt;
   
   TString eastmidwest[nEtaBins] = { "East", "Mid", "West" };
   TString rhoVal[nEtaBins] = { "(chgEastRho_te+neuEastRho)", "(chgMidRho_te+neuMidRho)", "(chgWestRho_te+neuWestRho)" };
@@ -72,7 +72,7 @@ void UEdiffRho(){
   int EAmarker[nEAbins] = { 24, 25 };
 
   //TH1D *hRhoByEta_pt[nPtBins][nEAbins];
-  array<array<TH1D*,nEAbins>,nPtBins> hRhoByEta_pt;
+  array<array<TH1D*,nPtBins>,nEAbins> hRhoByEta_pt;
   
   for ( int a=0; a<nEAbins; ++a ) {
     for ( int p=0; p<nPtBins; ++p ) {
