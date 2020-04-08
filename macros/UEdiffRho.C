@@ -61,8 +61,9 @@ void UEdiffRho(){
   TString EAbinString[nEAbins] = { "Lo", "Hi" };
   TString BBCselection[nEAbins] = { "BbcAdcSumEast>3559.12 && BbcAdcSumEast<11503", "BbcAdcSumEast>26718.1" };
 
-  TH1D *hRho_pt[nPtBins][nEtaBins][nEAbins];
-
+  //TH1D *hRho_pt[nPtBins][nEtaBins][nEAbins];
+  array<array<array<TH1D*,nEAbins>,nEtaBins>,nPtBins> hRho_pt;
+  
   TString eastmidwest[nEtaBins] = { "East", "Mid", "West" };
   TString rhoVal[nEtaBins] = { "(chgEastRho_te+neuEastRho)", "(chgMidRho_te+neuMidRho)", "(chgWestRho_te+neuWestRho)" };
   TString ptSelection[nPtBins] = { "leadPt>10.0 && leadPt<15.0", "leadPt>=15.0 && leadPt<=20.0", "leadPt>20.0 && leadPt<30.0" };
@@ -70,25 +71,27 @@ void UEdiffRho(){
   int EAcolor[nEAbins] = { 810, 884 };
   int EAmarker[nEAbins] = { 24, 25 };
 
-  TH1D *hRhoByEta_pt[nPtBins][nEAbins];
-
+  //TH1D *hRhoByEta_pt[nPtBins][nEAbins];
+  array<array<TH1D*,nEAbins>,nPtBins> hRhoByEta_pt;
   
   for ( int a=0; a<nEAbins; ++a ) {
     for ( int p=0; p<nPtBins; ++p ) {
 
       name = "hRhoByEta" + EAbinString[a] + ptBinName[p];
       hRhoByEta_pt[p][a] = new TH1D( name, "", 3,-1.5,1.5 );
-
+    }
+  }
+  
+  for ( int a=0; a<nEAbins; ++a ) {
+    for ( int p=0; p<nPtBins; ++p ) {
+      
       for ( int e=0; e<nEtaBins; ++e ) {
-	//jetTree->Draw("(chgEastRho_te+neuEastRho)>>hEastHi_10_15","leadPt>10.0 && leadPt<15.0 && BbcAdcSumEast>26718.1","");
 	name = "h" + eastmidwest[e] + EAbinString[a] + ptBinName[p];
 	TString drawString = rhoVal[e] + ">>h" + name;
 	TString drawCuts = ptSelection[p] + " && " + BBCselection[a];
 	jetTree->Draw( drawString, drawCuts, "" );
 	hRho_pt[p][e][a] = (TH1D*)gDirectory->Get( name );
 	hRho_pt[p][e][a]->SetStats(0);
-
-	int ebin = e+1;
 
 	rho = hRho_pt[p][e][a]->GetMean(1);
 	stdev = hRho_pt[p][e][a]->GetMeanError(1);
