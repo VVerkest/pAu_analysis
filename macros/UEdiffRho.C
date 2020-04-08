@@ -26,33 +26,45 @@ void UEdiffRho(){
   TString name, saveName, title, avg, sigma;
   double chgRho, neuRho, midRho, eastRho, westRho, rho, stdev;
   
-  TString fileName = "out/UE/pAuHTjetUE.root";
+  TString fileName = "out/UE/pAuHTjetUE_1HTtrig_inLead.root";
   TFile* inFile = new TFile( fileName, "READ" );
 
   TTree *jetTree = (TTree*) inFile->Get("HTjetTree");
 
   //  Tree variables
   int RunID, EventID, nTowers, nPrimary, nGlobal, nVertices, refMult, gRefMult;
-  double Vz, BbcAdcEastSum, leadPt, leadEta, leadPhi, chgEastRho, chgMidRho, chgWestRho, neuEastRho, neuMidRho, neuWestRho;
+  double Vz, BbcAdcSumEast, leadPt, leadEta, leadPhi, chgEastRho_te, chgMidRho_te, chgWestRho_te, neuEastRho, neuMidRho, neuWestRho;
 
-  jetTree->SetBranchAddress( "RunID", &RunID );      	       		jetTree->SetBranchAddress( "EventID", &EventID );					jetTree->SetBranchAddress( "nTowers", &nTowers );
-  jetTree->SetBranchAddress( "nPrimary", &nPrimary );       		jetTree->SetBranchAddress( "nGlobal", &nGlobal );					jetTree->SetBranchAddress( "nVertices", &nVertices );
-  jetTree->SetBranchAddress( "refMult", &refMult );			jetTree->SetBranchAddress( "gRefMult", &gRefMult );		       		jetTree->SetBranchAddress( "Vz", &Vz );
-  jetTree->SetBranchAddress( "leadPt", &leadPt );	       			jetTree->SetBranchAddress( "BbcAdcEastSum", &BbcAdcEastSum );	jetTree->SetBranchAddress( "leadEta", &leadEta );
-  jetTree->SetBranchAddress( "leadPhi", &leadPhi );	       		jetTree->SetBranchAddress( "chgEastRho", &chgEastRho );	       		jetTree->SetBranchAddress( "chgMidRho", &chgMidRho );
-  jetTree->SetBranchAddress( "chgWestRho", &chgWestRho );	jetTree->SetBranchAddress( "neuEastRho", &neuEastRho );			jetTree->SetBranchAddress( "neuMidRho", &neuMidRho );
+  jetTree->SetBranchAddress( "RunID", &RunID );
+  jetTree->SetBranchAddress( "EventID", &EventID );
+  jetTree->SetBranchAddress( "nTowers", &nTowers );
+  jetTree->SetBranchAddress( "nPrimary", &nPrimary );
+  jetTree->SetBranchAddress( "nGlobal", &nGlobal );
+  jetTree->SetBranchAddress( "nVertices", &nVertices );
+  jetTree->SetBranchAddress( "refMult", &refMult );
+  jetTree->SetBranchAddress( "gRefMult", &gRefMult );
+  jetTree->SetBranchAddress( "Vz", &Vz );
+  jetTree->SetBranchAddress( "leadPt", &leadPt );
+  jetTree->SetBranchAddress( "BbcAdcSumEast", &BbcAdcSumEast );
+  jetTree->SetBranchAddress( "leadEta", &leadEta );
+  jetTree->SetBranchAddress( "leadPhi", &leadPhi );
+  jetTree->SetBranchAddress( "chgEastRho_te", &chgEastRho_te );
+  jetTree->SetBranchAddress( "chgMidRho_te", &chgMidRho_te );
+  jetTree->SetBranchAddress( "chgWestRho_te", &chgWestRho_te );
+  jetTree->SetBranchAddress( "neuEastRho", &neuEastRho );
+  jetTree->SetBranchAddress( "neuMidRho", &neuMidRho );
   jetTree->SetBranchAddress( "neuWestRho", &neuWestRho );
 
   int nEntries = jetTree->GetEntries();
 
   const int nEAbins = 2;
   TString EAbinString[nEAbins] = { "Lo", "Hi" };
-  TString BBCselection[nEAbins] = { "BbcAdcEastSum>4107 && BbcAdcEastSum<11503", "BbcAdcEastSum>28537" };
+  TString BBCselection[nEAbins] = { "BbcAdcSumEast>3559.12 && BbcAdcSumEast<11503", "BbcAdcSumEast>26718.1" };
 
   TH1D *hRho_pt[nPtBins][nEtaBins][nEAbins];
 
   TString eastmidwest[nEtaBins] = { "East", "Mid", "West" };
-  TString rhoVal[nEtaBins] = { "(chgEastRho+neuEastRho)", "(chgMidRho+neuMidRho)", "(chgWestRho+neuWestRho)" };
+  TString rhoVal[nEtaBins] = { "(chgEastRho_te+neuEastRho)", "(chgMidRho_te+neuMidRho)", "(chgWestRho_te+neuWestRho)" };
   TString ptSelection[nPtBins] = { "leadPt>10.0 && leadPt<15.0", "leadPt>=15.0 && leadPt<=20.0", "leadPt>20.0 && leadPt<30.0" };
 
   int EAcolor[nEAbins] = { 810, 884 };
@@ -68,7 +80,7 @@ void UEdiffRho(){
       hRhoByEta_pt[p][a] = new TH1D( name, "", 3,-1.5,1.5 );
 
       for ( int e=0; e<nEtaBins; ++e ) {
-	//jetTree->Draw("(chgEastRho+neuEastRho)>>hEastHi_10_15","leadPt>10.0 && leadPt<15.0 && BbcAdcEastSum>28537","");
+	//jetTree->Draw("(chgEastRho_te+neuEastRho)>>hEastHi_10_15","leadPt>10.0 && leadPt<15.0 && BbcAdcSumEast>26718.1","");
 	name = "h" + eastmidwest[e] + EAbinString[a] + ptBinName[p];
 	TString drawString = rhoVal[e] + ">>h" + name;
 	TString drawCuts = ptSelection[p] + " && " + BBCselection[a];
@@ -104,61 +116,4 @@ void UEdiffRho(){
   }
 
 
-
-
-  
-  // TH1D *hEastHi_eta[nEtaBins];
-  // TH1D *hMidHi_eta[nEtaBins];
-  // TH1D *hWestHi_eta[nEtaBins];
-
-  // TH1D *hEastLo_eta[nEtaBins];
-  // TH1D *hMidLo_eta[nEtaBins];
-  // TH1D *hWestLo_eta[nEtaBins];
-
-
-  
-
-  // jetTree->Draw("(chgEastRho+neuEastRho)>>hEastHi_10_15","leadPt>10.0 && leadPt<15.0 && BbcAdcEastSum>28537","");
-  // TH1D *hEastHi_10_15 = (TH1D*)gDirectory->Get("hEastHi_10_15");  hEastHi_10_15->Scale(1./hEastHi_10_15->Integral());
-  // jetTree->Draw("(chgEastRho+neuEastRho)>>hEastHi_15_20","leadPt>15.0 && leadPt<20.0 && BbcAdcEastSum>28537","");
-  // TH1D *hEastHi_15_20 = (TH1D*)gDirectory->Get("hEastHi_15_20");  hEastHi_15_20->Scale(1./hEastHi_15_20->Integral());
-  // jetTree->Draw("(chgEastRho+neuEastRho)>>hEastHi_20_30","leadPt>20.0 && leadPt<30.0 && BbcAdcEastSum>28537","");
-  // TH1D *hEastHi_20_30 = (TH1D*)gDirectory->Get("hEastHi_20_30");  hEastHi_20_30->Scale(1./hEastHi_20_30->Integral());
-
-  // jetTree->Draw("(chgMidRho+neuMidRho)>>hMidHi_10_15","leadPt>10.0 && leadPt<15.0 && BbcAdcEastSum>28537","");
-  // TH1D *hMidHi_10_15 = (TH1D*)gDirectory->Get("hMidHi_10_15");  hMidHi_10_15->Scale(1./hMidHi_10_15->Integral());
-  // jetTree->Draw("(chgMidRho+neuMidRho)>>hMidHi_15_20","leadPt>15.0 && leadPt<20.0 && BbcAdcEastSum>28537","");
-  // TH1D *hMidHi_15_20 = (TH1D*)gDirectory->Get("hMidHi_15_20");  hMidHi_15_20->Scale(1./hMidHi_15_20->Integral());
-  // jetTree->Draw("(chgMidRho+neuMidRho)>>hMidHi_20_30","leadPt>20.0 && leadPt<30.0 && BbcAdcEastSum>28537","");
-  // TH1D *hMidHi_20_30 = (TH1D*)gDirectory->Get("hMidHi_20_30");  hMidHi_20_30->Scale(1./hMidHi_20_30->Integral());
-
-  // jetTree->Draw("(chgWestRho+neuWestRho)>>hWestHi_10_15","leadPt>10.0 && leadPt<15.0 && BbcAdcEastSum>28537","");
-  // TH1D *hWestHi_10_15 = (TH1D*)gDirectory->Get("hWestHi_10_15");  hWestHi_10_15->Scale(1./hWestHi_10_15->Integral());
-  // jetTree->Draw("(chgWestRho+neuWestRho)>>hWestHi_15_20","leadPt>15.0 && leadPt<20.0 && BbcAdcEastSum>28537","");
-  // TH1D *hWestHi_15_20 = (TH1D*)gDirectory->Get("hWestHi_15_20");  hWestHi_15_20->Scale(1./hWestHi_15_20->Integral());
-  // jetTree->Draw("(chgWestRho+neuWestRho)>>hWestHi_20_30","leadPt>20.0 && leadPt<30.0 && BbcAdcEastSum>28537","");
-  // TH1D *hWestHi_20_30 = (TH1D*)gDirectory->Get("hWestHi_20_30");  hWestHi_20_30->Scale(1./hWestHi_20_30->Integral());
-
-
-  // jetTree->Draw("(chgEastRho+neuEastRho)>>hEastLo_10_15","leadPt>10.0 && leadPt<15.0 && BbcAdcEastSum>4107 && BbcAdcEastSum<11503","");
-  // TH1D *hEastLo_10_15 = (TH1D*)gDirectory->Get("hEastLo_10_15");  hEastLo_10_15->Scale(1./hEastLo_10_15->Integral());
-  // jetTree->Draw("(chgEastRho+neuEastRho)>>hEastLo_15_20","leadPt>15.0 && leadPt<20.0 && BbcAdcEastSum>4107 && BbcAdcEastSum<11503","");
-  // TH1D *hEastLo_15_20 = (TH1D*)gDirectory->Get("hEastLo_15_20");  hEastLo_15_20->Scale(1./hEastLo_15_20->Integral());
-  // jetTree->Draw("(chgEastRho+neuEastRho)>>hEastLo_20_30","leadPt>20.0 && leadPt<30.0 && BbcAdcEastSum>4107 && BbcAdcEastSum<11503","");
-  // TH1D *hEastLo_20_30 = (TH1D*)gDirectory->Get("hEastLo_20_30");  hEastLo_20_30->Scale(1./hEastLo_20_30->Integral());
-
-  // jetTree->Draw("(chgMidRho+neuMidRho)>>hMidLo_10_15","leadPt>10.0 && leadPt<15.0 && BbcAdcEastSum>4107 && BbcAdcEastSum<11503","");
-  // TH1D *hMidLo_10_15 = (TH1D*)gDirectory->Get("hMidLo_10_15");  hMidLo_10_15->Scale(1./hMidLo_10_15->Integral());
-  // jetTree->Draw("(chgMidRho+neuMidRho)>>hMidLo_15_20","leadPt>15.0 && leadPt<20.0 && BbcAdcEastSum>4107 && BbcAdcEastSum<11503","");
-  // TH1D *hMidLo_15_20 = (TH1D*)gDirectory->Get("hMidLo_15_20");  hMidLo_15_20->Scale(1./hMidLo_15_20->Integral());
-  // jetTree->Draw("(chgMidRho+neuMidRho)>>hMidLo_20_30","leadPt>20.0 && leadPt<30.0 && BbcAdcEastSum>4107 && BbcAdcEastSum<11503","");
-  // TH1D *hMidLo_20_30 = (TH1D*)gDirectory->Get("hMidLo_20_30");  hMidLo_20_30->Scale(1./hMidLo_20_30->Integral());
-
-  // jetTree->Draw("(chgWestRho+neuWestRho)>>hWestLo_10_15","leadPt>10.0 && leadPt<15.0 && BbcAdcEastSum>4107 && BbcAdcEastSum<11503","");
-  // TH1D *hWestLo_10_15 = (TH1D*)gDirectory->Get("hWestLo_10_15");  hWestLo_10_15->Scale(1./hWestLo_10_15->Integral());
-  // jetTree->Draw("(chgWestRho+neuWestRho)>>hWestLo_15_20","leadPt>15.0 && leadPt<20.0 && BbcAdcEastSum>4107 && BbcAdcEastSum<11503","");
-  // TH1D *hWestLo_15_20 = (TH1D*)gDirectory->Get("hWestLo_15_20");  hWestLo_15_20->Scale(1./hWestLo_15_20->Integral());
-  // jetTree->Draw("(chgWestRho+neuWestRho)>>hWestLo_20_30","leadPt>20.0 && leadPt<30.0 && BbcAdcEastSum>4107 && BbcAdcEastSum<11503","");
-  // TH1D *hWestLo_20_30 = (TH1D*)gDirectory->Get("hWestLo_20_30");  hWestLo_20_30->Scale(1./hWestLo_20_30->Integral());
-  
 }
