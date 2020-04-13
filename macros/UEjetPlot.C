@@ -181,11 +181,11 @@ void UEjetPlot(){
     // neuRho = ( neuEastRho + neuMidRho + neuWestRho )/3;
     // rho = chgRho + neuRho;
 
-    hRho->Fill(rho_te);
-    hTowersVsRho->Fill(rho_te,nTowers);
-    hLeadJetPtRhoEta->Fill(leadPt,rho_te,leadEta);
+    hRho->Fill(rho);
+    hTowersVsRho->Fill(rho,nTowers);
+    hLeadJetPtRhoEta->Fill(leadPt,rho,leadEta);
     hLeadPtEtaPhi->Fill(leadPt,leadEta,leadPhi);
-    hPt_UE_BBCsumE->Fill(leadPt,rho_te,BbcAdcSumEast);
+    hPt_UE_BBCsumE->Fill(leadPt,rho,BbcAdcSumEast);
     hBBCsumE->Fill(BbcAdcSumEast);
     BBCEintegral = hBBCsumE->Integral(0,i);
     hBBCsumE_integral->Fill( BBCEintegral );
@@ -388,7 +388,7 @@ void UEjetPlot(){
   c1->SaveAs( "plots/UE/LeadEta_by_pt.pdf" , "PDF" );
 
 
-  jetTree->Draw("leadPt:rho_te>>hRho2d","","COLZ");
+  jetTree->Draw("leadPt:rho>>hRho2d","","COLZ");
   TH2D *hRho2d = (TH2D*)gDirectory->Get("hRho2d");
   c1->SetLogy();
   TLegend *leg2 = new TLegend(0.65, 0.65, 0.9, 0.9,NULL,"brNDC");    // LEGEND 0
@@ -433,7 +433,7 @@ void UEjetPlot(){
 
 
   // LO: 3559.12-10126.1
-  jetTree->Draw("leadPt:rho_te>>hRho2d_LO","BbcAdcSumEast>3559.12 && BbcAdcSumEast<10126.1","COLZ");
+  jetTree->Draw("leadPt:rho>>hRho2d_LO","BbcAdcSumEast>3559.12 && BbcAdcSumEast<10126.1","COLZ");
   TH2D *hRho2d_LO = (TH2D*)gDirectory->Get("hRho2d_LO");
   c1->SetLogy();
   TLegend *leg3 = new TLegend(0.65, 0.65, 0.9, 0.9,NULL,"brNDC");    // LEGEND 0
@@ -444,7 +444,7 @@ void UEjetPlot(){
   leg3->AddEntry((TObject*)0,"#bf{<#sigma>}", "");
 
   TH1D *hPtRho_LO[nPtBins];
-  TH2D *sPtRho_LO = new TH2D( "sPtRho_LO", "Low EA: Underlying Event by Lead Jet p_{T};#rho (GeV)", 20,0,15, 10,0.000001,1 );
+  TH2D *sPtRho_LO = new TH2D( "sPtRho_LO", "Low EA: Underlying Event by Lead Jet p_{T};#rho (GeV)",  20,0,8, 10,0.00001,1 );
   sPtRho_LO->SetStats(0);
   sPtRho_LO->Draw();
   for ( int p=0; p<nPtBins; ++p ) {
@@ -477,7 +477,7 @@ void UEjetPlot(){
 
 
   // HI: 26718.1+
-  jetTree->Draw("leadPt:rho_te>>hRho2d_HI","BbcAdcSumEast>26718.1","COLZ");
+  jetTree->Draw("leadPt:rho>>hRho2d_HI","BbcAdcSumEast>26718.1","COLZ");
   TH2D *hRho2d_HI = (TH2D*)gDirectory->Get("hRho2d_HI");
   c1->SetLogy();
   TLegend *leg4 = new TLegend(0.65, 0.65, 0.9, 0.9,NULL,"brNDC");    // LEGEND 0
@@ -488,7 +488,7 @@ void UEjetPlot(){
   leg4->AddEntry((TObject*)0,"#bf{<#sigma>}", "");
 
   TH1D *hPtRho_HI[nPtBins];
-  TH2D *sPtRho_HI = new TH2D( "sPtRho_HI", "High EA: Underlying Event by Lead Jet p_{T};#rho (GeV)", 20,0,15, 10,0.000001,1 );
+  TH2D *sPtRho_HI = new TH2D( "sPtRho_HI", "High EA: Underlying Event by Lead Jet p_{T};#rho (GeV)", 20,0,8, 10,0.00001,1 );
   sPtRho_HI->SetStats(0);
   sPtRho_HI->Draw();
   for ( int p=0; p<nPtBins; ++p ) {
@@ -526,7 +526,7 @@ void UEjetPlot(){
   
   //  corrected lead pt
   
-  jetTree->Draw("leadPtCorrected:rho_te>>hRhoCorr2d","","COLZ");
+  jetTree->Draw("leadPtCorrected:rho>>hRhoCorr2d","","COLZ");
   TH2D *hRhoCorr2d = (TH2D*)gDirectory->Get("hRhoCorr2d");
   c1->SetLogy();
   TLegend *leg12 = new TLegend(0.65, 0.65, 0.9, 0.9,NULL,"brNDC");    // LEGEND 0
@@ -571,7 +571,7 @@ void UEjetPlot(){
 
 
   // LO: 3559.12-10126.1
-  jetTree->Draw("leadPtCorrected:rho_te>>hRhoCorr2d_LO","BbcAdcSumEast>3559.12 && BbcAdcSumEast<10126.1","COLZ");
+  jetTree->Draw("leadPtCorrected:rho>>hRhoCorr2d_LO","BbcAdcSumEast>3559.12 && BbcAdcSumEast<10126.1","COLZ");
   TH2D *hRhoCorr2d_LO = (TH2D*)gDirectory->Get("hRhoCorr2d_LO");
   c1->SetLogy();
   TLegend *leg13 = new TLegend(0.65, 0.65, 0.9, 0.9,NULL,"brNDC");    // LEGEND 0
@@ -615,7 +615,7 @@ void UEjetPlot(){
 
 
   // HI: 26718.1+
-  jetTree->Draw("leadPtCorrected:rho_te>>hRhoCorr2d_HI","BbcAdcSumEast>26718.1","COLZ");
+  jetTree->Draw("leadPtCorrected:rho>>hRhoCorr2d_HI","BbcAdcSumEast>26718.1","COLZ");
   TH2D *hRhoCorr2d_HI = (TH2D*)gDirectory->Get("hRhoCorr2d_HI");
   c1->SetLogy();
   TLegend *leg14 = new TLegend(0.65, 0.65, 0.9, 0.9,NULL,"brNDC");    // LEGEND 0
