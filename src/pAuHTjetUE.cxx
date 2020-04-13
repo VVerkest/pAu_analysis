@@ -176,7 +176,7 @@ int main ( int argc, const char** argv ) {         // funcions and cuts specifie
 	dPhiTrigLead = fabs( leadJet.delta_phi_to( trigTowerPJ ) );
 	dRTrigLead = leadJet.delta_R( trigTowerPJ );
 
-	if ( dRTrigLead <= R ) {
+	if ( dRTrigLead<=R || fabs(dRTrigLead)>=(pi-R) ) {
 	  
 	  Selector allJetSelector = SelectorPtMin(2.0) && ptMaxSelector && jetEtaSelector;
 	  allJets = sorted_by_pt( allJetSelector( jetCluster.inclusive_jets() ) );     // EXTRACT ALL JETS IN >=5 GeV
