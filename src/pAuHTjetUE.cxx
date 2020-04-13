@@ -169,7 +169,8 @@ int main ( int argc, const char** argv ) {         // funcions and cuts specifie
 	  }
 	}
       }
-      if (nmatched==1) { // only accept events with 1 HT triggers
+      //if (nmatched==1) { // only accept events with 1 HT triggers
+      if (nmatched>0) {
 	nHTtrig = nmatched;
 	
 	dPhiTrigLead = fabs( leadJet.delta_phi_to( trigTowerPJ ) );
