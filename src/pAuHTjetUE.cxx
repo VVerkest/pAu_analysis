@@ -72,7 +72,8 @@ int main ( int argc, const char** argv ) {         // funcions and cuts specifie
   Selector leadJetSelector = jetEtaSelector && leadPtMinSelector;
   Selector ptMaxSelector = SelectorPtMax( 30.0 );
 
-  PseudoJet leadJet, trigTowerPJ;  vector<PseudoJet> rawParticles, rawJets, allJets, chgParticles, neuParticles, BGparticles;
+  PseudoJet leadJet, trigTowerPJ, towPJ;
+  vector<PseudoJet> rawParticles, rawJets, allJets, chgParticles, neuParticles, BGparticles;
   TStarJetPicoEventHeader* header;
   TStarJetPicoEvent* event;
   TStarJetVectorContainer<TStarJetVector> * container;
@@ -82,7 +83,7 @@ int main ( int argc, const char** argv ) {         // funcions and cuts specifie
   TStarJetPicoReader Reader;
   int numEvents = number_of_events;        // total events in HT: 152,007,032
   InitReader( Reader, Chain, numEvents );
-  double deltaR;       double trigTowEta, trigTowPhi;
+  double deltaPhi, deltaR;       double trigTowEta, trigTowPhi;
 
   Reader.NextEvent();
   // ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~  BEGIN EVENT LOOP!  ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~
@@ -155,18 +156,26 @@ int main ( int argc, const char** argv ) {         // funcions and cuts specifie
 	trig = (TStarJetPicoTriggerInfo *)event->GetTrigObj(i);
 	if ( trig->isBHT2() && UseTriggerTower( trig->GetId()) ) { trigTowers.push_back( trig->GetId() ); }
       }
-      std::sort(trigTowers.begin(), trigTowers.end());
+      sort(trigTowers.begin(), trigTowers.end());
 
       int nmatched = 0;
-      for (int i=0; i<nTowers; ++i){
+      for (int i=0; i<nTowers; ++i){				// loop throught selected towers in event
 	tow = (TStarJetPicoTower*)SelectedTowers->At(i);
-	if ( tow->GetEt()>=5.4 && std::count(trigTowers.begin(), trigTowers.end(), tow->GetId())) {
-	  if ( nmatched>0 && (tow->GetEt()<trigTowEt) ) { continue; }
-	  else {
-	    trigTowEt = tow->GetEt();
-	    trigTowerPJ.reset_PtYPhiM( tow->GetEt(), tow->GetEta(), tow->GetPhi(), 0.0 ); //reset_PtYPhiM!!
-	    nmatched += 1;
+	if ( tow->GetEt()>=5.4 && count(trigTowers.begin(), trigTowers.end(), tow->GetId())) { // min 5.4 GeV tower and must be in list of HT towers
+
+	  towPJ.reset_PtYPhiM( tow->GetEt(), tow->GetEta(), tow->GetPhi(), 0.0 ); //reset_PtYPhiM!!
+	  deltaPhi = fabs( leadJet.delta_phi_to( towPJ ) );
+	  deltaR = leadJet.delta_R( towPJ );
+
+	  if ( deltaR<=R || fabs(deltaPhi)>=(pi-R) ) {  // require trigger
+	    if ( nmatched>0 && (tow->GetEt()<trigTowEt) ) { continue; }   // more than 1 trigger tower
+	    else {							// first trigger tower
+	      trigTowEt = tow->GetEt();
+	      trigTowerPJ.reset_PtYPhiM( tow->GetEt(), tow->GetEta(), tow->GetPhi(), 0.0 ); //reset_PtYPhiM!!
+	      nmatched += 1;
+	    }
 	  }
+	  
 	}
       }
       //if (nmatched==1) { // only accept events with 1 HT triggers
@@ -176,7 +185,7 @@ int main ( int argc, const char** argv ) {         // funcions and cuts specifie
 	dPhiTrigLead = fabs( leadJet.delta_phi_to( trigTowerPJ ) );
 	dRTrigLead = leadJet.delta_R( trigTowerPJ );
 
-	if ( dRTrigLead<=R || fabs(dRTrigLead)>=(pi-R) ) {
+	if ( dRTrigLead<=R || fabs(dPhiTrigLead)>=(pi-R) ) {
 	  
 	  Selector allJetSelector = SelectorPtMin(2.0) && ptMaxSelector && jetEtaSelector;
 	  allJets = sorted_by_pt( allJetSelector( jetCluster.inclusive_jets() ) );     // EXTRACT ALL JETS IN >=5 GeV
