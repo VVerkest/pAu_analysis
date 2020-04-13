@@ -105,47 +105,73 @@ int main ( int argc, const char** argv ) {         // funcions and cuts specifie
     TList *SelectedTowers = Reader.GetListOfSelectedTowers();
     nTowers = CountTowers( SelectedTowers );
 
-    int trigTowId;
-    TStarJetPicoTriggerInfo *trig;
-    TStarJetPicoTower *tow, *triggerTower;
-    double trigTowEt = 0.0;
-    std::vector<int> trigTowers;
-    for ( int i=0; i<event->GetTrigObjs()->GetEntries(); ++i ) {
-      trig = (TStarJetPicoTriggerInfo *)event->GetTrigObj(i);
-      if ( trig->isBHT2() && UseTriggerTower( trig->GetId()) ) { trigTowers.push_back( trig->GetId() ); }
-    }
-    std::sort(trigTowers.begin(), trigTowers.end());
+    // int trigTowId;
+    // TStarJetPicoTriggerInfo *trig;
+    // TStarJetPicoTower *tow, *triggerTower;
+    // double trigTowEt = 0.0;
+    // std::vector<int> trigTowers;
+    // for ( int i=0; i<event->GetTrigObjs()->GetEntries(); ++i ) {
+    //   trig = (TStarJetPicoTriggerInfo *)event->GetTrigObj(i);
+    //   if ( trig->isBHT2() && UseTriggerTower( trig->GetId()) ) { trigTowers.push_back( trig->GetId() ); }
+    // }
+    // std::sort(trigTowers.begin(), trigTowers.end());
 
-    int nmatched = 0;
-    for (int i=0; i<nTowers; ++i){
-      tow = (TStarJetPicoTower*)SelectedTowers->At(i);
-      if ( tow->GetEt()>=5.4 && std::count(trigTowers.begin(), trigTowers.end(), tow->GetId())) {
-	if ( nmatched>0 && (tow->GetEt()<trigTowEt) ) { continue; }
-	else {
-	  trigTowEt = tow->GetEt();
-	  trigTowerPJ.reset_PtYPhiM( tow->GetEt(), tow->GetEta(), tow->GetPhi(), 0.0 ); //reset_PtYPhiM!!
-	  nmatched += 1;
+    // int nmatched = 0;
+    // for (int i=0; i<nTowers; ++i){
+    //   tow = (TStarJetPicoTower*)SelectedTowers->At(i);
+    //   if ( tow->GetEt()>=5.4 && std::count(trigTowers.begin(), trigTowers.end(), tow->GetId())) {
+    // 	if ( nmatched>0 && (tow->GetEt()<trigTowEt) ) { continue; }
+    // 	else {
+    // 	  trigTowEt = tow->GetEt();
+    // 	  trigTowerPJ.reset_PtYPhiM( tow->GetEt(), tow->GetEta(), tow->GetPhi(), 0.0 ); //reset_PtYPhiM!!
+    // 	  nmatched += 1;
+    // 	}
+    //   }
+    // }
+    // if (nmatched==1) { // only accept events with 1 HT triggers
+    //   nHTtrig = nmatched;
+	
+    Vz = header->GetPrimaryVertexZ();
+    //if ( UseHTevent( header, event, vzCut, Vz ) == false ) { continue; } // Skip events based on: Run#, vz cut, BBCSumE; only accept HT events
+	
+    GatherParticles( container, rawParticles );
+
+    GhostedAreaSpec gAreaSpec( 1.0, 1, 0.01 );
+    AreaDefinition area_def(active_area_explicit_ghosts, gAreaSpec);
+    ClusterSequenceArea jetCluster( rawParticles, jet_def, area_def); 
+      
+    leadJetSelector = leadPtMinSelector && jetEtaSelector;
+    rawJets = sorted_by_pt( leadJetSelector( jetCluster.inclusive_jets() ) );     // EXTRACT ALL JETS IN >=10 GeV
+    
+    if ( rawJets.size()>0 ) {
+      leadJet = rawJets[0]; 
+
+      int trigTowId;
+      TStarJetPicoTriggerInfo *trig;
+      TStarJetPicoTower *tow, *triggerTower;
+      double trigTowEt = 0.0;
+      std::vector<int> trigTowers;
+      for ( int i=0; i<event->GetTrigObjs()->GetEntries(); ++i ) {
+	trig = (TStarJetPicoTriggerInfo *)event->GetTrigObj(i);
+	if ( trig->isBHT2() && UseTriggerTower( trig->GetId()) ) { trigTowers.push_back( trig->GetId() ); }
+      }
+      std::sort(trigTowers.begin(), trigTowers.end());
+
+      int nmatched = 0;
+      for (int i=0; i<nTowers; ++i){
+	tow = (TStarJetPicoTower*)SelectedTowers->At(i);
+	if ( tow->GetEt()>=5.4 && std::count(trigTowers.begin(), trigTowers.end(), tow->GetId())) {
+	  if ( nmatched>0 && (tow->GetEt()<trigTowEt) ) { continue; }
+	  else {
+	    trigTowEt = tow->GetEt();
+	    trigTowerPJ.reset_PtYPhiM( tow->GetEt(), tow->GetEta(), tow->GetPhi(), 0.0 ); //reset_PtYPhiM!!
+	    nmatched += 1;
+	  }
 	}
       }
-    }
-    if (nmatched==1) { // only accept events with 1 HT triggers
-      nHTtrig = nmatched;
+      if (nmatched==1) { // only accept events with 1 HT triggers
+	nHTtrig = nmatched;
 	
-      Vz = header->GetPrimaryVertexZ();
-      //if ( UseHTevent( header, event, vzCut, Vz ) == false ) { continue; } // Skip events based on: Run#, vz cut, BBCSumE; only accept HT events
-	
-      GatherParticles( container, rawParticles );
-
-      GhostedAreaSpec gAreaSpec( 1.0, 1, 0.01 );
-      AreaDefinition area_def(active_area_explicit_ghosts, gAreaSpec);
-      ClusterSequenceArea jetCluster( rawParticles, jet_def, area_def); 
-      
-      leadJetSelector = leadPtMinSelector && jetEtaSelector;
-      rawJets = sorted_by_pt( leadJetSelector( jetCluster.inclusive_jets() ) );     // EXTRACT ALL JETS IN >=10 GeV
-    
-      if ( rawJets.size()>0 ) {
-	leadJet = rawJets[0]; 
-
 	dPhiTrigLead = fabs( leadJet.delta_phi_to( trigTowerPJ ) );
 	dRTrigLead = leadJet.delta_R( trigTowerPJ );
 
