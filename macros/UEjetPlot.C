@@ -42,7 +42,8 @@ void UEjetPlot(){
   double chgRho, neuRho, rho;
   
   //  TString fileName = "out/UE/pAuHTjetUE.root";
-  TString fileName = "out/UE/pAuHTjetUE_1HTtrig_inLead.root";
+  //  TString fileName = "out/UE/pAuHTjetUE_1HTtrig_inLead.root";
+  TString fileName = "out/UE/pAuHTjetUE_inLead.root";
   TFile* inFile = new TFile( fileName, "READ" );
 
   TH3D *hBGchg3D = (TH3D*) inFile->Get("hChgBgPtEtaPhi");
@@ -246,26 +247,26 @@ void UEjetPlot(){
 
   hLeadPtVsPtCorrected->Scale(1./hLeadPtVsPtCorrected->Integral("WIDTH"));
   hLeadPtVsPtCorrected->Draw("COLZ");
-  c0->SaveAs( "plots/UE/leadPtVsPtCorrected.pdf" , "PDF" );
+  c0->SaveAs( "plots/UE/inJet/leadPtVsPtCorrected.pdf" , "PDF" );
   
   hBGchg->Scale(1./hBGchg->Integral("WIDTH"));
   hBGchg->Draw("COLZ");
-  c0->SaveAs( "plots/UE/chgBgEtaPhi.pdf" , "PDF" );
+  c0->SaveAs( "plots/UE/inJet/chgBgEtaPhi.pdf" , "PDF" );
   
   hBGneu->Scale(1./hBGneu->Integral("WIDTH"));
   hBGneu->Draw("COLZ");
-  c0->SaveAs( "plots/UE/neuBgEtaPhi.pdf" , "PDF" );
+  c0->SaveAs( "plots/UE/inJet/neuBgEtaPhi.pdf" , "PDF" );
 
   hTowersVsRho->Scale(1./hTowersVsRho->Integral("WIDTH"));
   hTowersVsRho->GetZaxis()->SetRangeUser(0.0000001,1);
   hTowersVsRho->Draw("COLZ");
-  c0->SaveAs( "plots/UE/towersVsRho.pdf" , "PDF" );
+  c0->SaveAs( "plots/UE/inJet/towersVsRho.pdf" , "PDF" );
 
   c0->SetLogy();
 
   hRho->Scale(1./hRho->Integral("WIDTH"));
   hRho->Draw();
-  c0->SaveAs( "plots/UE/rho.pdf" , "PDF" );
+  c0->SaveAs( "plots/UE/inJet/rho.pdf" , "PDF" );
 
   TCanvas * c1 = new TCanvas( "c1" , "" ,700 ,500 );              // CANVAS 1
   
@@ -292,7 +293,7 @@ void UEjetPlot(){
 
   }
   leg0->Draw();
-  c1->SaveAs( "plots/UE/BBCEastSum_by_eta.pdf" , "PDF" );
+  c1->SaveAs( "plots/UE/inJet/BBCEastSum_by_eta.pdf" , "PDF" );
   c1->SetLogy(0);
 
 
@@ -321,7 +322,7 @@ void UEjetPlot(){
 
   }
   leg0a->Draw();
-  c1->SaveAs( "plots/UE/BBCEastSum_by_pt.pdf" , "PDF" );
+  c1->SaveAs( "plots/UE/inJet/BBCEastSum_by_pt.pdf" , "PDF" );
   c1->SetLogy(0);
 
 
@@ -350,7 +351,7 @@ void UEjetPlot(){
 
   }
   leg0b->Draw();
-  c1->SaveAs( "plots/UE/BBCEastSum_by_ptCorrected.pdf" , "PDF" );
+  c1->SaveAs( "plots/UE/inJet/BBCEastSum_by_ptCorrected.pdf" , "PDF" );
   c1->SetLogy(0);
 
 
@@ -385,7 +386,7 @@ void UEjetPlot(){
 
   }
   leg1->Draw();
-  c1->SaveAs( "plots/UE/LeadEta_by_pt.pdf" , "PDF" );
+  c1->SaveAs( "plots/UE/inJet/LeadEta_by_pt.pdf" , "PDF" );
 
 
   jetTree->Draw("leadPt:rho>>hRho2d","","COLZ");
@@ -426,7 +427,7 @@ void UEjetPlot(){
     leg2->AddEntry((TObject*)0,sigma, "");
   }
   leg2->Draw();
-  c1->SaveAs("plots/UE/rhoByLeadPt.pdf","PDF");
+  c1->SaveAs("plots/UE/inJet/rhoByLeadPt.pdf","PDF");
 
 
 
@@ -471,7 +472,7 @@ void UEjetPlot(){
     leg3->AddEntry((TObject*)0,sigma, "");
   }
   leg3->Draw();
-  c1->SaveAs("plots/UE/rhoByLeadPt_LOEA.pdf","PDF");
+  c1->SaveAs("plots/UE/inJet/rhoByLeadPt_LOEA.pdf","PDF");
 
 
 
@@ -515,7 +516,7 @@ void UEjetPlot(){
     leg4->AddEntry((TObject*)0,sigma, "");
   }
   leg4->Draw();
-  c1->SaveAs("plots/UE/rhoByLeadPt_HIEA.pdf","PDF");
+  c1->SaveAs("plots/UE/inJet/rhoByLeadPt_HIEA.pdf","PDF");
 
 
 
@@ -564,7 +565,7 @@ void UEjetPlot(){
     leg12->AddEntry((TObject*)0,sigma, "");
   }
   leg12->Draw();
-  c1->SaveAs("plots/UE/rhoByLeadPt_correctedPt.pdf","PDF");
+  c1->SaveAs("plots/UE/inJet/rhoByLeadPt_correctedPt.pdf","PDF");
 
 
 
@@ -609,7 +610,7 @@ void UEjetPlot(){
     leg13->AddEntry((TObject*)0,sigma, "");
   }
   leg13->Draw();
-  c1->SaveAs("plots/UE/rhoByLeadPt_LOEA_correctedPt.pdf","PDF");
+  c1->SaveAs("plots/UE/inJet/rhoByLeadPt_LOEA_correctedPt.pdf","PDF");
 
 
 
@@ -653,7 +654,7 @@ void UEjetPlot(){
     leg14->AddEntry((TObject*)0,sigma, "");
   }
   leg14->Draw();
-  c1->SaveAs("plots/UE/rhoByLeadPt_HIEA_correctedPt.pdf","PDF");
+  c1->SaveAs("plots/UE/inJet/rhoByLeadPt_HIEA_correctedPt.pdf","PDF");
 
 
 
@@ -703,7 +704,7 @@ void UEjetPlot(){
 
     }
     leg5[p]->Draw();
-    saveName = "plots/UE/BBCEastSum_by_eta" + ptBinName[p] +".pdf";
+    saveName = "plots/UE/inJet/BBCEastSum_by_eta" + ptBinName[p] +".pdf";
     c2->SaveAs( saveName , "PDF" );
   }
 
@@ -739,7 +740,7 @@ void UEjetPlot(){
 
     }
     leg6[p]->Draw();
-    saveName = "plots/UE/BBCEastSum_by_eta" + ptBinName[p] +"_corrected.pdf";
+    saveName = "plots/UE/inJet/BBCEastSum_by_eta" + ptBinName[p] +"_corrected.pdf";
     c2->SaveAs( saveName , "PDF" );
   }
 
@@ -785,6 +786,6 @@ void UEjetPlot(){
   pad1->cd();
   pad1->BuildLegend();
 
-  c3->SaveAs("plots/UE/CorrectedPtRatioPlot.pdf","PDF");
+  c3->SaveAs("plots/UE/inJet/CorrectedPtRatioPlot.pdf","PDF");
 
 }
