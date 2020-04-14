@@ -230,6 +230,7 @@ int main ( int argc, const char** argv ) {         // funcions and cuts specifie
 	  neuMidRho = neuMidSum/midArea;
 	  neuWestRho = neuWestSum/westArea;
 
+	  chgParticles.clear(); // clear vector!
 	  GatherChargedBGwithEfficiency( leadJet, container, chgParticles, efficFile );   // gather BG
 	  CalculateBGsubtractedChargedRho(chgParticles,chgEastSum,chgMidSum,chgWestSum);
 	  chgEastRho_te = chgEastSum/eastArea;
