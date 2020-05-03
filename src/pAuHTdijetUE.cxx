@@ -69,7 +69,8 @@ int main ( int argc, const char** argv ) {         // funcions and cuts specifie
   Selector leadJetSelector = jetEtaSelector && leadPtMinSelector;
   Selector ptMaxSelector = SelectorPtMax( 30.0 );
 
-  PseudoJet leadJet, recoJet;  vector<PseudoJet> rawParticles, rawJets, chgParticles, neuParticles, BGparticles, recoCandidates;
+  PseudoJet leadJet, recoJet, trigTowerPJ, towPJ;
+  vector<PseudoJet> rawParticles, rawJets, chgParticles, neuParticles, BGparticles, recoCandidates;
   TStarJetPicoEventHeader* header;
   TStarJetPicoEvent* event;
   TStarJetVectorContainer<TStarJetVector> * container;
@@ -79,7 +80,7 @@ int main ( int argc, const char** argv ) {         // funcions and cuts specifie
   TStarJetPicoReader Reader;
   int numEvents = number_of_events;        // total events in HT: 152,007,032
   InitReader( Reader, Chain, numEvents );
-
+  double deltaPhi, deltaR;       double trigTowEta, trigTowPhi;
 
   // ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~  BEGIN EVENT LOOP!  ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~
   while ( Reader.NextEvent() ) {
@@ -98,7 +99,10 @@ int main ( int argc, const char** argv ) {         // funcions and cuts specifie
     if (!(header->HasTriggerId(500205) || header->HasTriggerId(500215))) {continue;}   //  ONLY SELECT HT TRIGGER EVENTS
     if ( header->GetBbcAdcSumEast() > 64000 ) { continue; }
     if ( header->GetBbcAdcSumEast() < 3559.12 ) { continue; }     //  neglect 0-10% event activity
-    
+
+    TList *SelectedTowers = Reader.GetListOfSelectedTowers();
+    nTowers = CountTowers( SelectedTowers );
+
     Vz = header->GetPrimaryVertexZ();
     //if ( UseHTevent( header, event, vzCut, Vz ) == false ) { continue; } // Skip events based on: Run#, vz cut, BBCSumE; only accept HT events
 
@@ -185,8 +189,6 @@ int main ( int argc, const char** argv ) {         // funcions and cuts specifie
 	  
 	    RunID = header->GetRunId();
 	    EventID = Reader.GetNOfCurrentEvent();
-	    TList *SelectedTowers = Reader.GetListOfSelectedTowers();
-	    nTowers = CountTowers( SelectedTowers );
 	    nPrimary = header->GetNOfPrimaryTracks();
 	    nGlobal = header->GetNGlobalTracks();
 	    nVertices = header->GetNumberOfVertices();
