@@ -14,7 +14,7 @@ int main ( int argc, const char** argv ) {         // funcions and cuts specifie
   
   vector<string> arguments( argv+1, argv+argc );
   if ( argc ==  4 ) {    inFile = arguments[0];    outFile = arguments[1];    number_of_events = atoi(arguments[2].c_str()); }
-  else if ( argc==1 ) { inFile="production_pAu200_2015/HT/pAu_2015_200_HT*.root"; outFile="out/UE/pAuHTdijetUE.root"; number_of_events=100000; }
+  else if ( argc==1 ) { inFile="production_pAu200_2015/HT/pAu_2015_200_HT*.root"; outFile="out/UE/pAuHTdijetUE.root"; number_of_events=100; }
   else { cerr<< "incorrect number of command line arguments"; return -1; }
 
   TH1::SetDefaultSumw2();  TH2::SetDefaultSumw2();  TH3::SetDefaultSumw2();
@@ -114,6 +114,8 @@ int main ( int argc, const char** argv ) {         // funcions and cuts specifie
 
     leadJetSelector = leadPtMinSelector && ptMaxSelector && jetEtaSelector;
     rawJets = sorted_by_pt( leadJetSelector( jetCluster.inclusive_jets() ) );     // EXTRACT ALL JETS IN 10-30 GeV RANGE
+
+    cout<<"1"<<endl;
     
     if ( rawJets.size()>0 ) {
       leadJet = rawJets[0]; 
@@ -179,8 +181,7 @@ int main ( int argc, const char** argv ) {         // funcions and cuts specifie
 	}
 	else { continue; }
 	
-	if ( hasReco == false ) { continue; }
-	else {
+	if ( hasReco == true ) {
 
 	  dRTrigLead = leadJet.delta_R( trigTowerPJ );
 	  dRTrigReco = recoJet.delta_R( trigTowerPJ );
