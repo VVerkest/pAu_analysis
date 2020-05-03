@@ -114,80 +114,76 @@ int main ( int argc, const char** argv ) {         // funcions and cuts specifie
 
     leadJetSelector = leadPtMinSelector && ptMaxSelector && jetEtaSelector;
     rawJets = sorted_by_pt( leadJetSelector( jetCluster.inclusive_jets() ) );     // EXTRACT ALL JETS IN 10-30 GeV RANGE
-
-    cout<<"1"<<endl;
     
     if ( rawJets.size()>0 ) {
       leadJet = rawJets[0]; 
 
-      int trigTowId;
-      TStarJetPicoTriggerInfo *trig;
-      TStarJetPicoTower *tow, *triggerTower;
-      double trigTowEt = 0.0;
-      std::vector<int> trigTowers;
-      for ( int i=0; i<event->GetTrigObjs()->GetEntries(); ++i ) {
-	trig = (TStarJetPicoTriggerInfo *)event->GetTrigObj(i);
-	if ( trig->isBHT2() && UseTriggerTower( trig->GetId()) ) { trigTowers.push_back( trig->GetId() ); }
-      }
-      sort(trigTowers.begin(), trigTowers.end());
+            
+      //   REQUIRE RECOIL JET TO HAVE AT LEAST HALF OF LEAD PT!
+      Selector recoPtRangeSelector = SelectorPtRange( leadJet.pt()/2, ptHi[pval] );          //  JET pT RANGE    { 10-15, 15-20, 20-30 }
+      Selector etaRangeSelector = SelectorEtaRange( etaLo[eval], etaHi[eval] );          //  JET eta RANGE
 
-      int nmatched = 0;
-      for (int i=0; i<nTowers; ++i){				// loop throught selected towers in event
-	tow = (TStarJetPicoTower*)SelectedTowers->At(i);
-	if ( tow->GetEt()>=5.4 && count(trigTowers.begin(), trigTowers.end(), tow->GetId())) { // min 5.4 GeV tower and must be in list of HT towers
+      // Selector recoJetSelector = recoPtRangeSelector && etaRangeSelector && jetEtaSelector;
+      Selector recoJetSelector = recoPtRangeSelector && jetEtaSelector;
+    
+      recoCandidates = sorted_by_pt( recoJetSelector( jetCluster.inclusive_jets() ) );     // EXTRACT SELECTED JETS
 
-	  towPJ.reset_PtYPhiM( tow->GetEt(), tow->GetEta(), tow->GetPhi(), 0.0 ); //reset_PtYPhiM!!
-	  deltaPhi = fabs( leadJet.delta_phi_to( towPJ ) );
-	  deltaR = leadJet.delta_R( towPJ );
+    
+      bool hasReco = false;
+    
+      if ( recoCandidates.size()>0 ) {
 
-	  if ( deltaR<=R || fabs(deltaPhi)>=(pi-R) ) {  // require trigger
-	    if ( nmatched>0 && (tow->GetEt()<trigTowEt) ) { continue; }   // more than 1 trigger tower
-	    else {							// first trigger tower
-	      trigTowEt = tow->GetEt();
-	      trigTowerPJ.reset_PtYPhiM( tow->GetEt(), tow->GetEta(), tow->GetPhi(), 0.0 ); //reset_PtYPhiM!!
-	      nmatched += 1;
-	    }
+	for ( int i=0; i<recoCandidates.size(); ++i ) {
+	  double deltaPhi_abs = fabs( recoCandidates[i].phi() - leadJet.phi() );
+	  if ( fabs( deltaPhi_abs - pi ) <= R ) {
+	    recoJet = recoCandidates[i];
+	    hasReco = true;
 	  }
+	  if ( hasReco == true ) { continue; }  // exit loop with highest-pt jet in recoil range
+	}
+
+      }
+      else { continue; }
+
+      if ( hasReco == true ) {
+ 
+	int trigTowId;
+	TStarJetPicoTriggerInfo *trig;
+	TStarJetPicoTower *tow, *triggerTower;
+	double trigTowEt = 0.0;
+	std::vector<int> trigTowers;
+	for ( int i=0; i<event->GetTrigObjs()->GetEntries(); ++i ) {
+	  trig = (TStarJetPicoTriggerInfo *)event->GetTrigObj(i);
+	  if ( trig->isBHT2() && UseTriggerTower( trig->GetId()) ) { trigTowers.push_back( trig->GetId() ); }
+	}
+	sort(trigTowers.begin(), trigTowers.end());
+
+	int nmatched = 0;
+	for (int i=0; i<nTowers; ++i){				// loop throught selected towers in event
+	  tow = (TStarJetPicoTower*)SelectedTowers->At(i);
+	  if ( tow->GetEt()>=5.4 && count(trigTowers.begin(), trigTowers.end(), tow->GetId())) { // min 5.4 GeV tower and must be in list of HT towers
+
+	    towPJ.reset_PtYPhiM( tow->GetEt(), tow->GetEta(), tow->GetPhi(), 0.0 ); //reset_PtYPhiM!!
+	    dRTrigLead = leadJet.delta_R( towPJ );
+	    dRTrigReco = recoJet.delta_R( towPJ );
+
+
+	    if ( dRTrigLead<=R || dRTrigReco<=R ) { // require trigger
+	      if ( nmatched>0 && (tow->GetEt()<trigTowEt) ) { continue; }   // more than 1 trigger tower
+	      else {							// first trigger tower
+		trigTowEt = tow->GetEt();
+		trigTowerPJ.reset_PtYPhiM( tow->GetEt(), tow->GetEta(), tow->GetPhi(), 0.0 ); //reset_PtYPhiM!!
+		nmatched += 1;
+	      }
+	    }
 	  
-	}
-      }
-      if (nmatched>0) {
-	nHTtrig = nmatched;
-
-      
-	//   REQUIRE RECOIL JET TO HAVE AT LEAST HALF OF LEAD PT!
-	Selector recoPtRangeSelector = SelectorPtRange( leadJet.pt()/2, ptHi[pval] );          //  JET pT RANGE    { 10-15, 15-20, 20-30 }
-	Selector etaRangeSelector = SelectorEtaRange( etaLo[eval], etaHi[eval] );          //  JET eta RANGE
-
-	// Selector recoJetSelector = recoPtRangeSelector && etaRangeSelector && jetEtaSelector;
-	Selector recoJetSelector = recoPtRangeSelector && jetEtaSelector;
-    
-	recoCandidates = sorted_by_pt( recoJetSelector( jetCluster.inclusive_jets() ) );     // EXTRACT SELECTED JETS
-
-    
-	bool hasReco = false;
-    
-	if ( recoCandidates.size()>0 ) {
-
-	  for ( int i=0; i<recoCandidates.size(); ++i ) {
-	    double deltaPhi_abs = fabs( recoCandidates[i].phi() - leadJet.phi() );
-	    if ( fabs( deltaPhi_abs - pi ) <= R ) {
-	      recoJet = recoCandidates[i];
-	      hasReco = true;
-	    }
-	    if ( hasReco == true ) { continue; }  // exit loop with highest-pt jet in recoil range
 	  }
-
 	}
-	else { continue; }
-	
-	if ( hasReco == true ) {
-
-	  dRTrigLead = leadJet.delta_R( trigTowerPJ );
-	  dRTrigReco = recoJet.delta_R( trigTowerPJ );
+	if (nmatched>0) {
+	  nHTtrig = nmatched;
 
 	  if ( dRTrigLead<=R || dRTrigReco<=R ) {
-	  
+	    
 	    RunID = header->GetRunId();
 	    EventID = Reader.GetNOfCurrentEvent();
 	    nPrimary = header->GetNOfPrimaryTracks();
