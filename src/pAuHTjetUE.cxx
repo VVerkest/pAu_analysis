@@ -63,7 +63,7 @@ int main ( int argc, const char** argv ) {         // funcions and cuts specifie
   HTjetTree->Branch( "dRTrigLead", &dRTrigLead );
        
   TH3D *hChgBgPtEta_leadPt=new TH3D("hChgBgPtEta_leadPt","Charged Background #phi vs. #eta;p_{T} (GeV);#eta;Lead p_{T}",30,0,15,20,-1.0,1.0,80,0.0,40);
-  TH3D *hNeuBgPtEta_leadPt=newTH3D("hNeuBgPtEta_leadPt","Neutral Background #phi vs. #eta;p_{T} (GeV);#eta;Lead p_{T}",30,0,15,20,-1.0,1.0,80,0.0,40);
+  TH3D *hNeuBgPtEta_leadPt=new TH3D("hNeuBgPtEta_leadPt","Neutral Background #phi vs. #eta;p_{T} (GeV);#eta;Lead p_{T}",30,0,15,20,-1.0,1.0,80,0.0,40);
   TH3D *hAllJets=new TH3D("hAllJets","All jets p_{T}>=5.0 GeV;p_{T} (GeV);#eta;#phi", 160,0,80, 20,-1.0,1.0, 60,0.0,2*pi);
 
   JetDefinition jet_def(antikt_algorithm, R);     //  JET DEFINITION
