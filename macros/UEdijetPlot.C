@@ -203,15 +203,19 @@ void UEdijetPlot(){
 
 
   TCanvas * c1 = new TCanvas( "c1" , "" ,700 ,500 );              // CANVAS 1
-  
-  TLegend *leg0 = new TLegend(0.65, 0.65, 0.9, 0.9,NULL,"brNDC");    // LEGEND 0
-  leg0->SetBorderSize(1);   leg0->SetLineColor(1);   leg0->SetLineStyle(1);   leg0->SetLineWidth(1);   leg0->SetFillColor(0);   leg0->SetFillStyle(1001);
+  c1->SetMargin(0.15,0.1,0.12,0.1);  
+  TLegend *leg0 = new TLegend(0.55, 0.55, 0.89, 0.89,NULL,"brNDC");    // LEGEND 0
+  leg0->SetBorderSize(0);   leg0->SetLineColor(1);   leg0->SetLineStyle(1);   leg0->SetLineWidth(1);   leg0->SetFillColor(0);   leg0->SetFillStyle(1001);
   leg0->SetNColumns(2);
   leg0->AddEntry((TObject*)0,"#bf{#eta_{lead}}", "");
   leg0->AddEntry((TObject*)0,"#bf{<BBCE sum>}", "");
   
-  TH2D *sBBCbyEta = new TH2D("sBBCbyEta", "BBC ADC East Sum by Lead Jet #eta;BBC East Sum", 10,0,70000, 10,0,0.25);
+  TH2D *sBBCbyEta = new TH2D("sBBCbyEta", "BBC ADC East Sum by Lead Jet #eta;BBC East Sum;#frac{1}{N_{dijets}} #frac{dN_{dijets}}{d<BBCEsum>}", 10,0,70000, 10,0,0.25);
   sBBCbyEta->SetStats(0);
+  sBBCbyEta->GetXaxis()->SetLabelSize(.04);
+  sBBCbyEta->GetYaxis()->SetLabelSize(.04);
+  sBBCbyEta->GetXaxis()->SetTitleOffset(1.2);
+  sBBCbyEta->GetYaxis()->SetTitleOffset(1.6);
   sBBCbyEta->Draw();
   for ( int e=0; e<nEtaBins; ++e ) {
     hBBCEastSum[e]->SetStats(0);
