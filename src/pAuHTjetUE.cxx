@@ -62,9 +62,9 @@ int main ( int argc, const char** argv ) {         // funcions and cuts specifie
   HTjetTree->Branch( "dPhiTrigLead", &dPhiTrigLead );
   HTjetTree->Branch( "dRTrigLead", &dRTrigLead );
        
-  TH3D *hChgBgPtEtaPhi = new TH3D( "hChgBgPtEtaPhi", "Charged Background #phi vs. #eta;p_{T} (GeV);#eta;#phi", 30,0,15, 20,-1.0,1.0, 60,0.0,2*pi );
-  TH3D *hNeuBgPtEtaPhi = new TH3D( "hNeuBgPtEtaPhi", "Neutral Background #phi vs. #eta;p_{T} (GeV);#eta;#phi", 30,0,15, 20,-1.0,1.0, 60,0.0,2*pi );
-  TH3D *hAllJets = new TH3D( "hAllJets", "All jets p_{T}>=5.0 GeV;p_{T} (GeV);#eta;#phi", 160,0,80, 20,-1.0,1.0, 60,0.0,2*pi );
+  TH3D *hChgBgPtEta_leadPt=new TH3D("hChgBgPtEta_leadPt","Charged Background #phi vs. #eta;p_{T} (GeV);#eta;Lead p_{T}",30,0,15,20,-1.0,1.0,80,0.0,40);
+  TH3D *hNeuBgPtEta_leadPt=newTH3D("hNeuBgPtEta_leadPt","Neutral Background #phi vs. #eta;p_{T} (GeV);#eta;Lead p_{T}",30,0,15,20,-1.0,1.0,80,0.0,40);
+  TH3D *hAllJets=newTH3D("hAllJets","All jets p_{T}>=5.0 GeV;p_{T} (GeV);#eta;#phi", 160,0,80, 20,-1.0,1.0, 60,0.0,2*pi);
 
   JetDefinition jet_def(antikt_algorithm, R);     //  JET DEFINITION
   Selector jetEtaSelector = SelectorAbsEtaMax( 1.0-R );
@@ -103,34 +103,10 @@ int main ( int argc, const char** argv ) {         // funcions and cuts specifie
     if ( header->GetBbcAdcSumEast() > 64000 ) { continue; }
     if ( header->GetBbcAdcSumEast() < 3559.12 ) { continue; }     //  neglect 0-10% event activity
 
+    if ( header->GetBbcAdcSumEast() > 10126.1 ) { continue; }  // LO: 3559.12-10126.1;  HI: 26718.1+
+
     TList *SelectedTowers = Reader.GetListOfSelectedTowers();
     nTowers = CountTowers( SelectedTowers );
-
-    // int trigTowId;
-    // TStarJetPicoTriggerInfo *trig;
-    // TStarJetPicoTower *tow, *triggerTower;
-    // double trigTowEt = 0.0;
-    // std::vector<int> trigTowers;
-    // for ( int i=0; i<event->GetTrigObjs()->GetEntries(); ++i ) {
-    //   trig = (TStarJetPicoTriggerInfo *)event->GetTrigObj(i);
-    //   if ( trig->isBHT2() && UseTriggerTower( trig->GetId()) ) { trigTowers.push_back( trig->GetId() ); }
-    // }
-    // std::sort(trigTowers.begin(), trigTowers.end());
-
-    // int nmatched = 0;
-    // for (int i=0; i<nTowers; ++i){
-    //   tow = (TStarJetPicoTower*)SelectedTowers->At(i);
-    //   if ( tow->GetEt()>=5.4 && std::count(trigTowers.begin(), trigTowers.end(), tow->GetId())) {
-    // 	if ( nmatched>0 && (tow->GetEt()<trigTowEt) ) { continue; }
-    // 	else {
-    // 	  trigTowEt = tow->GetEt();
-    // 	  trigTowerPJ.reset_PtYPhiM( tow->GetEt(), tow->GetEta(), tow->GetPhi(), 0.0 ); //reset_PtYPhiM!!
-    // 	  nmatched += 1;
-    // 	}
-    //   }
-    // }
-    // if (nmatched==1) { // only accept events with 1 HT triggers
-    //   nHTtrig = nmatched;
 	
     Vz = header->GetPrimaryVertexZ();
     //if ( UseHTevent( header, event, vzCut, Vz ) == false ) { continue; } // Skip events based on: Run#, vz cut, BBCSumE; only accept HT events
@@ -198,8 +174,6 @@ int main ( int argc, const char** argv ) {         // funcions and cuts specifie
 	  
 	  RunID = header->GetRunId();
 	  EventID = Reader.GetNOfCurrentEvent();
-	  // TList *SelectedTowers = Reader.GetListOfSelectedTowers();
-	  // nTowers = CountTowers( SelectedTowers );
 	  nPrimary = header->GetNOfPrimaryTracks();
 	  nGlobal = header->GetNGlobalTracks();
 	  nVertices = header->GetNumberOfVertices();
@@ -222,7 +196,7 @@ int main ( int argc, const char** argv ) {         // funcions and cuts specifie
 	  nBGpart_neu = neuParticles.size();
     
 	  chgEastSum = 0;  chgMidSum = 0;  chgWestSum = 0;  neuEastSum = 0;  neuMidSum = 0;  neuWestSum = 0;
-	  CalculateRhoByChargeAndEta(chgParticles,neuParticles,chgEastSum,chgMidSum,chgWestSum,neuEastSum,neuMidSum,neuWestSum,hChgBgPtEtaPhi,hNeuBgPtEtaPhi);
+	  CalculateRhoByChargeAndEta(chgParticles,neuParticles,chgEastSum,chgMidSum,chgWestSum,neuEastSum,neuMidSum,neuWestSum,hChgBgPtEta_leadPt,hNeuBgPtEta_leadPt, leadJet.pt());
 	  chgEastRho = chgEastSum/eastArea;
 	  chgMidRho = chgMidSum/midArea;
 	  chgWestRho = chgWestSum/westArea;
@@ -245,8 +219,8 @@ int main ( int argc, const char** argv ) {         // funcions and cuts specifie
 
   TFile *pAuFile = new TFile( outFile.c_str() ,"RECREATE");
 
-  hChgBgPtEtaPhi->Write();  //  WRITE HISTOGRAMS & TREE
-  hNeuBgPtEtaPhi->Write();
+  hChgBgPtEta_leadPt->Write();  //  WRITE HISTOGRAMS & TREE
+  hNeuBgPtEta_leadPt->Write();
   hAllJets->Write();
   HTjetTree->Write();  
 
