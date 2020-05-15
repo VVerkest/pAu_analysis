@@ -62,12 +62,15 @@ int main ( int argc, const char** argv ) {         // funcions and cuts specifie
   HTjetTree->Branch( "dPhiTrigLead", &dPhiTrigLead );
   HTjetTree->Branch( "dRTrigLead", &dRTrigLead );
 
-
-  const int nVarBins = 72;
-  double binEdge[nVarBins+1] = { 0.0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1, 1.1, 1.2, 1.3, 1.4, 1.5, 1.6, 1.7, 1.8, 1.9, 2, 2.1, 2.2, 2.3, 2.4, 2.5, 2.6, 2.7, 2.8, 2.9, 3, 3.1, 3.2, 3.3, 3.4, 3.5, 3.7, 3.9, 4.1, 4.3, 4.5, 4.7, 4.9, 5.1, 5.3, 5.5, 5.7, 5.9, 6.2, 6.5, 6.8, 7.1, 7.4, 7.7, 8.1, 8.5, 8.9, 9.4, 9.9, 10.5, 11.1, 11.8, 12.5, 13.3, 14.2, 15.2, 16.4, 17.8, 19.4, 21.3, 23.6, 26.5, 30 };
+  const int xbins = 72;
+  double xbinEdge[xbins+1] = { 0.0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1, 1.1, 1.2, 1.3, 1.4, 1.5, 1.6, 1.7, 1.8, 1.9, 2, 2.1, 2.2, 2.3, 2.4, 2.5, 2.6, 2.7, 2.8, 2.9, 3, 3.1, 3.2, 3.3, 3.4, 3.5, 3.7, 3.9, 4.1, 4.3, 4.5, 4.7, 4.9, 5.1, 5.3, 5.5, 5.7, 5.9, 6.2, 6.5, 6.8, 7.1, 7.4, 7.7, 8.1, 8.5, 8.9, 9.4, 9.9, 10.5, 11.1, 11.8, 12.5, 13.3, 14.2, 15.2, 16.4, 17.8, 19.4, 21.3, 23.6, 26.5, 30 };
+  const int ybins = 10;
+  double ybinEdge[ybins+1] = { -1, -0.8, -0.6, -0.4, -0.2, 0, 0.2, 0.4, 0.6, 0.8, 1 };
+  const int zbins = 80;
+  double zbinEdge[zbins+1] = { 0, 0.5, 1, 1.5, 2, 2.5, 3, 3.5, 4, 4.5, 5, 5.5, 6, 6.5, 7, 7.5, 8, 8.5, 9, 9.5, 10, 10.5, 11, 11.5, 12, 12.5, 13, 13.5, 14, 14.5, 15, 15.5, 16, 16.5, 17, 17.5, 18, 18.5, 19, 19.5, 20, 20.5, 21, 21.5, 22, 22.5, 23, 23.5, 24, 24.5, 25, 25.5, 26, 26.5, 27, 27.5, 28, 28.5, 29, 29.5, 30, 30.5, 31, 31.5, 32, 32.5, 33, 33.5, 34, 34.5, 35, 35.5, 36, 36.5, 37, 37.5, 38, 38.5, 39, 39.5, 40 };
   
-  TH3D *hChgBgPtEta_leadPt=new TH3D("hChgBgPtEta_leadPt","Charged Background #phi vs. #eta;p_{T} (GeV);#eta;Lead p_{T} (GeV)",30,0,15,10,-1.0,1.0,nVarBins,binEdge);
-  TH3D *hNeuBgPtEta_leadPt=new TH3D("hNeuBgPtEta_leadPt","Neutral Background #phi vs. #eta;p_{T} (GeV);#eta;Lead p_{T} (GeV)",30,0,15,10,-1.0,1.0,nVarBins,binEdge);
+  TH3D *hChgBgPtEta_leadPt=new TH3D("hChgBgPtEta_leadPt","Charged Background #phi vs. #eta;p_{T} (GeV);#eta;Lead p_{T} (GeV)",xbins,xbinEdge,ybins,ybinEdge,zbins,zbinEdge);
+  TH3D *hNeuBgPtEta_leadPt=new TH3D("hNeuBgPtEta_leadPt","Neutral Background #phi vs. #eta;p_{T} (GeV);#eta;Lead p_{T} (GeV)",xbins,xbinEdge,ybins,ybinEdge,zbins,zbinEdge);
   TH3D *hAllJets=new TH3D("hAllJets","All jets p_{T}>=5.0 GeV;p_{T} (GeV);#eta;#phi", 160,0,80, 20,-1.0,1.0, 60,0.0,2*pi);
 
   JetDefinition jet_def(antikt_algorithm, R);     //  JET DEFINITION
@@ -99,7 +102,6 @@ int main ( int argc, const char** argv ) {         // funcions and cuts specifie
     event = Reader.GetEvent();
     header = event->GetHeader();
     container = Reader.GetOutputContainer();
-
     Vz = header->GetPrimaryVertexZ();
 
     if (header->GetRunId() >= 16142059 && header->GetRunId() <= 16149001) { continue; }    //TEMPORARILY SKIPPING THESE RUNS
@@ -202,13 +204,16 @@ int main ( int argc, const char** argv ) {         // funcions and cuts specifie
 	  nBGpart_neu = neuParticles.size();
     
 	  chgEastSum = 0;  chgMidSum = 0;  chgWestSum = 0;  neuEastSum = 0;  neuMidSum = 0;  neuWestSum = 0;
-	  CalculateRhoByChargeAndEta(chgParticles,neuParticles,chgEastSum,chgMidSum,chgWestSum,neuEastSum,neuMidSum,neuWestSum,hChgBgPtEta_leadPt,hNeuBgPtEta_leadPt, leadJet.pt());
+	  CalculateRhoByChargeAndEta(chgParticles,neuParticles,chgEastSum,chgMidSum,chgWestSum,neuEastSum,neuMidSum,neuWestSum);
 	  chgEastRho = chgEastSum/eastArea;
 	  chgMidRho = chgMidSum/midArea;
 	  chgWestRho = chgWestSum/westArea;
 	  neuEastRho = neuEastSum/eastArea;
 	  neuMidRho = neuMidSum/midArea;
 	  neuWestRho = neuWestSum/westArea;
+
+	  for (int i=0; i<chgParticles.size(); ++i) { hChgBgPtEta_leadPt->Fill( chgParticles[i].pt(), chgParticles[i].eta(), leadPt ); }
+	  for (int i=0; i<neuParticles.size(); ++i) { hNeuBgPtEta_leadPt->Fill( neuParticles[i].pt(), neuParticles[i].eta(), leadPt ); }
 
 	  chgParticles.clear(); // clear vector!
 	  GatherChargedBGwithEfficiency( leadJet, container, chgParticles, efficFile );   // gather BG

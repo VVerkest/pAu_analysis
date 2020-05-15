@@ -79,7 +79,7 @@ namespace pAuAnalysis {
 
   void CalculateBGsubtractedChargedRho( std::vector<fastjet::PseudoJet> chgPart, double &chgEast_Sum, double &chgMid_Sum, double &chgWest_Sum );
   
-  void CalculateRhoByChargeAndEta( std::vector<fastjet::PseudoJet> chgPart, std::vector<fastjet::PseudoJet> neuPart, double &chgEast_Sum, double &chgMid_Sum, double &chgWest_Sum, double &neuEast_Sum, double &neuMid_Sum, double &neuWest_Sum, TH3D *hChg, TH3D *hNeu, double lpt );
+  void CalculateRhoByChargeAndEta( std::vector<fastjet::PseudoJet> chgPart, std::vector<fastjet::PseudoJet> neuPart, double &chgEast_Sum, double &chgMid_Sum, double &chgWest_Sum, double &neuEast_Sum, double &neuMid_Sum, double &neuWest_Sum );
   
   int CountTowers( TList *selectedtowers );
 
