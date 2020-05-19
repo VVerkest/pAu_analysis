@@ -242,10 +242,10 @@ void rho_debug(){
     leg->AddEntry((TObject*)0,"#bf{<#rho_{chg}>}", "");
     leg->AddEntry((TObject*)0,"#bf{<n_{chg}>}", "");
 
-    hChgDist[j]->SetAxisRange(0.000001,3.0, "Y");
+    hChgDist[j]->SetAxisRange(0.000005,3.0, "Y");
     hChgDist[j]->Draw();
     hTreeChgRho[j]->SetStats(0);
-    hTreeChgRho[j]->SetAxisRange(0.000001,3.0, "Y");
+    hTreeChgRho[j]->SetAxisRange(0.000005,3.0, "Y");
     hTreeChgRho[j]->Draw("SAME");
     //c1->BuildLegend();
 	
