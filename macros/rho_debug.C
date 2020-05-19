@@ -64,18 +64,21 @@ void rho_debug(){
   TF1 *hEff_fit2[eta_bins][nEAbins];
 
   
-  // for (int i=0; i<eta_bins; ++i) {
-  //   for (int j=0; j<nEAbins; ++j){    
-  //   int binno = i+1;
-  //   name = "eff_s_bin_7_10_bbc__"; name += binno; name += "_"; name += binno; name += "_eta";
-  //   hEff[i][j] = (TH1D*)efficFile[j]->Get(name);
-  //   name += "_fit";
-  //   hEff_fit1[i][j] = new TF1(name,"pol3",0,10);
-  //   hEff[i][j]->Fit( hEff_fit1[i][j], "R" );
-  //   name += "2";
-  //   hEff_fit2[i][j] = new TF1(name,"pol0",10,30);
-  //   }
-  // }
+  for (int i=0; i<eta_bins; ++i) {
+    for (int j=0; j<nEAbins; ++j){    
+    int binno = i+1;
+    
+    if (j==0 ) { name = "eff_s_bin_1_3_bbc__"; name += binno; name += "_"; name += binno; name += "_eta"; }
+    else if (j==1) {name = "eff_s_bin_7_10_bbc__"; name += binno; name += "_"; name += binno; name += "_eta"; }
+    
+    hEff[i][j] = (TH1D*)efficFile[j]->Get(name);
+    name += "_fit";
+    hEff_fit1[i][j] = new TF1(name,"pol3",0,10);
+    hEff[i][j]->Fit( hEff_fit1[i][j], "R" );
+    name += "2";
+    hEff_fit2[i][j] = new TF1(name,"pol0",10,30);
+    }
+  }
 
   const int ybins = 10;
   double ybinEdge[ybins+1] = { -1, -0.8, -0.6, -0.4, -0.2, 0, 0.2, 0.4, 0.6, 0.8, 1 };
@@ -135,7 +138,7 @@ void rho_debug(){
     name = "hNchg_"; name += EAbinString[i];
     hNchg[i] = new TH1D("hNchg","# charged particles in UE", 50,0.0,50.0);
 
-    name = "hNchg_"; name += EAbinString[i];
+    name = "hNneu_"; name += EAbinString[i];
     hNneu[i] = new TH1D("hNneu","# neutral particles in UE", 50,0.0,50.0);
 
   }
@@ -172,15 +175,19 @@ void rho_debug(){
     hChgUEpt[a]->GetZaxis()->SetRangeUser(10.0, 30.0);
     hChgUEpt2D[a] = (TH2D*)hChgUEpt[a]->Project3D("YX");
     hChgUEpt2D[a]->Scale(1./hRho[a]->GetEntries());
+    name = "hChgUEpt2D_"; name += EAbinString[a]; name += "EA";
+    hChgUEpt2D[a]->SetName( name );
     
     hNeuUEpt[a]->GetZaxis()->SetRangeUser(10.0, 30.0);
     hNeuUEpt2D[a] = (TH2D*)hNeuUEpt[a]->Project3D("YX");
     hNeuUEpt2D[a]->Scale(1./hRho[a]->GetEntries()); 
-  }
+    name = "hNeuUEpt2D_"; name += EAbinString[a]; name += "EA";
+    hNeuUEpt2D[a]->SetName( name );
+ }
   
   TH1D *hChgPtDist[ybins][nEAbins];
   
-  int ecolor[ybins] = { 633, 618, 807, 800, 819, 419, 433, 862, 884, 619 };
+  int ecolor[ybins] = { 618, 633, 807, 800, 819, 419, 433, 862, 884, 619 };
   TString ybinEdgeString[ybins+1] = { "-1.0", "-0.8", "-0.6", "-0.4", "-0.2", "0.0", "0.2", "0.4", "0.6", "0.8", "1.0" };
   
   TCanvas * c0 = new TCanvas( "c0" , "" ,700 ,500 );              // CANVAS 0
@@ -190,98 +197,121 @@ void rho_debug(){
 
   // HERE
   TH1D *hTreeChgRho[nEAbins];
-  TH1D *hChgRho[nEAbins];
+  TH1D *hChgDist[nEAbins];
 
   for (int a=0; a<nEAbins; ++a) {
     for (int i=0; i<ybins; ++i) {
       int binno = i+1;
-      name = "hChgpTdist_10_15GeV_etabin"; name += binno;
+      name = "hChgpTdist_10_15GeV_"; name += EAbinString[a]; name += "EA_etabin"; name += binno;
       hChgUEpt2D[a]->GetYaxis()->SetRange( binno, binno+1 );
       hChgUEpt2D[a]->SetLineColor( ecolor[i] );
       hChgUEpt2D[a]->SetMarkerColor( ecolor[i] );
       hChgPtDist[i][a] = (TH1D*) hChgUEpt2D[a]->ProjectionX( name, binno, binno+1 );
       title = "Charged #rho dist. ("; title += ybinEdgeString[i]; title +="<#eta<"; title += ybinEdgeString[binno]; title += ");#rho (GeV)";
       hChgPtDist[i][a]->SetTitle( title );
-
+      hChgPtDist[i][a]->GetYaxis()->SetRangeUser(0.000001,0.3);
       hChgPtDist[i][a]->Draw("SAME");
     }
   }
+  c0->Close();
 
-
-  TCanvas *c01 = new TCanvas( "c01" , "" ,700 ,500 );
-  c01->SetLogy();
 
 
   for (int j=0; j<nEAbins; ++j) {
+    TCanvas *c1 = new TCanvas( "c1" , "" ,700 ,500 );
+    c1->SetLogy();
+
     name = "hTreeChgRho_"; name += EAbinString[j];
     hTreeChgRho[j] = new TH1D(name,"",30,0,15);
     drawString = "((0.35*chgEastRho)+(0.3*chgMidRho)+(0.35*chgWestRho))>>"; drawString += name;
     jetTree[j]->Draw( drawString ,"leadPt>10.0 && leadPt<30.0");
     hTreeChgRho[j]->Scale(1./hTreeChgRho[j]->GetEntries());
 
-    hChgRho[j] = (TH1D*)hChgPtDist[0][j]->DrawCopy();
-    name = "hChgRho_"; name += EAbinString[j];
-    hChgRho[j]->SetNameTitle( name ,"Charged #rho (p_{T}) distribution;#rho or p_{T} (GeV)");
-    for (int i=1; i<ybins; ++i) { hChgRho[j]->Add( hChgPtDist[i][j] ); }
-    hChgRho[j]->SetStats(0);
+    hChgDist[j] = (TH1D*)hChgPtDist[0][j]->DrawCopy();
+    name = "hChgDist_"; name += EAbinString[j];
+    title = EAbinString[j]; title += "EA: "; title += "Charged #rho (p_{T}) distribution;#rho or p_{T} (GeV)";
+    hChgDist[j]->SetNameTitle( name , title );
+    for (int i=1; i<ybins; ++i) { hChgDist[j]->Add( hChgPtDist[i][j] ); }
+    hChgDist[j]->SetStats(0);
 
 
-    TLegend *leg = new TLegend(0.6, 0.6, 0.89, 0.89,NULL,"brNDC");    // LEGEND 0
+    TLegend *leg = new TLegend(0.4, 0.6, 0.89, 0.89,NULL,"brNDC");    // LEGEND 0
     leg->SetBorderSize(0); leg->SetLineColor(1); leg->SetLineStyle(1); leg->SetLineWidth(1); leg->SetFillColor(0); leg->SetFillStyle(1001);
-    leg->SetNColumns(2);
+    leg->SetNColumns(3);
     leg->AddEntry((TObject*)0,"name", "");
-    leg->AddEntry((TObject*)0,"#bf{<#rho>}", "");
-    
-    hChgRho[j]->Draw();
-    hTreeChgRho[j]->SetStats(0);
-    hTreeChgRho[j]->Draw("SAME");
-    //c01->BuildLegend();
-	
-    title = "UE p_{T} dist. --"; title += EAbinString[j]; title += "EA";
-    leg->AddEntry( hChgRho[j], title , "lpf" );                            // ADD TO LEGEND
-    avg = "";
-    avg += hChgRho[j]->GetMean(1)*(hNchg[j]->GetMean()/AREA);                       // 1 denotes x-axis
-    avg = avg(0,5);
+    leg->AddEntry((TObject*)0,"#bf{<#rho_{chg}>}", "");
+    leg->AddEntry((TObject*)0,"#bf{<n_{chg}>}", "");
 
+    hChgDist[j]->SetAxisRange(0.000001,3.0, "Y");
+    hChgDist[j]->Draw();
+    hTreeChgRho[j]->SetStats(0);
+    hTreeChgRho[j]->SetAxisRange(0.000001,3.0, "Y");
+    hTreeChgRho[j]->Draw("SAME");
+    //c1->BuildLegend();
+	
+    title = "Avg. UE p_{T} dist";
+    leg->AddEntry( hChgDist[j], title , "lpf" );                            // ADD TO LEGEND
+    avg = "";
+    avg += hChgDist[j]->GetMean(1)*(hChgDist[j]->Integral()/AREA);                       // 1 denotes x-axis
+    avg = avg(0,5);
+    leg->AddEntry((TObject*)0,avg, "");
+    avg = "";
+    avg += hChgDist[j]->Integral();//hRho[j]->Integral();                       // 1 denotes x-axis
+    //cout<<hChgDist[j]->Integral()<<endl;
+    avg = avg(0,5);
     leg->AddEntry((TObject*)0,avg, "");
 
-    title = "#rho dist. -- "; title += EAbinString[j]; title += "EA";
+    title = "Event-by-event #rho dist.";
     leg->AddEntry( hTreeChgRho[j], title, "lpf" );                            // ADD TO LEGEND
     avg = "";
     avg += hTreeChgRho[j]->GetMean(1);                                           // 1 denotes x-axis
     avg = avg(0,5);
     leg->AddEntry((TObject*)0,avg, "");
-
+    avg = "";
+    avg += hNchg[j]->GetMean();                       // 1 denotes x-axis
+    avg = avg(0,5);
+    leg->AddEntry((TObject*)0,avg, "");
+    
     leg->Draw();
     saveName = "plots/UE/rho_debug/UEptMeanCompare_"; saveName += EAbinString[j]; saveName += "EA.pdf";
-    c01->SaveAs( saveName ,"PDF");
+    c1->SaveAs( saveName ,"PDF");
   
   }
-    
+  // c1->Close();
 
 
+  TCanvas *c2 = new TCanvas( "c2" , "" ,700 ,500 );
+  c2->SetLogy();
   
-  // for (int i=0; i<ybins; ++i) {
-  //   int binno = i+1;
+  for (int a=0; a<nEAbins; ++a) {
+    for (int i=0; i<ybins; ++i) {
+      int binno = i+1;
+      name = "hChgpTdist_10_15GeV_"; name += EAbinString[a]; name += "EA__etabin"; name += binno;
+      hChgUEpt2D[a]->GetYaxis()->SetRange( binno, binno+1 );
+      // hChgPtDist[i] = (TH1D*)
+      hChgUEpt2D[a]->SetLineColor( ecolor[i] );
+      hChgUEpt2D[a]->SetMarkerColor( ecolor[i] );
+      hChgPtDist[i][a] = (TH1D*) hChgUEpt2D[a]->ProjectionX( name, binno, binno+1 );
+      if (i==0) { title = "";  title = EAbinString[a]; title += "EA Charged #rho dist.";  hChgPtDist[i][a]->SetTitle( title ); }
+      else { title = "";  title = ybinEdgeString[i]; title += "<UE #eta<"; title += ybinEdgeString[binno];  hChgPtDist[i][a]->SetTitle( title ); }
+      hChgPtDist[i][a]->SetStats(0);
+      hChgPtDist[i][a]->SetAxisRange(0.000001,0.3, "Y");
+      if (i==0) { hChgPtDist[i][a]->Draw(); }
+      else { hChgPtDist[i][a]->Draw("SAME"); }
+    }
 
-  //   name = "hChgpTdist_10_15GeV_etabin"; name += binno;
-  //   hChgUEpt2D[a]->GetYaxis()->SetRange( binno, binno+1 );
-  //   // hChgPtDist[i] = (TH1D*)
-  //   hChgUEpt2D[a]->SetLineColor( ecolor[i] );
-  //   hChgUEpt2D[a]->SetMarkerColor( ecolor[i] );
-  //   hChgPtDist[i] = (TH1D*) hChgUEpt2D[a]->ProjectionX( name, binno, binno+1 );
-  //   title = "Charged #rho dist. ("; title += ybinEdgeString[i]; title +="<#eta<"; title += ybinEdgeString[binno]; title += ")";
-  //   hChgPtDist[i]->SetTitle( title );
-  //   hChgPtDist[i]->Draw("SAME");
-  //   // new TCanvas;
-  //   // hChgPtDist[i]->Draw();
-  //   //hChgPtDist[i]->Divide( hEff_fit1[i] );
-  // }
-  // c0->BuildLegend();
-  // c0->SaveAs("plots/UE/rho_debug/UEptDist_loEA.pdf","PDF");
+    title = "";  title += ybinEdgeString[0]; title += "<UE #eta<"; title += ybinEdgeString[1];  hChgPtDist[0][a]->SetTitle( title );
+    hChgPtDist[0][a]->SetTitle( title );
+    TLegend *leg0 = (TLegend*) c2->BuildLegend(0.4,0.45,0.75,0.8);
+    leg0->SetFillColorAlpha(0,0);  leg0->SetLineWidth(0);
+    title = "";  title = EAbinString[a]; title += " EA Charged UE p_{T} dist.";  hChgPtDist[0][a]->SetTitle( title );
+    hChgPtDist[0][a]->SetTitle( title );
+    name = "plots/UE/rho_debug/UEptDist_"; name+= EAbinString[a]; name += "EA.pdf";
+    c2->SaveAs( name ,"PDF");
 
-  // c0->Clear();
-  
+  }
+
+
   // //hEff[0]->Draw();
   // for (int i=0; i<ybins; ++i) {
   //   int binno = i+1;
