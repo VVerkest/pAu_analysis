@@ -20,7 +20,6 @@ int main ( int argc, const char** argv ) {         // funcions and cuts specifie
   TH1::SetDefaultSumw2();  TH2::SetDefaultSumw2();  TH3::SetDefaultSumw2();
 
   TTree *HTjetTree = new TTree( "HTjetTree", "HT_JetTree" );
-  string efficFile = "src/trackeffic.root";
 
   double chgEastSum, chgMidSum, chgWestSum, neuEastSum, neuMidSum, neuWestSum;
   
@@ -62,9 +61,19 @@ int main ( int argc, const char** argv ) {         // funcions and cuts specifie
   HTjetTree->Branch( "dPhiTrigLead", &dPhiTrigLead );
   HTjetTree->Branch( "dRTrigLead", &dRTrigLead );
 
-  TH3D *hChgBgPtEta_leadPt=new TH3D("hChgBgPtEta_leadPt","Charged Background #phi vs. #eta;p_{T} (GeV);#eta;Lead p_{T}",30,0,15,20,-1.0,1.0,120,0.0,40);
-  TH3D *hNeuBgPtEta_leadPt=new TH3D("hNeuBgPtEta_leadPt","Neutral Background #phi vs. #eta;p_{T} (GeV);#eta;Lead p_{T}",30,0,15,20,-1.0,1.0,120,0.0,40);
+  TH3D *hChgBgPtEta_leadPt[nPtBins];
+  TH3D *hNeuBgPtEta_leadPt[nPtBins];
 
+  for (int p=0; p<nPtBins; ++p) {
+
+    name = "hChgBgPtEta_leadPt"; name += ptBinName[p];
+    title = "Charged Background #phi vs. #eta ("; title += ptBinString[p]; title += ") ;p_{T} (GeV);#eta;Lead p_{T}";
+    hChgBgPtEta_leadPt[p] = new TH3D( name , title ,30,0,15,20,-1.0,1.0,120,0.0,40);
+    name = "hNeuBgPtEta_leadPt"; name += ptBinName[p];
+    title = "Neutral Background #phi vs. #eta ("; title += ptBinString[p]; title += ") ;p_{T} (GeV);#eta;Lead p_{T}";
+    hNeuBgPtEta_leadPt[p] = new TH3D( name, title, 30,0,15,20,-1.0,1.0,120,0.0,40);
+  }
+  
   TH3D *hAllJets=new TH3D("hAllJets","All jets p_{T}>=5.0 GeV;p_{T} (GeV);#eta;#phi", 160,0,80, 20,-1.0,1.0, 60,0.0,2*pi);
 
   JetDefinition jet_def(antikt_algorithm, R);     //  JET DEFINITION
@@ -86,7 +95,8 @@ int main ( int argc, const char** argv ) {         // funcions and cuts specifie
   InitReader( Reader, Chain, numEvents );
   double deltaPhi, deltaR;       double trigTowEta, trigTowPhi;
 
-  Reader.NextEvent();
+  string efficFile = "src/trackeffic_hiEA.root";
+
   // ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~  BEGIN EVENT LOOP!  ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~
   while ( Reader.NextEvent() ) {
 
@@ -105,10 +115,11 @@ int main ( int argc, const char** argv ) {         // funcions and cuts specifie
     if ( header->GetBbcAdcSumEast() > 64000 ) { continue; }
     if ( header->GetBbcAdcSumEast() < 3559.12 ) { continue; }     //  neglect 0-10% event activity
 
-    // //  HIGH EVENT ACTIVITY
-    // if ( header->GetBbcAdcSumEast() < 26718.1 ) { continue; }  // LO: 3559.12-10126.1;  HI: 26718.1+
-    //  LOW EVENT ACTIVITY
-    if ( header->GetBbcAdcSumEast() > 10126.1 ) { continue; }  // LO: 3559.12-10126.1;  HI: 26718.1+
+    //  HIGH EVENT ACTIVITY
+    if ( header->GetBbcAdcSumEast() < 26718.1 ) { continue; }  // LO: 3559.12-10126.1;  HI: 26718.1+
+
+    // //  LOW EVENT ACTIVITY
+    // if ( header->GetBbcAdcSumEast() > 10126.1 ) { continue; }  // LO: 3559.12-10126.1;  HI: 26718.1+
 
     TList *SelectedTowers = Reader.GetListOfSelectedTowers();
     nTowers = CountTowers( SelectedTowers );
@@ -208,8 +219,20 @@ int main ( int argc, const char** argv ) {         // funcions and cuts specifie
 	  neuMidRho = neuMidSum/midArea;
 	  neuWestRho = neuWestSum/westArea;
 
-	  for (int i=0; i<chgParticles.size(); ++i) { hChgBgPtEta_leadPt->Fill( chgParticles[i].pt(), chgParticles[i].eta(), leadPt ); }
-	  for (int i=0; i<neuParticles.size(); ++i) { hNeuBgPtEta_leadPt->Fill( neuParticles[i].pt(), neuParticles[i].eta(), leadPt ); }
+	  int pval = 99;    //int jeval = 99;    int eaval = 99;
+    
+
+	  if ( leadPt >= 10.0 && leadPt <= 30.0 ) {
+
+	    for ( int p=0; p<3; ++p ) {
+	      if ( leadPt >= ptLo[p]  &&  leadPt <= ptHi[p] ) { pval = p; }
+	      if ( pval==99 /*|| jeval==99*/ ) { cerr<<"UNABLE TO FIND PT OR ETA RANGE FOR LEAD JET"<<endl<<leadPt<<endl<<endl; }
+	    }
+	    else {continue;}
+	  }
+	  
+	  for (int i=0; i<chgParticles.size(); ++i) { hChgBgPtEta_leadPt[pval]->Fill( chgParticles[i].pt(), chgParticles[i].eta(), leadPt ); }
+	  for (int i=0; i<neuParticles.size(); ++i) { hNeuBgPtEta_leadPt[pval]->Fill( neuParticles[i].pt(), neuParticles[i].eta(), leadPt ); }
 
 	  chgParticles.clear(); // clear vector!
 	  GatherChargedBGwithEfficiency( leadJet, container, chgParticles, efficFile );   // gather BG
@@ -226,8 +249,11 @@ int main ( int argc, const char** argv ) {         // funcions and cuts specifie
 
   TFile *pAuFile = new TFile( outFile.c_str() ,"RECREATE");
 
-  hChgBgPtEta_leadPt->Write();  //  WRITE HISTOGRAMS & TREE
-  hNeuBgPtEta_leadPt->Write();
+  for (int p=0; p<nPtBins; ++p) {
+    hChgBgPtEta_leadPt[p]->Write();  //  WRITE HISTOGRAMS & TREE
+    hNeuBgPtEta_leadPt[p]->Write();
+  }
+  
   hAllJets->Write();
   HTjetTree->Write();  
 
