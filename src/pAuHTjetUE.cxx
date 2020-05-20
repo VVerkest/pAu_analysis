@@ -22,6 +22,7 @@ int main ( int argc, const char** argv ) {         // funcions and cuts specifie
   TTree *HTjetTree = new TTree( "HTjetTree", "HT_JetTree" );
 
   double chgEastSum, chgMidSum, chgWestSum, neuEastSum, neuMidSum, neuWestSum;
+  int pval;
   
   //  Tree variables
   int RunID, EventID, nTowers, nPrimary, nGlobal, nVertices, refMult, gRefMult, nBGpart_chg, nBGpart_neu, nJetsAbove5, nHTtrig;
@@ -219,16 +220,15 @@ int main ( int argc, const char** argv ) {         // funcions and cuts specifie
 	  neuMidRho = neuMidSum/midArea;
 	  neuWestRho = neuWestSum/westArea;
 
-	  int pval = 99;    //int jeval = 99;    int eaval = 99;
+	  pval = 99;    //int jeval = 99;    int eaval = 99;
     
 
 	  if ( leadPt >= 10.0 && leadPt <= 30.0 ) {
 
 	    for ( int p=0; p<3; ++p ) {
 	      if ( leadPt >= ptLo[p]  &&  leadPt <= ptHi[p] ) { pval = p; }
-	      if ( pval==99 /*|| jeval==99*/ ) { cerr<<"UNABLE TO FIND PT OR ETA RANGE FOR LEAD JET"<<endl<<leadPt<<endl<<endl; }
 	    }
-	    else {continue;}
+	    if ( pval==99 /*|| jeval==99*/ ) { cerr<<"UNABLE TO FIND PT OR ETA RANGE FOR LEAD JET"<<endl<<leadPt<<endl<<endl; }
 	  }
 	  
 	  for (int i=0; i<chgParticles.size(); ++i) { hChgBgPtEta_leadPt[pval]->Fill( chgParticles[i].pt(), chgParticles[i].eta(), leadPt ); }
