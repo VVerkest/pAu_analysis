@@ -293,7 +293,11 @@ namespace pAuAnalysis {
     int ptBin, etaBin;
     const int nBins = 10;
     double pt, eta, effic;
-    TString prefix = "eff_s_bin_1_10_bbc__";
+    TString prefix;
+    
+    if (efficiencyFile == "trackeffic.root") { prefix = "eff_s_bin_1_10_bbc__"; }
+    else if (efficiencyFile == "trackeffic_loEA.root") { prefix = "eff_s_bin_1_3_bbc__"; }
+    else if (efficiencyFile == "trackeffic_hiEA.root") { prefix = "eff_s_bin_7_10_bbc__"; }
 
     double etaLo[nBins] = { -1.0, -0.8, -0.6, -0.4, -0.2, 0.0, 0.2, 0.4, 0.6, 0.8 };
     double etaHi[nBins] = { -0.8, -0.6, -0.4, -0.2, 0.0, 0.2, 0.4, 0.6, 0.8, 1.0 };
