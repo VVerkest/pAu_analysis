@@ -250,8 +250,8 @@ int main ( int argc, const char** argv ) {         // funcions and cuts specifie
   TFile *pAuFile = new TFile( outFile.c_str() ,"RECREATE");
 
   for (int p=0; p<nPtBins; ++p) {
-    hChgBgPtEta_leadPt[p]->Write();  //  WRITE HISTOGRAMS & TREE
-    hNeuBgPtEta_leadPt[p]->Write();
+    hChgBgPtEta[p]->Write();  //  WRITE HISTOGRAMS & TREE
+    hNeuBgPtEta[p]->Write();
   }
   
   hAllJets->Write();
