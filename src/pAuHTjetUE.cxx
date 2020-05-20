@@ -62,17 +62,17 @@ int main ( int argc, const char** argv ) {         // funcions and cuts specifie
   HTjetTree->Branch( "dPhiTrigLead", &dPhiTrigLead );
   HTjetTree->Branch( "dRTrigLead", &dRTrigLead );
 
-  TH3D *hChgBgPtEta_leadPt[nPtBins];
-  TH3D *hNeuBgPtEta_leadPt[nPtBins];
+  TH2D *hChgBgPtEta[nPtBins];
+  TH2D *hNeuBgPtEta[nPtBins];
 
   for (int p=0; p<nPtBins; ++p) {
 
     name = "hChgBgPtEta_leadPt"; name += ptBinName[p];
-    title = "Charged Background #phi vs. #eta ("; title += ptBinString[p]; title += ") ;p_{T} (GeV);#eta;Lead p_{T}";
-    hChgBgPtEta_leadPt[p] = new TH3D( name , title ,30,0,15,20,-1.0,1.0,120,0.0,40);
+    title = "Charged Background #phi vs. #eta ("; title += ptBinString[p]; title += ") ;p_{T} (GeV);#eta";
+    hChgBgPtEta_leadPt[p] = new TH2D( name , title ,30,0,15,20,-1.0,1.0 );
     name = "hNeuBgPtEta_leadPt"; name += ptBinName[p];
-    title = "Neutral Background #phi vs. #eta ("; title += ptBinString[p]; title += ") ;p_{T} (GeV);#eta;Lead p_{T}";
-    hNeuBgPtEta_leadPt[p] = new TH3D( name, title, 30,0,15,20,-1.0,1.0,120,0.0,40);
+    title = "Neutral Background #phi vs. #eta ("; title += ptBinString[p]; title += ") ;p_{T} (GeV);#eta";
+    hNeuBgPtEta_leadPt[p] = new TH2D( name, title, 30,0,15,20,-1.0,1.0 );
   }
   
   TH3D *hAllJets=new TH3D("hAllJets","All jets p_{T}>=5.0 GeV;p_{T} (GeV);#eta;#phi", 160,0,80, 20,-1.0,1.0, 60,0.0,2*pi);
@@ -231,8 +231,8 @@ int main ( int argc, const char** argv ) {         // funcions and cuts specifie
 	    if ( pval==99 /*|| jeval==99*/ ) { cerr<<"UNABLE TO FIND PT OR ETA RANGE FOR LEAD JET"<<endl<<leadPt<<endl<<endl; }
 	  }
 	  
-	  for (int i=0; i<chgParticles.size(); ++i) { hChgBgPtEta_leadPt[pval]->Fill( chgParticles[i].pt(), chgParticles[i].eta(), leadPt ); }
-	  for (int i=0; i<neuParticles.size(); ++i) { hNeuBgPtEta_leadPt[pval]->Fill( neuParticles[i].pt(), neuParticles[i].eta(), leadPt ); }
+	  for (int i=0; i<chgParticles.size(); ++i) { hChgBgPtEta_leadPt[pval]->Fill( chgParticles[i].pt(), chgParticles[i].eta() ); }
+	  for (int i=0; i<neuParticles.size(); ++i) { hNeuBgPtEta_leadPt[pval]->Fill( neuParticles[i].pt(), neuParticles[i].eta() ); }
 
 	  chgParticles.clear(); // clear vector!
 	  GatherChargedBGwithEfficiency( leadJet, container, chgParticles, efficFile );   // gather BG
