@@ -26,7 +26,7 @@ int main ( int argc, const char** argv ) {         // funcions and cuts specifie
   
   //  Tree variables
   int RunID, EventID, nTowers, nPrimary, nGlobal, nVertices, refMult, gRefMult, nBGpart_chg, nBGpart_neu, nJetsAbove5, nHTtrig;
-  double Vz, BbcAdcSumEast, BbcAdcSumEastOuter, BbcAdcSumWest, BbcAdcSumWestOuter, leadPt, leadEta, leadPhi,
+  double Vz, BbcAdcSumEast, leadPt, leadEta, leadPhi,
     chgEastRho, chgMidRho, chgWestRho, chgEastRho_te, chgMidRho_te, chgWestRho_te, neuEastRho, neuMidRho, neuWestRho, leadArea, dPhiTrigLead, dRTrigLead;
 
   HTjetTree->Branch( "RunID", &RunID );
@@ -41,9 +41,6 @@ int main ( int argc, const char** argv ) {         // funcions and cuts specifie
   HTjetTree->Branch( "leadPt", &leadPt );
   HTjetTree->Branch( "leadEta", &leadEta );
   HTjetTree->Branch( "BbcAdcSumEast", &BbcAdcSumEast );
-  HTjetTree->Branch( "BbcAdcSumEastOuter", &BbcAdcSumEastOuter );
-  HTjetTree->Branch( "BbcAdcSumWest", &BbcAdcSumWest );
-  HTjetTree->Branch( "BbcAdcSumWestOuter", &BbcAdcSumWestOuter );
   HTjetTree->Branch( "leadPhi", &leadPhi );
   HTjetTree->Branch( "chgEastRho", &chgEastRho );
   HTjetTree->Branch( "chgMidRho", &chgMidRho );
@@ -75,8 +72,6 @@ int main ( int argc, const char** argv ) {         // funcions and cuts specifie
     hNeuBgPtEta[p] = new TH2D( name, title, 30,0,15,20,-1.0,1.0 );
   }
   
-  TH3D *hAllJets=new TH3D("hAllJets","All jets p_{T}>=5.0 GeV;p_{T} (GeV);#eta;#phi", 160,0,80, 20,-1.0,1.0, 60,0.0,2*pi);
-
   JetDefinition jet_def(antikt_algorithm, R);     //  JET DEFINITION
   Selector jetEtaSelector = SelectorAbsEtaMax( 1.0-R );
   Selector leadPtMinSelector = SelectorPtMin(leadJetMinPt);
@@ -183,11 +178,7 @@ int main ( int argc, const char** argv ) {         // funcions and cuts specifie
 	  allJets = sorted_by_pt( allJetSelector( jetCluster.inclusive_jets() ) );     // EXTRACT ALL JETS IN >=5 GeV
 	  
 	  nJetsAbove5 = allJets.size();
-	  for ( int i=0; i<allJets.size(); ++i ) {
-	    hAllJets->Fill( allJets[i].pt(), allJets[i].eta(), allJets[i].phi() );
-	  }
-	  
-	  
+
 	  RunID = header->GetRunId();
 	  EventID = Reader.GetNOfCurrentEvent();
 	  nPrimary = header->GetNOfPrimaryTracks();
@@ -196,9 +187,6 @@ int main ( int argc, const char** argv ) {         // funcions and cuts specifie
 	  refMult = header->GetReferenceMultiplicity();
 	  gRefMult = header->GetGReferenceMultiplicity();
 	  BbcAdcSumEast = header->GetBbcAdcSumEast();
-	  BbcAdcSumEastOuter = header->GetBbcAdcSumEastOuter();
-	  BbcAdcSumWest = header->GetBbcAdcSumWest();
-	  BbcAdcSumWestOuter = header->GetBbcAdcSumWestOuter();
 	  leadPt = leadJet.pt();
 	  leadEta = leadJet.eta();
 	  leadPhi = leadJet.phi();
@@ -254,7 +242,6 @@ int main ( int argc, const char** argv ) {         // funcions and cuts specifie
     hNeuBgPtEta[p]->Write();
   }
   
-  hAllJets->Write();
   HTjetTree->Write();  
 
   pAuFile->Write();
