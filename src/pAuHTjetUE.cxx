@@ -218,6 +218,7 @@ int main ( int argc, const char** argv ) {         // funcions and cuts specifie
 	    }
 	    if ( pval==99 /*|| jeval==99*/ ) { cerr<<"UNABLE TO FIND PT OR ETA RANGE FOR LEAD JET"<<endl<<leadPt<<endl<<endl; }
 	  }
+	  if ( pval==99 ) {continue;}
 	  
 	  for (int i=0; i<chgParticles.size(); ++i) { hChgBgPtEta[pval]->Fill( chgParticles[i].pt(), chgParticles[i].eta() ); }
 	  for (int i=0; i<neuParticles.size(); ++i) { hNeuBgPtEta[pval]->Fill( neuParticles[i].pt(), neuParticles[i].eta() ); }
