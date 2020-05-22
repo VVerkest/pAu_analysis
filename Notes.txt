@@ -1,0 +1,22 @@
+5/22/2020
+
+HP to-dos:
+
+[X] Produce corrected <dN/dEtadPhi> by using corrected pT spectrum
+[ ] Run over files to do lead pT correction during run-time
+[ ] Ask Dave how large is the pileup uncertainty -- percentage??
+[ ] Apply systematics to plots
+[ ] Begin poster
+[ ] Produce UE pT vs eta vs lead pT differentially in lead eta
+
+
+5/21/2020
+Dave Stewart:
+
+[regarding pilup correction]
+Hi Veronica, not sure how much difference it makes, but my brain is just catching up with my mouth. My existing preliminary is unfolded for embedding. However, the difference is from unfolding the low ZDCx (<7kHz) vs all the data (7-24kHz)
+So it's a little more complicated than I had said
+
+
+Also, totally random bit of advice: in the code, it's moderately better to pass around "vector<PseudoJet>&" vs "vector<PseudoJet>". (There are cases where this is *not* true -- if you have a copy you want to modify )
+But I was only perusing the code to find something for Helen last week, so maybe it's not applicable
