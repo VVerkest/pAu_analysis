@@ -525,7 +525,7 @@ void differentialUE(){
   c3->SaveAs("plots/UE/rho_debug/CHGdNdetadphi.pdf","PDF");  
 
 
-  double yEdge2[2] = { 0.578, 0.63 };
+  double yEdge2[2] = { 0.5, 0.8 };
   TH2D *hscale2 = new TH2D("hscale2",";lead p_{T} (GeV);Charged <p_{T}> (GeV)", nPtBins,ptBinEdge,1,yEdge2);
   hscale2->SetName("");
 
@@ -616,7 +616,7 @@ void differentialUE(){
 
   
 
-  
+  TCanvas *c3b = new TCanvas;  
 
   double yEdge3[2] = { 0.5, 0.8 };
   TH2D *hscale3 = new TH2D("hscale3",";lead p_{T} (GeV);Track Effic. Corr. Charged <p_{T}> (GeV)", nPtBins,ptBinEdge,1,yEdge3);
@@ -655,8 +655,8 @@ void differentialUE(){
     }
   }
     
-  c3->BuildLegend(0.5,0.75,1.0,1.0);
-  c3->SaveAs("plots/UE/rho_debug/Chg_MeanPt_te.pdf","PDF");
+  c3b->BuildLegend(0.5,0.75,1.0,1.0);
+  c3b->SaveAs("plots/UE/rho_debug/Chg_MeanPt_te.pdf","PDF");
 
 
 
