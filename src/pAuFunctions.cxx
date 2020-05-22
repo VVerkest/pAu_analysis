@@ -437,8 +437,9 @@ namespace pAuAnalysis {
 
   double UEsubtraction( fastjet::PseudoJet leadjet, std::string UEcorrFile, double BBCEsum ) {
 
-    TFile *UEfile = new TFile( UEcorrFile, "READ" );
+    TFile *UEfile = new TFile( UEcorrFile.c_str() , "READ" );
 
+    double rhoValue;
 
     TH1D* EastRhoProfile = (TH1D*)UEfile->Get("hEastRhoProfile");
     int nEastProfBins = EastRhoProfile->GetNbinsX();
@@ -447,21 +448,21 @@ namespace pAuAnalysis {
     TH1D* WestRhoProfile = (TH1D*)UEfile->Get("hWestRhoProfile");
     int nWestProfBins = WestRhoProfile->GetNbinsX();
 
-    if ( leadJet.eta() >= etaLo[0]  &&  leadJet.eta() <= etaHi[0] ) {  //EAST
+    if ( leadjet.eta() >= etaLo[0]  &&  leadjet.eta() <= etaHi[0] ) {  //EAST
       for ( int j=0; j<nEastProfBins; ++j ) {
 	double BBCElo = EastRhoProfile->GetBinLowEdge(j);
 	double BBCEhi = BBCElo + EastRhoProfile->GetBinWidth(j);
 	if ( BBCEsum >= BBCElo &&  BBCEsum <= BBCEhi ) { rhoValue = EastRhoProfile->GetBinContent(j); }
       }
     }
-    else if ( leadJet.eta() >= etaLo[1]  &&  leadJet.eta() <= etaHi[1] ) {  //MID
+    else if ( leadjet.eta() >= etaLo[1]  &&  leadjet.eta() <= etaHi[1] ) {  //MID
       for ( int j=0; j<nMidProfBins; ++j ) {
 	double BBCElo = MidRhoProfile->GetBinLowEdge(j);
 	double BBCEhi = BBCElo + MidRhoProfile->GetBinWidth(j);
 	if ( BBCEsum >= BBCElo &&  BBCEsum <= BBCEhi ) { rhoValue = MidRhoProfile->GetBinContent(j); }
       }
     }
-    else if ( leadJet.eta() >= etaLo[2]  &&  leadJet.eta() <= etaHi[2] ) {  //WEST
+    else if ( leadjet.eta() >= etaLo[2]  &&  leadjet.eta() <= etaHi[2] ) {  //WEST
       for ( int j=0; j<nWestProfBins; ++j ) {
 	double BBCElo = WestRhoProfile->GetBinLowEdge(j);
 	double BBCEhi = BBCElo + WestRhoProfile->GetBinWidth(j);
