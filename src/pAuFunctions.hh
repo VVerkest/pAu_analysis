@@ -102,7 +102,7 @@ namespace pAuAnalysis {
 
   void InitReader( TStarJetPicoReader & reader, TChain* chain, int nEvents );
 
-  double UEsubtraction( fastjet::pseudojet leadjet, std::string UEcorrFile, double BBCEsum );
+  double UEsubtraction( fastjet::PseudoJet leadjet, std::string UEcorrFile, double BBCEsum );
   
   bool UseHTevent( TStarJetPicoEventHeader* Header, TStarJetPicoEvent* Event, double vz_cut, double vz );
 

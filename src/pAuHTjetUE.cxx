@@ -190,7 +190,7 @@ int main ( int argc, const char** argv ) {         // funcions and cuts specifie
 	  gRefMult = header->GetGReferenceMultiplicity();
 	  BbcAdcSumEast = header->GetBbcAdcSumEast();
 	  leadPt = leadJet.pt();
-	  leadPtCorrected = UEsubtraction( leadJet, UEcorrFile );
+	  leadPtCorrected = UEsubtraction( leadJet, UEcorrFile, BbcAdcSumEast );
 	  leadEta = leadJet.eta();
 	  leadPhi = leadJet.phi();
 	  leadArea = leadJet.area();

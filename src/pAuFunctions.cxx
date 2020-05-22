@@ -435,7 +435,7 @@ namespace pAuAnalysis {
     reader.Init( nEvents ); //runs through all events with -1
   }
 
-  double UEsubtraction( fastjet::pseudojet leadjet, std::string UEcorrFile, double BBCEsum ) {
+  double UEsubtraction( fastjet::PseudoJet leadjet, std::string UEcorrFile, double BBCEsum ) {
 
     TFile *UEfile = new TFile( UEcorrFile, "READ" );
 
