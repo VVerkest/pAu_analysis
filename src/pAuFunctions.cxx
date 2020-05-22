@@ -435,6 +435,46 @@ namespace pAuAnalysis {
     reader.Init( nEvents ); //runs through all events with -1
   }
 
+  double UEsubtraction( fastjet::pseudojet leadjet, std::string UEcorrFile, double BBCEsum ) {
+
+    TFile *UEfile = new TFile( UEcorrFile, "READ" );
+
+
+    TH1D* EastRhoProfile = (TH1D*)UEfile->Get("hEastRhoProfile");
+    int nEastProfBins = EastRhoProfile->GetNbinsX();
+    TH1D* MidRhoProfile = (TH1D*)UEfile->Get("hMidRhoProfile");
+    int nMidProfBins = MidRhoProfile->GetNbinsX();
+    TH1D* WestRhoProfile = (TH1D*)UEfile->Get("hWestRhoProfile");
+    int nWestProfBins = WestRhoProfile->GetNbinsX();
+
+    if ( leadJet.eta() >= etaLo[0]  &&  leadJet.eta() <= etaHi[0] ) {  //EAST
+      for ( int j=0; j<nEastProfBins; ++j ) {
+	double BBCElo = EastRhoProfile->GetBinLowEdge(j);
+	double BBCEhi = BBCElo + EastRhoProfile->GetBinWidth(j);
+	if ( BBCEsum >= BBCElo &&  BBCEsum <= BBCEhi ) { rhoValue = EastRhoProfile->GetBinContent(j); }
+      }
+    }
+    else if ( leadJet.eta() >= etaLo[1]  &&  leadJet.eta() <= etaHi[1] ) {  //MID
+      for ( int j=0; j<nMidProfBins; ++j ) {
+	double BBCElo = MidRhoProfile->GetBinLowEdge(j);
+	double BBCEhi = BBCElo + MidRhoProfile->GetBinWidth(j);
+	if ( BBCEsum >= BBCElo &&  BBCEsum <= BBCEhi ) { rhoValue = MidRhoProfile->GetBinContent(j); }
+      }
+    }
+    else if ( leadJet.eta() >= etaLo[2]  &&  leadJet.eta() <= etaHi[2] ) {  //WEST
+      for ( int j=0; j<nWestProfBins; ++j ) {
+	double BBCElo = WestRhoProfile->GetBinLowEdge(j);
+	double BBCEhi = BBCElo + WestRhoProfile->GetBinWidth(j);
+	if ( BBCEsum >= BBCElo &&  BBCEsum <= BBCEhi ) { rhoValue = WestRhoProfile->GetBinContent(j); }
+      }
+    }
+    else { std::cerr<<"error with finding lead jet eta"<<std::endl; }
+    
+    double leadPtCorr = leadPt - leadArea*rhoValue;
+
+    return leadPtCorr;
+  }
+
 
   bool UseHTevent( TStarJetPicoEventHeader* Header, TStarJetPicoEvent* Event, double vz_cut, double vz ) {
     if (Header->GetRunId() >= 16142059 && Header->GetRunId() <= 16149001) { return false; }    //TEMPORARILY SKIPPING THESE RUNS

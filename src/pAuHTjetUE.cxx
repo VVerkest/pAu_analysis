@@ -26,8 +26,8 @@ int main ( int argc, const char** argv ) {         // funcions and cuts specifie
   
   //  Tree variables
   int RunID, EventID, nTowers, nPrimary, nGlobal, nVertices, refMult, gRefMult, nBGpart_chg, nBGpart_neu, nJetsAbove5, nHTtrig;
-  double Vz, BbcAdcSumEast, leadPt, leadEta, leadPhi,
-    chgEastRho, chgMidRho, chgWestRho, chgEastRho_te, chgMidRho_te, chgWestRho_te, neuEastRho, neuMidRho, neuWestRho, leadArea, dPhiTrigLead, dRTrigLead;
+  double Vz, BbcAdcSumEast, leadPt, leadPtCorrected, leadEta, leadPhi, chgEastRho, chgMidRho, chgWestRho, chgEastRho_te, chgMidRho_te, chgWestRho_te,
+    neuEastRho, neuMidRho, neuWestRho, leadArea, dPhiTrigLead, dRTrigLead;
 
   HTjetTree->Branch( "RunID", &RunID );
   HTjetTree->Branch( "EventID", &EventID );
@@ -39,6 +39,7 @@ int main ( int argc, const char** argv ) {         // funcions and cuts specifie
   HTjetTree->Branch( "gRefMult", &gRefMult );
   HTjetTree->Branch( "Vz", &Vz );
   HTjetTree->Branch( "leadPt", &leadPt );
+  HTjetTree->Branch( "leadPtCorrected", &leadPtCorrected );
   HTjetTree->Branch( "leadEta", &leadEta );
   HTjetTree->Branch( "BbcAdcSumEast", &BbcAdcSumEast );
   HTjetTree->Branch( "leadPhi", &leadPhi );
@@ -92,6 +93,7 @@ int main ( int argc, const char** argv ) {         // funcions and cuts specifie
   double deltaPhi, deltaR;       double trigTowEta, trigTowPhi;
 
   string efficFile = "src/trackeffic_loEA.root";
+  string UEcorrFile = "src/UEsubtractionPlots.root";
 
   // ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~  BEGIN EVENT LOOP!  ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~
   while ( Reader.NextEvent() ) {
@@ -188,6 +190,7 @@ int main ( int argc, const char** argv ) {         // funcions and cuts specifie
 	  gRefMult = header->GetGReferenceMultiplicity();
 	  BbcAdcSumEast = header->GetBbcAdcSumEast();
 	  leadPt = leadJet.pt();
+	  leadPtCorrected = UEsubtraction( leadJet, UEcorrFile );
 	  leadEta = leadJet.eta();
 	  leadPhi = leadJet.phi();
 	  leadArea = leadJet.area();
@@ -214,7 +217,7 @@ int main ( int argc, const char** argv ) {         // funcions and cuts specifie
 	  if ( leadPt >= 10.0 && leadPt <= 30.0 ) {
 
 	    for ( int p=0; p<3; ++p ) {
-	      if ( leadPt >= ptLo[p]  &&  leadPt <= ptHi[p] ) { pval = p; }
+	      if ( leadPtCorrected >= ptLo[p]  &&  leadPtCorrected <= ptHi[p] ) { pval = p; }
 	    }
 	    if ( pval==99 /*|| jeval==99*/ ) { cerr<<"UNABLE TO FIND PT OR ETA RANGE FOR LEAD JET"<<endl<<leadPt<<endl<<endl; }
 	  }
