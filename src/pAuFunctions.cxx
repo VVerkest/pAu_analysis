@@ -471,7 +471,7 @@ namespace pAuAnalysis {
     }
     else { std::cerr<<"error with finding lead jet eta"<<std::endl; }
     
-    double leadPtCorr = leadPt - leadArea*rhoValue;
+    double leadPtCorr = leadPt - leadjet.area()*rhoValue;
 
     return leadPtCorr;
   }
