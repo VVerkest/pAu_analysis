@@ -22,7 +22,7 @@ int main ( int argc, const char** argv ) {         // funcions and cuts specifie
   TTree *HTjetTree = new TTree( "HTjetTree", "HT_JetTree" );
 
   double chgEastSum, chgMidSum, chgWestSum, neuEastSum, neuMidSum, neuWestSum;
-  int pval;
+  int pval, jeval;
   
   //  Tree variables
   int RunID, EventID, nTowers, nPrimary, nGlobal, nVertices, refMult, gRefMult, nBGpart_chg, nBGpart_neu, nJetsAbove5, nHTtrig;
@@ -75,10 +75,10 @@ int main ( int argc, const char** argv ) {         // funcions and cuts specifie
 
   for (int e=0; e<nEtaBins; ++e) {
 
-    name = "hChgBgPtEta"; name += ptBinName[p];
+    name = "hChgBgPtEta"; name += etaBinName[e];
     title = "Charged Background #phi vs. #eta ("; title += etaBinString[e]; title += ") ;p_{T} (GeV);#eta";
     hChgBgPtEta[e] = new TH2D( name , title ,30,0,15,20,-1.0,1.0 );
-    name = "hNeuBgPtEta"; name += ptBinName[p];
+    name = "hNeuBgPtEta"; name += etaBinName[e];
     title = "Neutral Background #phi vs. #eta ("; title += etaBinString[e]; title += ") ;p_{T} (GeV);#eta";
     hNeuBgPtEta[e] = new TH2D( name, title, 30,0,15,20,-1.0,1.0 );
   }
@@ -236,7 +236,7 @@ int main ( int argc, const char** argv ) {         // funcions and cuts specifie
 	    for ( int e=0; e<nEtaBins; ++e ) {
 	      if ( leadPtCorrected >= etaLo[e]  &&  leadPtCorrected <= etaHi[e] ) { jeval = e; }
 	    }
-	    if ( pval==99 || jeval==99*/ ) { cerr<<"UNABLE TO FIND PT OR ETA RANGE FOR LEAD JET"<<endl<<leadPt<<endl<<endl; }
+	    if ( pval==99 || jeval==99 ) { cerr<<"UNABLE TO FIND PT OR ETA RANGE FOR LEAD JET"<<endl<<leadPt<<endl<<endl; }
 
 	  }
 	  if (jeval==99) {continue;}
