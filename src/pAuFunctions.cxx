@@ -444,37 +444,37 @@ namespace pAuAnalysis {
     
     double rhoValue;
 
-    // TH1D* EastRhoProfile = (TH1D*)UEfile->Get("hEastRhoProfile");
-    // int nEastProfBins = EastRhoProfile->GetNbinsX();
-    // TH1D* MidRhoProfile = (TH1D*)UEfile->Get("hMidRhoProfile");
-    // int nMidProfBins = MidRhoProfile->GetNbinsX();
-    // TH1D* WestRhoProfile = (TH1D*)UEfile->Get("hWestRhoProfile");
-    // int nWestProfBins = WestRhoProfile->GetNbinsX();
+    TH1D* EastRhoProfile = (TH1D*)UEfile->Get("hEastRhoByBBCEsum_pfx");
+    int nEastProfBins = EastRhoProfile->GetNbinsX();
+    TH1D* MidRhoProfile = (TH1D*)UEfile->Get("hMidRhoByBBCEsum_pfx");
+    int nMidProfBins = MidRhoProfile->GetNbinsX();
+    TH1D* WestRhoProfile = (TH1D*)UEfile->Get("hWestRhoByBBCEsum_pfx");
+    int nWestProfBins = WestRhoProfile->GetNbinsX();
 
-    // if ( leadjet.eta() >= eta_Lo[0]  &&  leadjet.eta() <= eta_Hi[0] ) {  //EAST
-    //   for ( int j=0; j<nEastProfBins; ++j ) {
-    // 	double BBCElo = EastRhoProfile->GetBinLowEdge(j);
-    // 	double BBCEhi = BBCElo + EastRhoProfile->GetBinWidth(j);
-    // 	if ( BBCEsum >= BBCElo &&  BBCEsum <= BBCEhi ) { rhoValue = EastRhoProfile->GetBinContent(j); }
-    //   }
-    // }
-    // else if ( leadjet.eta() >= eta_Lo[1]  &&  leadjet.eta() <= eta_Hi[1] ) {  //MID
-    //   for ( int j=0; j<nMidProfBins; ++j ) {
-    // 	double BBCElo = MidRhoProfile->GetBinLowEdge(j);
-    // 	double BBCEhi = BBCElo + MidRhoProfile->GetBinWidth(j);
-    // 	if ( BBCEsum >= BBCElo &&  BBCEsum <= BBCEhi ) { rhoValue = MidRhoProfile->GetBinContent(j); }
-    //   }
-    // }
-    // else if ( leadjet.eta() >= eta_Lo[2]  &&  leadjet.eta() <= eta_Hi[2] ) {  //WEST
-    //   for ( int j=0; j<nWestProfBins; ++j ) {
-    // 	double BBCElo = WestRhoProfile->GetBinLowEdge(j);
-    // 	double BBCEhi = BBCElo + WestRhoProfile->GetBinWidth(j);
-    // 	if ( BBCEsum >= BBCElo &&  BBCEsum <= BBCEhi ) { rhoValue = WestRhoProfile->GetBinContent(j); }
-    //   }
-    // }
-    // else { std::cerr<<"error with finding lead jet eta"<<std::endl; }
+    if ( leadjet.eta() >= eta_Lo[0]  &&  leadjet.eta() <= eta_Hi[0] ) {  //EAST
+      for ( int j=0; j<nEastProfBins; ++j ) {
+    	double BBCElo = EastRhoProfile->GetBinLowEdge(j);
+    	double BBCEhi = BBCElo + EastRhoProfile->GetBinWidth(j);
+    	if ( BBCEsum >= BBCElo &&  BBCEsum <= BBCEhi ) { rhoValue = EastRhoProfile->GetBinContent(j); }
+      }
+    }
+    else if ( leadjet.eta() >= eta_Lo[1]  &&  leadjet.eta() <= eta_Hi[1] ) {  //MID
+      for ( int j=0; j<nMidProfBins; ++j ) {
+    	double BBCElo = MidRhoProfile->GetBinLowEdge(j);
+    	double BBCEhi = BBCElo + MidRhoProfile->GetBinWidth(j);
+    	if ( BBCEsum >= BBCElo &&  BBCEsum <= BBCEhi ) { rhoValue = MidRhoProfile->GetBinContent(j); }
+      }
+    }
+    else if ( leadjet.eta() >= eta_Lo[2]  &&  leadjet.eta() <= eta_Hi[2] ) {  //WEST
+      for ( int j=0; j<nWestProfBins; ++j ) {
+    	double BBCElo = WestRhoProfile->GetBinLowEdge(j);
+    	double BBCEhi = BBCElo + WestRhoProfile->GetBinWidth(j);
+    	if ( BBCEsum >= BBCElo &&  BBCEsum <= BBCEhi ) { rhoValue = WestRhoProfile->GetBinContent(j); }
+      }
+    }
+    else { std::cerr<<"error with finding lead jet eta"<<std::endl; }
     
-    double leadPtCorr = leadjet.pt();// - leadjet.area()*rhoValue;
+    double leadPtCorr = leadjet.pt() - leadjet.area()*rhoValue;
 
     return leadPtCorr;
   }
