@@ -214,7 +214,7 @@ int main ( int argc, const char** argv ) {         // funcions and cuts specifie
 	  pval = 99;    //int jeval = 99;    int eaval = 99;
     
 
-	  if ( leadPt >= 10.0 && leadPt <= 30.0 ) {
+	  if ( leadPtCorrected >= 10.0 && leadPtCorrected <= 30.0 ) {
 
 	    for ( int p=0; p<3; ++p ) {
 	      if ( leadPtCorrected >= ptLo[p]  &&  leadPtCorrected <= ptHi[p] ) { pval = p; }
