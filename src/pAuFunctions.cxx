@@ -439,17 +439,17 @@ namespace pAuAnalysis {
 
     TFile *UEfile = new TFile( UEcorrFile.c_str() , "READ" );
 
-    const double eta_Lo[3] = { -1.0, -0.3, 0.3 };
-    const double eta_Hi[3] = { -0.3, 0.3, 1.0 };
+    double eta_Lo[3] = { -1.0, -0.3, 0.3 };
+    double eta_Hi[3] = { -0.3, 0.3, 1.0 };
     
     double rhoValue;
 
-    TH1D* EastRhoProfile = (TH1D*)UEfile->Get("hEastRhoProfile");
-    int nEastProfBins = EastRhoProfile->GetNbinsX();
-    TH1D* MidRhoProfile = (TH1D*)UEfile->Get("hMidRhoProfile");
-    int nMidProfBins = MidRhoProfile->GetNbinsX();
-    TH1D* WestRhoProfile = (TH1D*)UEfile->Get("hWestRhoProfile");
-    int nWestProfBins = WestRhoProfile->GetNbinsX();
+    // TH1D* EastRhoProfile = (TH1D*)UEfile->Get("hEastRhoProfile");
+    // int nEastProfBins = EastRhoProfile->GetNbinsX();
+    // TH1D* MidRhoProfile = (TH1D*)UEfile->Get("hMidRhoProfile");
+    // int nMidProfBins = MidRhoProfile->GetNbinsX();
+    // TH1D* WestRhoProfile = (TH1D*)UEfile->Get("hWestRhoProfile");
+    // int nWestProfBins = WestRhoProfile->GetNbinsX();
 
     // if ( leadjet.eta() >= eta_Lo[0]  &&  leadjet.eta() <= eta_Hi[0] ) {  //EAST
     //   for ( int j=0; j<nEastProfBins; ++j ) {
