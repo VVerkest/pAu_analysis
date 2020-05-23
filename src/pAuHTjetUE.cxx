@@ -234,7 +234,7 @@ int main ( int argc, const char** argv ) {         // funcions and cuts specifie
 	  // if ( pval==99 ) {continue;}
 
 	    for ( int e=0; e<nEtaBins; ++e ) {
-	      if ( leadPtCorrected >= etaLo[e]  &&  leadPtCorrected <= etaHi[e] ) { jeval = e; }
+	      if ( leadEta >= etaLo[e]  &&  leadEta <= etaHi[e] ) { jeval = e; }
 	    }
 	    if ( pval==99 || jeval==99 ) { cerr<<"UNABLE TO FIND PT OR ETA RANGE FOR LEAD JET"<<endl<<leadPt<<endl<<endl; }
 
