@@ -240,8 +240,8 @@ int main ( int argc, const char** argv ) {         // funcions and cuts specifie
 
 	  }
 	  if (jeval==99) {continue;}
-	  // for (int i=0; i<chgParticles.size(); ++i) { hChgBgPtEta[pval]->Fill( chgParticles[i].pt(), chgParticles[i].eta() ); }
-	  // for (int i=0; i<neuParticles.size(); ++i) { hNeuBgPtEta[pval]->Fill( neuParticles[i].pt(), neuParticles[i].eta() ); }
+	  for (int i=0; i<chgParticles.size(); ++i) { hChgBgPtEta[pval]->Fill( chgParticles[i].pt(), chgParticles[i].eta() ); }
+	  for (int i=0; i<neuParticles.size(); ++i) { hNeuBgPtEta[pval]->Fill( neuParticles[i].pt(), neuParticles[i].eta() ); }
 
 	  chgParticles.clear(); // clear vector!
 	  GatherChargedBGwithEfficiency( leadJet, container, chgParticles, efficFile );   // gather BG
