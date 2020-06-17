@@ -63,7 +63,7 @@ namespace pAuAnalysis {
   const double MaxEtCut = 30.0;
   
   const double R = 0.4;
-  const double vzCut = 30.0;   // |Vz|<=30 cm
+  const double vzCut = 10.0;   // |Vz|<=30 cm
   const double dcaCut = 3.0;   // DCA<=3.0 cm
   const double etaCut = 1.0;       // |eta|<=1
   const double partMinPt = 0.2;      //  particle Pt >= 0.2 GeV
