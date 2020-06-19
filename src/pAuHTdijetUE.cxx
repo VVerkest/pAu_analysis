@@ -212,7 +212,7 @@ int main ( int argc, const char** argv ) {         // funcions and cuts specifie
 	    nBGpart_neu = neuParticles.size();
 
 	    chgEastSum = 0;            chgMidSum = 0;            chgWestSum = 0;            neuEastSum = 0;            neuMidSum = 0;            neuWestSum = 0;
-	    CalculateRhoByChargeAndEta(chgParticles,neuParticles,chgEastSum,chgMidSum,chgWestSum,neuEastSum,neuMidSum,neuWestSum,hChgBgPtEtaPhi,hNeuBgPtEtaPhi);
+	    CalculateRhoByChargeAndEta(chgParticles,neuParticles,chgEastSum,chgMidSum,chgWestSum,neuEastSum,neuMidSum,neuWestSum);
 	    chgEastRho = chgEastSum/eastArea;
 	    chgMidRho = chgMidSum/midArea;
 	    chgWestRho = chgWestSum/westArea;
