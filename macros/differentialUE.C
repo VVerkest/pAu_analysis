@@ -52,7 +52,7 @@ void differentialUE(){
   int jeval, bgeval, pval, eaval;
   TString name, saveName, title, avg, sigma, drawString;
 
-  TString fileName[nEAbins] = { "out/UE/pAuHTjetUE_loEA.root", "out/UE/pAuHTjetUE_hiEA.root" };
+  TString fileName[nEAbins] = { "out/UE/pAuHTjetUE_loEA_diffPt.root", "out/UE/pAuHTjetUE_hiEA_diffPt.root" };
   TString efficFileName[nEAbins] = { "src/trackeffic_loEA.root", "src/trackeffic_hiEA.root" };
 
   TFile* inFile[nEAbins];
@@ -153,16 +153,16 @@ void differentialUE(){
   for (int a=0; a<nEAbins; ++a) {
     for (int i=0; i<nEntries[a]; ++i) {
       jetTree[a]->GetEntry(i);
-      if ( !(leadPt[a]>ptLo[0] && leadPt[a]<ptHi[2]) ) { continue; }
-      // if ( !(leadPt[a]>ptLo[1] && leadPt[a]<ptHi[1]) ) { continue; }
+      if ( !(leadPtCorrected[a]>ptLo[0] && leadPtCorrected[a]<ptHi[2]) ) { continue; }
+      // if ( !(leadPtCorrected[a]>ptLo[1] && leadPtCorrected[a]<ptHi[1]) ) { continue; }
       else {
 
 	pval = 99;
 
 	for ( int p=0; p<3; ++p ) {
-	  if ( leadPt[a] >= ptLo[p]  &&  leadPt[a] <= ptHi[p] ) { pval = p; }
+	  if ( leadPtCorrected[a] >= ptLo[p]  &&  leadPtCorrected[a] <= ptHi[p] ) { pval = p; }
 	}
-	if ( pval==99 /*|| jeval==99*/ ) { cerr<<"UNABLE TO FIND PT OR ETA RANGE FOR LEAD JET"<<endl<<leadPt<<endl<<endl; }
+	if ( pval==99 /*|| jeval==99*/ ) { cerr<<"UNABLE TO FIND PT OR ETA RANGE FOR LEAD JET"<<endl<<leadPtCorrected<<endl<<endl; }
 	
 	
 
@@ -260,7 +260,6 @@ void differentialUE(){
 
 
 	for(int ix = 1; ix <= hChgUEpt[a][p]->GetNbinsX(); ++ix){
-
 	  int xbin = ix+1;
 	  
 	  double pt = hChgUEpt[a][p]->GetXaxis()->GetBinCenter(xbin);
@@ -273,9 +272,7 @@ void differentialUE(){
 	  double corr_err = (double) old_err/eff;
 	  hChgUEpt_te[a][p]->SetBinContent( xbin, ybin, corr_value);
 	  hChgUEpt_te[a][p]->SetBinError( xbin, ybin, corr_err );
-	  
 	}
-	
 	
       }
 	
