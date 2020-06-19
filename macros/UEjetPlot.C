@@ -11,8 +11,9 @@ void UEjetPlot(){
   const double ptLo[nPtBins] = { 10.0, 15.0, 20.0 };
   const double ptHi[nPtBins] = { 15.0, 20.0, 30.0 };
   const TString ptBinName[nPtBins] = { "_10_15GeV", "_15_20GeV", "_20_30GeV" };
-  const TString ptBinString[nPtBins] = { "10<p_{T}^{lead}<15", "15<p_{T}^{lead}<20",  "20<p_{T}^{lead}<30" };
-  const TString ptCorrectedBinString[nPtBins] = { "10<p_{T}^{corrected}<15", "15<p_{T}^{corrected}<20",  "20<p_{T}^{corrected}<30" };
+  const TString ptBinString[nPtBins] = { "10 < p_{T,lead}^{reco} < 15", "15 < p_{T,lead}^{reco} < 20",  "20 < p_{T,lead}^{reco} < 30" };
+  const TString ptBinStringRaw[nPtBins] = { "10 < p_{T,lead}^{raw} < 15", "15 < p_{T,lead}^{raw} < 20",  "20 < p_{T,lead}^{raw} < 30" };
+  const TString ptCorrectedBinString[nPtBins] = { "10 < p_{T}^{corrected} < 15", "15 < p_{T}^{corrected} < 20",  "20 < p_{T}^{corrected} < 30" };
   const int ptColor[nPtBins] = { 797, 593, 892 };
   const int ptMarker[nPtBins] = { 20, 21, 29 };
 
@@ -21,7 +22,7 @@ void UEjetPlot(){
   const double etaHi[nEtaBins] = { -0.3, 0.3, 1.0 };
   const TString jetEtaBinName[nEtaBins] = { "_eastJet", "_midJet", "_westJet" };
   const TString etaBinName[nEtaBins] = { "_eastEta", "_midEta", "_westEta" };
-  const TString etaBinString[nEtaBins] = { "-0.6<#eta_{jet}<-0.3", "-0.3<#eta_{jet}<0.3", "0.3<#eta_{jet}<0.6" };
+  const TString etaBinString[nEtaBins] = { "-0.6 < #eta_{jet}^{lead} < -0.3", "-0.3 < #eta_{jet}^{lead} < 0.3", "0.3 < #eta_{jet}^{lead} < 0.6" };
   const int etaColor[nEtaBins] = { 877, 596, 814 };
   const int etaMarker[nEtaBins] = { 25, 27, 28 };
 
@@ -30,29 +31,46 @@ void UEjetPlot(){
   const TString BackgroundChargeString[nChgBins] = { "Charged", "Neutral", "Chg+Neu" };
   const int color[nChgBins] = { 807, 823, 874 };
   const int marker[nChgBins] = { 22, 23, 20 };
-  
+
+  const int nEAbins = 2;
+  TString EAbinString[nEAbins] = { "Low EA", "High EA" };
+
   const int nEA = 3;
   const TString EAstring[nEA] = { "low", "mid", "high" };
   const double BBCEsumLo[nEA] = { 3559.12, 10126.1, 26718.1 };   // LO: 3559.12-10126.1;  HI: 26718.1+
   const double BBCEsumHi[nEA] = { 10126.1, 26718.1, 64000.0 };  // 0, 3559.12, 6735.12, 10126.1, 13752.1, 17669.1, 21948.1, 26718.1, 32283.1, 39473.1, 64000
   // { 0, 3559.12, 6735.12, 10126.1, 13752.1, 17669.1, 21948.1, 26718.1, 32283.1, 39473.1, 64000 }
-  
+
+  TString textString[5] = {"p+Au #sqrt{#it{s}_{NN}} = 200 GeV","E^{trig}_{T} > 5.4 GeV","anti-k_{T} R=0.4 jets","#left|#eta^{jets}#right| < 0.6",
+			   "10 < p_{T,lead}^{reco} < 30 [GeV/#it{c}]"};
+  TLatex *tex[5];
+
+  for (int i=0; i<5; ++i) {
+    tex[i] = new TLatex(0.2,0.85-0.05*i,textString[i]);
+    tex[i]->SetTextFont(63);
+    tex[i]->SetTextSize(16);
+    tex[i]->SetTextColor(kBlack);
+    tex[i]->SetLineWidth(1);
+    tex[i]->SetNDC();
+  }
+
   int jeval, bgeval, pval, eaval;
   TString name, saveName, title, avg, sigma;
   double chgRho, neuRho, rho;
   
   //TString fileName = "out/UE/pAuHTjetUE.root";
-  TString fileName = "out/UE/pAuHTjetUE_trackeffic_sys2.root";
+  TString fileName = "out/UE/pAuHTjetUE_10cmVzCut_diffEta.root";
   //TString fileName = "out/UE/pAuHTjetUE_inLead.root";
   TFile* inFile = new TFile( fileName, "READ" );
+  string plotdir = "plots/UE/10cmVzCut_diffEta/";
 
-  TH3D *hBGchg3D = (TH3D*) inFile->Get("hChgBgPtEtaPhi");
-  TH3D *hBGneu3D = (TH3D*) inFile->Get("hNeuBgPtEtaPhi");
+  // TH3D *hBGchg3D = (TH3D*) inFile->Get("hChgBgPtEtaPhi");
+  // TH3D *hBGneu3D = (TH3D*) inFile->Get("hNeuBgPtEtaPhi");
 
-  TH2D *hBGchg = (TH2D*)hBGchg3D->Project3D("ZY");
-  TH2D *hBGneu = (TH2D*)hBGneu3D->Project3D("ZY");
-  hBGchg->SetName("hBGchg");
-  hBGneu->SetName("hBGneu");
+  // TH2D *hBGchg = (TH2D*)hBGchg3D->Project3D("ZY");
+  // TH2D *hBGneu = (TH2D*)hBGneu3D->Project3D("ZY");
+  // hBGchg->SetName("hBGchg");
+  // hBGneu->SetName("hBGneu");
   
   TTree *jetTree = (TTree*) inFile->Get("HTjetTree");
 
@@ -91,19 +109,19 @@ void UEjetPlot(){
 
   int nEntries = jetTree->GetEntries();
 
-  TH1D *hRho = new TH1D("hRho","Underlying Event;#rho (GeV)",60,0,15);
-  TH1D *hRho_HI = new TH1D("hRho_HI","High EA Underlying Event;#rho (GeV)",120,0,40);
-  TH1D *hRho_LO = new TH1D("hRho_LO","Low EA Underlying Event;#rho (GeV)",120,0,30);
-  TH2D *hTowersVsRho = new TH2D("hTowersVsRho","# of Towers vs. UE;#rho (GeV);# of Towers", 100,0,25, 200,0,200 );
-  TH3D *hLeadJetPtRhoEta = new TH3D( "hLeadJetPtRhoEta", "Lead Jet p_{T}, #rho, #eta;Jet p_{T} (GeV);#rho;Jet #eta", 400,0.0,100.0, 100,0,25, 40,-1.0,1.0 );  
-  TH3D *hLeadPtEtaPhi = new TH3D("hLeadPtEtaPhi","Lead Jet p_{T} vs. #eta vs. #phi;p_{T} (GeV);#eta;#phi", 280,0,70, 40,-1.0,1.0, 120,0,6.3);
-  TH3D *hPt_UE_BBCsumE = new TH3D("hPt_UE_BBCsumE","UE vs. BBC ADC East Sum;Lead Jet p_{T} (GeV);Underlying Event (GeV);BBC ADC East Sum", 500,0,125, 50,0,25, 140,0,70000 );
+  TH1D *hRho = new TH1D("hRho","Underlying Event;#rho [GeV]",60,0,15);
+  TH1D *hRho_HI = new TH1D("hRho_HI","High EA Underlying Event;#rho [GeV]",120,0,40);
+  TH1D *hRho_LO = new TH1D("hRho_LO","Low EA Underlying Event;#rho [GeV]",120,0,30);
+  TH2D *hTowersVsRho = new TH2D("hTowersVsRho","# of Towers vs. UE;#rho [GeV];# of Towers", 100,0,25, 200,0,200 );
+  TH3D *hLeadJetPtRhoEta = new TH3D( "hLeadJetPtRhoEta", "Lead Jet p_{T}, #rho, #eta;Jet p_{T} [GeV];#rho;Jet #eta", 400,0.0,100.0, 100,0,25, 40,-1.0,1.0 );  
+  TH3D *hLeadPtEtaPhi = new TH3D("hLeadPtEtaPhi","Lead Jet p_{T} vs. #eta vs. #phi;p_{T} [GeV];#eta;#phi", 280,0,70, 40,-1.0,1.0, 120,0,6.3);
+  TH3D *hPt_UE_BBCsumE = new TH3D("hPt_UE_BBCsumE","UE vs. BBC ADC East Sum;Lead Jet p_{T} [GeV];Underlying Event [GeV];BBC ADC East Sum", 500,0,125, 50,0,25, 140,0,70000 );
   TH1D *hBBCsumE = new TH1D("hBBCsumE","BBC ADC East Sum;BBCE Sum", 140,0,70000 );
   TH1D *hBBCsumE_integral = new TH1D("integral","BBC ADC East Sum Integral;Int(BBCE Sum)", 280,0,70000 );
   TH1D *hleadEta_LoEA = new TH1D( "hleadEta_LoEA", "Low Event Activity", 40,-1,1 );
   TH1D *hleadEta_HiEA = new TH1D( "hleadEta_HiEA", "High Event Activity", 40,-1,1 );
 
-  TH2D *hLeadPtVsPtCorrected = new TH2D("hLeadPtVsPtCorrected","Lead Jet p_{T} vs. Background-Subtracted p_{T} ;p_{T} (GeV);p_{T}^{corrected} (GeV)", 80,10,30, 120,0,30 );
+  TH2D *hLeadPtVsPtCorrected = new TH2D("hLeadPtVsPtCorrected","Lead Jet p_{T} vs. Background-Subtracted p_{T} ;p_{T} [GeV];p_{T}^{corrected} [GeV]", 80,10,30, 120,0,30 );
   
   TH1D *hLeadEta[nPtBins];
   TH1D *hBBCEastSum_byEta[nEtaBins];
@@ -112,8 +130,8 @@ void UEjetPlot(){
   TH1D *hEAdist[nPtBins][nEtaBins];
   TH1D *hEAdistCORRECTED[nPtBins][nEtaBins];
 
-  TH1D *hpt = new TH1D("hpt",";p_{T} (GeV);#frac{1}{N_{jets}}#frac{dN_{jets}}{dp_{T}}",50,8,30);
-  TH1D *hptc = new TH1D("hptc",";p_{T} (GeV);#frac{1}{N_{jets}}#frac{dN_{jets}}{dp_{T}}",50,8,30);
+  TH1D *hpt = new TH1D("hpt",";p_{T} [GeV];#frac{1}{#it{N}_{jets}}#frac{d#it{N}_{jets}}{dp_{T}}",50,8,30);
+  TH1D *hptc = new TH1D("hptc",";p_{T} [GeV];#frac{1}{#it{N}_{jets}}#frac{d#it{N}_{jets}}{dp_{T}}",50,8,30);
   hpt->SetStats(0);
   hptc->SetStats(0);  
 
@@ -121,22 +139,22 @@ void UEjetPlot(){
 
     name = "hBBCEastSum_byEta" + etaBinName[e];
     title = "BBC ADC East Sum:  " + etaBinString[e] + ";BBC East Sum";
-    hBBCEastSum_byEta[e] = new TH1D( name, title, 18,0,70000 );
+    hBBCEastSum_byEta[e] = new TH1D( name, title, 12,3000,70000 );
     hBBCEastSum_byEta[e]->SetMarkerStyle( etaMarker[e] );
     hBBCEastSum_byEta[e]->SetMarkerColor( etaColor[e] );
     hBBCEastSum_byEta[e]->SetLineColor( etaColor[e] );
 
     name = "hBBCEastSum_byPt" + ptBinName[e];
     title = "BBC ADC East Sum:  " + ptBinString[e] + ";BBC East Sum";
-    hBBCEastSum_byPt[e] = new TH1D( name, title, 18,0,70000 );
+    hBBCEastSum_byPt[e] = new TH1D( name, title, 12,3000,70000 );
     hBBCEastSum_byPt[e]->SetMarkerStyle( ptMarker[e] );
     hBBCEastSum_byPt[e]->SetMarkerColor( ptColor[e] );
     hBBCEastSum_byPt[e]->SetLineColor( ptColor[e] );
     
     name = "hBBCEastSum_byPtCorrected" + ptBinName[e];
     title = "BBC ADC East Sum:  " + ptCorrectedBinString[e] + ";BBC East Sum";
-    hBBCEastSum_byPtCorrected[e] = new TH1D( name, title, 18,0,70000 );
-    hBBCEastSum_byPtCorrected[e]->SetMarkerStyle( ptMarker[e] );
+    hBBCEastSum_byPtCorrected[e] = new TH1D( name, title, 12,3000,70000 );
+    hBBCEastSum_byPtCorrected[e]->SetMarkerStyle( 20 );
     hBBCEastSum_byPtCorrected[e]->SetMarkerColor( ptColor[e] );
     hBBCEastSum_byPtCorrected[e]->SetLineColor( ptColor[e] );
     
@@ -205,12 +223,12 @@ void UEjetPlot(){
     pval = 99;    jeval = 99;    eaval = 99;
     
 
-    if ( leadPt >= 10.0 && leadPt <= 30.0 ) {
+    if ( leadPtCorrected >= 10.0 && leadPtCorrected <= 30.0 ) {
       for ( int ea=0; ea<3; ++ea ) {
 	if ( BbcAdcSumEast > BBCEsumLo[ea]  &&  BbcAdcSumEast < BBCEsumHi[ea] ) { eaval = ea; }
       }    
       for ( int p=0; p<3; ++p ) {
-	if ( leadPt >= ptLo[p]  &&  leadPt <= ptHi[p] ) { pval = p; }
+	if ( leadPtCorrected >= ptLo[p]  &&  leadPtCorrected <= ptHi[p] ) { pval = p; }
       }
       for ( int je=0; je<3; ++je ) {
 	if ( leadEta >= etaLo[je]  &&  leadEta <= etaHi[je] ) { jeval = je; }
@@ -247,41 +265,47 @@ void UEjetPlot(){
 
   hLeadPtVsPtCorrected->Scale(1./hLeadPtVsPtCorrected->Integral("WIDTH"));
   hLeadPtVsPtCorrected->Draw("COLZ");
-  c0->SaveAs( "plots/UE/inLead/leadPtVsPtCorrected_tracksys2.pdf" , "PDF" );
+  c0->SaveAs( (plotdir + "leadPtVsPtCorrected.pdf").c_str() , "PDF" );
   
-  hBGchg->Scale(1./hBGchg->Integral("WIDTH"));
-  hBGchg->Draw("COLZ");
-  c0->SaveAs( "plots/UE/inLead/chgBgEtaPhi_tracksys2.pdf" , "PDF" );
+  // hBGchg->Scale(1./hBGchg->Integral("WIDTH"));
+  // hBGchg->Draw("COLZ");
+  // c0->SaveAs( "plots/UE/10cmVzCut/chgBgEtaPhi.pdf").c_str() , "PDF" );
   
-  hBGneu->Scale(1./hBGneu->Integral("WIDTH"));
-  hBGneu->Draw("COLZ");
-  c0->SaveAs( "plots/UE/inLead/neuBgEtaPhi_tracksys2.pdf" , "PDF" );
+  // hBGneu->Scale(1./hBGneu->Integral("WIDTH"));
+  // hBGneu->Draw("COLZ");
+  // c0->SaveAs( "plots/UE/10cmVzCut/neuBgEtaPhi.pdf").c_str() , "PDF" );
 
   hTowersVsRho->Scale(1./hTowersVsRho->Integral("WIDTH"));
   hTowersVsRho->GetZaxis()->SetRangeUser(0.0000001,1);
   hTowersVsRho->Draw("COLZ");
-  c0->SaveAs( "plots/UE/inLead/towersVsRho_tracksys2.pdf" , "PDF" );
+  c0->SaveAs( (plotdir + "towersVsRho.pdf").c_str() , "PDF" );
 
   c0->SetLogy();
 
   hRho->Scale(1./hRho->Integral("WIDTH"));
   hRho->Draw();
-  c0->SaveAs( "plots/UE/inLead/rho_tracksys2.pdf" , "PDF" );
+  c0->SaveAs( (plotdir + "rho.pdf").c_str() , "PDF" );
+  
 
   TCanvas * c1 = new TCanvas( "c1" , "" ,700 ,500 );              // CANVAS 1
-  c1->SetMargin(0.15,0.1,0.12,0.1);
-  TLegend *leg0 = new TLegend(0.55, 0.55, 0.89, 0.89,NULL,"brNDC");    // LEGEND 0
-  leg0->SetBorderSize(0);   leg0->SetLineColor(1);   leg0->SetLineStyle(1);   leg0->SetLineWidth(1);   leg0->SetFillColor(0);   leg0->SetFillStyle(1001);
+  c1->SetMargin(0.14,0.05,0.13,0.05);
+  TLegend *leg0 = new TLegend(0.48, 0.66, .92, .95,NULL,"brNDC");    // LEGEND 0
+  leg0->SetBorderSize(0);   leg0->SetLineColor(1);   leg0->SetLineStyle(1);   leg0->SetLineWidth(1);   leg0->SetFillColorAlpha(0,0.0);   leg0->SetFillStyle(1001);
   leg0->SetNColumns(2);
-  leg0->AddEntry((TObject*)0,"#bf{#eta_{lead}}", "");
-  leg0->AddEntry((TObject*)0,"#bf{<BBCE sum>}", "");
+  leg0->AddEntry((TObject*)0,"", "");
+  leg0->AddEntry((TObject*)0,"<iBBCE sum>", "");
+
+  TString lmean1[nEtaBins] = { "23430", "23080", "22700" };
+  TString lerr1[nEtaBins] = { "50", "40", "50" };
   
-  TH2D *sBBCbyEta = new TH2D("sBBCbyEta", "BBC ADC East Sum by Lead Jet #eta;BBC East Sum;#frac{1}{N_{jets}} #frac{dN_{jets}}{d<BBCEsum>}", 35,0,70000, 10,0,0.15);
+  TH2D *sBBCbyEta = new TH2D("sBBCbyEta", ";iBBC East Sum;#frac{1}{#it{N}_{jets}} #frac{d#it{N}_{jets}}{diBBCEsum}", 35,0,70000, 10,0,0.25);
   sBBCbyEta->SetStats(0);
   sBBCbyEta->GetXaxis()->SetLabelSize(.04);
-  sBBCbyEta->GetYaxis()->SetLabelSize(.04);
+  sBBCbyEta->GetYaxis()->SetLabelSize(.045);
+  sBBCbyEta->GetXaxis()->SetTitleSize(0.045);
   sBBCbyEta->GetXaxis()->SetTitleOffset(1.2);
-  sBBCbyEta->GetYaxis()->SetTitleOffset(1.6);
+  sBBCbyEta->GetYaxis()->SetTitleOffset(1.4);
+  sBBCbyEta->GetYaxis()->SetTitleSize(0.04);
   sBBCbyEta->Draw();
   for ( int e=0; e<nEtaBins; ++e ) {
     hBBCEastSum_byEta[e]->SetStats(0);
@@ -289,74 +313,129 @@ void UEjetPlot(){
     hBBCEastSum_byEta[e]->Draw("SAME");
     avg = "";
     avg += hBBCEastSum_byEta[e]->GetMean(1);                                           // 1 denotes x-axis
-    avg = avg(0,5);
+    avg = avg(0,6);
     name = "hBBCEastSum_byEta" + etaBinName[e];
     title = etaBinString[e];
     leg0->AddEntry( name, title, "lpf" );                            // ADD TO LEGEND
+
+
+    //avg = lmean1[e] + " #pm " + lerr1[e];
     leg0->AddEntry((TObject*)0,avg, "");
 
   }
   leg0->Draw();
-  c1->SaveAs( "plots/UE/inLead/BBCEastSum_by_eta_tracksys2.pdf" , "PDF" );
+  
+  TPaveText *sp1 = new TPaveText(0.1,0.8,0.5,1.0,"NDC");
+  //sp1->AddText("STAR Preliminary");
+  sp1->AddText("");
+  sp1->SetTextSize(0.04);
+  sp1->SetTextColor(kRed);
+  sp1->SetFillColorAlpha(0,0.0);
+  sp1->SetLineColorAlpha(0,0.0);
+  sp1->Draw("NB");
+
+  auto jetText = new TLatex(0.57,0.52,"jets uncorrected for detector effects");
+  jetText->SetTextFont(63);
+  jetText->SetTextSize(16);
+  jetText->SetTextColor(kBlack);
+  jetText->SetLineWidth(1);
+  jetText->SetNDC();
+  jetText->Draw();
+  jetText->DrawLatex(0.65,0.46,"statistical errors only");
+
+    
+  for (int i=0; i<5; ++i) {
+    tex[i]->DrawLatex(0.2,0.45-0.05*i,textString[i]);
+  }
+  c1->SaveAs( (plotdir + "BBCEastSum_by_eta.pdf").c_str() , "PDF" );
+
   c1->SetLogy(0);
 
-
-
-
-  TLegend *leg0a = new TLegend(0.55, 0.55, 0.89, 0.89,NULL,"brNDC");    // LEGEND 0
-  leg0a->SetBorderSize(0);   leg0a->SetLineColor(1);   leg0a->SetLineStyle(1);   leg0a->SetLineWidth(1);   leg0a->SetFillColor(0);   leg0a->SetFillStyle(1001);
-  leg0a->SetNColumns(2);
-  leg0a->AddEntry((TObject*)0,"#bf{p_{T}^{lead}}", "");
-  leg0a->AddEntry((TObject*)0,"#bf{<BBCE sum>}", "");
   
-  TH2D *sBBCbyPt = new TH2D("sBBCbyPt", "BBC ADC East Sum by Lead Jet p_{T};BBC East Sum", 35,0,70000, 10,0,0.15);
+  TString bmean[nPtBins] = { "22780", "21870", "21200" };
+  TString berror[nPtBins] = { "30", "60", "100" };
+
+  TLegend *leg0a = new TLegend(0.48, 0.66, .92, .95,NULL,"brNDC");    // LEGEND 0
+  leg0a->SetBorderSize(0);   leg0a->SetLineColor(1);   leg0a->SetLineStyle(1);   leg0a->SetLineWidth(1);   leg0a->SetFillColorAlpha(0,0.0);   leg0a->SetFillStyle(1001);
+  leg0a->SetNColumns(2);
+  leg0a->AddEntry((TObject*)0,"", "");
+  leg0a->AddEntry((TObject*)0,"<BBCE sum>", "");
+  
+  TH2D *sBBCbyPt = new TH2D("sBBCbyPt", ";iBBC East Sum;#frac{1}{#it{N}_{jets}} #frac{d#it{N}_{jets}}{diBBCEsum}", 35,0,70000, 10,0,0.25);
+  sBBCbyPt->GetXaxis()->SetLabelSize(.04);
+  sBBCbyPt->GetYaxis()->SetLabelSize(.045);
+  sBBCbyPt->GetXaxis()->SetTitleSize(0.045);
+  sBBCbyPt->GetXaxis()->SetTitleOffset(1.2);
+  sBBCbyPt->GetYaxis()->SetTitleOffset(1.4);
+  sBBCbyPt->GetYaxis()->SetTitleSize(0.04);
   sBBCbyPt->SetStats(0);
   sBBCbyPt->Draw();
-  for ( int p=0; p<nPtBins; ++p ) {
-    hBBCEastSum_byPt[p]->SetStats(0);
-    hBBCEastSum_byPt[p]->Scale(1./hBBCEastSum_byPt[p]->Integral());
-    hBBCEastSum_byPt[p]->Draw("SAME");
-    avg = "";
-    avg += hBBCEastSum_byPt[p]->GetMean(1);                                           // 1 denotes x-axis
-    avg = avg(0,5);
-    name = "hBBCEastSum_byPt" + ptBinName[p];
-    title = ptBinString[p];
-    leg0a->AddEntry( name, title, "lpf" );                            // ADD TO LEGEND
-    leg0a->AddEntry((TObject*)0,avg, "");
-
-  }
-  leg0a->Draw();
-  c1->SaveAs( "plots/UE/inLead/BBCEastSum_by_pt_tracksys2.pdf" , "PDF" );
-  c1->SetLogy(0);
-
-
-
-  
-  TLegend *leg0b = new TLegend(0.65, 0.65, 0.9, 0.9,NULL,"brNDC");    // LEGEND 0
-  leg0b->SetBorderSize(1);   leg0b->SetLineColor(1);   leg0b->SetLineStyle(1);   leg0b->SetLineWidth(1);   leg0b->SetFillColor(0);   leg0b->SetFillStyle(1001);
-  leg0b->SetNColumns(2);
-  leg0b->AddEntry((TObject*)0,"#bf{p_{T}^{corrected}}", "");
-  leg0b->AddEntry((TObject*)0,"#bf{<BBCE sum>}", "");
-  
-  TH2D *sBBCbyPtCorrected = new TH2D("sBBCbyPtCorrected", "BBC ADC East Sum by Corrected Lead Jet p_{T};BBC East Sum", 35,0,70000, 10,0,0.15);
-  sBBCbyPtCorrected->SetStats(0);
-  sBBCbyPtCorrected->Draw();
   for ( int p=0; p<nPtBins; ++p ) {
     hBBCEastSum_byPtCorrected[p]->SetStats(0);
     hBBCEastSum_byPtCorrected[p]->Scale(1./hBBCEastSum_byPtCorrected[p]->Integral());
     hBBCEastSum_byPtCorrected[p]->Draw("SAME");
     avg = "";
-    avg += hBBCEastSum_byPtCorrected[p]->GetMean(1);                                           // 1 denotes x-axis
-    avg = avg(0,5);
+    // avg += hBBCEastSum_byPtCorrected[p]->GetMean(1);                                           // 1 denotes x-axis
+    // avg = avg(0,5);
     name = "hBBCEastSum_byPtCorrected" + ptBinName[p];
-    title = ptCorrectedBinString[p];
-    leg0b->AddEntry( name, title, "lpf" );                            // ADD TO LEGEND
-    leg0b->AddEntry((TObject*)0,avg, "");
+    title = ptBinString[p];
+    leg0a->AddEntry( name, title, "lpf" );                            // ADD TO LEGEND
+
+    TString meanError = "";
+    // meanError += hBBCEastSum_byPtCorrected[p]->GetMeanError();
+    // meanError = meanError(0,6);
+    avg += hBBCEastSum_byPtCorrected[p]->GetMean(1);                                           // 1 denotes x-axis
+    avg = avg(0,6);
+    // avg = bmean[p] + " #pm " + berror[p];
+    leg0a->AddEntry((TObject*)0,avg, "");
 
   }
-  leg0b->Draw();
-  c1->SaveAs( "plots/UE/inLead/BBCEastSum_by_ptCorrected_tracksys2.pdf" , "PDF" );
+  leg0a->Draw();
+
+  jetText->DrawLatex(0.57,0.52,"jets uncorrected for detector effects");
+  jetText->DrawLatex(0.65,0.46,"statistical errors only");
+
+  sp1->Draw("NB");
+
+  for (int i=0; i<4; ++i) {
+    tex[i]->DrawLatex(0.2,0.4-0.05*i,textString[i]);
+  }
+
+
+
+  
+  c1->SaveAs( (plotdir + "BBCEastSum_by_ptCorrected.pdf").c_str() , "PDF" );
+  
   c1->SetLogy(0);
+
+
+  
+  // TLegend *leg0b = new TLegend(0.65, 0.65, 0.9, 0.9,NULL,"brNDC");    // LEGEND 0
+  // leg0b->SetBorderSize(1);   leg0b->SetLineColor(1);   leg0b->SetLineStyle(1);   leg0b->SetLineWidth(1);   leg0b->SetFillColor(0);   leg0b->SetFillStyle(1001);
+  // leg0b->SetNColumns(2);
+  // leg0b->AddEntry((TObject*)0,"#bf{p_{T}^{corrected}}", "");
+  // leg0b->AddEntry((TObject*)0,"#bf{<BBCE sum>}", "");
+  
+  // TH2D *sBBCbyPtCorrected = new TH2D("sBBCbyPtCorrected", "BBC ADC East Sum by Corrected Lead Jet p_{T};BBC East Sum", 35,0,70000, 10,0,0.15);
+  // sBBCbyPtCorrected->SetStats(0);
+  // sBBCbyPtCorrected->Draw();
+  // for ( int p=0; p<nPtBins; ++p ) {
+  //   hBBCEastSum_byPtCorrected[p]->SetStats(0);
+  //   hBBCEastSum_byPtCorrected[p]->Scale(1./hBBCEastSum_byPtCorrected[p]->Integral());
+  //   hBBCEastSum_byPtCorrected[p]->Draw("SAME");
+  //   avg = "";
+  //   avg += hBBCEastSum_byPtCorrected[p]->GetMean(1);                                           // 1 denotes x-axis
+  //   avg = avg(0,5);
+  //   name = "hBBCEastSum_byPtCorrected" + ptBinName[p];
+  //   title = ptCorrectedBinString[p];
+  //   leg0b->AddEntry( name, title, "lpf" );                            // ADD TO LEGEND
+  //   leg0b->AddEntry((TObject*)0,avg, "");
+
+  // }
+  // leg0b->Draw();
+  // c1->SaveAs( (plotdir + "BBCEastSum_by_ptCorrected.pdf").c_str() , "PDF" );
+  
+    c1->SetLogy(0);
 
 
   
@@ -390,7 +469,7 @@ void UEjetPlot(){
 
   }
   leg1->Draw();
-  c1->SaveAs( "plots/UE/inLead/LeadEta_by_pt_tracksys2.pdf" , "PDF" );
+  c1->SaveAs( (plotdir + "LeadEta_by_pt.pdf").c_str() , "PDF" );
 
 
   jetTree->Draw("leadPt:rho>>hRho2d","","COLZ");
@@ -404,7 +483,7 @@ void UEjetPlot(){
   leg2->AddEntry((TObject*)0,"#bf{<#sigma>}", "");
 
   TH1D *hPtRho[nPtBins];
-  TH2D *sPtRho = new TH2D( "sPtRho", "Underlying Event by Lead Jet p_{T};#rho (GeV)", 40,0,12, 10,0.000001,1 );
+  TH2D *sPtRho = new TH2D( "sPtRho", "Underlying Event by Lead Jet p_{T};#rho [GeV]", 40,0,12, 10,0.000001,1 );
   sPtRho->SetStats(0);
   sPtRho->Draw();
   for ( int p=0; p<nPtBins; ++p ) {
@@ -431,7 +510,7 @@ void UEjetPlot(){
     leg2->AddEntry((TObject*)0,sigma, "");
   }
   leg2->Draw();
-  c1->SaveAs("plots/UE/inLead/rhoByLeadPt_tracksys2.pdf","PDF");
+  c1->SaveAs((plotdir + "rhoByLeadPt.pdf").c_str(),"PDF");
 
 
 
@@ -449,7 +528,7 @@ void UEjetPlot(){
   leg3->AddEntry((TObject*)0,"#bf{<#sigma>}", "");
 
   TH1D *hPtRho_LO[nPtBins];
-  TH2D *sPtRho_LO = new TH2D( "sPtRho_LO", "Low EA: Underlying Event by Lead Jet p_{T};#rho (GeV)", 40,0,12, 10,0.000001,1 );
+  TH2D *sPtRho_LO = new TH2D( "sPtRho_LO", "Low EA: Underlying Event by Lead Jet p_{T};#rho [GeV]", 40,0,12, 10,0.000001,1 );
   sPtRho_LO->SetStats(0);
   sPtRho_LO->Draw();
   for ( int p=0; p<nPtBins; ++p ) {
@@ -476,7 +555,16 @@ void UEjetPlot(){
     leg3->AddEntry((TObject*)0,sigma, "");
   }
   leg3->Draw();
-  c1->SaveAs("plots/UE/inLead/rhoByLeadPt_LOEA_tracksys2.pdf","PDF");
+
+  // TLatex *EAtext = new TLatex(0.65, 0.85,EAbinString[0]);
+  // EAtext->SetTextFont(63);
+  // EAtext->SetTextSize(16);
+  // EAtext->SetTextColor(kBlack);
+  // EAtext->SetLineWidth(1);
+  // EAtext->SetNDC();
+  // EAtext->Draw();
+
+  c1->SaveAs((plotdir + "rhoByLeadPt_LOEA.pdf").c_str(),"PDF");
 
 
 
@@ -493,7 +581,7 @@ void UEjetPlot(){
   leg4->AddEntry((TObject*)0,"#bf{<#sigma>}", "");
 
   TH1D *hPtRho_HI[nPtBins];
-  TH2D *sPtRho_HI = new TH2D( "sPtRho_HI", "High EA: Underlying Event by Lead Jet p_{T};#rho (GeV)", 40,0,12, 10,0.000001,1 );
+  TH2D *sPtRho_HI = new TH2D( "sPtRho_HI", "High EA: Underlying Event by Lead Jet p_{T};#rho [GeV]", 40,0,12, 10,0.000001,1 );
   sPtRho_HI->SetStats(0);
   sPtRho_HI->Draw();
   for ( int p=0; p<nPtBins; ++p ) {
@@ -520,9 +608,7 @@ void UEjetPlot(){
     leg4->AddEntry((TObject*)0,sigma, "");
   }
   leg4->Draw();
-  c1->SaveAs("plots/UE/inLead/rhoByLeadPt_HIEA_tracksys2.pdf","PDF");
-
-
+  c1->SaveAs((plotdir + "rhoByLeadPt_HIEA.pdf").c_str(),"PDF");
 
 
 
@@ -542,7 +628,7 @@ void UEjetPlot(){
   leg12->AddEntry((TObject*)0,"#bf{<#sigma>}", "");
 
   TH1D *hCorrPtRho[nPtBins];
-  TH2D *sCorrPtRho = new TH2D( "sCorrPtRho", "Underlying Event by Corrected Lead Jet p_{T};#rho (GeV)", 40,0,12, 10,0.000001,1 );
+  TH2D *sCorrPtRho = new TH2D( "sCorrPtRho", "Underlying Event by Corrected Lead Jet p_{T};#rho [GeV]", 40,0,12, 10,0.000001,1 );
   sCorrPtRho->SetStats(0);
   sCorrPtRho->Draw();
   for ( int p=0; p<nPtBins; ++p ) {
@@ -569,41 +655,46 @@ void UEjetPlot(){
     leg12->AddEntry((TObject*)0,sigma, "");
   }
   leg12->Draw();
-  c1->SaveAs("plots/UE/inLead/rhoByLeadPt_correctedPt_tracksys2.pdf","PDF");
-
+  c1->SaveAs((plotdir + "rhoByLeadPt_correctedPt.pdf").c_str(),"PDF");
+  
 
 
   TCanvas * c1a = new TCanvas( "c1a" , "" ,700 ,500 );              // CANVAS 1
   c1a->SetMargin(0.15,0.1,0.12,0.1);
 
   // LO: 3559.12-10126.1
-  jetTree->Draw("leadPtCorrected:rho_te>>hRhoCorr2d_LO","BbcAdcSumEast>3559.12 && BbcAdcSumEast<10126.1","COLZ");
+  jetTree->Draw("leadPtCorrected:rho>>hRhoCorr2d_LO","BbcAdcSumEast>3559.12 && BbcAdcSumEast<10126.1","COLZ");
   TH2D *hRhoCorr2d_LO = (TH2D*)gDirectory->Get("hRhoCorr2d_LO");
   //c1a->SetLogy();
-  c1a->SetMargin(0.12,0.1,0.12,0.1);
+  c1a->SetMargin(0.125,0.05,0.1,0.05);
 
-  TLegend *leg13 = new TLegend(0.43, 0.5, 0.88, 0.88,NULL,"brNDC");    // LEGEND 0
+  TLegend *leg13 = new TLegend(0.57, 0.62, 0.90, 0.95,NULL,"brNDC");    // LEGEND 0
   leg13->SetBorderSize(0);   leg13->SetLineColor(1);   leg13->SetLineStyle(1);   leg13->SetLineWidth(1);   leg13->SetFillColor(0);   leg13->SetFillStyle(1001);
-  leg13->SetNColumns(3);
-  leg13->AddEntry((TObject*)0,"#bf{p_{T}^{corrected}}", "");
-  leg13->AddEntry((TObject*)0,"#bf{<#rho>}", "");
-  leg13->AddEntry((TObject*)0,"#bf{<#sigma>}", "");
+  leg13->SetNColumns(2);
+  leg13->AddEntry((TObject*)0,"lead jet p_{T}", "");
+  leg13->AddEntry((TObject*)0,"uncorr. <#rho>", "");
+  leg13->SetFillColorAlpha(0,0.0);
 
   TH1D *hCorrPtRho_LO[nPtBins];
-  TH2D *sCorrPtRho_LO = new TH2D( "sCorrPtRho_LO", "Low EA: Underlying Event by Lead Jet p_{T};#rho (GeV);#frac{1}{N_{jets}} #frac{dN_{jets}}{d<#rho>}", 40,0,4.5, 10,0,0.25 );
+  TH2D *sCorrPtRho_LO = new TH2D( "sCorrPtRho_LO", ";#rho [GeV];#frac{1}{#it{N}_{jets}} #frac{d#it{N}_{jets}}{d#rho}", 40,0,4.5, 10,0,0.25 );
   sCorrPtRho_LO->SetStats(0);
   sCorrPtRho_LO->GetXaxis()->SetLabelSize(.04);
   sCorrPtRho_LO->GetYaxis()->SetLabelSize(.04);
   sCorrPtRho_LO->GetXaxis()->SetTitleOffset(1);
-  sCorrPtRho_LO->GetYaxis()->SetTitleOffset(1.2);
+  sCorrPtRho_LO->GetYaxis()->SetTitleOffset(1.25);
   sCorrPtRho_LO->GetXaxis()->SetTitleSize(.04);
   sCorrPtRho_LO->GetYaxis()->SetTitleSize(.04);
   sCorrPtRho_LO->Draw();
+
+  //0.7099 ± 0.0027  0.6770 ± 0.0055  0.6419 ± 0.0085
+  double lmean[nPtBins] = { 0.710, 0.677, 0.642 };
+  double lerr[nPtBins] = { 0.003, 0.006, 0.009 };
+    
   for ( int p=0; p<nPtBins; ++p ) {
     hRhoCorr2d_LO->GetYaxis()->SetRangeUser( ptLo[p], ptHi[p] );
     hCorrPtRho_LO[p] = (TH1D*) hRhoCorr2d_LO->ProjectionX();
     name = "hUE" + ptBinName[p];
-    title =  ptCorrectedBinString[p];
+    title =  ptBinStringRaw[p];
     hCorrPtRho_LO[p]->SetNameTitle( name, title );
     hCorrPtRho_LO[p]->SetLineColor( ptColor[p] );
     hCorrPtRho_LO[p]->SetMarkerColor( ptColor[p] );
@@ -612,36 +703,63 @@ void UEjetPlot(){
     hCorrPtRho_LO[p]->SetStats(0);
     hCorrPtRho_LO[p]->Draw("SAME");
 
+    leg13->AddEntry( name, title, "lpf" );                            // ADD TO LEGEND
+
     avg = "";
     avg+=hCorrPtRho_LO[p]->GetMean(1);
-    avg = avg(0,5);
-    sigma="";
-    sigma+=hCorrPtRho_LO[p]->GetStdDev(1);
-    sigma = sigma(0,5);
-    leg13->AddEntry( name, title, "lpf" );                            // ADD TO LEGEND
-    leg13->AddEntry((TObject*)0,avg, "");
-    leg13->AddEntry((TObject*)0,sigma, "");
-  }
-  leg13->Draw();
-  c1a->SaveAs("plots/UE/inLead/rhoByLeadPt_LOEA_correctedPt_lin_tracksys2.pdf","PDF");
+    avg = avg(0,6);
+    TString meanError;
+    meanError+=hCorrPtRho_LO[p]->GetMeanError();
+    meanError = meanError(0,6);
 
+    // avg = "";
+    // avg += lmean[p];
+    // avg = avg(0,5);
+    // TString meanError = "";
+    // meanError += lerr[p];
+    // meanError = meanError(0,5);
+    // avg += " #pm " + meanError;
+    leg13->AddEntry((TObject*)0,avg, "");  // FOR PRELIMINARIES!
+  }
+
+  TLatex *EAtext = new TLatex(0.3, 0.7,EAbinString[0]);
+  EAtext->SetTextFont(63);
+  EAtext->SetTextSize(32);
+  EAtext->SetTextColor(kBlack);
+  EAtext->SetLineWidth(1);
+  EAtext->SetNDC();
+  EAtext->Draw();
+
+  for (int i=0; i<4; ++i) {
+    tex[i]->DrawLatex(0.65,0.35-0.05*i,textString[i]);
+  }
+  sp1->Draw("NB");
+
+  jetText->DrawLatex(0.57,0.52,"jets uncorrected for detector effects");
+  jetText->DrawLatex(0.65,0.46,"statistical errors only");
+
+  leg13->Draw();
+  c1a->SaveAs((plotdir + "rhoByLeadPt_LOEA_lin.pdf").c_str(),"PDF");
 
 
 
   // HI: 26718.1+
-  jetTree->Draw("leadPtCorrected:rho_te>>hRhoCorr2d_HI","BbcAdcSumEast>26718.1","COLZ");
+  jetTree->Draw("leadPtCorrected:rho>>hRhoCorr2d_HI","BbcAdcSumEast>26718.1","COLZ");
   TH2D *hRhoCorr2d_HI = (TH2D*)gDirectory->Get("hRhoCorr2d_HI");
   //c1a->SetLogy();
-  c1a->SetMargin(0.12,0.1,0.12,0.1);
-  TLegend *leg14 = new TLegend(0.43, 0.5, 0.88, 0.88,NULL,"brNDC");    // LEGEND 0
+  c1a->SetMargin(0.125,0.05,0.1,0.05);
+  TLegend *leg14 = new TLegend(0.57, 0.62, 0.90, 0.95,NULL,"brNDC");    // LEGEND 0
   leg14->SetBorderSize(0);   leg14->SetLineColor(1);   leg14->SetLineStyle(1);   leg14->SetLineWidth(1);   leg14->SetFillColor(0);   leg14->SetFillStyle(1001);
-  leg14->SetNColumns(3);
-  leg14->AddEntry((TObject*)0,"#bf{p_{T}^{corrected}}", "");
-  leg14->AddEntry((TObject*)0,"#bf{<#rho>}", "");
-  leg14->AddEntry((TObject*)0,"#bf{<#sigma>}", "");
+  leg14->SetNColumns(2);
+  leg14->AddEntry((TObject*)0,"lead jet p_{T}", "");
+  leg14->AddEntry((TObject*)0,"uncorr. <#rho>", "");
 
+  //  1.1900 ± 0.0027   1.1495 ± 0.0046   1.1001 ± 0.0098
+  double lmean2[nPtBins] = { 1.190, 1.150, 1.10 };
+  double lerr2[nPtBins] = { 0.003, 0.005, 0.01 };
+  
   TH1D *hCorrPtRho_HI[nPtBins];
-  TH2D *sCorrPtRho_HI = new TH2D( "sCorrPtRho_HI", "High EA: Underlying Event by Lead Jet p_{T};#rho (GeV);#frac{1}{N_{jets}} #frac{dN_{jets}}{d<#rho>}", 40,0,4.5, 10,0,0.25 );
+  TH2D *sCorrPtRho_HI = new TH2D( "sCorrPtRho_HI", ";#rho [GeV];#frac{1}{#it{N}_{jets}} #frac{d#it{N}_{jets}}{d#rho}", 40,0,4.5, 10,0,0.25 );
   sCorrPtRho_HI->SetStats(0);
   sCorrPtRho_HI->GetXaxis()->SetLabelSize(.04);
   sCorrPtRho_HI->GetYaxis()->SetLabelSize(.04);
@@ -654,7 +772,7 @@ void UEjetPlot(){
     hRhoCorr2d_HI->GetYaxis()->SetRangeUser( ptLo[p], ptHi[p] );
     hCorrPtRho_HI[p] = (TH1D*) hRhoCorr2d_HI->ProjectionX();
     name = "hUE" + ptBinName[p];
-    title =  ptCorrectedBinString[p];
+    title =  ptBinStringRaw[p];
     hCorrPtRho_HI[p]->SetNameTitle( name, title );
     hCorrPtRho_HI[p]->SetLineColor( ptColor[p] );
     hCorrPtRho_HI[p]->SetMarkerColor( ptColor[p] );
@@ -663,22 +781,46 @@ void UEjetPlot(){
     hCorrPtRho_HI[p]->SetStats(0);
     hCorrPtRho_HI[p]->Draw("SAME");
 
-    avg = "";
-    avg+=hCorrPtRho_HI[p]->GetMean(1);
-    avg = avg(0,5);
-    sigma="";
-    sigma+=hCorrPtRho_HI[p]->GetStdDev(1);
-    sigma = sigma(0,5);
+    leg14->SetFillColorAlpha(0,0.0);
     leg14->AddEntry( name, title, "lpf" );                            // ADD TO LEGEND
-    leg14->AddEntry((TObject*)0,avg, "");
-    leg14->AddEntry((TObject*)0,sigma, "");
+
+    avg = "";
+    avg += hCorrPtRho_HI[p]->GetMean(1);
+    avg = avg(0,6);
+    TString meanError = "";
+    meanError += hCorrPtRho_HI[p]->GetMeanError();
+    meanError = meanError(0,6);
+    avg += " #pm " + meanError;
+
+    // avg = "";
+    // avg += lmean2[p];
+    // if (p==2) { avg = avg(0,4); }
+    // else { avg = avg(0,5); }
+    // TString meanError = "";
+    // meanError += lerr2[p];
+    // if (p==2) { meanError = meanError(0,4); }
+    // else { meanError = meanError(0,5); }
+    // avg += " #pm " + meanError;
+    leg14->AddEntry((TObject*)0,avg, "");   //  FOR PRELIMINARIES ONLY!
   }
+
+  sp1->Draw("NB");
+  
+  EAtext->DrawText(0.3, 0.7,EAbinString[1]);
+  //0.7,0.15
+  for (int i=0; i<4; ++i) {
+    tex[i]->DrawLatex(0.65,0.35-0.05*i,textString[i]);
+  }
+
+  jetText->DrawLatex(0.57,0.52,"jets uncorrected for detector effects");
+  jetText->DrawLatex(0.65,0.46,"statistical errors only");
+		   
   leg14->Draw();
-  c1a->SaveAs("plots/UE/inLead/rhoByLeadPt_HIEA_correctedPt_lin_tracksys2.pdf","PDF");
+  c1a->SaveAs((plotdir + "rhoByLeadPt_HIEA_lin.pdf").c_str(),"PDF");
 
 
-
-
+  
+ 
 
   c1->SetLogy();
 
@@ -730,7 +872,7 @@ void UEjetPlot(){
 
     }
     leg5[p]->Draw();
-    saveName = "plots/UE/inLead/BBCEastSum_by_eta" + ptBinName[p] +"_tracksys2.pdf";
+    saveName = plotdir + "BBCEastSum_by_eta" + ptBinName[p] +".pdf";
     c2->SaveAs( saveName , "PDF" );
   }
 
@@ -766,7 +908,7 @@ void UEjetPlot(){
 
     }
     leg6[p]->Draw();
-    saveName = "plots/UE/inLead/BBCEastSum_by_eta" + ptBinName[p] +"_corrected_tracksys2.pdf";
+    saveName = plotdir + "BBCEastSum_by_eta" + ptBinName[p] +"_corrected.pdf";
     c2->SaveAs( saveName , "PDF" );
   }
 
@@ -827,6 +969,7 @@ void UEjetPlot(){
   leg7->AddEntry( hptc,"Corrected p_{T}", "lpf" );
   leg7->Draw();
   
-  c3->SaveAs("plots/UE/inLead/CorrectedPtRatioPlot_tracksys2.pdf","PDF");
+  c3->SaveAs((plotdir + "CorrectedPtRatioPlot.pdf").c_str(),"PDF");
+
 
 }
