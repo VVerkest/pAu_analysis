@@ -63,25 +63,25 @@ int main ( int argc, const char** argv ) {         // funcions and cuts specifie
   TH2D *hChgBgPtEta[nPtBins];
   TH2D *hNeuBgPtEta[nPtBins];
 
-  // for (int p=0; p<nPtBins; ++p) {
+  for (int p=0; p<nPtBins; ++p) {
 
-  //   name = "hChgBgPtEta"; name += ptBinName[p];
-  //   title = "Charged Background #phi vs. #eta ("; title += ptBinString[p]; title += ") ;p_{T} (GeV);#eta";
-  //   hChgBgPtEta[p] = new TH2D( name , title ,30,0,15,20,-1.0,1.0 );
-  //   name = "hNeuBgPtEta"; name += ptBinName[p];
-  //   title = "Neutral Background #phi vs. #eta ("; title += ptBinString[p]; title += ") ;p_{T} (GeV);#eta";
-  //   hNeuBgPtEta[p] = new TH2D( name, title, 30,0,15,20,-1.0,1.0 );
-  // }
-
-  for (int e=0; e<nEtaBins; ++e) {
-
-    name = "hChgBgPtEta"; name += etaBinName[e];
-    title = "Charged Background #phi vs. #eta ("; title += etaBinString[e]; title += ") ;p_{T} (GeV);#eta";
-    hChgBgPtEta[e] = new TH2D( name , title ,30,0,15,20,-1.0,1.0 );
-    name = "hNeuBgPtEta"; name += etaBinName[e];
-    title = "Neutral Background #phi vs. #eta ("; title += etaBinString[e]; title += ") ;p_{T} (GeV);#eta";
-    hNeuBgPtEta[e] = new TH2D( name, title, 30,0,15,20,-1.0,1.0 );
+    name = "hChgBgPtEta"; name += ptBinName[p];
+    title = "Charged Background #phi vs. #eta ("; title += ptBinString[p]; title += ") ;p_{T} (GeV);#eta";
+    hChgBgPtEta[p] = new TH2D( name , title ,30,0,15,20,-1.0,1.0 );
+    name = "hNeuBgPtEta"; name += ptBinName[p];
+    title = "Neutral Background #phi vs. #eta ("; title += ptBinString[p]; title += ") ;p_{T} (GeV);#eta";
+    hNeuBgPtEta[p] = new TH2D( name, title, 30,0,15,20,-1.0,1.0 );
   }
+
+  // for (int e=0; e<nEtaBins; ++e) {
+
+  //   name = "hChgBgPtEta"; name += etaBinName[e];
+  //   title = "Charged Background #phi vs. #eta ("; title += etaBinString[e]; title += ") ;p_{T} (GeV);#eta";
+  //   hChgBgPtEta[e] = new TH2D( name , title ,30,0,15,20,-1.0,1.0 );
+  //   name = "hNeuBgPtEta"; name += etaBinName[e];
+  //   title = "Neutral Background #phi vs. #eta ("; title += etaBinString[e]; title += ") ;p_{T} (GeV);#eta";
+  //   hNeuBgPtEta[e] = new TH2D( name, title, 30,0,15,20,-1.0,1.0 );
+  // }
   
   JetDefinition jet_def(antikt_algorithm, R);     //  JET DEFINITION
   Selector jetEtaSelector = SelectorAbsEtaMax( 1.0-R );
@@ -123,8 +123,8 @@ int main ( int argc, const char** argv ) {         // funcions and cuts specifie
     if ( header->GetBbcAdcSumEast() > 64000 ) { continue; }
     if ( header->GetBbcAdcSumEast() < 3559.12 ) { continue; }     //  neglect 90-100% event activity
 
-    // //  HIGH EVENT ACTIVITY
-    // if ( header->GetBbcAdcSumEast() < 26718.1 ) { continue; }  // LO: 3559.12-10126.1;  HI: 26718.1+
+    //  HIGH EVENT ACTIVITY
+    if ( header->GetBbcAdcSumEast() < 26718.1 ) { continue; }  // LO: 3559.12-10126.1;  HI: 26718.1+
 
     // //  LOW EVENT ACTIVITY
     // if ( header->GetBbcAdcSumEast() > 10126.1 ) { continue; }  // LO: 3559.12-10126.1;  HI: 26718.1+
@@ -226,22 +226,26 @@ int main ( int argc, const char** argv ) {         // funcions and cuts specifie
 
 	  if ( leadPtCorrected >= 10.0 && leadPtCorrected <= 30.0 ) {
 
-	  //   for ( int p=0; p<3; ++p ) {
-	  //     if ( leadPtCorrected >= ptLo[p]  &&  leadPtCorrected <= ptHi[p] ) { pval = p; }
-	  //   }
-	  //   if ( pval==99 /*|| jeval==99*/ ) { cerr<<"UNABLE TO FIND PT OR ETA RANGE FOR LEAD JET"<<endl<<leadPt<<endl<<endl; }
-	  // }
-	  // if ( pval==99 ) {continue;}
-
-	    for ( int e=0; e<nEtaBins; ++e ) {
-	      if ( leadEta >= etaLo[e]  &&  leadEta <= etaHi[e] ) { jeval = e; }
+	    for ( int p=0; p<3; ++p ) {
+	      if ( leadPtCorrected >= ptLo[p]  &&  leadPtCorrected <= ptHi[p] ) { pval = p; }
 	    }
-	    if ( /*pval==99*/ jeval==99 ) { cerr<<"UNABLE TO FIND PT OR ETA RANGE FOR LEAD JET"<<endl<<leadPt<<endl<<endl; }
-
+	    if ( pval==99 /*|| jeval==99*/ ) { cerr<<"UNABLE TO FIND PT OR ETA RANGE FOR LEAD JET"<<endl<<leadPt<<endl<<endl; }
 	  }
-	  if (jeval==99) {continue;}
-	  for (int i=0; i<chgParticles.size(); ++i) { hChgBgPtEta[jeval]->Fill( chgParticles[i].pt(), chgParticles[i].eta() ); }
-	  for (int i=0; i<neuParticles.size(); ++i) { hNeuBgPtEta[jeval]->Fill( neuParticles[i].pt(), neuParticles[i].eta() ); }
+	  if ( pval==99 ) {continue;}
+
+	  for (int i=0; i<chgParticles.size(); ++i) { hChgBgPtEta[pval]->Fill( chgParticles[i].pt(), chgParticles[i].eta() ); }
+	  for (int i=0; i<neuParticles.size(); ++i) { hNeuBgPtEta[pval]->Fill( neuParticles[i].pt(), neuParticles[i].eta() ); }
+
+	    // for ( int e=0; e<nEtaBins; ++e ) {
+	    //   if ( leadEta >= etaLo[e]  &&  leadEta <= etaHi[e] ) { jeval = e; }
+	    // }
+	    // if ( /*pval==99*/ jeval==99 ) { cerr<<"UNABLE TO FIND PT OR ETA RANGE FOR LEAD JET"<<endl<<leadPt<<endl<<endl; }
+
+	  // }
+	  // if (jeval==99) {continue;}
+
+	  // for (int i=0; i<chgParticles.size(); ++i) { hChgBgPtEta[jeval]->Fill( chgParticles[i].pt(), chgParticles[i].eta() ); }
+	  // for (int i=0; i<neuParticles.size(); ++i) { hNeuBgPtEta[jeval]->Fill( neuParticles[i].pt(), neuParticles[i].eta() ); }
 
 	  chgParticles.clear(); // clear vector!
 	  GatherChargedBGwithEfficiency( leadJet, container, chgParticles, efficFile );   // gather BG
