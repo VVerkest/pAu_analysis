@@ -46,8 +46,8 @@ void etaDifferentialUE_systematics(){
   const double ptLo[nPtBins] = { 10.0, 15.0, 20.0 };
   const double ptHi[nPtBins] = { 15.0, 20.0, 30.0 };
   const TString ptBinName[nPtBins] = { "_10_15GeV", "_15_20GeV", "_20_30GeV" };
-  const TString ptBinString[nPtBins] = { "10<p_{T}^{lead}<15", "15<p_{T}^{lead}<20",  "20<p_{T}^{lead}<30" };
-  const TString ptCorrectedBinString[nPtBins] = { "10<p_{T}<15", "15<p_{T}<20",  "20<p_{T}<30" };
+  const TString ptBinString[nPtBins] = { "10 < p_{T,lead}^{reco} < 15", "15 < p_{T,lead}^{reco} < 20",  "20 < p_{T,lead}^{reco} < 30" };
+  const TString ptCorrectedBinString[nPtBins] = { "10 < p_{T} < 15", "15 < p_{T} < 20",  "20 < p_{T} < 30" };
   const int ptColor[nPtBins] = { 797, 593, 892 };
   const int ptMarker[nPtBins] = { 20, 21, 29 };
 
@@ -57,7 +57,7 @@ void etaDifferentialUE_systematics(){
   const TString jetEtaBinName[nEtaBins] = { "_eastJet", "_midJet", "_westJet" };
   const TString etaBinName[nEtaBins] = { "_eastEta", "_midEta", "_westEta" };
   const TString etaBinString[nEtaBins] = { "-0.6 < #eta_{jet}^{lead} < -0.3", "-0.3 < #eta_{jet}^{lead} < 0.3", "0.3 < #eta_{jet}^{lead} < 0.6" };
-  const TString UEetaBinString[nEtaBins] = { "-0.6 < UE #eta < -0.3", "-0.3 < UE #eta < 0.3", "0.3 < UE #eta <0.6" };
+  const TString UEetaBinString[nEtaBins] = { "-1.0 < UE #eta < -0.3", "-0.3 < UE #eta < 0.3", "0.3 < UE #eta < 1.0" };
   const int etaColor[nEtaBins] = { 877, 596, 814 };
   const int etaMarker[nEtaBins] = { 25, 27, 28 };
 
@@ -88,7 +88,10 @@ void etaDifferentialUE_systematics(){
   int jeval, bgeval, pval, eaval;
   TString name, saveName, title, avg, sigma, drawString;
 
-  TString fileName[nEAbins] = { "out/UE/pAuHTjetUE_loEA_diffEta.root", "out/UE/pAuHTjetUE_hiEA_diffEta.root" };
+  string fileSuffix = "10cmVzCut";
+  
+  TString fileName[nEAbins] = { ("out/UE/pAuHTjetUE_"+fileSuffix+"_loEA_diffEta.root").c_str(),
+				("out/UE/pAuHTjetUE_"+fileSuffix+"_hiEA_diffEta.root").c_str() };
   TString efficFileName[nEAbins] = { "src/trackeffic_loEA.root", "src/trackeffic_hiEA.root" };
 
   TFile* inFile[nEAbins];
@@ -430,14 +433,23 @@ void etaDifferentialUE_systematics(){
   // ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ HISTOGRAMS ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~
 
 
-  double etaBinEdge[nEtaBins+1] = { -0.5, 0.5, 1.5, 2.5 };
-  double yEdge[2] = {0.5,1.8};
+  double etaBinEdgeCenter[nEtaBins+1] = { -0.5, 0.5, 1.5, 2.5 };
+  double etaBinEdge[nEtaBins+1][nEtaBins]; //  {  {...}, {...}, {...}, {...}  }
 
+  double shift[nEtaBins] = { -0.25, 0.0, 0.25 };
+
+  // for (int i=0; i<nEtaBins+1; ++i){
+  //   for (int j=0; j<nEtaBins; ++j){
+  //     etaBinEdge[i][j] = 
+  //   }
+  // }
+
+  double yEdge[2] = {0.5,1.8};
 
 
   
   //East <#rho>          Mid <#rho>          West <#rho>
-  TH2D *hscale0 = new TH2D("hscale0",";;#LT #frac{dN_{ch}}{d#eta d#phi} #GT", nEtaBins,etaBinEdge,1,yEdge);
+  TH2D *hscale0 = new TH2D("hscale0",";;#LT #frac{d#it{N}_{ch}}{d#eta d#phi} #GT", 3,0.5,2.5,11,0.5,1.8);
   hscale0->GetYaxis()->SetTitleOffset(1);
   hscale0->GetXaxis()->SetTitleOffset(1.0);
   hscale0->GetYaxis()->SetTitleSize(0.05);
@@ -463,20 +475,23 @@ void etaDifferentialUE_systematics(){
 
   TLegend *leg0;
   
-  leg0 = new TLegend(0.5, 0.67, 0.95, 0.95,NULL,"brNDC");    // LEGEND 0
+  leg0 = new TLegend(0.45, 0.67, 0.95, 0.95,NULL,"brNDC");    // LEGEND 0
   leg0->SetBorderSize(0);  leg0->SetLineColor(1);  leg0->SetLineStyle(1);
   leg0->SetLineWidth(1);  leg0->SetFillColorAlpha(0,0.0);  leg0->SetFillStyle(1001);
   leg0->SetNColumns(2);
 
-  leg0->AddEntry((TObject*)0,"70-90% EA", "");
   leg0->AddEntry((TObject*)0,"0-30% EA", "");
+  leg0->AddEntry((TObject*)0,"70-90% EA", "");
+
+  //errorFill[nEAbins] = {  };
+  int binno = 0;
 
   for ( int e=0; e<nEtaBins; ++e) {
-    for ( int a=0; a<nEAbins; ++a) {
+    for (int a=nEAbins-1; a>=0; --a) {
 
       name = "hCHGdNdetadphi_te_" + EAbinName[a] + etaBinName[e];
       title = etaBinString[e] + "   ";
-      hCHGdNdetadphi_te[a][e] = new TH1D( name, title , nEtaBins,etaBinEdge );
+      hCHGdNdetadphi_te[a][e] = new TH1D( name, title , 11,0.5,2.5 );
 
       hCHGdNdetadphi_te[a][e]->SetStats(0);
       hCHGdNdetadphi_te[a][e]->SetLineColor( etaColor[e] );
@@ -484,29 +499,36 @@ void etaDifferentialUE_systematics(){
       hCHGdNdetadphi_te[a][e]->SetMarkerStyle( EAmarker[a] );
       hCHGdNdetadphi_te[a][e]->SetMarkerSize( 2 );
 
-      leg0->AddEntry(hCHGdNdetadphi_te[a][e],title,"p");
+      leg0->AddEntry(hCHGdNdetadphi_te[a][e],title,"lpf");
       
       name = "hCHGdNdetadphi_te_sys_" + EAbinName[a] + etaBinName[e];
-      hCHGdNdetadphi_te_sys[a][e] = new TH1D( name, "" , nEtaBins,etaBinEdge );
+      hCHGdNdetadphi_te_sys[a][e] = new TH1D( name, "" , 11,0.5,2.5 );
       
       hCHGdNdetadphi_te_sys[a][e]->SetStats(0);
-      hCHGdNdetadphi_te_sys[a][e]->SetFillColorAlpha( etaColor[e], 0.2 );
       hCHGdNdetadphi_te_sys[a][e]->SetLineColorAlpha( etaColor[e], 0.0 );
       hCHGdNdetadphi_te_sys[a][e]->SetMarkerColorAlpha( etaColor[e], 0.0 );
       hCHGdNdetadphi_te_sys[a][e]->SetMarkerSize( 0 );
+
+        if (a==0) {
+	  hCHGdNdetadphi_te_sys[a][e]->SetFillStyle(3002);
+	  hCHGdNdetadphi_te_sys[a][e]->SetFillColor( etaColor[e] );
+	}
+	else { hCHGdNdetadphi_te_sys[a][e]->SetFillColorAlpha( etaColor[e], 0.2 ); }
+
       
       //hCHGdNdetadphi_te[a][e];
-	
+
+      
       for ( int je=0; je<nEtaBins; ++je) {
 	
-	int jebin = je+1;
+	binno = (3*je) + e + je + 1; 
 	
 	double value = (double) ( nChg_te[je][a][e] / area[je] );
-	hCHGdNdetadphi_te[a][e]->SetBinContent( jebin, value );
-	hCHGdNdetadphi_te[a][e]->SetBinError( jebin, nChg_te_err[je][a][e] );
+	hCHGdNdetadphi_te[a][e]->SetBinContent( binno, value );
+	hCHGdNdetadphi_te[a][e]->SetBinError( binno, nChg_te_err[je][a][e] );
 
-	hCHGdNdetadphi_te_sys[a][e]->SetBinContent( jebin, value );
-	hCHGdNdetadphi_te_sys[a][e]->SetBinError( jebin, value*nChg_te_sys[je][a][e] );
+	hCHGdNdetadphi_te_sys[a][e]->SetBinContent( binno, value );
+	hCHGdNdetadphi_te_sys[a][e]->SetBinError( binno, value*nChg_te_sys[je][a][e] );
 
       }
     }
@@ -514,11 +536,15 @@ void etaDifferentialUE_systematics(){
 
   for (int a=nEAbins-1; a>=0; --a) {
     for ( int e=0; e<nEtaBins; ++e) {
-      hCHGdNdetadphi_te[a][e]->Draw("lpfX0ESAME");
       hCHGdNdetadphi_te_sys[a][e]->Draw("e2SAME");
     }
   }
 
+  for (int a=nEAbins-1; a>=0; --a) {
+    for ( int e=0; e<nEtaBins; ++e) {
+      hCHGdNdetadphi_te[a][e]->Draw("lpfX0ESAME");
+    }
+  }
 
   
   TPaveText *sp1 = new TPaveText(0.175,0.75,0.5,1.0,"NDC");
@@ -530,7 +556,7 @@ void etaDifferentialUE_systematics(){
   sp1->Draw("NB");
 
   
-  TLatex *tex0 = new TLatex(0.175,0.8,"p+Au #sqrt{s_{NN}} = 200 GeV");
+  TLatex *tex0 = new TLatex(0.175,0.8,"p+Au #sqrt{#it{s}_{NN}} = 200 GeV");
   tex0->SetTextFont(63);
   tex0->SetTextSize(16);
   tex0->SetTextColor(kBlack);
@@ -551,14 +577,14 @@ void etaDifferentialUE_systematics(){
   tex2->SetLineWidth(1);
   tex2->SetNDC();
   tex2->Draw();
-  TLatex *tex3 = new TLatex(0.175,0.65,"#left|eta^{jets}#right| < 0.6");
+  TLatex *tex3 = new TLatex(0.175,0.65,"#left|#eta^{jets}#right| < 0.6");
   tex3->SetTextFont(63);
   tex3->SetTextSize(16);
   tex3->SetTextColor(kBlack);
   tex3->SetLineWidth(1);
   tex3->SetNDC();
   tex3->Draw();
-  TLatex *tex4 = new TLatex(0.175,0.6,"10 < p^{lead jet}_{T} < 30 [GeV/#it{c}]");
+  TLatex *tex4 = new TLatex(0.175,0.6,"10 < p_{T,lead}^{reco} < 30 [GeV/#it{c}]");
   tex4->SetTextFont(63);
   tex4->SetTextSize(16);
   tex4->SetTextColor(kBlack);
@@ -568,7 +594,7 @@ void etaDifferentialUE_systematics(){
   
   
   leg0->Draw();
-  c0->SaveAs("plots/UE/rho_debug/CHGdNdetadphi_te_eta_systematics.pdf","PDF");
+  c0->SaveAs(("plots/UE/"+fileSuffix+"/CHGdNdetadphi_te_eta_systematics.pdf").c_str(),"PDF");
   //c0->Close();
   
 
@@ -576,7 +602,7 @@ void etaDifferentialUE_systematics(){
   c1->SetMargin(0.125,0.05,0.125,0.05);
 
   double yEdge1[2] = { 0.55, 0.85 };
-  TH2D *hscale3 = new TH2D("hscale3",";;#LT p_{T}^{ch} #GT [GeV/#it{c}]", nEtaBins,etaBinEdge,1,yEdge1);
+  TH2D *hscale3 = new TH2D("hscale3",";;#LT p_{T}^{ch} #GT [GeV/#it{c}]", 3,0.5,2.5,10,0.55,0.85);
   hscale3->GetYaxis()->SetTitleOffset(1.25);
   hscale3->GetYaxis()->SetTitleOffset(1.25);
   hscale3->GetYaxis()->SetTitleOffset(1.0);
@@ -611,7 +637,7 @@ void etaDifferentialUE_systematics(){
 
       name = "hChg_MeanPt_te_" + EAbinName[a] + etaBinName[e];
       title = EAbinString[a] + "   " + etaBinString[e] + "   ";
-      hChg_pt_te[a][e] = new TH1D( name, title , nEtaBins,etaBinEdge );
+      hChg_pt_te[a][e] = new TH1D( name, title , 11,0.5,2.5 );
 
       hChg_pt_te[a][e]->SetStats(0);
       hChg_pt_te[a][e]->SetLineColor( etaColor[e] );
@@ -622,25 +648,31 @@ void etaDifferentialUE_systematics(){
       //leg1->AddEntry( hChg_pt_te[a][e], title, "p" );
       
       name = "hChg_MeanPt_te_sys_" + EAbinName[a] + etaBinName[e];
-      hChg_pt_te_sys[a][e] = new TH1D( name, "" , nEtaBins,etaBinEdge );
+      hChg_pt_te_sys[a][e] = new TH1D( name, "" , 11,0.5,2.5 );
 
       hChg_pt_te_sys[a][e]->SetStats(0);
-      hChg_pt_te_sys[a][e]->SetFillColorAlpha( etaColor[e], 0.2 );
       hChg_pt_te_sys[a][e]->SetMarkerColorAlpha( etaColor[e], 0.0 );
       hChg_pt_te_sys[a][e]->SetLineColorAlpha( etaColor[e], 0.0 );
       hChg_pt_te_sys[a][e]->SetMarkerSize( 0.0 );
+
+      if (a==0) {
+	hChg_pt_te_sys[a][e]->SetFillStyle(3002);
+	hChg_pt_te_sys[a][e]->SetFillColor( etaColor[e]);
+      }
+      else { hChg_pt_te_sys[a][e]->SetFillColorAlpha( etaColor[e], 0.2 ); }
 
       //hCHGdNdetadphi_te[a][e];
 	
       for ( int je=0; je<nEtaBins; ++je) {
 	
-	int jebin = je+1;
+	binno = (3*je) + e + je + 1; 
+	
 	double value = te_meanChgPt[je][a][e];
-	hChg_pt_te[a][e]->SetBinContent( jebin, value );
-	hChg_pt_te[a][e]->SetBinError( jebin, te_meanChgPt_err[je][a][e] );
+	hChg_pt_te[a][e]->SetBinContent( binno, value );
+	hChg_pt_te[a][e]->SetBinError( binno, te_meanChgPt_err[je][a][e] );
 
-	hChg_pt_te_sys[a][e]->SetBinContent( jebin, value );
-	hChg_pt_te_sys[a][e]->SetBinError( jebin, value*te_meanChgPt_sys[je][a][e] );
+	hChg_pt_te_sys[a][e]->SetBinContent( binno, value );
+	hChg_pt_te_sys[a][e]->SetBinError( binno, value*te_meanChgPt_sys[je][a][e] );
 	
       }
     }
@@ -648,8 +680,12 @@ void etaDifferentialUE_systematics(){
 
   for (int a=nEAbins-1; a>=0; --a) {
     for ( int e=0; e<nEtaBins; ++e) {
-      hChg_pt_te[a][e]->Draw("lpfX0ESAME");
       hChg_pt_te_sys[a][e]->Draw("E2SAME");
+    }
+  }
+  for (int a=nEAbins-1; a>=0; --a) {
+    for ( int e=0; e<nEtaBins; ++e) {
+      hChg_pt_te[a][e]->Draw("lpfX0ESAME");
     }
   }
   
@@ -664,10 +700,9 @@ void etaDifferentialUE_systematics(){
   tex4->Draw();
 
  
-  c1->SaveAs("plots/UE/rho_debug/Chg_MeanPt_te_eta_systematics.pdf","PDF");
+  c1->SaveAs(("plots/UE/"+fileSuffix+"/Chg_MeanPt_te_eta_systematics.pdf").c_str(),"PDF");
 
 
- 
 
 }
 
