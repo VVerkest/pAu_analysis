@@ -1,13 +1,42 @@
+5/23/2020
+
+Plots for preliminary:
+[X] <pT> as fn of lead pT
+[X] <dNch/dEtadPhi> as fn of lead pT
+[X] <pT> as fn of lead eta
+[X] <dNch/dEtadPhi> as fn of lead eta
+[X] jet BBCEsum by lead eta
+[X] dijet BBCEsum by lead eta
+[ ] old full rho
+
+
+Description for jetcorr:
+
+I have produced plots of charged <pT> and <dNch/dEtadPhi> as functions of lead
+pT and lead eta. In these plots, lead jet pT is the lead jet pT that
+has been corrected for UE, but the jet energy scale has not been
+corrected. <pT> and <dNch/dEtadPhi> have been corrected for tracking
+efficiency, and the systematics shown are due to tracking
+efficiency. Additionally, I have produced plots of BBCEsum
+distributions for different lead jet eta for both jet and di-jet events.
+
+
+
+
+
+
+
+
 5/22/2020
 
 HP to-dos:
 
 [X] Produce corrected <dN/dEtadPhi> by using corrected pT spectrum
-[ ] Run over files to do lead pT correction during run-time
+[X] Run over files to do lead pT correction during run-time
 [ ] Ask Dave how large is the pileup uncertainty -- percentage??
-[ ] Apply systematics to plots
+[X] Apply systematics to plots
 [ ] Begin poster
-[ ] Produce UE pT vs eta vs lead pT differentially in lead eta
+[X] Produce UE pT vs eta vs lead pT differentially in lead eta
 
 
 5/21/2020
