@@ -11,7 +11,8 @@ void UEdijetPlot(){
   const double ptLo[nPtBins] = { 10.0, 15.0, 20.0 };
   const double ptHi[nPtBins] = { 15.0, 20.0, 30.0 };
   const TString ptBinName[nPtBins] = { "_10_15GeV", "_15_20GeV", "_20_30GeV" };
-  const TString ptBinString[nPtBins] = { "10<p_{T}^{lead}<15", "15<p_{T}^{lead}<20",  "20<p_{T}^{lead}<30" };
+  const TString ptBinString[nPtBins] = { "10 < p_{T,lead}^{reco} < 15", "15 < p_{T,lead}^{reco} < 20",  "20 < p_{T,lead}^{reco} < 30" };
+  const TString ptBinStringRaw[nPtBins] = { "10 < p_{T,lead}^{raw} < 15", "15 < p_{T,lead}^{raw} < 20",  "20 < p_{T,lead}^{raw} < 30" };
   const TString ptCorrectedBinString[nPtBins] = { "10<p_{T}^{corrected}<15", "15<p_{T}^{corrected}<20",  "20<p_{T}^{corrected}<30" };
   const int ptColor[nPtBins] = { 797, 593, 892 };
 
@@ -19,7 +20,7 @@ void UEdijetPlot(){
   const double etaLo[nEtaBins] = { -1.0, -0.3, 0.3 };
   const double etaHi[nEtaBins] = { -0.3, 0.3, 1.0 };
   const TString etaBinName[nEtaBins] = { "_eastEta", "_midEta", "_westEta" };
-  const TString etaBinString[nEtaBins] = { "-0.6<#eta_{jet}<-0.3", "-0.3<#eta_{jet}<0.3", "0.3<#eta_{jet}<0.6" };
+  const TString etaBinString[nEtaBins] = { "-0.6 < #eta_{jet}^{lead} < -0.3", "-0.3 < #eta_{jet}^{lead} < 0.3", "0.3 < #eta_{jet}^{lead} < 0.6" };
   const int etaColor[nEtaBins] = { 877, 596, 814 };
   const int etaMarker[nEtaBins] = { 25, 27, 28 };
 
@@ -106,7 +107,7 @@ void UEdijetPlot(){
 
     name = "hBBCEastSum" + etaBinName[e];
     title = "BBC ADC East Sum:  " + etaBinString[e] + ";BBC East Sum";
-    hBBCEastSum[e] = new TH1D( name, title, 9,0,70000 );
+    hBBCEastSum[e] = new TH1D( name, title, 12,3000,70000 );
     hBBCEastSum[e]->SetMarkerStyle( etaMarker[e] );
     hBBCEastSum[e]->SetMarkerColor( etaColor[e] );
     hBBCEastSum[e]->SetLineColor( etaColor[e] );
@@ -173,7 +174,7 @@ void UEdijetPlot(){
     hEAdist[pval][eval]->Fill( BbcAdcSumEast );
     
   }
-
+  /*
   TCanvas * c0 = new TCanvas( "c0" , "" ,700 ,500 );              // CANVAS 0
 
   hLeadPhi->Scale(1./hLeadPhi->Integral("WIDTH"));
@@ -200,38 +201,102 @@ void UEdijetPlot(){
   hRho->Scale(1./hRho->Integral("WIDTH"));
   hRho->Draw();
   c0->SaveAs( "plots/UE/dijet_rho.pdf" , "PDF" );
-
+  */
 
   TCanvas * c1 = new TCanvas( "c1" , "" ,700 ,500 );              // CANVAS 1
-  c1->SetMargin(0.15,0.1,0.12,0.1);  
-  TLegend *leg0 = new TLegend(0.55, 0.55, 0.89, 0.89,NULL,"brNDC");    // LEGEND 0
-  leg0->SetBorderSize(0);   leg0->SetLineColor(1);   leg0->SetLineStyle(1);   leg0->SetLineWidth(1);   leg0->SetFillColor(0);   leg0->SetFillStyle(1001);
+  c1->SetMargin(0.14,0.05,0.13,0.05);
+  TLegend *leg0 = new TLegend(0.48, 0.66, .92, .95,NULL,"brNDC");    // LEGEND 0
+  leg0->SetBorderSize(0);   leg0->SetLineColor(1);   leg0->SetLineStyle(1);   leg0->SetLineWidth(1);   leg0->SetFillColorAlpha(0,0.0);   leg0->SetFillStyle(1001);
   leg0->SetNColumns(2);
-  leg0->AddEntry((TObject*)0,"#bf{#eta_{lead}}", "");
-  leg0->AddEntry((TObject*)0,"#bf{<BBCE sum>}", "");
+  leg0->AddEntry((TObject*)0,"", "");
+  leg0->AddEntry((TObject*)0,"<iBBCE sum>", "");
+
+  TString lmean[nEtaBins] = { "23000", "22720", "22100" };
+  TString lerr[nEtaBins] = { "100", "90", "100" };
   
-  TH2D *sBBCbyEta = new TH2D("sBBCbyEta", "BBC ADC East Sum by Lead Jet #eta;BBC East Sum;#frac{1}{N_{dijets}} #frac{dN_{dijets}}{d<BBCEsum>}", 10,0,70000, 10,0,0.25);
+  TH2D *sBBCbyEta = new TH2D("sBBCbyEta", ";iBBC East Sum;#frac{1}{#it{N}_{dijets}} #frac{d#it{N}_{dijets}}{diBBCEsum}", 30,0.0,70000, 10,0,0.25);
   sBBCbyEta->SetStats(0);
   sBBCbyEta->GetXaxis()->SetLabelSize(.04);
-  sBBCbyEta->GetYaxis()->SetLabelSize(.04);
+  sBBCbyEta->GetYaxis()->SetLabelSize(.045);
+  sBBCbyEta->GetXaxis()->SetTitleSize(0.045);
   sBBCbyEta->GetXaxis()->SetTitleOffset(1.2);
-  sBBCbyEta->GetYaxis()->SetTitleOffset(1.6);
+  sBBCbyEta->GetYaxis()->SetTitleOffset(1.4);
+  sBBCbyEta->GetYaxis()->SetTitleSize(0.04);
   sBBCbyEta->Draw();
   for ( int e=0; e<nEtaBins; ++e ) {
     hBBCEastSum[e]->SetStats(0);
     hBBCEastSum[e]->Scale(1./hBBCEastSum[e]->Integral());
     hBBCEastSum[e]->Draw("SAME");
-    avg = "";
-    avg += hBBCEastSum[e]->GetMean(1);                                           // 1 denotes x-axis
-    avg = avg(0,5);
     name = "hBBCEastSum" + etaBinName[e];
     title = etaBinString[e];
     leg0->AddEntry( name, title, "lpf" );                            // ADD TO LEGEND
+
+    // avg = "";
+    // avg += hBBCEastSum[e]->GetMean(1);                                           // 1 denotes x-axis
+    // avg = avg(0,6);
+    // TString meanError = "";
+    // meanError += hBBCEastSum[e]->GetMeanError();
+    // meanError = meanError(0,6);
+    // avg += " #pm " + meanError;
+
+    avg = lmean[e] + " #pm " + lerr[e];
+
     leg0->AddEntry((TObject*)0,avg, "");
 
   }
   leg0->Draw();
-  c1->SaveAs( "plots/UE/dijet_BBCEastSum_by_eta.pdf" , "PDF" );
+  
+  TPaveText *sp1 = new TPaveText(0.1,0.8,0.5,1.0,"NDC");
+  sp1->AddText("STAR Preliminary");
+  sp1->SetTextSize(0.04);
+  sp1->SetTextColor(kRed);
+  sp1->SetFillColorAlpha(0,0.0);
+  sp1->SetLineColorAlpha(0,0.0);
+  sp1->Draw("NB");
+
+  auto dijetText = new TLatex(0.2,0.82,"#left|#phi_{jet}^{lead}- #phi_{jet}^{recoil}#right| > #pi-R");
+  dijetText->SetTextFont(63);
+  dijetText->SetTextSize(20);
+  dijetText->SetTextColor(kBlack);
+  dijetText->SetLineWidth(1);
+  dijetText->SetNDC();
+  dijetText->Draw();
+    
+  dijetText->SetTextSize(16);
+  dijetText->DrawLatex(0.17,0.74,"p_{T}_{jet}^{recoil} > #frac{1}{2} p_{T}^{lead}   #left|#eta_{jet}^{recoil}#right| < 0.6");
+
+  dijetText->SetTextSize(16);
+  dijetText->DrawLatex(0.57,0.52,"jets uncorrected for detector effects");
+  dijetText->SetTextSize(16);
+  dijetText->DrawLatex(0.65,0.46,"statistical errors only");
+  
+
+  // TPaveText *sp3 = new TPaveText(0.1,0.95,0.5,0.95,"NDC");
+  // sp3->AddText("p_{T}^{reo}>#frac{1}{2}p_{T}^{lead}");
+  // sp3->SetTextSize(0.035);
+  // //sp3->SetTextColor(kRed);
+  // sp3->SetFillColorAlpha(0,0.0);
+  // sp3->SetLineColorAlpha(0,0.0);
+  // sp3->Draw("NB");
+  
+
+  TString textString[5] = {"p+Au #sqrt{#it{s}_{NN}} = 200 GeV","E^{trig}_{T} > 5.4 GeV","anti-k_{T} R=0.4 jets","#left|#eta^{jets}#right| < 0.6",
+			   "10 < p_{T,lead}^{reco} < 30 [GeV/#it{c}]"};
+  TLatex *tex[5];
+  
+  for (int i=0; i<5; ++i) {
+    tex[i] = new TLatex(0.2,0.45-0.05*i,textString[i]);
+    tex[i]->SetTextFont(63);
+    tex[i]->SetTextSize(16);
+    tex[i]->SetTextColor(kBlack);
+    tex[i]->SetLineWidth(1);
+    tex[i]->SetNDC();
+    tex[i]->Draw();
+  }
+  
+  c1->SaveAs( "plots/UE/BBCEastSum_by_eta_dijet.pdf" , "PDF" );
+  
+  /*
   c1->SetLogy(0);
 
 
@@ -526,5 +591,5 @@ void UEdijetPlot(){
   pad1->BuildLegend();
 
   c3->SaveAs("plots/UE/dijetCorrectedPtRatioPlot.pdf","PDF");
-
+  */
 }
