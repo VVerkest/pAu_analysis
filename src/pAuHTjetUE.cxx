@@ -64,6 +64,7 @@ int main ( int argc, const char** argv ) {         // funcions and cuts specifie
   TH2D *hNeuBgPtEta[nPtBins];
 
   TH3D *hChgUE = new TH3D("hChgUE",";leading jet p_{T} (GeV);chg. UE part. p_{T} (GeV);chg. UE part. #eta", 55,4.5,59.5, 30,0.0,30.0, 40,-1.0,1.0);
+  TH1D *hLeadPt = new TH1D("hLeadPt",";leading jet p_{T} (GeV)",55,4.5,59.5);
   
   // for (int p=0; p<nPtBins; ++p) {
 
@@ -226,7 +227,7 @@ int main ( int argc, const char** argv ) {         // funcions and cuts specifie
 	  pval = 99;    jeval = 99;
 
 	  for (int i=0; i<chgParticles.size(); ++i) { hChgUE->Fill( leadPtCorrected, chgParticles[i].pt(), chgParticles[i].eta() ); }
-    
+	  hLeadPt->Fill( leadPtCorrected );
 
 	  if ( leadPtCorrected >= 10.0 && leadPtCorrected <= 30.0 ) {
 
@@ -277,6 +278,7 @@ int main ( int argc, const char** argv ) {         // funcions and cuts specifie
     hNeuBgPtEta[p]->Write();
   }
 
+  hLeadPt->Write();
   hChgUE->Write();
   HTjetTree->Write();  
 
