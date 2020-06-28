@@ -63,6 +63,8 @@ int main ( int argc, const char** argv ) {         // funcions and cuts specifie
   TH2D *hChgBgPtEta[nPtBins];
   TH2D *hNeuBgPtEta[nPtBins];
 
+  TH3D *hChgUE = new TH3D("hChgUE",";leading jet p_{T} (GeV);chg. UE part. p_{T} (GeV);chg. UE part. #eta", 55,4.5,59.5, 30,0.0,30.0, 40,-1.0,1.0);
+  
   // for (int p=0; p<nPtBins; ++p) {
 
   //   name = "hChgBgPtEta"; name += ptBinName[p];
@@ -102,7 +104,7 @@ int main ( int argc, const char** argv ) {         // funcions and cuts specifie
   InitReader( Reader, Chain, numEvents );
   double deltaPhi, deltaR;       double trigTowEta, trigTowPhi;
 
-  string efficFile = "src/trackeffic_hiEA.root";
+  string efficFile = "src/trackeffic.root";
   string UEcorrFile = "src/UEsubtractionPlots.root";
 
   // ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~  BEGIN EVENT LOOP!  ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~
@@ -123,8 +125,8 @@ int main ( int argc, const char** argv ) {         // funcions and cuts specifie
     if ( header->GetBbcAdcSumEast() > 64000 ) { continue; }
     if ( header->GetBbcAdcSumEast() < 3559.12 ) { continue; }     //  neglect 90-100% event activity
 
-    //  HIGH EVENT ACTIVITY
-    if ( header->GetBbcAdcSumEast() < 26718.1 ) { continue; }  // LO: 3559.12-10126.1;  HI: 26718.1+
+    // //  HIGH EVENT ACTIVITY
+    // if ( header->GetBbcAdcSumEast() < 26718.1 ) { continue; }  // LO: 3559.12-10126.1;  HI: 26718.1+
 
     // //  LOW EVENT ACTIVITY
     // if ( header->GetBbcAdcSumEast() > 10126.1 ) { continue; }  // LO: 3559.12-10126.1;  HI: 26718.1+
@@ -222,6 +224,8 @@ int main ( int argc, const char** argv ) {         // funcions and cuts specifie
 	  neuWestRho = neuWestSum/westArea;
 
 	  pval = 99;    jeval = 99;
+
+	  for (int i=0; i<chgParticles.size(); ++i) { hChgUE->Fill( leadPtCorrected, chgParticles[i].pt(), chgParticles[i].eta() ); }
     
 
 	  if ( leadPtCorrected >= 10.0 && leadPtCorrected <= 30.0 ) {
@@ -272,7 +276,8 @@ int main ( int argc, const char** argv ) {         // funcions and cuts specifie
     hChgBgPtEta[p]->Write();  //  WRITE HISTOGRAMS & TREE
     hNeuBgPtEta[p]->Write();
   }
-  
+
+  hChgUE->Write();
   HTjetTree->Write();  
 
   pAuFile->Write();
