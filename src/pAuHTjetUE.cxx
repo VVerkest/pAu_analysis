@@ -25,7 +25,7 @@ int main ( int argc, const char** argv ) {         // funcions and cuts specifie
   int pval, jeval;
   
   //  Tree variables
-  int RunID, EventID, nTowers, nPrimary, nGlobal, nVertices, refMult, gRefMult, nBGpart_chg, nBGpart_neu, nJetsAbove5, nHTtrig;
+  int RunID, EventID, nTowers, nPrimary, nGlobal, nVertices, refMult, gRefMult, nUEpart_chg, nUEpart_neu, nJetsAbove5, nHTtrig;
   double Vz, BbcAdcSumEast, leadPt, leadPtCorrected, leadEta, leadPhi, chgEastRho, chgMidRho, chgWestRho, chgEastRho_te, chgMidRho_te, chgWestRho_te,
     neuEastRho, neuMidRho, neuWestRho, leadArea, dPhiTrigLead, dRTrigLead;
 
@@ -53,37 +53,37 @@ int main ( int argc, const char** argv ) {         // funcions and cuts specifie
   HTjetTree->Branch( "neuMidRho", &neuMidRho );
   HTjetTree->Branch( "neuWestRho", &neuWestRho );
   HTjetTree->Branch( "leadArea", &leadArea );
-  HTjetTree->Branch( "nBGpart_chg", &nBGpart_chg );
-  HTjetTree->Branch( "nBGpart_neu", &nBGpart_neu );
+  HTjetTree->Branch( "nUEpart_chg", &nUEpart_chg );
+  HTjetTree->Branch( "nUEpart_neu", &nUEpart_neu );
   HTjetTree->Branch( "nJetsAbove5", &nJetsAbove5 );
   HTjetTree->Branch( "nHTtrig", &nHTtrig );
   HTjetTree->Branch( "dPhiTrigLead", &dPhiTrigLead );
   HTjetTree->Branch( "dRTrigLead", &dRTrigLead );
 
-  TH2D *hChgBgPtEta[nPtBins];
-  TH2D *hNeuBgPtEta[nPtBins];
+  TH2D *hChgUePtEta[nPtBins];
+  TH2D *hNeuUePtEta[nPtBins];
 
   TH3D *hChgUE = new TH3D("hChgUE",";leading jet p_{T} (GeV);chg. UE part. p_{T} (GeV);chg. UE part. #eta", 55,4.5,59.5, 30,0.0,30.0, 40,-1.0,1.0);
   TH1D *hLeadPt = new TH1D("hLeadPt",";leading jet p_{T} (GeV)",55,4.5,59.5);
   
   // for (int p=0; p<nPtBins; ++p) {
 
-  //   name = "hChgBgPtEta"; name += ptBinName[p];
+  //   name = "hChgUePtEta"; name += ptBinName[p];
   //   title = "Charged Background #phi vs. #eta ("; title += ptBinString[p]; title += ") ;p_{T} (GeV);#eta";
-  //   hChgBgPtEta[p] = new TH2D( name , title ,30,0,15,20,-1.0,1.0 );
-  //   name = "hNeuBgPtEta"; name += ptBinName[p];
+  //   hChgUePtEta[p] = new TH2D( name , title ,30,0,15,20,-1.0,1.0 );
+  //   name = "hNeuUePtEta"; name += ptBinName[p];
   //   title = "Neutral Background #phi vs. #eta ("; title += ptBinString[p]; title += ") ;p_{T} (GeV);#eta";
-  //   hNeuBgPtEta[p] = new TH2D( name, title, 30,0,15,20,-1.0,1.0 );
+  //   hNeuUePtEta[p] = new TH2D( name, title, 30,0,15,20,-1.0,1.0 );
   // }
 
   for (int e=0; e<nEtaBins; ++e) {
 
-    name = "hChgBgPtEta"; name += etaBinName[e];
+    name = "hChgUePtEta"; name += etaBinName[e];
     title = "Charged Background #phi vs. #eta ("; title += etaBinString[e]; title += ") ;p_{T} (GeV);#eta";
-    hChgBgPtEta[e] = new TH2D( name , title ,30,0,15,20,-1.0,1.0 );
-    name = "hNeuBgPtEta"; name += etaBinName[e];
+    hChgUePtEta[e] = new TH2D( name , title ,30,0,15,20,-1.0,1.0 );
+    name = "hNeuUePtEta"; name += etaBinName[e];
     title = "Neutral Background #phi vs. #eta ("; title += etaBinString[e]; title += ") ;p_{T} (GeV);#eta";
-    hNeuBgPtEta[e] = new TH2D( name, title, 30,0,15,20,-1.0,1.0 );
+    hNeuUePtEta[e] = new TH2D( name, title, 30,0,15,20,-1.0,1.0 );
   }
   
   JetDefinition jet_def(antikt_algorithm, R);     //  JET DEFINITION
@@ -93,7 +93,7 @@ int main ( int argc, const char** argv ) {         // funcions and cuts specifie
   Selector ptMaxSelector = SelectorPtMax( 30.0 );
 
   PseudoJet leadJet, trigTowerPJ, towPJ;
-  vector<PseudoJet> rawParticles, rawJets, allJets, chgParticles, neuParticles, BGparticles;
+  vector<PseudoJet> rawParticles, rawJets, allJets, chgParticles, neuParticles, UEparticles;
   TStarJetPicoEventHeader* header;
   TStarJetPicoEvent* event;
   TStarJetVectorContainer<TStarJetVector> * container;
@@ -209,11 +209,11 @@ int main ( int argc, const char** argv ) {         // funcions and cuts specifie
 	  leadArea = leadJet.area();
 
 	  //  BACKGROUND ESTIMATION
-	  GatherChargedBG( leadJet, container, chgParticles );
-	  GatherNeutralBG( leadJet, container, neuParticles );
+	  GatherChargedUE( leadJet, container, chgParticles );
+	  GatherNeutralUE( leadJet, container, neuParticles );
 
-	  nBGpart_chg = chgParticles.size();
-	  nBGpart_neu = neuParticles.size();
+	  nUEpart_chg = chgParticles.size();
+	  nUEpart_neu = neuParticles.size();
     
 	  chgEastSum = 0;  chgMidSum = 0;  chgWestSum = 0;  neuEastSum = 0;  neuMidSum = 0;  neuWestSum = 0;
 	  CalculateRhoByChargeAndEta(chgParticles,neuParticles,chgEastSum,chgMidSum,chgWestSum,neuEastSum,neuMidSum,neuWestSum);
@@ -240,8 +240,8 @@ int main ( int argc, const char** argv ) {         // funcions and cuts specifie
 	    // }
 	    // if ( pval==99 ) {continue;}
 
-	    // for (int i=0; i<chgParticles.size(); ++i) { hChgBgPtEta[pval]->Fill( chgParticles[i].pt(), chgParticles[i].eta() ); }
-	    // for (int i=0; i<neuParticles.size(); ++i) { hNeuBgPtEta[pval]->Fill( neuParticles[i].pt(), neuParticles[i].eta() ); }
+	    // for (int i=0; i<chgParticles.size(); ++i) { hChgUePtEta[pval]->Fill( chgParticles[i].pt(), chgParticles[i].eta() ); }
+	    // for (int i=0; i<neuParticles.size(); ++i) { hNeuUePtEta[pval]->Fill( neuParticles[i].pt(), neuParticles[i].eta() ); }
 
 
 	    
@@ -253,18 +253,18 @@ int main ( int argc, const char** argv ) {         // funcions and cuts specifie
 	  }
 	  if (jeval==99) {continue;}
 
-	  for (int i=0; i<chgParticles.size(); ++i) { hChgBgPtEta[jeval]->Fill( chgParticles[i].pt(), chgParticles[i].eta() ); }
-	  for (int i=0; i<neuParticles.size(); ++i) { hNeuBgPtEta[jeval]->Fill( neuParticles[i].pt(), neuParticles[i].eta() ); }
-
-
 	  
+	  for (int i=0; i<chgParticles.size(); ++i) { hChgUePtEta[jeval]->Fill( chgParticles[i].pt(), chgParticles[i].eta() ); }
+	  for (int i=0; i<neuParticles.size(); ++i) { hNeuUePtEta[jeval]->Fill( neuParticles[i].pt(), neuParticles[i].eta() ); }
+
 	  chgParticles.clear(); // clear vector!
-	  GatherChargedBGwithEfficiency( leadJet, container, chgParticles, efficFile );   // gather BG
-	  CalculateBGsubtractedChargedRho(chgParticles,chgEastSum,chgMidSum,chgWestSum);
+	  GatherChargedUEwithEfficiency( leadJet, container, chgParticles, efficFile );   // gather UE
+	  CalculateUEsubtractedChargedRho(chgParticles,chgEastSum,chgMidSum,chgWestSum);
 	  chgEastRho_te = chgEastSum/eastArea;
 	  chgMidRho_te = chgMidSum/midArea;
 	  chgWestRho_te = chgWestSum/westArea;
-    
+
+	  
 	  HTjetTree->Fill();
 	}
       }
@@ -274,8 +274,8 @@ int main ( int argc, const char** argv ) {         // funcions and cuts specifie
   TFile *pAuFile = new TFile( outFile.c_str() ,"RECREATE");
 
   for (int p=0; p<nPtBins; ++p) {
-    hChgBgPtEta[p]->Write();  //  WRITE HISTOGRAMS & TREE
-    hNeuBgPtEta[p]->Write();
+    hChgUePtEta[p]->Write();  //  WRITE HISTOGRAMS & TREE
+    hNeuUePtEta[p]->Write();
   }
 
   hLeadPt->Write();

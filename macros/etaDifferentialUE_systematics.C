@@ -62,7 +62,7 @@ void etaDifferentialUE_systematics(){
   const int etaMarker[nEtaBins] = { 25, 27, 28 };
 
   const int nChgBins = 3;
-  const TString BackgroundChargeBias[nChgBins] = { "_chgBG", "_neuBG", "_allBG" };
+  const TString BackgroundChargeBias[nChgBins] = { "_chgUE", "_neuUE", "_allUE" };
   const TString BackgroundChargeString[nChgBins] = { "Charged", "Neutral", "Chg+Neu" };
   const int color[nChgBins] = { 807, 823, 874 };
   const int marker[nChgBins] = { 22, 23, 20 };
@@ -85,10 +85,10 @@ void etaDifferentialUE_systematics(){
   int EAcolor[nEAbins] = { 884, 810 };
   int EAmarker[nEAbins] = { 24, 20 };
   
-  int jeval, bgeval, pval, eaval;
+  int jeval, ueeval, pval, eaval;
   TString name, saveName, title, avg, sigma, drawString;
 
-  string fileSuffix = "10cmVzCut";
+  string fileSuffix = "10cmVzCut_6cmVzDiff";
   
   TString fileName[nEAbins] = { ("out/UE/pAuHTjetUE_"+fileSuffix+"_loEA_diffEta.root").c_str(),
 				("out/UE/pAuHTjetUE_"+fileSuffix+"_hiEA_diffEta.root").c_str() };
@@ -121,7 +121,7 @@ void etaDifferentialUE_systematics(){
   
   //  Tree variables
   int RunID[nEAbins], EventID[nEAbins], nTowers[nEAbins], nPrimary[nEAbins], nGlobal[nEAbins], nVertices[nEAbins], refMult[nEAbins],
-    gRefMult[nEAbins], nBGpart_chg[nEAbins], nBGpart_neu[nEAbins];
+    gRefMult[nEAbins], nUEpart_chg[nEAbins], nUEpart_neu[nEAbins];
   double Vz[nEAbins], BbcAdcSumEast[nEAbins], leadPt[nEAbins], leadEta[nEAbins], leadPhi[nEAbins], chgEastRho[nEAbins], chgMidRho[nEAbins],
     chgWestRho[nEAbins], neuEastRho[nEAbins], neuMidRho[nEAbins], neuWestRho[nEAbins], leadArea[nEAbins], eastRho[nEAbins], midRho[nEAbins],
     westRho[nEAbins], leadPtCorrected[nEAbins], chgEastRho_te[nEAbins], chgMidRho_te[nEAbins], chgWestRho_te[nEAbins], rho_te[nEAbins], rho[nEAbins];
@@ -159,17 +159,17 @@ void etaDifferentialUE_systematics(){
     jetTree[i]->SetBranchAddress( "neuWestRho", &neuWestRho[i] );
     jetTree[i]->SetBranchAddress( "leadArea", &leadArea[i] );
     jetTree[i]->SetBranchAddress( "leadPtCorrected", &leadPtCorrected[i] );
-    jetTree[i]->SetBranchAddress( "nBGpart_chg", &nBGpart_chg[i] );
-    jetTree[i]->SetBranchAddress( "nBGpart_neu", &nBGpart_neu[i] );
+    jetTree[i]->SetBranchAddress( "nUEpart_chg", &nUEpart_chg[i] );
+    jetTree[i]->SetBranchAddress( "nUEpart_neu", &nUEpart_neu[i] );
     jetTree[i]->SetBranchAddress( "rho", &rho[i] );
     jetTree[i]->SetBranchAddress( "rho_te", &rho_te[i] );
 
     nEntries[i] = jetTree[i]->GetEntries();
 
     for (int e=0; e<nEtaBins; ++e) {
-      name = "hChgBgPtEta"; name += etaBinName[e];
+      name = "hChgUePtEta"; name += etaBinName[e];
       hChgUEpt[i][e] = (TH2D*)inFile[i]->Get( name );
-      name = "hNeuBgPtEta"; name += etaBinName[e];
+      name = "hNeuUePtEta"; name += etaBinName[e];
       hNeuUEpt[i][e] = (TH2D*)inFile[i]->Get( name );
     
       name = "hRho_"; name += EAbinName[i]; name += etaBinName[e];
@@ -204,8 +204,8 @@ void etaDifferentialUE_systematics(){
 	if ( jeval==99 /*|| jeval==99*/ ) { cerr<<"UNABLE TO FIND PT OR ETA RANGE FOR LEAD JET"<<endl<<leadEta[a]<<endl<<endl; }
 	else {
 	  hRho[a][jeval]->Fill(rho[a]);
-	  hNchg[a][jeval]->Fill(nBGpart_chg[a]);
-	  hNneu[a][jeval]->Fill(nBGpart_neu[a]);
+	  hNchg[a][jeval]->Fill(nUEpart_chg[a]);
+	  hNneu[a][jeval]->Fill(nUEpart_neu[a]);
 	}
       }
       
@@ -548,7 +548,8 @@ void etaDifferentialUE_systematics(){
 
   
   TPaveText *sp1 = new TPaveText(0.175,0.75,0.5,1.0,"NDC");
-  sp1->AddText("STAR Preliminary");
+  //sp1->AddText("STAR Preliminary");
+  sp1->AddText("");
   sp1->SetTextSize(0.04);
   sp1->SetTextColor(kRed);
   sp1->SetFillColorAlpha(0,0.0);

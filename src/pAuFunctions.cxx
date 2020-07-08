@@ -25,7 +25,7 @@ namespace pAuAnalysis {
       hEffic[j] = (TH1D*)ef->Get( name );
     }
     
-    std::vector<fastjet::PseudoJet> uncorrPart = chgPart;  // move uncorrected BG particles to new PJ vector
+    std::vector<fastjet::PseudoJet> uncorrPart = chgPart;  // move uncorrected UE particles to new PJ vector
     chgPart.clear();
     
     for (int i=0; i<uncorrPart.size(); ++i) {
@@ -61,7 +61,7 @@ namespace pAuAnalysis {
   
   
   void BackGroundEstimationAndPlots( std::vector<fastjet::PseudoJet> chgPart, std::vector<fastjet::PseudoJet> neuPart, fastjet::PseudoJet leadJet,
-				     TH3D *PartPtDEtaDPhi, TH3D *PartPtEtaPhi, TH3D *BG, double &chgSum, double &neuSum ) {
+				     TH3D *PartPtDEtaDPhi, TH3D *PartPtEtaPhi, TH3D *UE, double &chgSum, double &neuSum ) {
 
     chgSum = 0;
     neuSum = 0;
@@ -72,7 +72,7 @@ namespace pAuAnalysis {
       double dEta = leadJet.eta() - chgPart[i].eta();
       PartPtDEtaDPhi->Fill( chgPart[i].pt(), dEta, dPhi );
       PartPtEtaPhi->Fill( leadJet.pt(), chgPart[i].eta(), chgPart[i].phi() );
-      BG->Fill( chgPart[i].pt(), chgPart[i].eta(), chgPart[i].phi() );
+      UE->Fill( chgPart[i].pt(), chgPart[i].eta(), chgPart[i].phi() );
       chgSum+=chgPart[i].pt();
     }
 
@@ -82,21 +82,21 @@ namespace pAuAnalysis {
       double dEta = leadJet.eta() - neuPart[i].eta();
       PartPtDEtaDPhi->Fill( neuPart[i].pt(), dEta, dPhi );
       PartPtEtaPhi->Fill( neuPart[i].pt(), neuPart[i].eta(), neuPart[i].phi() );
-      BG->Fill( neuPart[i].pt(), neuPart[i].eta(), neuPart[i].phi() );
+      UE->Fill( neuPart[i].pt(), neuPart[i].eta(), neuPart[i].phi() );
       neuSum+=neuPart[i].pt();
     }
 
   }
 
   
-  void CalculateBGsubtractedChargedRho( std::vector<fastjet::PseudoJet> chgPart, double &chgEast_Sum, double &chgMid_Sum, double &chgWest_Sum ) {
+  void CalculateUEsubtractedChargedRho( std::vector<fastjet::PseudoJet> chgPart, double &chgEast_Sum, double &chgMid_Sum, double &chgWest_Sum ) {
     double etaLoEast = -1.0;
     double etaLoMid = -0.3;
     double etaLoWest = 0.3;
     double etaHiEast = -0.3;
     double etaHiMid = 0.3;
     double etaHiWest = 1.0;
-    double BGeta;
+    double UEeta;
 
     chgEast_Sum=0;
     chgMid_Sum=0;
@@ -104,11 +104,11 @@ namespace pAuAnalysis {
 
     
     for ( int i=0; i<chgPart.size(); ++i ) {
-      BGeta = chgPart[i].eta();
-      if ( BGeta>=etaLoMid && BGeta<etaHiMid ) { chgMid_Sum+= chgPart[i].pt(); }
-      else if ( BGeta>=etaLoEast && BGeta<=etaHiEast ) { chgEast_Sum+= chgPart[i].pt(); }
-      else if ( BGeta>etaLoWest && BGeta<=etaHiWest ) { chgWest_Sum+= chgPart[i].pt(); }
-      else { std::cerr<<"error with chg BG particle eta"<<std::endl; }
+      UEeta = chgPart[i].eta();
+      if ( UEeta>=etaLoMid && UEeta<etaHiMid ) { chgMid_Sum+= chgPart[i].pt(); }
+      else if ( UEeta>=etaLoEast && UEeta<=etaHiEast ) { chgEast_Sum+= chgPart[i].pt(); }
+      else if ( UEeta>etaLoWest && UEeta<=etaHiWest ) { chgWest_Sum+= chgPart[i].pt(); }
+      else { std::cerr<<"error with chg UE particle eta"<<std::endl; }
     }
   }
   
@@ -121,7 +121,7 @@ namespace pAuAnalysis {
   //   double etaHiEast = -0.3;
   //   double etaHiMid = 0.3;
   //   double etaHiWest = 1.0;
-  //   double BGeta;
+  //   double UEeta;
 
   //   chgEast_Sum=0;
   //   chgMid_Sum=0;
@@ -132,21 +132,21 @@ namespace pAuAnalysis {
 
     
   //   for ( int i=0; i<chgPart.size(); ++i ) {
-  //     BGeta = chgPart[i].eta();
-  //     hChg->Fill( chgPart[i].pt(), BGeta, chgPart[i].phi() );
-  //     if ( BGeta>=etaLoMid && BGeta<etaHiMid ) { chgMid_Sum+= chgPart[i].pt(); }
-  //     else if ( BGeta>=etaLoEast && BGeta<=etaHiEast ) { chgEast_Sum+= chgPart[i].pt(); }
-  //     else if ( BGeta>etaLoWest && BGeta<=etaHiWest ) { chgWest_Sum+= chgPart[i].pt(); }
-  //     else { std::cerr<<"error with chg BG particle eta"<<std::endl; }
+  //     UEeta = chgPart[i].eta();
+  //     hChg->Fill( chgPart[i].pt(), UEeta, chgPart[i].phi() );
+  //     if ( UEeta>=etaLoMid && UEeta<etaHiMid ) { chgMid_Sum+= chgPart[i].pt(); }
+  //     else if ( UEeta>=etaLoEast && UEeta<=etaHiEast ) { chgEast_Sum+= chgPart[i].pt(); }
+  //     else if ( UEeta>etaLoWest && UEeta<=etaHiWest ) { chgWest_Sum+= chgPart[i].pt(); }
+  //     else { std::cerr<<"error with chg UE particle eta"<<std::endl; }
   //   }
     
   //   for ( int i=0; i<neuPart.size(); ++i ) {
-  //     BGeta = neuPart[i].eta();
-  //     hNeu->Fill( neuPart[i].pt(), BGeta, neuPart[i].phi() );
-  //     if ( BGeta>=etaLoMid && BGeta<etaHiMid ) { neuMid_Sum+= neuPart[i].pt(); }
-  //     else if ( BGeta>=etaLoEast && BGeta<=etaHiEast ) { neuEast_Sum+= neuPart[i].pt(); }
-  //     else if ( BGeta>etaLoWest && BGeta<=etaHiWest ) { neuWest_Sum+= neuPart[i].pt(); }
-  //     else { std::cerr<<"error with neu BG particle eta"<<std::endl; }
+  //     UEeta = neuPart[i].eta();
+  //     hNeu->Fill( neuPart[i].pt(), UEeta, neuPart[i].phi() );
+  //     if ( UEeta>=etaLoMid && UEeta<etaHiMid ) { neuMid_Sum+= neuPart[i].pt(); }
+  //     else if ( UEeta>=etaLoEast && UEeta<=etaHiEast ) { neuEast_Sum+= neuPart[i].pt(); }
+  //     else if ( UEeta>etaLoWest && UEeta<=etaHiWest ) { neuWest_Sum+= neuPart[i].pt(); }
+  //     else { std::cerr<<"error with neu UE particle eta"<<std::endl; }
   //   }
 
 
@@ -161,7 +161,7 @@ namespace pAuAnalysis {
     double etaHiEast = -0.3;
     double etaHiMid = 0.3;
     double etaHiWest = 1.0;
-    double BGeta;
+    double UEeta;
 
     chgEast_Sum=0;
     chgMid_Sum=0;
@@ -172,19 +172,19 @@ namespace pAuAnalysis {
 
     
     for ( int i=0; i<chgPart.size(); ++i ) {
-      BGeta = chgPart[i].eta();
-      if ( BGeta>=etaLoMid && BGeta<etaHiMid ) { chgMid_Sum+= chgPart[i].pt(); }
-      else if ( BGeta>=etaLoEast && BGeta<=etaHiEast ) { chgEast_Sum+= chgPart[i].pt(); }
-      else if ( BGeta>etaLoWest && BGeta<=etaHiWest ) { chgWest_Sum+= chgPart[i].pt(); }
-      else { std::cerr<<"error with chg BG particle eta"<<std::endl; }
+      UEeta = chgPart[i].eta();
+      if ( UEeta>=etaLoMid && UEeta<etaHiMid ) { chgMid_Sum+= chgPart[i].pt(); }
+      else if ( UEeta>=etaLoEast && UEeta<=etaHiEast ) { chgEast_Sum+= chgPart[i].pt(); }
+      else if ( UEeta>etaLoWest && UEeta<=etaHiWest ) { chgWest_Sum+= chgPart[i].pt(); }
+      else { std::cerr<<"error with chg UE particle eta"<<std::endl; }
     }
     
     for ( int i=0; i<neuPart.size(); ++i ) {
-      BGeta = neuPart[i].eta();
-      if ( BGeta>=etaLoMid && BGeta<etaHiMid ) { neuMid_Sum+= neuPart[i].pt(); }
-      else if ( BGeta>=etaLoEast && BGeta<=etaHiEast ) { neuEast_Sum+= neuPart[i].pt(); }
-      else if ( BGeta>etaLoWest && BGeta<=etaHiWest ) { neuWest_Sum+= neuPart[i].pt(); }
-      else { std::cerr<<"error with neu BG particle eta"<<std::endl; }
+      UEeta = neuPart[i].eta();
+      if ( UEeta>=etaLoMid && UEeta<etaHiMid ) { neuMid_Sum+= neuPart[i].pt(); }
+      else if ( UEeta>=etaLoEast && UEeta<=etaHiEast ) { neuEast_Sum+= neuPart[i].pt(); }
+      else if ( UEeta>etaLoWest && UEeta<=etaHiWest ) { neuWest_Sum+= neuPart[i].pt(); }
+      else { std::cerr<<"error with neu UE particle eta"<<std::endl; }
     }
 
 
@@ -249,7 +249,7 @@ namespace pAuAnalysis {
   }
 
   
-  std::vector<fastjet::PseudoJet> GatherBackground ( fastjet::PseudoJet trigJet, TStarJetVectorContainer<TStarJetVector> * container , std::vector<fastjet::PseudoJet> & bgParticles ){
+  std::vector<fastjet::PseudoJet> GatherBackground ( fastjet::PseudoJet trigJet, TStarJetVectorContainer<TStarJetVector> * container , std::vector<fastjet::PseudoJet> & ueParticles ){
     for ( int i=0; i < container->GetEntries() ; ++i ) {
       TStarJetVector* sv = container->Get(i);
       fastjet::PseudoJet current = fastjet::PseudoJet( *sv );
@@ -262,13 +262,13 @@ namespace pAuAnalysis {
 
       current.set_user_index( sv->GetCharge() );
 
-      bgParticles.push_back(current);
+      ueParticles.push_back(current);
     }
-    return bgParticles;
+    return ueParticles;
   }
 
   
-  std::vector<fastjet::PseudoJet> GatherChargedBG ( fastjet::PseudoJet trigJet, TStarJetVectorContainer<TStarJetVector> * container , std::vector<fastjet::PseudoJet> & chgParticles ){
+  std::vector<fastjet::PseudoJet> GatherChargedUE ( fastjet::PseudoJet trigJet, TStarJetVectorContainer<TStarJetVector> * container , std::vector<fastjet::PseudoJet> & chgParticles ){
     for ( int i=0; i < container->GetEntries() ; ++i ) {
       TStarJetVector* sv = container->Get(i);
       fastjet::PseudoJet current = fastjet::PseudoJet( *sv );
@@ -288,7 +288,7 @@ namespace pAuAnalysis {
   }
 
 
-  std::vector<fastjet::PseudoJet> GatherChargedBGwithEfficiency ( fastjet::PseudoJet trigJet, TStarJetVectorContainer<TStarJetVector> * container , std::vector<fastjet::PseudoJet> & chgParticles,  std::string efficiencyFile ){
+  std::vector<fastjet::PseudoJet> GatherChargedUEwithEfficiency ( fastjet::PseudoJet trigJet, TStarJetVectorContainer<TStarJetVector> * container , std::vector<fastjet::PseudoJet> & chgParticles,  std::string efficiencyFile ){
 
     int ptBin, etaBin;
     const int nBins = 10;
@@ -354,7 +354,7 @@ namespace pAuAnalysis {
   }
 
   
-  std::vector<fastjet::PseudoJet> GatherNeutralBG ( fastjet::PseudoJet trigJet, TStarJetVectorContainer<TStarJetVector> * container , std::vector<fastjet::PseudoJet> & neuParticles ){
+  std::vector<fastjet::PseudoJet> GatherNeutralUE ( fastjet::PseudoJet trigJet, TStarJetVectorContainer<TStarJetVector> * container , std::vector<fastjet::PseudoJet> & neuParticles ){
     for ( int i=0; i < container->GetEntries() ; ++i ) {
       TStarJetVector* sv = container->Get(i);
       fastjet::PseudoJet current = fastjet::PseudoJet( *sv );
