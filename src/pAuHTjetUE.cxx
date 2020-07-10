@@ -60,30 +60,32 @@ int main ( int argc, const char** argv ) {         // funcions and cuts specifie
   HTjetTree->Branch( "dPhiTrigLead", &dPhiTrigLead );
   HTjetTree->Branch( "dRTrigLead", &dRTrigLead );
 
-  TH2D *hChgUePtEta[nPtBins];
-  TH2D *hNeuUePtEta[nPtBins];
+  // TH2D *hChgUePtEta[nPtBins];
+  // TH2D *hNeuUePtEta[nPtBins];
 
-  TH3D *hChgUE = new TH3D("hChgUE",";leading jet p_{T} (GeV);chg. UE part. p_{T} (GeV);chg. UE part. #eta", 55,4.5,59.5, 30,0.0,30.0, 40,-1.0,1.0);
-  TH1D *hLeadPt = new TH1D("hLeadPt",";leading jet p_{T} (GeV)",55,4.5,59.5);
-  
-  // for (int p=0; p<nPtBins; ++p) {
+  TH3D *hChgUE[nEtaBins];
+  TH1D *hLeadPt[nEtaBins];
 
-  //   name = "hChgUePtEta"; name += ptBinName[p];
-  //   title = "Charged Background #phi vs. #eta ("; title += ptBinString[p]; title += ") ;p_{T} (GeV);#eta";
-  //   hChgUePtEta[p] = new TH2D( name , title ,30,0,15,20,-1.0,1.0 );
-  //   name = "hNeuUePtEta"; name += ptBinName[p];
-  //   title = "Neutral Background #phi vs. #eta ("; title += ptBinString[p]; title += ") ;p_{T} (GeV);#eta";
-  //   hNeuUePtEta[p] = new TH2D( name, title, 30,0,15,20,-1.0,1.0 );
-  // }
+  for (int e=0; e<nEtaBins; ++e) {
+    
+    name = "hChgUE" + etaBinName[e] + "Jet";
+    title = etaBinString[e] + ";leading jet p_{T} (GeV);chg. UE part. p_{T} (GeV);chg. UE part. #eta";
+    hChgUE[e] = new TH3D(name, title, 55,4.5,59.5, 30,0.0,30.0, 40,-1.0,1.0);
+
+    name = "hLeadPt" + etaBinName[e] + "Jet";
+    title = etaBinString[e] + ";leading jet p_{T} (GeV)";
+    hLeadPt[e] = new TH1D(name, title, 55,4.5,59.5);
+    
+  }
 
   for (int e=0; e<nEtaBins; ++e) {
 
-    name = "hChgUePtEta"; name += etaBinName[e];
-    title = "Charged Background #phi vs. #eta ("; title += etaBinString[e]; title += ") ;p_{T} (GeV);#eta";
-    hChgUePtEta[e] = new TH2D( name , title ,30,0,15,20,-1.0,1.0 );
-    name = "hNeuUePtEta"; name += etaBinName[e];
-    title = "Neutral Background #phi vs. #eta ("; title += etaBinString[e]; title += ") ;p_{T} (GeV);#eta";
-    hNeuUePtEta[e] = new TH2D( name, title, 30,0,15,20,-1.0,1.0 );
+    // name = "hChgUePtEta"; name += etaBinName[e];
+    // title = "Charged Underlying Event #phi vs. #eta ("; title += etaBinString[e]; title += ") ;p_{T} (GeV);#eta";
+    // hChgUePtEta[e] = new TH2D( name , title ,30,0,15,20,-1.0,1.0 );
+    // name = "hNeuUePtEta"; name += etaBinName[e];
+    // title = "Neutral Underlying Event #phi vs. #eta ("; title += etaBinString[e]; title += ") ;p_{T} (GeV);#eta";
+    // hNeuUePtEta[e] = new TH2D( name, title, 30,0,15,20,-1.0,1.0 );
   }
   
   JetDefinition jet_def(antikt_algorithm, R);     //  JET DEFINITION
@@ -208,7 +210,7 @@ int main ( int argc, const char** argv ) {         // funcions and cuts specifie
 	  leadPhi = leadJet.phi();
 	  leadArea = leadJet.area();
 
-	  //  BACKGROUND ESTIMATION
+	  //  UNDERLYING EVENT ESTIMATION
 	  GatherChargedUE( leadJet, container, chgParticles );
 	  GatherNeutralUE( leadJet, container, neuParticles );
 
@@ -226,36 +228,36 @@ int main ( int argc, const char** argv ) {         // funcions and cuts specifie
 
 	  pval = 99;    jeval = 99;
 
-	  for (int i=0; i<chgParticles.size(); ++i) { hChgUE->Fill( leadPtCorrected, chgParticles[i].pt(), chgParticles[i].eta() ); }
-	  hLeadPt->Fill( leadPtCorrected );
-
-	  if ( leadPtCorrected >= 10.0 && leadPtCorrected <= 30.0 ) {
-
-
-	    
-	    //   for ( int p=0; p<3; ++p ) {
-	    //     if ( leadPtCorrected >= ptLo[p]  &&  leadPtCorrected <= ptHi[p] ) { pval = p; }
-	    //   }
-	    //   if ( pval==99 /*|| jeval==99*/ ) { cerr<<"UNABLE TO FIND PT OR ETA RANGE FOR LEAD JET"<<endl<<leadPt<<endl<<endl; }
-	    // }
-	    // if ( pval==99 ) {continue;}
-
-	    // for (int i=0; i<chgParticles.size(); ++i) { hChgUePtEta[pval]->Fill( chgParticles[i].pt(), chgParticles[i].eta() ); }
-	    // for (int i=0; i<neuParticles.size(); ++i) { hNeuUePtEta[pval]->Fill( neuParticles[i].pt(), neuParticles[i].eta() ); }
-
-
-	    
-	    for ( int e=0; e<nEtaBins; ++e ) {
-	      if ( leadEta >= etaLo[e]  &&  leadEta <= etaHi[e] ) { jeval = e; }
-	    }
-	    if ( /*pval==99*/ jeval==99 ) { cerr<<"UNABLE TO FIND PT OR ETA RANGE FOR LEAD JET"<<endl<<leadPt<<endl<<endl; }
-
+	  for ( int e=0; e<nEtaBins; ++e ) {
+	    if ( leadEta >= etaLo[e]  &&  leadEta <= etaHi[e] ) { jeval = e; }
 	  }
-	  if (jeval==99) {continue;}
+	  
+	  if ( jeval==99 ) { cerr<<"UNABLE TO FIND PT OR ETA RANGE FOR LEAD JET"<<endl<<leadPt<<endl<<endl; }
 
 	  
-	  for (int i=0; i<chgParticles.size(); ++i) { hChgUePtEta[jeval]->Fill( chgParticles[i].pt(), chgParticles[i].eta() ); }
-	  for (int i=0; i<neuParticles.size(); ++i) { hNeuUePtEta[jeval]->Fill( neuParticles[i].pt(), neuParticles[i].eta() ); }
+	  if (jeval==99) {continue;}
+	  
+	  for (int i=0; i<chgParticles.size(); ++i) { hChgUE[jeval]->Fill( leadPtCorrected, chgParticles[i].pt(), chgParticles[i].eta() ); }
+	  hLeadPt[jeval]->Fill( leadPtCorrected );
+
+	  // if ( leadPtCorrected >= 10.0 && leadPtCorrected <= 30.0 ) {
+
+	  //   for ( int p=0; p<3; ++p ) {
+	  //       if ( leadPtCorrected >= ptLo[p]  &&  leadPtCorrected <= ptHi[p] ) { pval = p; }
+	  //     }
+	  //     if ( pval==99 /*|| jeval==99*/ ) { cerr<<"UNABLE TO FIND PT OR ETA RANGE FOR LEAD JET"<<endl<<leadPt<<endl<<endl; }
+	  //   }
+	  //   if ( pval==99 ) {continue;}
+
+	  //   for (int i=0; i<chgParticles.size(); ++i) { hChgUePtEta[pval]->Fill( chgParticles[i].pt(), chgParticles[i].eta() ); }
+	  //   for (int i=0; i<neuParticles.size(); ++i) { hNeuUePtEta[pval]->Fill( neuParticles[i].pt(), neuParticles[i].eta() ); }
+
+
+ 
+
+	  
+	  // for (int i=0; i<chgParticles.size(); ++i) { hChgUePtEta[jeval]->Fill( chgParticles[i].pt(), chgParticles[i].eta() ); }
+	  // for (int i=0; i<neuParticles.size(); ++i) { hNeuUePtEta[jeval]->Fill( neuParticles[i].pt(), neuParticles[i].eta() ); }
 
 	  chgParticles.clear(); // clear vector!
 	  GatherChargedUEwithEfficiency( leadJet, container, chgParticles, efficFile );   // gather UE
@@ -273,13 +275,15 @@ int main ( int argc, const char** argv ) {         // funcions and cuts specifie
 
   TFile *pAuFile = new TFile( outFile.c_str() ,"RECREATE");
 
-  for (int p=0; p<nPtBins; ++p) {
-    hChgUePtEta[p]->Write();  //  WRITE HISTOGRAMS & TREE
-    hNeuUePtEta[p]->Write();
+  //for (int p=0; p<nPtBins; ++p) {
+    // hChgUePtEta[p]->Write();  //  WRITE HISTOGRAMS & TREE
+    // hNeuUePtEta[p]->Write();
+  for ( int e=0; e<nEtaBins; ++e ) {
+    hChgUE[e]->Write();
+    hLeadPt[e]->Write();
   }
+    //}
 
-  hLeadPt->Write();
-  hChgUE->Write();
   HTjetTree->Write();  
 
   pAuFile->Write();
