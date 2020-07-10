@@ -91,7 +91,7 @@ int main ( int argc, const char** argv ) {         // funcions and cuts specifie
   JetDefinition jet_def(antikt_algorithm, R);     //  JET DEFINITION
   Selector jetEtaSelector = SelectorAbsEtaMax( 1.0-R );
   Selector leadPtMinSelector = SelectorPtMin(leadJetMinPt);
-  Selector leadJetSelector = jetEtaSelector && leadPtMinSelector;
+  Selector leadJetSelector = jetEtaSelector;// && leadPtMinSelector;
   Selector ptMaxSelector = SelectorPtMax( 30.0 );
 
   PseudoJet leadJet, trigTowerPJ, towPJ;
@@ -145,7 +145,7 @@ int main ( int argc, const char** argv ) {         // funcions and cuts specifie
     AreaDefinition area_def(active_area_explicit_ghosts, gAreaSpec);
     ClusterSequenceArea jetCluster( rawParticles, jet_def, area_def); 
       
-    leadJetSelector = leadPtMinSelector && jetEtaSelector;
+    leadJetSelector = jetEtaSelector; // && leadPtMinSelector;
     rawJets = sorted_by_pt( leadJetSelector( jetCluster.inclusive_jets() ) );     // EXTRACT ALL JETS IN >=10 GeV
     
     if ( rawJets.size()>0 ) {
