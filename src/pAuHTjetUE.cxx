@@ -19,8 +19,6 @@ int main ( int argc, const char** argv ) {         // funcions and cuts specifie
 
   TH1::SetDefaultSumw2();  TH2::SetDefaultSumw2();  TH3::SetDefaultSumw2();
 
-  TFile *pAuFile = new TFile( outFile.c_str() ,"RECREATE");
-
   TTree *HTjetTree = new TTree( "HTjetTree", "HT_JetTree" );
 
   double chgEastSum, chgMidSum, chgWestSum, neuEastSum, neuMidSum, neuWestSum;
@@ -31,36 +29,36 @@ int main ( int argc, const char** argv ) {         // funcions and cuts specifie
   double Vz, BbcAdcSumEast, leadPt, leadPtCorrected, leadEta, leadPhi, chgEastRho, chgMidRho, chgWestRho, chgEastRho_te, chgMidRho_te, chgWestRho_te,
     neuEastRho, neuMidRho, neuWestRho, leadArea, dPhiTrigLead, dRTrigLead;
 
-  HTjetTree->Branch( "RunID", &RunID );
-  HTjetTree->Branch( "EventID", &EventID );
-  HTjetTree->Branch( "nTowers", &nTowers );
-  HTjetTree->Branch( "nPrimary", &nPrimary );
-  HTjetTree->Branch( "nGlobal", &nGlobal );
-  HTjetTree->Branch( "nVertices", &nVertices );
-  HTjetTree->Branch( "refMult", &refMult );
-  HTjetTree->Branch( "gRefMult", &gRefMult );
-  HTjetTree->Branch( "Vz", &Vz );
-  HTjetTree->Branch( "leadPt", &leadPt );
-  HTjetTree->Branch( "leadPtCorrected", &leadPtCorrected );
-  HTjetTree->Branch( "leadEta", &leadEta );
-  HTjetTree->Branch( "BbcAdcSumEast", &BbcAdcSumEast );
-  HTjetTree->Branch( "leadPhi", &leadPhi );
-  HTjetTree->Branch( "chgEastRho", &chgEastRho );
-  HTjetTree->Branch( "chgMidRho", &chgMidRho );
-  HTjetTree->Branch( "chgWestRho_te", &chgWestRho_te );
-  HTjetTree->Branch( "chgEastRho_te", &chgEastRho_te );
-  HTjetTree->Branch( "chgMidRho_te", &chgMidRho_te );
-  HTjetTree->Branch( "chgWestRho", &chgWestRho );
-  HTjetTree->Branch( "neuEastRho", &neuEastRho );
-  HTjetTree->Branch( "neuMidRho", &neuMidRho );
-  HTjetTree->Branch( "neuWestRho", &neuWestRho );
-  HTjetTree->Branch( "leadArea", &leadArea );
-  HTjetTree->Branch( "nUEpart_chg", &nUEpart_chg );
-  HTjetTree->Branch( "nUEpart_neu", &nUEpart_neu );
-  HTjetTree->Branch( "nJetsAbove5", &nJetsAbove5 );
-  HTjetTree->Branch( "nHTtrig", &nHTtrig );
-  HTjetTree->Branch( "dPhiTrigLead", &dPhiTrigLead );
-  HTjetTree->Branch( "dRTrigLead", &dRTrigLead );
+  // HTjetTree->Branch( "RunID", &RunID );
+  // HTjetTree->Branch( "EventID", &EventID );
+  // HTjetTree->Branch( "nTowers", &nTowers );
+  // HTjetTree->Branch( "nPrimary", &nPrimary );
+  // HTjetTree->Branch( "nGlobal", &nGlobal );
+  // HTjetTree->Branch( "nVertices", &nVertices );
+  // HTjetTree->Branch( "refMult", &refMult );
+  // HTjetTree->Branch( "gRefMult", &gRefMult );
+  // HTjetTree->Branch( "Vz", &Vz );
+  // HTjetTree->Branch( "leadPt", &leadPt );
+  // HTjetTree->Branch( "leadPtCorrected", &leadPtCorrected );
+  // HTjetTree->Branch( "leadEta", &leadEta );
+  // HTjetTree->Branch( "BbcAdcSumEast", &BbcAdcSumEast );
+  // HTjetTree->Branch( "leadPhi", &leadPhi );
+  // HTjetTree->Branch( "chgEastRho", &chgEastRho );
+  // HTjetTree->Branch( "chgMidRho", &chgMidRho );
+  // HTjetTree->Branch( "chgWestRho_te", &chgWestRho_te );
+  // HTjetTree->Branch( "chgEastRho_te", &chgEastRho_te );
+  // HTjetTree->Branch( "chgMidRho_te", &chgMidRho_te );
+  // HTjetTree->Branch( "chgWestRho", &chgWestRho );
+  // HTjetTree->Branch( "neuEastRho", &neuEastRho );
+  // HTjetTree->Branch( "neuMidRho", &neuMidRho );
+  // HTjetTree->Branch( "neuWestRho", &neuWestRho );
+  // HTjetTree->Branch( "leadArea", &leadArea );
+  // HTjetTree->Branch( "nUEpart_chg", &nUEpart_chg );
+  // HTjetTree->Branch( "nUEpart_neu", &nUEpart_neu );
+  // HTjetTree->Branch( "nJetsAbove5", &nJetsAbove5 );
+  // HTjetTree->Branch( "nHTtrig", &nHTtrig );
+  // HTjetTree->Branch( "dPhiTrigLead", &dPhiTrigLead );
+  // HTjetTree->Branch( "dRTrigLead", &dRTrigLead );
 
   // TH2D *hChgUePtEta[nPtBins];
   // TH2D *hNeuUePtEta[nPtBins];
@@ -269,11 +267,13 @@ int main ( int argc, const char** argv ) {         // funcions and cuts specifie
 	  chgWestRho_te = chgWestSum/westArea;
 
 	  
-	  HTjetTree->Fill();
+	  // HTjetTree->Fill();
 	}
       }
     }
   }  // ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~  END EVENT LOOP!  ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~
+
+  TFile *pAuFile = new TFile( outFile.c_str() ,"RECREATE");
 
   //for (int p=0; p<nPtBins; ++p) {
     // hChgUePtEta[p]->Write();  //  WRITE HISTOGRAMS & TREE
@@ -284,7 +284,7 @@ int main ( int argc, const char** argv ) {         // funcions and cuts specifie
   }
     //}
 
-  HTjetTree->Write();  
+  // HTjetTree->Write();  
 
   pAuFile->Write();
   pAuFile->Close();
