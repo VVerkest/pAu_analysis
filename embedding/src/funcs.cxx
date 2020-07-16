@@ -22,7 +22,7 @@ namespace Analysis {
     int n_towers = 0;
     for (int i=0; i<selectedtowers->GetEntries(); ++i) {
       tow = (TStarJetPicoTower *) selectedtowers->At(i);
-      if ( fabs(tow->GetEta())<=max_track_rap ) { n_towers+=1; }
+      if ( fabs(tow->GetEta())<=maxTrackEta ) { n_towers+=1; }
     }
     return n_towers;
   }
@@ -356,7 +356,7 @@ namespace Analysis {
       TStarJetVector* sv = container->Get(i);
       fastjet::PseudoJet current = fastjet::PseudoJet( *sv );
       current.set_user_index( sv->GetCharge() );
-      if ( std::abs(current.eta()) > etaCut )      { continue; }  // removes particles with |eta|>1
+      if ( std::abs(current.eta()) > maxTrackEta )      { continue; }  // removes particles with |eta|>1
       if ( current.pt() < partMinPt )      { continue; }  // removes particles with pt<0.2GeV
 
       rawParticles.push_back(current);

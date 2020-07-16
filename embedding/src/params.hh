@@ -52,6 +52,7 @@ namespace Analysis {
   const std::string det_badTowers = "lists/bad_towers_pAu2015.list";
 
   const double detVertexZCut = 10.0;
+  const int RefMultCut = 0;
   const double detMaxEventPtCut = 30.0;
   const double detMaxEventEtCut = 30.0;
   const double detMinEventEtCut = 0.2;
@@ -67,8 +68,13 @@ namespace Analysis {
   const double maxTrackEta = 1.0;
   const double maxJetEta = 1.0 - R;
   const double minJetPt = 5.0;
-  const double minPartPt = 0.2;
+  const double partMinPt = 0.2;
+
+
+
   
+  const double NEF_max = 0.9;             //neutral energy fraction of jet must be < 90% (not used for PYTHIA) !!!!!
+
   
   /*
   const std::string outFileName = "out/analysis.root";
@@ -123,7 +129,6 @@ namespace Analysis {
   const double det_jet_ptmin = 5.0;//GeV //detector-level jet pT >= 15 GeV
   const double jet_ptmax = 1000.0;//GeV   //DEBUG
   const double max_rap = max_track_rap-R; //|eta_jet| < 1-R
-  const double NEF_max = 0.9;             //neutral energy fraction of jet must be < 90% (not used for PYTHIA) !!!!!
   const double mass_min = 1.0;//GeV       //det-jet M >= 1.0 GeV !!!!!
   
   //ghosts - not used for pp (jets aren't bkground subtracted), so once I have AuAu running as well, this can be moved there
