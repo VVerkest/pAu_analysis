@@ -142,6 +142,14 @@ int main (int argc, const char ** argv) {
     TList *SelectedTowers = detReader.GetListOfSelectedTowers();
     TStarJetPicoTower *tow;
     int nTowers = CountTowers( SelectedTowers );
+
+    vector<int> trigTowers;
+    for ( int i=0; i<event->GetTrigObjs()->GetEntries(); ++i ) {
+      trig = (TStarJetPicoTriggerInfo *)event->GetTrigObj(i);
+      if ( trig->isBHT2() && UseTriggerTower( trig->GetId()) ) { trigTowers.push_back( trig->GetId() ); }
+    }
+    sort(trigTowers.begin(), trigTowers.end());
+
     PseudoJet trigTowerPJ, towPJ;
     double deltaPhi, deltaR;
     int nTowersMatched = 0;
