@@ -3,7 +3,7 @@
 # used to submit sequential jobs on the grid
 
 # first make sure program is updated and exists
- make bin/pAuHTjetUE || exit
+ make bin/sim || exit
 
 set ExecPath = `pwd`
 set execute = './bin/sim'
@@ -29,7 +29,7 @@ foreach input ( ${base}* )
 # Create the output file base name                                                                                                                                             
 set OutBase = `basename $input | sed 's/.root//g'`
 set uscore = "_"
-set OutBase = "$OutFile$uscore$outBase"
+set OutBase = "$outFile$uscore$OutBase"
 
 # Make the output names and path                                                                                                                                               
 set outLocation = out/${outDir}/
