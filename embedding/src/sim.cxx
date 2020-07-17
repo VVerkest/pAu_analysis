@@ -193,6 +193,9 @@ int main (int argc, const char ** argv) {
     d_leadPt = d_leadJet.pt();
     d_leadEta = d_leadJet.eta();
     d_leadPhi = d_leadJet.phi();
+
+    partFilename =  partReader->GetInputChain()->GetCurrentFile()->GetName();
+    detFilename =  detReader->GetInputChain()->GetCurrentFile()->GetName();
     mc_weight = LookupRun15Xsec( partFilename );
     
     hPtResponse->Fill( p_leadPt, d_leadPt, mc_weight );
