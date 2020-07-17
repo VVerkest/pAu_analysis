@@ -94,7 +94,7 @@ int main (int argc, const char ** argv) {
   vector<PseudoJet> p_Particles, d_Particles, p_Jets, d_Jets, p_matches;
   PseudoJet p_leadJet, d_leadJet;
 
-  TH2D *hPtResponse = new TH2D("hPtResponse",";part-level leading jet p_{T} (GeV),det-level leading jet p_{T} (GeV)",55,4.5,59.5, 55,4.5,59.5);
+  TH2D *hPtResponse = new TH2D("hPtResponse",";part-level leading jet p_{T} (GeV);det-level leading jet p_{T} (GeV)",55,4.5,59.5, 55,4.5,59.5);
   TH1D *hMisses = new TH1D( "hMisses","Missses;missing part-level leading jet p_{T} (GeV)",55,4.5,59.5);
   TH1D *hFakes = new TH1D( "hFakes","Fakes;fake det-level leading jet p_{T} (GeV)",55,4.5,59.5);
   TH3D *hTrigEtEtaPhi = new TH3D( "hTrigEtEtaPhi",";Trigger E_{T} (GeV);Trigger #eta;Trigger #phi",30,0,30, 40,-1.0,1.0, 120,0,2*pi);
@@ -106,6 +106,7 @@ int main (int argc, const char ** argv) {
   // ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~  BEGIN EVENT LOOP!  ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~
   while ( partReader.NextEvent() ) {  // loop through all part-level events
 
+    partReader->PrintStatus(10); detReader->PrintStatus(10);     // Print out reader status every 10 seconds
 
     EventID = partReader.GetNOfCurrentEvent();
     if ( !(detReader.ReadEvent(EventID)) ) {continue;}  // see if corresponding det-level event exists; if not, skip event
@@ -194,12 +195,12 @@ int main (int argc, const char ** argv) {
     d_leadEta = d_leadJet.eta();
     d_leadPhi = d_leadJet.phi();
 
-    partFilename =  partReader->GetInputChain()->GetCurrentFile()->GetName();
-    detFilename =  detReader->GetInputChain()->GetCurrentFile()->GetName();
+    partFilename =  partReader.GetInputChain()->GetCurrentFile()->GetName();
+    detFilename =  detReader.GetInputChain()->GetCurrentFile()->GetName();
     mc_weight = LookupRun15Xsec( partFilename );
     
     hPtResponse->Fill( p_leadPt, d_leadPt, mc_weight );
-    hTrigEtEtaPhi->Fill( trigTowerPJ.e(), trigTowerPJ.eta(), trigTowerPJ.phi(), mc_weight );
+    // hTrigEtEtaPhi->Fill( trigTowerPJ.e(), trigTowerPJ.eta(), trigTowerPJ.phi(), mc_weight );
 
     // hMisses->Fill( , mc_weight );
     // hFakes->Fill( , mc_weight );
@@ -216,6 +217,7 @@ int main (int argc, const char ** argv) {
 
   eventTree->Write();
   
+  embedFile->Write();
   embedFile->Close();
   
   return 0;
