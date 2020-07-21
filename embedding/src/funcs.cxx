@@ -31,7 +31,7 @@ namespace Analysis {
   bool DiscardpAuEmbedEvent(const TString Filename, const std::vector<fastjet::PseudoJet> p_Jets, const std::vector<fastjet::PseudoJet> g_Jets) {
     bool bad_event = 0;
 
-    string pt_hat[9] = { "pt-hat57", "pt-hat79", "pt-hat911", "pt-hat1115", "pt-hat1525", "pt-hat2535", "pt-hat3545", "pt-hat4555", "pt-hat5565" };
+    std::string pt_hat[9] = { "pt-hat57", "pt-hat79", "pt-hat911", "pt-hat1115", "pt-hat1525", "pt-hat2535", "pt-hat3545", "pt-hat4555", "pt-hat5565" };
     double maxPtVal[9] = { 7.0, 9.0, 11.0, 15.0, 25.0, 35.0, 45.0, 55.0, 65.0 };
 
     for ( int i=0; i<9; ++i ) {
