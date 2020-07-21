@@ -53,7 +53,7 @@ namespace Analysis {
       }
     }
 
-    if ( binFound==0 ) { std::cerr<<"Pythia pT bin not found for this file!"<<std::endl; }
+    if ( binFound==0 ) { std::cerr<<"Pythia pT bin not found for this file: "<<fileName<<std::endl; }
         
     return bad_event;
   }
