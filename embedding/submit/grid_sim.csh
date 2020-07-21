@@ -51,7 +51,7 @@ echo "Logging errors to " $ErrFile
     # //! [2]: flag: require match? Options: "nomatch" (match = 0), or "match" (match = 1).
     # //! [3]: input data
 
-set arg = "$outLocation$outName $numevents  $matchFlag $Files"
+set arg = "$outLocation$outName  $matchFlag $Files"
 
 echo "now submitting this script: "
 echo qsub -V -l mem=4GB -o $LogFile -e $ErrFile -N $1 -- ${ExecPath}/submit/qwrap.sh ${ExecPath} $execute $arg
