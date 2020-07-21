@@ -12,14 +12,12 @@ int main (int argc, const char ** argv) {
   TH1::SetDefaultSumw2( );    TH2::SetDefaultSumw2( );    TH3::SetDefaultSumw2( );
 
   //! Command line arguments:
-  //! [0]: output directory
-  //! [1]: output filename
-  //! [2]: flag: require match? Options: "nomatch" (match = 0), or "match" (match = 1).
-  //! [3]: input data
+  //! [0]: output filename
+  //! [1]: flag: require match? Options: "nomatch" (match = 0), or "match" (match = 1).
+  //! [2]: input data
 
   // Defaults
-  string outputDir = "out/"; // directory where everything will be saved
-  string outFileName = "test.root"; //output file
+  string outFileName = "out/test.root"; //output file
   string chainList = "lists/simlist.txt"; // input file: can be .root, .txt, .list
   bool match = 1; //match = 0 => no match between Pythia & Pythia+Geant events.
   
@@ -28,18 +26,20 @@ int main (int argc, const char ** argv) {
   case 1: // Default case
     __OUT("Using Default Settings");
     break;
-  case 5: { // Custom case
+  case 4: { // Custom case
     __OUT("Using Custom Settings");
     std::vector<std::string> arguments( argv+1, argv+argc );
-    
-    // Set non-default values
-    outputDir         = arguments[0];
-    outFileName       = arguments[1];
-    if (arguments[2] == "matched") {match = 1;} else if (arguments[4] == "unmatched") {match = 0;} else {cerr << "Not a valid flag!" << endl; exit(1);}
-    chainList = arguments[3];
-    
+
+    // Set non-default values    
+    outFileName       = arguments[0];
+            
+    if (arguments[1] == "matched" || arguments[1] == "match") {match = 1;}
+    else if (arguments[4] == "unmatched") {match = 0;}
+    else {cerr << "Not a valid flag!" << endl; exit(1);}
+    chainList = arguments[2];
+      
     //Printing settings:
-    cout << "Outputting to: " << (outputDir+outFileName).c_str() << "\nSettings:\n " << arguments[2] << " jets;\n input file: " << chainList << "\n";
+    cout << "Outputting to: " << (outFileName).c_str() << "\nSettings:\n " << arguments[2] << " jets;\n input file: " << chainList << "\n";
     break;
   }
   default: { // Error: invalid custom settings
@@ -61,7 +61,7 @@ int main (int argc, const char ** argv) {
   else if ( Analysis::HasEnding( chainList.c_str(), ".txt"  ) || Analysis::HasEnding( chainList.c_str(), ".list" ) )  { partChain = TStarJetPicoUtils::BuildChainFromFileList(chainList.c_str()); detChain = TStarJetPicoUtils::BuildChainFromFileList(chainList.c_str());}
   else { __ERR("data file is not recognized type: .root or .txt only.") return -1; }
   
-  TFile *fout = new TFile( ( outputDir + outFileName ).c_str() ,"RECREATE");
+  TFile *fout = new TFile( ( outFileName ).c_str() ,"RECREATE");
   fout->cd();
 
   TTree *eventTree = new TTree( "eventTree", "event_Tree" );
@@ -103,10 +103,11 @@ int main (int argc, const char ** argv) {
   InitReader( detReader, detChain, -1, detVertexZCut, detMaxEventPtCut, detMaxEventEtCut, detMinEventEtCut, detVertexZDiffCut,
 	      detDCACut, detMinNFitPointsCut, detFitOverMaxPointsCut, detMaxPtCut, detMaxEtCut, det_badTowers  );
 
+  int noMatch = 0;  int jetPtOverMax = 0;
   // ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~  BEGIN EVENT LOOP!  ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~
   while ( partReader.NextEvent() ) {  // loop through all part-level events
 
-    partReader->PrintStatus(10); detReader->PrintStatus(10);     // Print out reader status every 10 seconds
+    partReader.PrintStatus(10); detReader.PrintStatus(10);     // Print out reader status every 10 seconds
 
     EventID = partReader.GetNOfCurrentEvent();
     if ( !(detReader.ReadEvent(EventID)) ) {continue;}  // see if corresponding det-level event exists; if not, skip event
@@ -138,6 +139,8 @@ int main (int argc, const char ** argv) {
 
     if ( d_Jets.size()==0 || p_Jets.size()==0 ) { continue; }
 
+    if ( DiscardEmbedEvent( partFilename, p_Jets, d_Jets ) ) { ++jetPtOverMax; }
+    
     d_leadJet = d_Jets[0];
 
     TList *SelectedTowers = detReader.GetListOfSelectedTowers();
@@ -159,18 +162,18 @@ int main (int argc, const char ** argv) {
       tow = (TStarJetPicoTower*)SelectedTowers->At(i);
       if ( tow->GetEt()>=5.4 && count(trigTowers.begin(), trigTowers.end(), tow->GetId())) { // min 5.4 GeV tower and must be in list of HT towers
 	
-	towPJ.reset_PtYPhiM( tow->GetEt(), tow->GetEta(), tow->GetPhi(), 0.0 ); //reset_PtYPhiM!!
-	deltaPhi = fabs( d_leadJet.delta_phi_to( towPJ ) );
-	deltaR = d_leadJet.delta_R( towPJ );
-	double trigTowEt = 0;
-	  if ( deltaR<=R || fabs(deltaPhi)>=(pi-R) ) {  // require trigger
-	    if ( nTowersMatched>0 && (tow->GetEt()<trigTowEt) ) { continue; }   // more than 1 trigger tower
-	    else {							// first trigger tower
-	      trigTowEt = tow->GetEt();
-	      trigTowerPJ.reset_PtYPhiM( tow->GetEt(), tow->GetEta(), tow->GetPhi(), 0.0 ); //reset_PtYPhiM!!
-	      nTowersMatched += 1;
-	    }
-	  }
+    	towPJ.reset_PtYPhiM( tow->GetEt(), tow->GetEta(), tow->GetPhi(), 0.0 ); //reset_PtYPhiM!!
+    	deltaPhi = fabs( d_leadJet.delta_phi_to( towPJ ) );
+    	deltaR = d_leadJet.delta_R( towPJ );
+    	double trigTowEt = 0;
+    	  if ( deltaR<=R || fabs(deltaPhi)>=(pi-R) ) {  // require trigger
+    	    if ( nTowersMatched>0 && (tow->GetEt()<trigTowEt) ) { continue; }   // more than 1 trigger tower
+    	    else {							// first trigger tower
+    	      trigTowEt = tow->GetEt();
+    	      trigTowerPJ.reset_PtYPhiM( tow->GetEt(), tow->GetEta(), tow->GetPhi(), 0.0 ); //reset_PtYPhiM!!
+    	      nTowersMatched += 1;
+    	    }
+    	  }
 	  
       }
     }
@@ -179,7 +182,7 @@ int main (int argc, const char ** argv) {
     Selector LeadJetMatcher = SelectorCircle( R );  // Match triggered lead det-level jet to part-level jet
     LeadJetMatcher.set_reference( d_leadJet );
     p_matches = sorted_by_pt( LeadJetMatcher( p_Jets ));
-    if ( p_matches.size()==0 ) { continue; }
+    if ( p_matches.size()==0 ) { ++noMatch; /*continue;*/ }
 
     p_leadJet = p_matches[0];
     
@@ -200,25 +203,29 @@ int main (int argc, const char ** argv) {
     mc_weight = LookupRun15Xsec( partFilename );
     
     hPtResponse->Fill( p_leadPt, d_leadPt, mc_weight );
-    // hTrigEtEtaPhi->Fill( trigTowerPJ.e(), trigTowerPJ.eta(), trigTowerPJ.phi(), mc_weight );
+    hTrigEtEtaPhi->Fill( trigTowerPJ.e(), trigTowerPJ.eta(), trigTowerPJ.phi(), mc_weight );
 
     // hMisses->Fill( , mc_weight );
     // hFakes->Fill( , mc_weight );
 
     eventTree->Fill();
   }  // ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~  END EVENT LOOP!  ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~
-  
-  TFile *embedFile = new TFile( (outputDir+outFileName).c_str() ,"RECREATE");
 
+  // TString fileName = outputDir+outFileName;
+  // cout<<fileName<<endl;
+  // TFile *embedFile = new TFile( fileName ,"RECREATE");
+  // embedFile->cd();
+
+  cout<<endl<<noMatch<<" events dropped due to no matched leading jet"<<endl<<jetPtOverMax<<" events dropped due to having a jet with pT>2*upperPtBin"<<endl;
+  
   hPtResponse->Write();
-  hMisses->Write();
-  hFakes->Write();
   hTrigEtEtaPhi->Write();
+  // hMisses->Write();
+  // hFakes->Write();
 
   eventTree->Write();
   
-  embedFile->Write();
-  embedFile->Close();
+  fout->Close();
   
   return 0;
 }//main
