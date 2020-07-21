@@ -237,8 +237,8 @@ int main ( int argc, const char** argv ) {         // funcions and cuts specifie
 	  
 	  if (jeval==99) {continue;}
 	  
-	  for (int i=0; i<chgParticles.size(); ++i) { hChgUE[jeval]->Fill( leadPtCorrected, chgParticles[i].pt(), chgParticles[i].eta() ); }
-	  hLeadPt[jeval]->Fill( leadPtCorrected );
+	  for (int i=0; i<chgParticles.size(); ++i) { hChgUE[jeval]->Fill( leadPt, chgParticles[i].pt(), chgParticles[i].eta() ); }
+	  hLeadPt[jeval]->Fill( leadPt );
 
 	  // if ( leadPtCorrected >= 10.0 && leadPtCorrected <= 30.0 ) {
 
