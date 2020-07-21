@@ -28,7 +28,7 @@ namespace Analysis {
   }
 
   //discards events on the grounds of them having jets of pT > double the high end of the pT-hat bin from which they came. Both the Py & Py+Ge event will be thrown out.  
-  bool DiscardpAuEmbedEvent(const TString Filename, const std::vector<fastjet::PseudoJet> p_Jets, const std::vector<fastjet::PseudoJet> d_Jets) {
+  bool DiscardpAuEmbedEvent(const TString Filename, const std::vector<fastjet::PseudoJet> pJets, const std::vector<fastjet::PseudoJet> dJets) {
     bool bad_event = 0;
 
     std::string pt_hat[9] = { "pt-hat57", "pt-hat79", "pt-hat911", "pt-hat1115", "pt-hat1525", "pt-hat2535", "pt-hat3545", "pt-hat4555", "pt-hat5565" };
@@ -39,12 +39,12 @@ namespace Analysis {
     for ( int i=0; i<9; ++i ) {
       if ( name.find(pt_hat[i]) != std::string::npos ) {  // loop over and find pythia pt bin from file name
 	
-	if (p_Jets.size() != 0) {
-	  if (p_Jets[0].pt() > 2*maxPtVal[i]) { bad_event = 1; }  // if lead jet is over twice the upper range of pt bin, discard the event
+	if (pJets.size() != 0) {
+	  if (pJets[0].pt() > 2*maxPtVal[i]) { bad_event = 1; }  // if lead jet is over twice the upper range of pt bin, discard the event
 	}
 
-	if (d_Jets.size() != 0) {
-	  if (d_Jets[0].pt() > 2*maxPtVal[i]) { bad_event = 1; }  // if lead jet is over twice the upper range of pt bin, discard the event
+	if (dJets.size() != 0) {
+	  if (dJets[0].pt() > 2*maxPtVal[i]) { bad_event = 1; }  // if lead jet is over twice the upper range of pt bin, discard the event
 	}
 	
       }
