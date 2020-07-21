@@ -37,7 +37,7 @@ namespace Analysis {
     std::string name = (std::string) Filename;
     
     for ( int i=0; i<9; ++i ) {
-      if ( (std::string) name.find(pt_hat[i]) ) {  // loop over and find pythia pt bin from file name
+      if ( name.find(pt_hat[i]) != std::string::npos ) {  // loop over and find pythia pt bin from file name
 	
 	if (p_Jets.size() != 0) {
 	  if (p_Jets[0].pt() > 2*maxPtVal[i]) { bad_event = 1; }  // if lead jet is over twice the upper range of pt bin, discard the event
