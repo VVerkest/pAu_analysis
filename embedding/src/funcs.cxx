@@ -27,6 +27,31 @@ namespace Analysis {
     return n_towers;
   }
 
+  //discards events on the grounds of them having jets of pT > double the high end of the pT-hat bin from which they came. Both the Py & Py+Ge event will be thrown out.  
+  bool DiscardpAuEmbedEvent(const TString Filename, const std::vector<fastjet::PseudoJet> p_Jets, const std::vector<fastjet::PseudoJet> g_Jets) {
+    bool bad_event = 0;
+
+    string pt_hat[9] = { "pt-hat57", "pt-hat79", "pt-hat911", "pt-hat1115", "pt-hat1525", "pt-hat2535", "pt-hat3545", "pt-hat4555", "pt-hat5565" };
+    double maxPtVal[9] = { 7.0, 9.0, 11.0, 15.0, 25.0, 35.0, 45.0, 55.0, 65.0 };
+
+    for ( int i=0; i<9; ++i ) {
+      if ( (std::string) Filename.find(pt_hat[i]) ) {  // loop over and find pythia pt bin from file name
+	
+	if (p_Jets.size() != 0) {
+	  if (p_Jets[0].pt() > 2*maxPtVal[i]) { bad_event = 1; }  // if lead jet is over twice the upper range of pt bin, discard the event
+	}
+
+	if (d_Jets.size() != 0) {
+	  if (d_Jets[0].pt() > 2*maxPtVal[i]) { bad_event = 1; }  // if lead jet is over twice the upper range of pt bin, discard the event
+	}
+	
+      }
+    }
+    
+    
+    return bad_event;
+  }
+  
 
     //discards events on the grounds of them having jets of pT > double the high end of the pT-hat bin from which they came. Both the Py & Py+Ge event will be thrown out.                                                                                                                                                       
   //NOTE: I don't think the Picos save the pT-hat bin edges from the production, so I have to use the filenames instead                                         

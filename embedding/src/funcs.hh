@@ -96,6 +96,8 @@ namespace Analysis {
   //accepts jets which pass a neutral energy fraction cut
   void ApplyNEFSelection (const std::vector<fastjet::PseudoJet>, std::vector<fastjet::PseudoJet> &);
 
+  bool DiscardpAuEmbedEvent(const TString, const std::vector<fastjet::PseudoJet>, const std::vector<fastjet::PseudoJet> );
+  
   bool DiscardEvent(const TString, const std::vector<fastjet::PseudoJet>, const std::vector<fastjet::PseudoJet>);
 
   std::vector<int> MatchJets(const std::vector<fastjet::PseudoJet>, const std::vector<fastjet::PseudoJet>, std::vector<fastjet::PseudoJet> &, std::vector<fastjet::PseudoJet> &);
