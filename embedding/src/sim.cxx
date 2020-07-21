@@ -182,7 +182,7 @@ int main (int argc, const char ** argv) {
     Selector LeadJetMatcher = SelectorCircle( R );  // Match triggered lead det-level jet to part-level jet
     LeadJetMatcher.set_reference( d_leadJet );
     p_matches = sorted_by_pt( LeadJetMatcher( p_Jets ));
-    if ( p_matches.size()==0 ) { ++noMatch; /*continue;*/ }
+    if ( p_matches.size()==0 ) { ++noMatch; continue; }
 
     p_leadJet = p_matches[0];
     
