@@ -27,6 +27,7 @@ namespace Analysis {
     return n_towers;
   }
 
+  
   //discards events on the grounds of them having jets of pT > double the high end of the pT-hat bin from which they came. Both the Py & Py+Ge event will be thrown out.  
   bool DiscardpAuEmbedEvent(const TString Filename, const std::vector<fastjet::PseudoJet> pJets, const std::vector<fastjet::PseudoJet> dJets) {
     bool bad_event = 0;
@@ -53,10 +54,7 @@ namespace Analysis {
       }
     }
 
-    if ( binFound==0 ) {
-      std::cerr<<"Pythia pT bin not found for this file: "<<FileName<<std::endl;
-      bad_event = 1;
-    }
+    if ( binFound==0 ) { std::cerr<<"Pythia pT bin not found for this file: "<<Filename<<std::endl; }
         
     return bad_event;
   }
