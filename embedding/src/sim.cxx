@@ -139,7 +139,7 @@ int main (int argc, const char ** argv) {
 
     if ( d_Jets.size()==0 || p_Jets.size()==0 ) { continue; }
 
-    if ( DiscardpAuEmbedEvent( partFilename, p_Jets, d_Jets ) ) { ++jetPtOverMax; }
+    if ( DiscardpAuEmbedEvent( partFilename, p_Jets, d_Jets ) ) { ++jetPtOverMax; cout<<partFilename<<endl; }
     
     d_leadJet = d_Jets[0];
 
