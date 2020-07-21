@@ -35,9 +35,12 @@ namespace Analysis {
     double maxPtVal[9] = { 7.0, 9.0, 11.0, 15.0, 25.0, 35.0, 45.0, 55.0, 65.0 };
 
     std::string name = (std::string) Filename;
+    bool binFound = 0;
     
     for ( int i=0; i<9; ++i ) {
       if ( name.find(pt_hat[i]) != std::string::npos ) {  // loop over and find pythia pt bin from file name
+
+	binFound = 1;
 	
 	if (pJets.size() != 0) {
 	  if (pJets[0].pt() > 2*maxPtVal[i]) { bad_event = 1; }  // if lead jet is over twice the upper range of pt bin, discard the event
@@ -49,8 +52,9 @@ namespace Analysis {
 	
       }
     }
-    
-    
+
+    if ( binFound==0 ) { std::cerr<<"Pythia pT bin not found for this file!"<<std::endl; }
+        
     return bad_event;
   }
   
