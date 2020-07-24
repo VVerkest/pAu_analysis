@@ -100,7 +100,10 @@ namespace Analysis {
   
   bool DiscardEvent(const TString, const std::vector<fastjet::PseudoJet>, const std::vector<fastjet::PseudoJet>);
 
-  std::vector<int> MatchJets(const std::vector<fastjet::PseudoJet>, const std::vector<fastjet::PseudoJet>, std::vector<fastjet::PseudoJet> &, std::vector<fastjet::PseudoJet> &);
+  void MissesFakesAndMatches(std::vector<fastjet::PseudoJet> &, std::vector<fastjet::PseudoJet> &,
+			     std::vector<fastjet::PseudoJet> &, std::vector<fastjet::PseudoJet> &);
+  
+  // std::vector<int> MatchJets(const std::vector<fastjet::PseudoJet>, const std::vector<fastjet::PseudoJet>, std::vector<fastjet::PseudoJet> &, std::vector<fastjet::PseudoJet> &);
   std::vector<int> FakesandMisses(const std::vector<fastjet::PseudoJet>, const std::vector<fastjet::PseudoJet>, std::vector<fastjet::PseudoJet> &);
 
   //HISTOGRAMS [not used currently but might be useful in the future, so saving it here]
