@@ -103,7 +103,6 @@ int main (int argc, const char ** argv) {
   InitReader( detReader, detChain, -1, detVertexZCut, detMaxEventPtCut, detMaxEventEtCut, detMinEventEtCut, detVertexZDiffCut,
 	      detDCACut, detMinNFitPointsCut, detFitOverMaxPointsCut, detMaxPtCut, detMaxEtCut, det_badTowers  );
 
-  int noMatch = 0;  int jetPtOverMax = 0;
   // ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~  BEGIN EVENT LOOP!  ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~
   while ( partReader.NextEvent() ) {  // loop through all part-level events
 
@@ -142,7 +141,7 @@ int main (int argc, const char ** argv) {
 
     partFilename =  partReader.GetInputChain()->GetCurrentFile()->GetName();
     detFilename =  detReader.GetInputChain()->GetCurrentFile()->GetName();
-    if ( DiscardpAuEmbedEvent( partFilename, p_Jets, d_Jets ) ) { ++jetPtOverMax; }
+    if ( DiscardpAuEmbedEvent( partFilename, p_Jets, d_Jets ) ) { continue; }
     
     d_leadJet = d_Jets[0];
 
@@ -185,8 +184,7 @@ int main (int argc, const char ** argv) {
     Selector LeadJetMatcher = SelectorCircle( R );  // Match triggered lead det-level jet to part-level jet
     LeadJetMatcher.set_reference( d_leadJet );
     p_leadMatches = sorted_by_pt( LeadJetMatcher( p_Jets ));
-    if ( p_leadMatches.size()==0 ) { ++noMatch; continue; }
-    if ( DiscardpAuEmbedEvent( partFilename, p_Jets, d_Jets ) ) { continue; }
+    if ( p_leadMatches.size()==0 ) { continue; }
     
     p_leadJet = p_leadMatches[0];
     
@@ -222,13 +220,6 @@ int main (int argc, const char ** argv) {
     
     eventTree->Fill();
   }  // ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~  END EVENT LOOP!  ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~
-
-  // TString fileName = outputDir+outFileName;
-  // cout<<fileName<<endl;
-  // TFile *embedFile = new TFile( fileName ,"RECREATE");
-  // embedFile->cd();
-
-  cout<<endl<<noMatch<<" events dropped due to no matched leading jet"<<endl<<jetPtOverMax<<" events dropped due to having a jet with pT>2*upperPtBin"<<endl;
   
   hPtResponse->Write();
   hTrigEtEtaPhi->Write();
