@@ -91,7 +91,7 @@ int main (int argc, const char ** argv) {
   JetDefinition jet_def( antikt_algorithm, R );
   Selector jetSelector = SelectorAbsRapMax( maxJetEta ) && SelectorPtMin( minJetPt );
 
-  vector<PseudoJet> p_Particles, d_Particles, p_Jets, d_Jets, p_matches;
+  vector<PseudoJet> p_Particles, d_Particles, p_Jets, d_Jets, p_leadMatches, p_matches, d_matches, fakeJets, missedJets;
   PseudoJet p_leadJet, d_leadJet;
 
   TH2D *hPtResponse = new TH2D("hPtResponse",";part-level leading jet p_{T} (GeV);det-level leading jet p_{T} (GeV)",55,4.5,59.5, 55,4.5,59.5);
@@ -113,8 +113,9 @@ int main (int argc, const char ** argv) {
     if ( !(detReader.ReadEvent(EventID)) ) {continue;}  // see if corresponding det-level event exists; if not, skip event
     detReader.ReadEvent( EventID );
 
-    p_Particles.clear();    d_Particles.clear();    p_Jets.clear();    d_Jets.clear();    p_matches.clear();  // clear vectors
-
+    p_Particles.clear();    d_Particles.clear();    p_Jets.clear();    d_Jets.clear();    p_leadMatches.clear();  // clear vectors
+    p_matches.clear();    d_matches.clear();    fakeJets.clear();    missedJets.clear();    
+    
     d_event = detReader.GetEvent();    d_header = d_event->GetHeader();    d_container = detReader.GetOutputContainer();
     p_event = partReader.GetEvent();   p_header = p_event->GetHeader();    p_container = partReader.GetOutputContainer();
 
@@ -139,6 +140,8 @@ int main (int argc, const char ** argv) {
 
     if ( d_Jets.size()==0 || p_Jets.size()==0 ) { continue; }
 
+    partFilename =  partReader.GetInputChain()->GetCurrentFile()->GetName();
+    detFilename =  detReader.GetInputChain()->GetCurrentFile()->GetName();
     if ( DiscardpAuEmbedEvent( partFilename, p_Jets, d_Jets ) ) { ++jetPtOverMax; }
     
     d_leadJet = d_Jets[0];
@@ -181,10 +184,11 @@ int main (int argc, const char ** argv) {
 
     Selector LeadJetMatcher = SelectorCircle( R );  // Match triggered lead det-level jet to part-level jet
     LeadJetMatcher.set_reference( d_leadJet );
-    p_matches = sorted_by_pt( LeadJetMatcher( p_Jets ));
-    if ( p_matches.size()==0 ) { ++noMatch; continue; }
-
-    p_leadJet = p_matches[0];
+    p_leadMatches = sorted_by_pt( LeadJetMatcher( p_Jets ));
+    if ( p_leadMatches.size()==0 ) { ++noMatch; continue; }
+    if ( DiscardpAuEmbedEvent( partFilename, p_Jets, d_Jets ) ) { continue; }
+    
+    p_leadJet = p_leadMatches[0];
     
     RunID = d_header->GetRunId();
     EventID = detReader.GetNOfCurrentEvent();
@@ -198,16 +202,24 @@ int main (int argc, const char ** argv) {
     d_leadEta = d_leadJet.eta();
     d_leadPhi = d_leadJet.phi();
 
-    partFilename =  partReader.GetInputChain()->GetCurrentFile()->GetName();
-    detFilename =  detReader.GetInputChain()->GetCurrentFile()->GetName();
     mc_weight = LookupRun15Xsec( partFilename );
     
     hPtResponse->Fill( p_leadPt, d_leadPt, mc_weight );
     hTrigEtEtaPhi->Fill( trigTowerPJ.e(), trigTowerPJ.eta(), trigTowerPJ.phi(), mc_weight );
 
-    // hMisses->Fill( , mc_weight );
-    // hFakes->Fill( , mc_weight );
+    d_Jets.erase( d_Jets.begin() );
+    p_leadMatches.erase( p_leadMatches.begin() );  // delete matched lead jets & return remaining matched part-jets to original vector
+    for ( int i=0; i<p_leadMatches.size(); ++i ) { p_Jets.push_back( p_leadMatches[i] ); }
 
+    
+    MissesFakesAndMatches( p_Jets, d_Jets, p_matches, d_matches );
+
+    if ( p_matches.size()!=d_matches.size() ) { cerr<<"error in function ''MissesFakesAndMatches''"<<endl; }
+    else {
+      for (int i=0; i<p_Jets.size(); ++i) { hMisses->Fill( p_Jets[i].pt(), mc_weight ); }  // fill with part-level jet
+      for (int i=0; i<d_Jets.size(); ++i) { hFakes->Fill( d_Jets[i].pt(), mc_weight ); }   // fill with det-level jet
+    }
+    
     eventTree->Fill();
   }  // ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~  END EVENT LOOP!  ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~
 
@@ -220,8 +232,8 @@ int main (int argc, const char ** argv) {
   
   hPtResponse->Write();
   hTrigEtEtaPhi->Write();
-  // hMisses->Write();
-  // hFakes->Write();
+  hMisses->Write();
+  hFakes->Write();
 
   eventTree->Write();
   
