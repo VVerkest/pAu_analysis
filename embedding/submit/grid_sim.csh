@@ -15,12 +15,12 @@ set outFile = pAu2015embedding
 # Create the folder name for output
 #set outFile = stock
 # Make the directories since they may not exist...                                                                                                                             
-if ( ! -d out/${outFile} ) then
-mkdir -p out/${outFile}
+if ( ! -d out/${outDir} ) then
+mkdir -p out/${outDir}
 endif
 
-if ( ! -d log/${outFile} ) then
-mkdir -p log/${outFile}
+if ( ! -d log/${outDir} ) then
+mkdir -p log/${outDir}
 endif
 
 # Now Submit jobs for each data file                                                                                                                                           
