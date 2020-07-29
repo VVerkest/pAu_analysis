@@ -137,11 +137,23 @@ int main (int argc, const char ** argv) {
     ClusterSequenceArea p_jetCluster( p_Particles, jet_def, area_def); 
     p_Jets = sorted_by_pt( jetSelector( p_jetCluster.inclusive_jets() ) );
 
-    if ( d_Jets.size()==0 || p_Jets.size()==0 ) { continue; }
+    if ( d_Jets.size()==0 && p_Jets.size()==0 ) { continue; }
+
+    mc_weight = LookupRun15Xsec( partFilename );
+
+    if ( d_Jets.size()==0 ) {
+      hMisses->Fill( p_Jets[0].pt(), mc_weight );
+      continue;
+    } // missed jet
+    if ( p_Jets.size()==0 ) {
+      hFakes->Fill( d_Jets[0].pt(), mc_weight );
+      continue;
+    } // fake jet
+    // only events with 1+ det and 1+ part jet pass this line
 
     partFilename =  partReader.GetInputChain()->GetCurrentFile()->GetName();
     detFilename =  detReader.GetInputChain()->GetCurrentFile()->GetName();
-    if ( DiscardpAuEmbedEvent( partFilename, p_Jets, d_Jets ) ) { continue; }
+    if ( p_Jets.size()!=0 && DiscardpAuEmbedEvent( partFilename, p_Jets, d_Jets ) ) { continue; }
     
     d_leadJet = d_Jets[0];
 
@@ -184,7 +196,11 @@ int main (int argc, const char ** argv) {
     Selector LeadJetMatcher = SelectorCircle( R );  // Match triggered lead det-level jet to part-level jet
     LeadJetMatcher.set_reference( d_leadJet );
     p_leadMatches = sorted_by_pt( LeadJetMatcher( p_Jets ));
-    if ( p_leadMatches.size()==0 ) { continue; }
+    if ( p_leadMatches.size()==0 ) {
+      hFakes->Fill( d_leadJet.pt(), mc_weight );
+      continue;
+    } // fake jet
+    // only events with a det lead jet containing a trigger and a matched part jet pass this line
     
     p_leadJet = p_leadMatches[0];
     
@@ -199,24 +215,9 @@ int main (int argc, const char ** argv) {
     d_leadPt = d_leadJet.pt();
     d_leadEta = d_leadJet.eta();
     d_leadPhi = d_leadJet.phi();
-
-    mc_weight = LookupRun15Xsec( partFilename );
     
     hPtResponse->Fill( p_leadPt, d_leadPt, mc_weight );
     hTrigEtEtaPhi->Fill( trigTowerPJ.e(), trigTowerPJ.eta(), trigTowerPJ.phi(), mc_weight );
-
-    d_Jets.erase( d_Jets.begin() );
-    p_leadMatches.erase( p_leadMatches.begin() );  // delete matched lead jets & return remaining matched part-jets to original vector
-    for ( int i=0; i<p_leadMatches.size(); ++i ) { p_Jets.push_back( p_leadMatches[i] ); }
-
-    
-    MissesFakesAndMatches( p_Jets, d_Jets, p_matches, d_matches );
-
-    if ( p_matches.size()!=d_matches.size() ) { cerr<<"error in function ''MissesFakesAndMatches''"<<endl; }
-    else {
-      for (int i=0; i<p_Jets.size(); ++i) { hMisses->Fill( p_Jets[i].pt(), mc_weight ); }  // fill with part-level jet
-      for (int i=0; i<d_Jets.size(); ++i) { hFakes->Fill( d_Jets[i].pt(), mc_weight ); }   // fill with det-level jet
-    }
     
     eventTree->Fill();
   }  // ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~  END EVENT LOOP!  ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~
