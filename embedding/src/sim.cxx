@@ -139,6 +139,8 @@ int main (int argc, const char ** argv) {
 
     if ( d_Jets.size()==0 && p_Jets.size()==0 ) { continue; }
 
+    partFilename =  partReader.GetInputChain()->GetCurrentFile()->GetName();
+    detFilename =  detReader.GetInputChain()->GetCurrentFile()->GetName();
     mc_weight = LookupRun15Xsec( partFilename );
 
     if ( d_Jets.size()==0 ) {
@@ -151,8 +153,6 @@ int main (int argc, const char ** argv) {
     } // fake jet
     // only events with 1+ det and 1+ part jet pass this line
 
-    partFilename =  partReader.GetInputChain()->GetCurrentFile()->GetName();
-    detFilename =  detReader.GetInputChain()->GetCurrentFile()->GetName();
     if ( p_Jets.size()!=0 && DiscardpAuEmbedEvent( partFilename, p_Jets, d_Jets ) ) { continue; }
     
     d_leadJet = d_Jets[0];
