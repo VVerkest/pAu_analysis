@@ -71,6 +71,11 @@ namespace Analysis {
   const double partMinPt = 0.2;
 
 
+  const int nEtaBins = 3;
+  const double etaLo[nEtaBins] = { -1.0, -0.3, 0.3 };
+  const double etaHi[nEtaBins] = { -0.3, 0.3, 1.0 };
+  const TString etaBinName[nEtaBins] = { "_eastEta", "_midEta", "_westEta" };
+  const TString etaBinString[nEtaBins] = { "-0.6<#eta_{jet}<-0.3", "-0.3<#eta_{jet}<0.3", "0.3<#eta_{jet}<0.6" };
 
   
   const double NEF_max = 0.9;             //neutral energy fraction of jet must be < 90% (not used for PYTHIA) !!!!!
