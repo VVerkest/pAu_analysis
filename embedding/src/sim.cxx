@@ -66,6 +66,7 @@ int main (int argc, const char ** argv) {
 
   TTree *eventTree = new TTree( "eventTree", "event_Tree" );
 
+  TString name, title;
   int RunID, EventID, refMult;
   double Vz, BbcAdcSumEast, p_leadPt, p_leadEta, p_leadPhi, d_leadPt, d_leadEta, d_leadPhi, mc_weight;
 
@@ -94,9 +95,22 @@ int main (int argc, const char ** argv) {
   vector<PseudoJet> p_Particles, d_Particles, p_Jets, d_Jets, p_leadMatches, p_matches, d_matches, fakeJets, missedJets;
   PseudoJet p_leadJet, d_leadJet;
 
-  TH2D *hPtResponse = new TH2D("hPtResponse",";part-level leading jet p_{T} (GeV);det-level leading jet p_{T} (GeV)",55,4.5,59.5, 55,4.5,59.5);
-  TH1D *hMisses = new TH1D( "hMisses","Missses;missing part-level leading jet p_{T} (GeV)",55,4.5,59.5);
-  TH1D *hFakes = new TH1D( "hFakes","Fakes;fake det-level leading jet p_{T} (GeV)",55,4.5,59.5);
+  TH2D *hPtResponse[nEtaBins];
+  TH1D *hFakes[nEtaBins];
+  TH1D *hMisses = new TH1D( "hMisses","Misses;missing part-level leading jet p_{T} (GeV)",55,4.5,59.5);
+
+  for (int e=0; e<nEtaBins; ++e) {
+    
+    name = "hPtResponse" + etaBinName[e] + "Jet";
+    title = etaBinString[e] + ";part-level leading jet p_{T} (GeV);det-level leading jet p_{T} (GeV)";
+    hPtResponse[e] = new TH2D(name, title,55,4.5,59.5, 55,4.5,59.5);
+
+    name = "hFakes" + etaBinName[e] + "Jet";
+    title = etaBinString[e] + "  ~  Fakes;missing part-level leading jet p_{T} (GeV)";
+    hFakes[e] = new TH1D(name, title, 55,4.5,59.5);
+    
+  }
+
   TH3D *hTrigEtEtaPhi = new TH3D( "hTrigEtEtaPhi",";Trigger E_{T} (GeV);Trigger #eta;Trigger #phi",30,0,30, 40,-1.0,1.0, 120,0,2*pi);
 
   InitReader( partReader, partChain, -1, 9999, 1000, 1000, -1, 9999, 100, -1, -1, 1000, 9999, "lists/dummy_tower_list.txt" );
@@ -147,11 +161,6 @@ int main (int argc, const char ** argv) {
       hMisses->Fill( p_Jets[0].pt(), mc_weight );
       continue;
     } // missed jet
-    if ( p_Jets.size()==0 ) {
-      hFakes->Fill( d_Jets[0].pt(), mc_weight );
-      continue;
-    } // fake jet
-    // only events with 1+ det and 1+ part jet pass this line
 
     if ( p_Jets.size()!=0 && DiscardpAuEmbedEvent( partFilename, p_Jets, d_Jets ) ) { continue; }
     
@@ -169,9 +178,7 @@ int main (int argc, const char ** argv) {
     }
     sort(trigTowers.begin(), trigTowers.end());
 
-    PseudoJet trigTowerPJ, towPJ;
-    double deltaPhi, deltaR;
-    int nTowersMatched = 0;
+    PseudoJet trigTowerPJ, towPJ;     double deltaPhi, deltaR;     int nTowersMatched = 0;
     for (int i=0; i<nTowers; ++i){				// loop throught selected towers in event
       tow = (TStarJetPicoTower*)SelectedTowers->At(i);
       if ( tow->GetEt()>=5.4 && count(trigTowers.begin(), trigTowers.end(), tow->GetId())) { // min 5.4 GeV tower and must be in list of HT towers
@@ -193,15 +200,31 @@ int main (int argc, const char ** argv) {
     }
     if (nTowersMatched==0) { continue; } // require HT trigger to be within lead det jet
 
+    int eval = 99;
+    for (int ebin=0; ebin<nEtaBins; ++ebin) {
+      if ( d_leadJet.eta()>=etaLo[ebin] && d_leadJet.eta()<=etaHi[ebin]) {eval = ebin;}
+    }
+    if (eval==99) { cerr<<"error finding lead jet eta"<<endl; continue; }
+    
+    if ( p_Jets.size()==0 ) {
+      hFakes[eval]->Fill( d_Jets[0].pt(), mc_weight );
+      continue;
+    } // fake jet
+    // only events with 1 triggered det lead jet and 1+ part jet pass this line
+
     Selector LeadJetMatcher = SelectorCircle( R );  // Match triggered lead det-level jet to part-level jet
     LeadJetMatcher.set_reference( d_leadJet );
     p_leadMatches = sorted_by_pt( LeadJetMatcher( p_Jets ));
     if ( p_leadMatches.size()==0 ) {
-      hFakes->Fill( d_leadJet.pt(), mc_weight );
+      hFakes[eval]->Fill( d_leadJet.pt(), mc_weight );
       continue;
     } // fake jet
-    // only events with a det lead jet containing a trigger and a matched part jet pass this line
-    
+    else if ( p_leadMatches[0].delta_R(p_Jets[0]) > 0.0001 ) {    // IF THE LEAD PART JET DOES NOT MATCH->MISS!!
+      hMisses->Fill(p_Jets[0], mc_weight);
+      continue;
+    }
+
+    // only events with a det lead jet containing a trigger and a matched lead part jet pass this line
     p_leadJet = p_leadMatches[0];
     
     RunID = d_header->GetRunId();
@@ -209,23 +232,22 @@ int main (int argc, const char ** argv) {
     refMult = d_header->GetReferenceMultiplicity();
     Vz = d_header->GetPrimaryVertexZ();
     BbcAdcSumEast = d_header->GetBbcAdcSumEast();
-    p_leadPt = p_leadJet.pt();
-    p_leadEta = p_leadJet.eta();
-    p_leadPhi = p_leadJet.phi();
-    d_leadPt = d_leadJet.pt();
-    d_leadEta = d_leadJet.eta();
-    d_leadPhi = d_leadJet.phi();
+    p_leadPt = p_leadJet.pt();     p_leadEta = p_leadJet.eta();     p_leadPhi = p_leadJet.phi();
+    d_leadPt = d_leadJet.pt();     d_leadEta = d_leadJet.eta();     d_leadPhi = d_leadJet.phi();
     
-    hPtResponse->Fill( p_leadPt, d_leadPt, mc_weight );
+    hPtResponse[eval]->Fill( p_leadPt, d_leadPt, mc_weight );
     hTrigEtEtaPhi->Fill( trigTowerPJ.e(), trigTowerPJ.eta(), trigTowerPJ.phi(), mc_weight );
     
     eventTree->Fill();
   }  // ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~  END EVENT LOOP!  ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~
   
-  hPtResponse->Write();
+  for (int e=0;e<nEtaBins; ++e ) {
+    hPtResponse[e]->Write();
+    hFakes[e]->Write();
+  }
+  
   hTrigEtEtaPhi->Write();
   hMisses->Write();
-  hFakes->Write();
 
   eventTree->Write();
   
