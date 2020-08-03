@@ -220,7 +220,7 @@ int main (int argc, const char ** argv) {
       continue;
     } // fake jet
     else if ( p_leadMatches[0].delta_R(p_Jets[0]) > 0.0001 ) {    // IF THE LEAD PART JET DOES NOT MATCH->MISS!!
-      hMisses->Fill(p_Jets[0], mc_weight);
+      hMisses->Fill(p_Jets[0].pt(), mc_weight);
       continue;
     }
 
