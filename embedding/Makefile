@@ -59,13 +59,15 @@ $(BDIR)/%  : $(ODIR)/%.o
 ###############################################################################
 ############################# Main Targets ####################################
 ###############################################################################
-all : $(BDIR)/sim
+all : $(BDIR)/sim $(BDIR)/ptResponse_diff
 
 $(ODIR)/funcs.o : $(SDIR)/funcs.cxx $(SDIR)/funcs.hh $(SDIR)/params.hh
 $(ODIR)/sim.o : $(SDIR)/sim.cxx $(SDIR)/params.hh
+$(ODIR)/ptResponse_diff.o : $(SDIR)/ptResponse_diff.cxx $(SDIR)/params.hh
 
 #data analysis
 $(BDIR)/sim :	$(ODIR)/sim.o	$(ODIR)/funcs.o
+$(BDIR)/ptResponse_diff :	$(ODIR)/ptResponse_diff.o	$(ODIR)/funcs.o
 
 
 ###############################################################################
