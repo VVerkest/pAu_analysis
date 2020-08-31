@@ -31,7 +31,7 @@ int main (int argc, const char ** argv) {
     std::vector<std::string> arguments( argv+1, argv+argc );
 
     // Set non-default values    
-    outFileName       = arguments[0];
+    outFileName = arguments[0];
             
     if (arguments[1] == "matched" || arguments[1] == "match") {match = 1;}
     else if (arguments[4] == "unmatched") {match = 0;}
