@@ -108,7 +108,8 @@ int main ( int argc, const char** argv ) {         // funcions and cuts specifie
   InitReader( Reader, Chain, numEvents );
   double deltaPhi, deltaR;       double trigTowEta, trigTowPhi;
 
-  string efficFile = "src/trackeffic_loEA.root";
+  // string efficFile = "src/trackeffic_loEA.root";
+  string efficFile = "src/trackeffic.root";
   string UEcorrFile = "src/UEsubtractionPlots.root";
 
   // ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~  BEGIN EVENT LOOP!  ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~
@@ -132,8 +133,8 @@ int main ( int argc, const char** argv ) {         // funcions and cuts specifie
     // //  HIGH EVENT ACTIVITY
     // if ( header->GetBbcAdcSumEast() < 26718.1 ) { continue; }  // LO: 3559.12-10126.1;  HI: 26718.1+
 
-    //  LOW EVENT ACTIVITY
-    if ( header->GetBbcAdcSumEast() > 10126.1 ) { continue; }  // LO: 3559.12-10126.1;  HI: 26718.1+
+    // //  LOW EVENT ACTIVITY
+    // if ( header->GetBbcAdcSumEast() > 10126.1 ) { continue; }  // LO: 3559.12-10126.1;  HI: 26718.1+
 
     TList *SelectedTowers = Reader.GetListOfSelectedTowers();
     nTowers = CountTowers( SelectedTowers );
@@ -262,7 +263,7 @@ int main ( int argc, const char** argv ) {         // funcions and cuts specifie
 	  // for (int i=0; i<neuParticles.size(); ++i) { hNeuUePtEta[jeval]->Fill( neuParticles[i].pt(), neuParticles[i].eta() ); }
 
 	  chgParticles.clear(); // clear vector!
-	  GatherChargedUEwithEfficiency( leadJet, container, chgParticles, efficFile );   // gather UE
+	  // GatherChargedUEwithEfficiency( leadJet, container, chgParticles, efficFile );   // gather UE
 	  CalculateUEsubtractedChargedRho(chgParticles,chgEastSum,chgMidSum,chgWestSum);
 	  chgEastRho_te = chgEastSum/eastArea;
 	  chgMidRho_te = chgMidSum/midArea;
