@@ -27,7 +27,7 @@ int main ( int argc, const char** argv ) {         // funcions and cuts specifie
   //  Tree variables
   int RunID, EventID, nTowers, nPrimary, nGlobal, nVertices, refMult, gRefMult, nUEpart_chg, nUEpart_neu, nJetsAbove5, nHTtrig;
   double Vz, BbcAdcSumEast, leadPt, leadPtCorrected, leadEta, leadPhi, chgEastRho, chgMidRho, chgWestRho, chgEastRho_te, chgMidRho_te, chgWestRho_te,
-    neuEastRho, neuMidRho, neuWestRho, leadArea, dPhiTrigLead, dRTrigLead;
+    neuEastRho, neuMidRho, neuWestRho, leadArea, dPhiTrigLead, dRTrigLead, trigPhi;
 
   // HTjetTree->Branch( "RunID", &RunID );
   // HTjetTree->Branch( "EventID", &EventID );
@@ -42,7 +42,7 @@ int main ( int argc, const char** argv ) {         // funcions and cuts specifie
   // HTjetTree->Branch( "leadPtCorrected", &leadPtCorrected );
   // HTjetTree->Branch( "leadEta", &leadEta );
   // HTjetTree->Branch( "BbcAdcSumEast", &BbcAdcSumEast );
-  // HTjetTree->Branch( "leadPhi", &leadPhi );
+  HTjetTree->Branch( "leadPhi", &leadPhi );
   // HTjetTree->Branch( "chgEastRho", &chgEastRho );
   // HTjetTree->Branch( "chgMidRho", &chgMidRho );
   // HTjetTree->Branch( "chgWestRho_te", &chgWestRho_te );
@@ -55,10 +55,11 @@ int main ( int argc, const char** argv ) {         // funcions and cuts specifie
   // HTjetTree->Branch( "leadArea", &leadArea );
   // HTjetTree->Branch( "nUEpart_chg", &nUEpart_chg );
   // HTjetTree->Branch( "nUEpart_neu", &nUEpart_neu );
-  // HTjetTree->Branch( "nJetsAbove5", &nJetsAbove5 );
-  // HTjetTree->Branch( "nHTtrig", &nHTtrig );
-  // HTjetTree->Branch( "dPhiTrigLead", &dPhiTrigLead );
-  // HTjetTree->Branch( "dRTrigLead", &dRTrigLead );
+  HTjetTree->Branch( "nJetsAbove5", &nJetsAbove5 );
+  HTjetTree->Branch( "nHTtrig", &nHTtrig );
+  HTjetTree->Branch( "dPhiTrigLead", &dPhiTrigLead );
+  HTjetTree->Branch( "dRTrigLead", &dRTrigLead );
+  HTjetTree->Branch( "trigPhi", &trigPhi );
 
   // TH2D *hChgUePtEta[nPtBins];
   // TH2D *hNeuUePtEta[nPtBins];
@@ -107,7 +108,7 @@ int main ( int argc, const char** argv ) {         // funcions and cuts specifie
   InitReader( Reader, Chain, numEvents );
   double deltaPhi, deltaR;       double trigTowEta, trigTowPhi;
 
-  string efficFile = "src/trackeffic.root";
+  string efficFile = "src/trackeffic_loEA.root";
   string UEcorrFile = "src/UEsubtractionPlots.root";
 
   // ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~  BEGIN EVENT LOOP!  ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~
@@ -131,8 +132,8 @@ int main ( int argc, const char** argv ) {         // funcions and cuts specifie
     // //  HIGH EVENT ACTIVITY
     // if ( header->GetBbcAdcSumEast() < 26718.1 ) { continue; }  // LO: 3559.12-10126.1;  HI: 26718.1+
 
-    // //  LOW EVENT ACTIVITY
-    // if ( header->GetBbcAdcSumEast() > 10126.1 ) { continue; }  // LO: 3559.12-10126.1;  HI: 26718.1+
+    //  LOW EVENT ACTIVITY
+    if ( header->GetBbcAdcSumEast() > 10126.1 ) { continue; }  // LO: 3559.12-10126.1;  HI: 26718.1+
 
     TList *SelectedTowers = Reader.GetListOfSelectedTowers();
     nTowers = CountTowers( SelectedTowers );
@@ -185,7 +186,8 @@ int main ( int argc, const char** argv ) {         // funcions and cuts specifie
       //if (nmatched==1) { // only accept events with 1 HT triggers
       if (nmatched>0) {
 	nHTtrig = nmatched;
-	
+
+	trigPhi = trigTowerPJ.phi();
 	dPhiTrigLead = fabs( leadJet.delta_phi_to( trigTowerPJ ) );
 	dRTrigLead = leadJet.delta_R( trigTowerPJ );
 
@@ -267,7 +269,7 @@ int main ( int argc, const char** argv ) {         // funcions and cuts specifie
 	  chgWestRho_te = chgWestSum/westArea;
 
 	  
-	  // HTjetTree->Fill();
+	  HTjetTree->Fill();
 	}
       }
     }
@@ -284,7 +286,7 @@ int main ( int argc, const char** argv ) {         // funcions and cuts specifie
   }
     //}
 
-  // HTjetTree->Write();  
+  HTjetTree->Write();  
 
   pAuFile->Write();
   pAuFile->Close();
