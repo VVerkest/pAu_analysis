@@ -71,13 +71,30 @@ namespace Analysis {
   const double partMinPt = 0.2;
 
 
+  const int nPtBins = 3;
+  const double ptLo[nPtBins] = { 10.0, 15.0, 20.0 };
+  const double ptHi[nPtBins] = { 15.0, 20.0, 30.0 };
+  const TString ptBinName[nPtBins] = { "_10_15GeV", "_15_20GeV", "_20_30GeV" };
+  const TString ptBinString[nPtBins] = { "10<p_{T}^{lead}<15", "15<p_{T}^{lead}<20",  "20<p_{T}^{lead}<30" };
+  const int ptMarker[nPtBins] = { 20, 34, 33 };
+
+  const double AREA = 4*(1.14159265);
+  const double eastArea = 2*(0.7)*(fastjet::pi - 2);   // (  0.7 in eta  ) X (  2*( pi-1 - 1 ) in phi  )
+  const double midArea = 2*(0.6)*(fastjet::pi - 2);   // (  0.6 in eta  ) X (  2*( pi-1 - 1 ) in phi  )
+  const double westArea = 2*(0.7)*(fastjet::pi - 2);   // (  0.7 in eta  ) X (  2*( pi-1 - 1 ) in phi  )
+
+  
+  const int marker[55] = { 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29 };
+  
   const int nEtaBins = 3;
   const double etaLo[nEtaBins] = { -1.0, -0.3, 0.3 };
   const double etaHi[nEtaBins] = { -0.3, 0.3, 1.0 };
   const TString etaBinName[nEtaBins] = { "_eastEta", "_midEta", "_westEta" };
+  const TString emw[nEtaBins] = { "east", "mid", "west" };
   const TString etaBinString[nEtaBins] = { "-0.6<#eta_{jet}<-0.3", "-0.3<#eta_{jet}<0.3", "0.3<#eta_{jet}<0.6" };
+  const int etaColor[nEtaBins] = { 877, 596, 814 };
+  const double area[nEtaBins] = { eastArea, midArea, westArea };
 
-  
   const double NEF_max = 0.9;             //neutral energy fraction of jet must be < 90% (not used for PYTHIA) !!!!!
 
   
