@@ -71,6 +71,8 @@ namespace Analysis {
 
   template<typename T>
   T CastTo(std::string);  
+  
+  void drawText(const char*, float, float, int);
 
   double radius_str_to_double (std::string radius_str);
   

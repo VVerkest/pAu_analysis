@@ -151,6 +151,19 @@ namespace Analysis {
     return dummy;
   }
 
+  
+  void drawText(const char *text, float xp, float yp, int size){
+    TLatex *tex = new TLatex(xp,yp,text);
+    tex->SetTextFont(63);
+    tex->SetTextSize(size);
+    tex->SetTextColor(kBlack);
+    tex->SetLineWidth(1);
+    //tex->SetTextFont(42);
+    tex->SetNDC();
+    tex->Draw();
+  }
+  
+  
   //When we want e.g. R_jet = 0.4 for analysis, and take in "04" on the command line, this converts to (double) 0.4.
   double radius_str_to_double (std::string radius_str) {
     std::string radiusNum = radius_str.substr(0,1)+"."+radius_str.substr(1,1); //e.g. 0.4                                                               
