@@ -55,7 +55,7 @@ int main () {
     hUE3D[e] = (TH3D*)UEfile->Get(name);    
   }
 
-  TH3D *hChgUE3D = new TH3D("hChgUE3D",";chg. UE part. p_{T} (GeV);chg. UE part. #eta", 55,4.5,59.5, 30,0.0,30.0, 40,-1.0,1.0);
+  TH3D *hChgUE3D = new TH3D("hChgUE3D",";leading jet p_{T} (GeV);chg. UE part. p_{T} (GeV);chg. UE part. #eta", 55,4.5,59.5, 30,0.0,30.0, 40,-1.0,1.0);
   TH1D *hleadPt = new TH1D("hleadPt",";leading jet p_{T} (GeV)", 55,4.5,59.5);
 
   for (int e=0; e<nEtaBins; ++e) {
@@ -63,18 +63,8 @@ int main () {
     hleadPt->Add(hLeadJetPt[e]);
   }
   
-  TH2D *hChgUE2D = (TH2D*)ProjectUEHistograms( hChgUE3D, "plots/test/" );  
-  TH1D *hUEpt[55];  TH1D *hWtUEpt[nPtBins];
-
-  for (int p=0; p<nPtBins; ++p) {
-    name = "hWtUEpt"; name += ptBinName[p];
-    TString title = ptBinString[p]; title += ";ch UE p_{T} (GeV)";
-    hWtUEpt[p] = new TH1D(name,title,30,0.0,30.0);
-  }
-
-  ProjectAndScaleUEHistogramForAllPt( hChgUE2D, hleadPt, hUEpt, hWtUEpt, "plots/test/" );
-
-  WeightUEPtByLeadPtAndFakes( hWtUEpt, hUEpt, hDetWt, hleadPt, hFakeJets, "plots/test/" );
+  TH2D *hChgUE2D = (TH2D*)ProjectUEHistograms( hChgUE3D, "plots/test/" );
+  TH2D *hChgUE2D_corr = new TH2D("hChgUE2D_corr",";leading jet p_{T} (GeV);chg. UE part. p_{T} (GeV)", 55,4.5,59.5, 30,0.0,30.0);
 
 
   // ########################################################################################################
@@ -85,45 +75,23 @@ int main () {
 
   TH1D *hEffic = (TH1D*)ef->Get( "eff_s_bin_1_10_bbc__1_10_eta" );
 
-  TCanvas * can8 = new TCanvas( "can8" , "" ,700 ,500 );              // CANVAS 8
-  can8->SetLogy();
+  TrackingEfficiency2DCorrection( hChgUE2D_corr, hChgUE2D, hEffic );
   
-  double pt, effic, corrPt, corrErr;
-  int ptBin;
+  TH1D *hUEpt[55];  TH1D *hWtUEpt[nPtBins];
+  
   for (int p=0; p<nPtBins; ++p) {
-
-    for ( int i=1; i<=hWtUEpt[p]->GetNbinsX(); ++i ) {
-
-      pt = hWtUEpt[p]->GetBinCenter(i);  // loop over chg UE pT bins
-      if ( pt > 3.0 ) { pt = 3.0; }
-      ptBin = hEffic->FindBin( pt );    // find histogram bin corresponding to track pt
-      effic = hEffic->GetBinContent( ptBin );
-      corrPt = hWtUEpt[p]->GetBinContent(i)/effic;                     // calculate corrected bin content and error
-      corrErr = hWtUEpt[p]->GetBinError(i)/effic;                      // (divide bin content and error by efficiency)
-
-      hWtUEpt[p]->SetBinContent( i, corrPt );
-      hWtUEpt[p]->SetBinError( i, corrErr );
-    }
-
-    hWtUEpt[p]->SetStats(1);
-    hWtUEpt[p]->SetAxisRange( 0.000001,10,"Y");
-    hWtUEpt[p]->SetLineColor(kBlack);
-    hWtUEpt[p]->SetMarkerColor(kBlack);
-    hWtUEpt[p]->Draw();
-
-    TString text = "#LT p_{T}^{ch}#GT = "; text += hWtUEpt[p]->GetMean(1);
-    text = text(0,26);
-    DrawText(text, 0.6, 0.7, 20);
-
-    text = "#LT#frac{dN_{ch}}{d#eta d#phi}#GT = "; text += hWtUEpt[p]->Integral()/AREA;
-    text = text(0,42);
-    DrawText( text, 0.6, 0.55, 20 );
-      
-    name = "plots/test/CorrectedWtUEpt"; name += ptBinName[p]; name += ".pdf";
-    can8->SaveAs(name,"PDF");
+    name = "hWtUEpt"; name += ptBinName[p];
+    TString title = ptBinString[p]; title += ";ch UE p_{T} (GeV)";
+    hWtUEpt[p] = new TH1D(name,title,30,0.0,30.0);
   }
 
-  
+  ProjectAndScaleUEHistogramForAllPt( hChgUE2D_corr, hleadPt, hUEpt, hWtUEpt, "plots/test/" );
+
+  WeightUEPtByLeadPtAndFakes( hWtUEpt, hUEpt, hDetWt, hleadPt, hFakeJets, "plots/test/" );
+
+
+  for (int p=0; p<nPtBins; ++p) { ProjectAndSaveFinalUEPlots( hWtUEpt[p], ptBinName[p], "plots/test/" ); }
+
   return 0;
 
 }

@@ -93,7 +93,7 @@ namespace Analysis {
     TCanvas * can5 = new TCanvas( "can5" , "" ,700 ,500 );              // CANVAS 5
 
     for (int p=0; p<nPtBins; ++p) {  //  WEIGHT AND ADD PROJECTIONS TO GET WEIGHTED DETECTOR RESPONSE
-      for (int i=5; i<26; ++i) {
+      for (int i=0; i<21; ++i) {
 	int ptVal = i + 5;
 	int binno = i + 1;
 	if ( ptVal >= ptLo[p] && ptVal <= ptHi[p] ) {
@@ -387,6 +387,37 @@ namespace Analysis {
     
   }
 
+  
+  void ProjectAndSaveFinalUEPlots( TH1D *h_WtUEpt, TString suffix, TString plot_dir ){
+
+    TString canvasName = "can8" + suffix;
+    TCanvas * can8 = new TCanvas( canvasName , "" ,700 ,500 );              // CANVAS 8
+    can8->SetLogy();
+	
+    double pt, effic, corrPt, corrErr;
+    int ptBin;
+
+    h_WtUEpt->SetStats(1);
+    h_WtUEpt->SetAxisRange( 0.000001,10,"Y");
+    h_WtUEpt->SetLineColor(kBlack);
+    h_WtUEpt->SetMarkerColor(kBlack);
+    h_WtUEpt->Draw();
+	
+    TString text = "#LT p_{T}^{ch}#GT = "; text += h_WtUEpt->GetMean(1);
+    text = text(0,26);
+    DrawText(text, 0.6, 0.7, 20);
+
+    text = "#LT#frac{dN_{ch}}{d#eta d#phi}#GT = "; text += h_WtUEpt->Integral()/AREA;
+    text = text(0,42);
+    DrawText( text, 0.6, 0.55, 20 );
+      
+    TString name = plot_dir + "CorrectedWtUEpt"; name += suffix; name += ".pdf";
+    can8->SaveAs(name,"PDF");
+
+    can8->Destructor();
+  }
+  
+
   void ProjectAndScaleUEHistogramForAllPt( TH2D *h_ChgUE2D, TH1D *h_leadPt, TH1D *h_UEpt[55], TH1D *h_WtUEpt[nPtBins], TString dir_name ){
   
     TCanvas * can6 = new TCanvas( "can6" , "" ,700 ,500 );              // CANVAS 6
@@ -424,7 +455,7 @@ namespace Analysis {
   void ProjectPartLevelJetPt( TH2D* h_PtResponse, TH1D *h_Det[21], TString plot_dir ) {
 
     
-    for (int i=5; i<26; ++i) {  // PROJECT FOR ALL PART-LEVEL BINS 10-30 GeV
+    for (int i=0; i<21; ++i) {  // PROJECT FOR ALL PART-LEVEL BINS 10-30 GeV
       int ptVal = i + 5;
       int binno = i + 1;
     
@@ -441,7 +472,7 @@ namespace Analysis {
 
 
     TCanvas * can4 = new TCanvas( "can4" , "" ,700 ,500 );              // CANVAS 4
-    for (int i=5; i<26; ++i) { h_Det[i]->Draw("SAME PLC PMC"); } // PROJECT FOR ALL PART-LEVEL BINS 10-30 GeV
+    for (int i=0; i<21; ++i) { h_Det[i]->Draw("SAME PLC PMC"); } // PROJECT FOR ALL PART-LEVEL BINS 10-30 GeV
     can4->BuildLegend(0.68,0.1,0.9,0.9);
     TString saveName = plot_dir + "detPtResponses.pdf";
     can4->SaveAs(saveName,"PDF");
@@ -467,6 +498,35 @@ namespace Analysis {
     h_ChgUE2D->GetYaxis()->SetRangeUser(0.0,30.0);
 
     return h_ChgUE2D;
+  }
+
+  
+  void TrackingEfficiency2DCorrection( TH2D* h_ChgUE2D_te, TH2D* h_ChgUE2D_uncorr, TH1D *h_Effic ){
+    
+    double pt, effic, ptVal, corrVal, corrErr, jetPt; // eta, phi, e, px, py, pz, 
+    int ptBin;
+	
+    for ( int iy=1; iy<=h_ChgUE2D_uncorr->GetNbinsY(); ++iy ) {  // loop over chg UE pT bins (y)
+      pt = h_ChgUE2D_uncorr->GetYaxis()->GetBinCenter(iy);
+      if ( pt > 3.0 ) { pt = 3.0; }
+      ptBin = h_Effic->FindBin( pt );    // find histogram bin corresponding to track pt
+      effic = h_Effic->GetBinContent( ptBin );
+	
+      for ( int ix=1; ix<=h_ChgUE2D_uncorr->GetNbinsX(); ++ix ) { // loop over all lead jet pt bins (x)
+
+	ptVal = h_ChgUE2D_uncorr->GetYaxis()->GetBinCenter(iy);
+	corrVal = h_ChgUE2D_uncorr->GetBinContent(ix,iy)/effic;      // calculate corrected bin content and error
+	corrErr = h_ChgUE2D_uncorr->GetBinError(ix,iy)/effic;       // (divide bin content and error by efficiency)
+	jetPt = h_ChgUE2D_uncorr->GetXaxis()->GetBinCenter(ix);
+	ptBin = h_ChgUE2D_uncorr->GetYaxis()->FindBin( ptVal );
+	  
+	// h_ChgUE2D_te->Fill( jetPt, ptVal, corrVal );
+	h_ChgUE2D_te->SetBinContent( ix, ptBin, corrVal );
+	h_ChgUE2D_te->SetBinError( ix, ptBin, corrErr );
+
+      }
+    }
+	
   }
   
 
