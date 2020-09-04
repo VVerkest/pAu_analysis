@@ -26,6 +26,7 @@
 #include "TLatex.h"
 #include "TMathText.h"
 #include "TProfile.h"
+#include "TCanvas.h"
 
 // TStarJetPico
 #include "TStarJetPicoReader.h"
@@ -58,118 +59,40 @@ using std::unordered_map; using std::make_shared; using std::shared_ptr;
 
 namespace Analysis {
 
-  // IO/OS MANIP Functions from Nick
-
-  // Helper to build the TChain, used to decide which input format                                         
-  bool HasEnding (std::string const &, std::string const &);
-
-  template <typename T>
-  std::set<T> ParseCSV(std::string);
-
-  template<typename T>
-  bool CanCast(std::string);
-
-  template<typename T>
-  T CastTo(std::string);  
-  
-  void drawText(const char*, float, float, int);
-
-  double radius_str_to_double (std::string radius_str);
-  
+                                        
   int CountTowers( TList* );
+  
+  bool DiscardpAuEmbedEvent(const TString, const std::vector<fastjet::PseudoJet>, const std::vector<fastjet::PseudoJet> );
+  
+  void DrawText(const char*, float, float, int);
 
-  bool DiscardEmbedEvent(const TString, const std::vector<fastjet::PseudoJet>, const std::vector<fastjet::PseudoJet>);
+  std::vector<fastjet::PseudoJet> GatherParticles( TStarJetVectorContainer<TStarJetVector> *, std::vector<fastjet::PseudoJet> & );
+
+  void GenerateWeightedPtResponse( TH1D *[3], TH1D *[21], TH1D *, TString );
+
+  void GetEmbeddingHistograms( TFile *, TH2D *, TH1D *, TH1D *, TString );
+
+  bool HasEnding (std::string const &, std::string const &);  // Helper to build the TChain, used to decide which input format
 
   void InitReader( TStarJetPicoReader &, TChain*, int, double, double, double, double, double, double, int, double, double, double, TString );
   
-  // void InitReader( TStarJetPicoReader &, TChain*, int, double, double, double, double, double, double, int, double, double, double, TString );
-  //initializes the reader with the appropriate cuts & selections
-  // void InitReader(TStarJetPicoReader *, TChain*, int, const std::string, const double, const double, const double, const double, const double, const double, const double, const double, const double, const double, const bool, const std::string, const std::string);
-
   double LookupRun6Xsec(TString);
   double LookupRun12Xsec(TString);
   double LookupRun15Xsec(TString);
-  
-  std::vector<fastjet::PseudoJet> GatherParticles( TStarJetVectorContainer<TStarJetVector> *, std::vector<fastjet::PseudoJet> & );
-
-  // //converts tstarjetvectors into pseudojets for later clustering into jets; also assigns particle masses
-  // void GatherParticles (TStarJetVectorContainer<TStarJetVector> *, TStarJetVector*, std::vector<fastjet::PseudoJet> &, const bool, const bool );
-
-  //accepts jets which pass a neutral energy fraction cut
-  void ApplyNEFSelection (const std::vector<fastjet::PseudoJet>, std::vector<fastjet::PseudoJet> &);
-
-  bool DiscardpAuEmbedEvent(const TString, const std::vector<fastjet::PseudoJet>, const std::vector<fastjet::PseudoJet> );
-  
-  bool DiscardEvent(const TString, const std::vector<fastjet::PseudoJet>, const std::vector<fastjet::PseudoJet>);
 
   void MissesFakesAndMatches(std::vector<fastjet::PseudoJet> &, std::vector<fastjet::PseudoJet> &,
 			     std::vector<fastjet::PseudoJet> &, std::vector<fastjet::PseudoJet> &);
-  
-  // std::vector<int> MatchJets(const std::vector<fastjet::PseudoJet>, const std::vector<fastjet::PseudoJet>, std::vector<fastjet::PseudoJet> &, std::vector<fastjet::PseudoJet> &);
-  std::vector<int> FakesandMisses(const std::vector<fastjet::PseudoJet>, const std::vector<fastjet::PseudoJet>, std::vector<fastjet::PseudoJet> &);
 
-  //HISTOGRAMS [not used currently but might be useful in the future, so saving it here]
-  template<class Key, class H, class hash=std::hash<Key>>
-    class Collection {
-    public:
-      Collection() : collection_() { };
-      ~Collection() { };
+  void ProjectAndScaleUEHistogramForAllPt( TH2D *, TH1D *, TH1D *[55], TH1D *[nPtBins], TString );
   
-      H* get(Key key) {
-	if (keyExists(key))
-	  return collection_[key].get();
-	return nullptr;
-      }
-  
-      template <typename... Args>
-      void add(Key key, Args... args) {
-	collection_[key] = make_shared<H>(key.c_str(), args...);
-	collection_[key]->SetDirectory(0);
-      }
-  
-      template <typename ...Args>
-      bool fill(Key key, Args... args) {
-	if (!keyExists(key))
-	  return false;
-	collection_[key]->Fill(args...);
-	return true;
-      }
-  
-      bool write(Key key) {
-	if (!keyExists(key))
-	  return false;
-	collection_[key]->Write();
-	return true;
-      }
+  void ProjectPartLevelJetPt( TH2D*, TH1D*[21], TString );
 
-      void clear() {
-	collection_.clear();
-      }
+  TH2D *ProjectUEHistograms( TH3D *, TString );
   
-    private:
-  
-      unordered_map<Key, shared_ptr<H>, hash> collection_ = {};
-  
-      bool keyExists(std::string key) {
-	for (auto& h : collection_) {
-	  if (h.first == key)
-	    return true;
-	}
-	return false;
-      }
-  
-    };
-
-  void FillHistsHelper(Collection<std::string, TH1D> &, Collection<std::string, TH2D> &, Collection<std::string, TH3D> &, const std::string, const fastjet::PseudoJet, const double);
-
-  void FillHists(Collection<std::string, TH1D> &, Collection<std::string, TH2D> &, Collection<std::string, TH3D> &, const std::vector<fastjet::PseudoJet>, const double);
-
-  
-  void FillSDHistsHelper(Collection<std::string, TH1D> &, Collection<std::string, TH2D> &, Collection<std::string, TH3D> &, const std::string, const fastjet::PseudoJet, const double);
-
-  void FillSDHists(Collection<std::string, TH1D> &, Collection<std::string, TH2D> &, Collection<std::string, TH3D> &, const std::vector<fastjet::PseudoJet>, const double);
-
   bool UseTriggerTower( int );
+
+  void WeightUEPtByLeadPtAndFakes( TH1D *[nPtBins], TH1D *[55], TH1D *[nPtBins], TH1D *, TH1D *, TString );
+  
 }
 
 #endif
