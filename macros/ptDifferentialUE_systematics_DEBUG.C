@@ -285,8 +285,8 @@ void ptDifferentialUE_systematics_DEBUG(){
 	  double newPt = ptVal/eff;
 	  double newPtBin = hChgUEpt_te[a][p]->FindBin( newPt );
 	  
-	  hChgUEpt_te[a][p]->SetBinContent( newPtBin, ybin, corr_value);
-	  hChgUEpt_te[a][p]->SetBinError( newPtBin, ybin, corr_err );
+	  hChgUEpt_te[a][p]->SetBinContent( newPtBin, ybin, binContent);
+	  hChgUEpt_te[a][p]->SetBinError( newPtBin, ybin, newError );
 	}
 
 
@@ -307,8 +307,8 @@ void ptDifferentialUE_systematics_DEBUG(){
 	  double newPt = ptVal/eff;
 	  double newPtBin = hChgUEpt_te[a][p]->FindBin( newPt );
 
-	  hChgUEpt_te_sys1[a][p]->SetBinContent( newPtBin, ybin, corr_value);
-	  hChgUEpt_te_sys1[a][p]->SetBinError( newPtBin, ybin, corr_err );
+	  hChgUEpt_te_sys1[a][p]->SetBinContent( newPtBin, ybin, binContent);
+	  hChgUEpt_te_sys1[a][p]->SetBinError( newPtBin, ybin, newError );
 	}
 
 
@@ -329,8 +329,8 @@ void ptDifferentialUE_systematics_DEBUG(){
 	  double newPt = ptVal/eff;
 	  double newPtBin = hChgUEpt_te[a][p]->FindBin( newPt );
 
-	  hChgUEpt_te_sys2[a][p]->SetBinContent( newPtBin, ybin, corr_value);
-	  hChgUEpt_te_sys2[a][p]->SetBinError( newPtBin, ybin, corr_err );
+	  hChgUEpt_te_sys2[a][p]->SetBinContent( newPtBin, ybin, binContent);
+	  hChgUEpt_te_sys2[a][p]->SetBinError( newPtBin, ybin, newError );
 	}
 
 	
