@@ -134,9 +134,9 @@ void ptDifferentialUE_systematics_DEBUG(){
     nEntries[i] = jetTree[i]->GetEntries();
 
     for (int p=0; p<nPtBins; ++p) {
-      name = "hChgUePtEta"; name += ptBinName[p];
+      name = "hChgBgPtEta"; name += ptBinName[p];
       hChgUEpt[i][p] = (TH2D*)inFile[i]->Get( name );
-      name = "hNeuUePtEta"; name += ptBinName[p];
+      name = "hNeuBgPtEta"; name += ptBinName[p];
       hNeuUEpt[i][p] = (TH2D*)inFile[i]->Get( name );
     
       name = "hRho_"; name += EAbinName[i]; name += ptBinName[p];
