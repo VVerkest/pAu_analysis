@@ -58,8 +58,7 @@ void ptDifferentialUE_systematics_DEBUG(){
 
   string fileSuffix = "";
   
-  TString fileName[nEAbins] = { ("out/UE/pAuHTjetUE_loEA_diffPt.root").c_str(),
-                                ("out/UE/pAuHTjetUE_hiEA_diffPt.root").c_str() };
+  TString fileName[nEAbins] = { "out/UE/pAuHTjetUE_loEA_diffPt.root", "out/UE/pAuHTjetUE_hiEA_diffPt.root" };
   TString efficFileName[nEAbins] = { "src/trackeffic_loEA.root", "src/trackeffic_hiEA.root" };
 
   TFile* inFile[nEAbins];
