@@ -58,8 +58,7 @@ void ptDifferentialUE_systematics(){
 
   string dirName = "prelim";
   
-  TString fileName[nEAbins] = { ("out/UE/pAuHTjetUE_loEA_diffPt.root").c_str(),
-                                ("out/UE/pAuHTjetUE_hiEA_diffPt.root").c_str() };
+  TString fileName[nEAbins] = { "out/UE/pAuHTjetUE_loEA_diffPt.root", "out/UE/pAuHTjetUE_hiEA_diffPt.root" };
   TString efficFileName[nEAbins] = { "src/trackeffic_loEA.root", "src/trackeffic_hiEA.root" };
 
   TFile* inFile[nEAbins];
@@ -544,7 +543,8 @@ void ptDifferentialUE_systematics(){
   //c0->SetGridx();
   
   leg0->Draw();
-  c0->SaveAs(("plots/UE/"+dirName+"/CHGdNdetadphi_te_pt_systematics.pdf").c_str(),"PDF");
+  name = "plots/UE/"+dirName+"/CHGdNdetadphi_te_pt_systematics.pdf";
+  c0->SaveAs(name,"PDF");
   //c0->Close();
 
  
@@ -635,8 +635,9 @@ void ptDifferentialUE_systematics(){
   tex2->Draw();
   tex3->Draw();
   //tex4->Draw();
-  
-  c1->SaveAs(("plots/UE/"+dirName+"/Chg_MeanPt_te_pt_systematics.pdf").c_str(),"PDF");
+
+  name = "plots/UE/"+dirName+"/Chg_MeanPt_te_pt_systematics.pdf";
+  c1->SaveAs(name,"PDF");
   //c1->SetGridx();
 
 
