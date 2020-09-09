@@ -56,10 +56,10 @@ void ptDifferentialUE_systematics(){
   int jeval, ueeval, pval, eaval;
   TString name, saveName, title, avg, sigma, drawString;
 
-  string fileSuffix = "10cmVzCut_6cmVzDiff";
+  string dirName = "prelim";
   
-  TString fileName[nEAbins] = { ("out/UE/pAuHTjetUE_"+fileSuffix+"_loEA_diffPt.root").c_str(),
-                                ("out/UE/pAuHTjetUE_"+fileSuffix+"_hiEA_diffPt.root").c_str() };
+  TString fileName[nEAbins] = { ("out/UE/pAuHTjetUE_loEA_diffPt.root").c_str(),
+                                ("out/UE/pAuHTjetUE_hiEA_diffPt.root").c_str() };
   TString efficFileName[nEAbins] = { "src/trackeffic_loEA.root", "src/trackeffic_hiEA.root" };
 
   TFile* inFile[nEAbins];
@@ -540,7 +540,7 @@ void ptDifferentialUE_systematics(){
   //c0->SetGridx();
   
   leg0->Draw();
-  c0->SaveAs(("plots/UE/"+fileSuffix+"/CHGdNdetadphi_te_pt_systematics.pdf").c_str(),"PDF");
+  c0->SaveAs(("plots/UE/"+dirName+"/CHGdNdetadphi_te_pt_systematics.pdf").c_str(),"PDF");
   //c0->Close();
 
  
@@ -632,7 +632,7 @@ void ptDifferentialUE_systematics(){
   tex3->Draw();
   //tex4->Draw();
   
-  c1->SaveAs(("plots/UE/"+fileSuffix+"/Chg_MeanPt_te_pt_systematics.pdf").c_str(),"PDF");
+  c1->SaveAs(("plots/UE/"+dirName+"/Chg_MeanPt_te_pt_systematics.pdf").c_str(),"PDF");
   //c1->SetGridx();
 
 
