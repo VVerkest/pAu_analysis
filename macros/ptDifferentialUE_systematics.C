@@ -652,7 +652,9 @@ void ptDifferentialUE_systematics(){
 	
     }
   }
-    
+  c0->Write();
+  c1->Write();
+      
   outFile->Write();
   
 }

@@ -667,7 +667,7 @@ void ptDifferentialUE_systematics_DEBUG(){
   //c1->SetGridx();
 
 
-  TFile *outFile = new TFile("src/ptdifferentialUE.root","RECREATE");
+  TFile *outFile = new TFile("src/ptdifferentialUE_DEBUG.root","RECREATE");
   
   for (int a=0; a<nEAbins; ++a) {
     for (int p=0; p<nPtBins; ++p) {
@@ -678,7 +678,10 @@ void ptDifferentialUE_systematics_DEBUG(){
 	
     }
   }
-    
+
+  c0->Write();
+  c1->Write();
+  
   outFile->Write();
   
 }
