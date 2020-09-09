@@ -127,17 +127,13 @@ void ptDifferentialUE_systematics(){
     jetTree[i]->SetBranchAddress( "neuWestRho", &neuWestRho[i] );
     jetTree[i]->SetBranchAddress( "leadArea", &leadArea[i] );
     jetTree[i]->SetBranchAddress( "leadPtCorrected", &leadPtCorrected[i] );
-    jetTree[i]->SetBranchAddress( "nUEpart_chg", &nUEpart_chg[i] );
-    jetTree[i]->SetBranchAddress( "nUEpart_neu", &nUEpart_neu[i] );
-    jetTree[i]->SetBranchAddress( "rho", &rho[i] );
-    jetTree[i]->SetBranchAddress( "rho_te", &rho_te[i] );
 
     nEntries[i] = jetTree[i]->GetEntries();
 
     for (int p=0; p<nPtBins; ++p) {
-      name = "hChgUePtEta"; name += ptBinName[p];
+      name = "hChgBgPtEta"; name += ptBinName[p];
       hChgUEpt[i][p] = (TH2D*)inFile[i]->Get( name );
-      name = "hNeuUePtEta"; name += ptBinName[p];
+      name = "hNeuBgPtEta"; name += ptBinName[p];
       hNeuUEpt[i][p] = (TH2D*)inFile[i]->Get( name );
     
       name = "hRho_"; name += EAbinName[i]; name += ptBinName[p];
@@ -171,7 +167,7 @@ void ptDifferentialUE_systematics(){
 	}
 	if ( pval==99 /*|| jeval==99*/ ) { cerr<<"UNABLE TO FIND PT OR ETA RANGE FOR LEAD JET"<<endl<<leadPtCorrected<<endl<<endl; }
 
-	hRho[a][pval]->Fill(rho[a]);
+	hRho[a][pval]->Fill(leadPt[a]);
 	hNchg[a][pval]->Fill(nUEpart_chg[a]);
 	hNneu[a][pval]->Fill(nUEpart_neu[a]);
       }

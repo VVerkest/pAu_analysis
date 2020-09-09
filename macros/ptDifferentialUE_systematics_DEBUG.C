@@ -388,9 +388,14 @@ void ptDifferentialUE_systematics_DEBUG(){
 	te_meanChgPt_sys2[e][a][p] = hChgUEpt_te_sys2[a][p]->GetMean(1);
 	nChg_te_sys2[e][a][p] = hChgUEpt_te_sys1[a][p]->Integral();
 
-      }      
+	cout<<te_meanChgPt[e][a][p]<<"\t";
+
+      }
+      cout<<endl;
     }
+    cout<<endl;
   }
+  cout<<endl;
 
   double nChg_te_sys[nEtaBins][nEAbins][nPtBins];
   double te_meanChgPt_sys[nEtaBins][nEAbins][nPtBins];
