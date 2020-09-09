@@ -126,10 +126,10 @@ void ptDifferentialUE_systematics_DEBUG(){
     jetTree[i]->SetBranchAddress( "neuWestRho", &neuWestRho[i] );
     jetTree[i]->SetBranchAddress( "leadArea", &leadArea[i] );
     jetTree[i]->SetBranchAddress( "leadPtCorrected", &leadPtCorrected[i] );
-    jetTree[i]->SetBranchAddress( "nUEpart_chg", &nUEpart_chg[i] );
-    jetTree[i]->SetBranchAddress( "nUEpart_neu", &nUEpart_neu[i] );
-    jetTree[i]->SetBranchAddress( "rho", &rho[i] );
-    jetTree[i]->SetBranchAddress( "rho_te", &rho_te[i] );
+    // jetTree[i]->SetBranchAddress( "nUEpart_chg", &nUEpart_chg[i] );
+    // jetTree[i]->SetBranchAddress( "nUEpart_neu", &nUEpart_neu[i] );
+    // jetTree[i]->SetBranchAddress( "rho", &rho[i] );
+    // jetTree[i]->SetBranchAddress( "rho_te", &rho_te[i] );
 
     nEntries[i] = jetTree[i]->GetEntries();
 
@@ -140,7 +140,7 @@ void ptDifferentialUE_systematics_DEBUG(){
       hNeuUEpt[i][p] = (TH2D*)inFile[i]->Get( name );
     
       name = "hRho_"; name += EAbinName[i]; name += ptBinName[p];
-      hRho[i][p] = new TH1D(name,"UE;<#rho> [GeV/#it{c}]", 30,0.0,15.0);
+      hRho[i][p] = new TH1D(name,";Leading jet p_{T} [GeV/#it{c}]", 30,0.0,15.0);
       
       name = "hNchg_"; name += EAbinName[i]; name += ptBinName[p];
       hNchg[i][p] = new TH1D( name,"# charged particles in UE", 50,0.0,50.0);
@@ -170,7 +170,7 @@ void ptDifferentialUE_systematics_DEBUG(){
 	}
 	if ( pval==99 /*|| jeval==99*/ ) { cerr<<"UNABLE TO FIND PT OR ETA RANGE FOR LEAD JET"<<endl<<leadPtCorrected<<endl<<endl; }
 
-	hRho[a][pval]->Fill(rho[a]);
+	hRho[a][pval]->Fill(leadPt[a]);
 	hNchg[a][pval]->Fill(nUEpart_chg[a]);
 	hNneu[a][pval]->Fill(nUEpart_neu[a]);
       }
