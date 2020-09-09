@@ -280,7 +280,7 @@ void ptDifferentialUE_systematics_DEBUG(){
 	  
 	  double binContent = hChgUEpt[a][p]->GetBinContent(xbin,ybin);
 	  double binError = hChgUEpt[a][p]->GetBinError(xbin,ybin);
-	  double newError = (double) old_err/eff;
+	  double newError = (double) binError/eff;
 
 	  double newPt = ptVal/eff;
 	  double newPtBin = hChgUEpt_te[a][p]->FindBin( newPt );
@@ -302,7 +302,7 @@ void ptDifferentialUE_systematics_DEBUG(){
 	  
 	  double binContent = hChgUEpt[a][p]->GetBinContent(xbin,ybin);
 	  double binError = hChgUEpt[a][p]->GetBinError(xbin,ybin);
-	  double newError = (double) old_err/eff;
+	  double newError = (double) binError/eff;
 
 	  double newPt = ptVal/eff;
 	  double newPtBin = hChgUEpt_te[a][p]->FindBin( newPt );
@@ -324,7 +324,7 @@ void ptDifferentialUE_systematics_DEBUG(){
 	  
 	  double binContent = hChgUEpt[a][p]->GetBinContent(xbin,ybin);
 	  double binError = hChgUEpt[a][p]->GetBinError(xbin,ybin);
-	  double newError = (double) old_err/eff;
+	  double newError = (double) binError/eff;
 
 	  double newPt = ptVal/eff;
 	  double newPtBin = hChgUEpt_te[a][p]->FindBin( newPt );
