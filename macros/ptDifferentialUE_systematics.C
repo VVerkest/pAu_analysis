@@ -383,11 +383,15 @@ void ptDifferentialUE_systematics(){
 	sys1 = fabs( 1 - ( te_meanChgPt_sys1[e][a][p] / te_meanChgPt[e][a][p] ) );
 	sys2 = fabs( 1 - ( te_meanChgPt_sys2[e][a][p] / te_meanChgPt[e][a][p] ) );
 	te_meanChgPt_sys[e][a][p] = max( sys1, sys2 );
-	
-      }
-    }
-  }
 
+	cout<<te_meanChgPt[e][a][p]<<"\t"; 
+      }
+      cout<<endl;
+    }
+    cout<<endl;
+  }
+  cout<<endl;
+  
   
   // ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ HISTOGRAMS ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~
 
