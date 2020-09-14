@@ -52,7 +52,8 @@ namespace pAuAnalysis {
   const int RefMultCut = 0;
   const int MinNFitPointsCut = 20;
 
-  const double VertexZDiffCut = 6.0;  // changed!
+  const double vzCut = 30.0;   // |Vz|<=30 cm      // changed!
+  const double VertexZDiffCut = 3.0;  // changed!
   const double MaxEventPtCut = 30.0;
   const double MaxEventEtCut = 30.0;
   const double MinEventEtCut = 0.2;
@@ -62,7 +63,6 @@ namespace pAuAnalysis {
   const double MaxEtCut = 30.0;
   
   const double R = 0.4;
-  const double vzCut = 10.0;   // |Vz|<=30 cm      // changed!
   const double VertexZCut = vzCut;
   const double dcaCut = 3.0;   // DCA<=3.0 cm
   const double etaCut = 1.0;       // |eta|<=1
