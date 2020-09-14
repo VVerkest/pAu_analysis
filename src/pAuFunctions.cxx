@@ -427,6 +427,8 @@ namespace pAuAnalysis {
     std::cout << "Using these tower cuts:" << std::endl;
     std::cout << "  GetMaxEtCut = " << towerCuts->GetMaxEtCut() << std::endl;
     std::cout << "  Gety8PythiaCut = " << towerCuts->Gety8PythiaCut() << std::endl;
+    std::cout << "  Vz cut = " << evCuts->GetVertexZCut() << std::endl;
+    std::cout << "  Vz diff cut = " << evCuts->GetVertexZDiffCut() << std::endl;
     
     // V0s: Turn off
     reader.SetProcessV0s(false);
