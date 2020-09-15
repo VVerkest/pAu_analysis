@@ -59,7 +59,7 @@ $(BDIR)/%  : $(ODIR)/%.o
 ###############################################################################
 ############################# Main Targets ####################################
 ###############################################################################
-all : $(BDIR)/pAu_QA $(BDIR)/pAu_analysis_MB $(BDIR)/pAu_analysis_HT $(BDIR)/pAu_HT_jets $(BDIR)/pAu_HT_dijets $(BDIR)/pAu_HT_jetTree $(BDIR)/pAu_HT_jetPlot $(BDIR)/find_bad_towers $(BDIR)/find_bad_trigger_towers $(BDIR)/pAuHTjetUE $(BDIR)/pAuHTjetUE_prelim $(BDIR)/pAuHTdijetUE $(BDIR)/EAdistribution $(BDIR)/pAu_HT_jet_trigger
+all : $(BDIR)/pAu_QA $(BDIR)/pAu_analysis_MB $(BDIR)/pAu_analysis_HT $(BDIR)/pAu_HT_jets $(BDIR)/pAu_HT_dijets $(BDIR)/pAu_HT_jetTree $(BDIR)/pAu_HT_jetPlot $(BDIR)/find_bad_towers $(BDIR)/find_bad_trigger_towers $(BDIR)/pAuHTjetUE $(BDIR)/pAuHTjetUE_prelim $(BDIR)/pAuHTdijetUE $(BDIR)/EAdistribution $(BDIR)/pAu_HT_jet_trigger $(BDIR)/CompareTrees
 
 $(ODIR)/pAuQAFunctions.o : $(SDIR)/pAuQAFunctions.cxx $(SDIR)/pAuQAFunctions.hh
 $(ODIR)/pAu_QA.o : $(SDIR)/pAu_QA.cxx $(SDIR)/pAuQAFunctions.hh
@@ -76,6 +76,7 @@ $(ODIR)/pAu_HT_dijets.o : $(SDIR)/pAu_HT_dijets.cxx
 $(ODIR)/pAu_HT_jetTree.o : $(SDIR)/pAu_HT_jetTree.cxx
 $(ODIR)/pAu_HT_jetPlot.o : $(SDIR)/pAu_HT_jetPlot.cxx
 $(ODIR)/find_bad_towers.o : $(SDIR)/find_bad_towers.cxx
+$(ODIR)/CompareTrees.o : $(SDIR)/CompareTrees.cxx
 $(ODIR)/find_bad_trigger_towers.o : $(SDIR)/find_bad_trigger_towers.cxx
 
 #data analysis
@@ -92,6 +93,7 @@ $(BDIR)/pAu_HT_dijets :	$(ODIR)/pAu_HT_dijets.o	$(ODIR)/pAuFunctions.o
 $(BDIR)/pAu_HT_jetTree :	$(ODIR)/pAu_HT_jetTree.o	$(ODIR)/pAuFunctions.o
 $(BDIR)/pAu_HT_jetPlot :	$(ODIR)/pAu_HT_jetPlot.o
 $(BDIR)/find_bad_towers :	$(ODIR)/find_bad_towers.o
+$(BDIR)/CompareTrees :	$(ODIR)/CompareTrees.o
 $(BDIR)/find_bad_trigger_towers :	$(ODIR)/find_bad_trigger_towers.o
 
 
