@@ -26,35 +26,36 @@ int main ( int argc, const char** argv ) {         // funcions and cuts specifie
   
   //  Tree variables
   int RunID, EventID, nTowers, nPrimary, nGlobal, nVertices, refMult, gRefMult, nUEpart_chg, nUEpart_neu, nJetsAbove5, nHTtrig;
-  double Vz, BbcAdcSumEast, leadPt, leadPtCorrected, leadEta, leadPhi, chgEastRho, chgMidRho, chgWestRho, chgEastRho_te, chgMidRho_te, chgWestRho_te,
-    neuEastRho, neuMidRho, neuWestRho, leadArea, dPhiTrigLead, dRTrigLead, trigPhi;
+  double Vz, vpdVz, BbcAdcSumEast, leadPt, leadPtCorrected, leadEta, leadPhi, chgEastRho, chgMidRho, chgWestRho, chgEastRho_te,
+    chgMidRho_te, chgWestRho_te, neuEastRho, neuMidRho, neuWestRho, leadArea, dPhiTrigLead, dRTrigLead, trigPhi;
 
-  // HTjetTree->Branch( "RunID", &RunID );
-  // HTjetTree->Branch( "EventID", &EventID );
-  // HTjetTree->Branch( "nTowers", &nTowers );
-  // HTjetTree->Branch( "nPrimary", &nPrimary );
-  // HTjetTree->Branch( "nGlobal", &nGlobal );
-  // HTjetTree->Branch( "nVertices", &nVertices );
-  // HTjetTree->Branch( "refMult", &refMult );
-  // HTjetTree->Branch( "gRefMult", &gRefMult );
-  // HTjetTree->Branch( "Vz", &Vz );
-  // HTjetTree->Branch( "leadPt", &leadPt );
-  // HTjetTree->Branch( "leadPtCorrected", &leadPtCorrected );
-  // HTjetTree->Branch( "leadEta", &leadEta );
-  // HTjetTree->Branch( "BbcAdcSumEast", &BbcAdcSumEast );
+  HTjetTree->Branch( "RunID", &RunID );
+  HTjetTree->Branch( "EventID", &EventID );
+  HTjetTree->Branch( "nTowers", &nTowers );
+  HTjetTree->Branch( "nPrimary", &nPrimary );
+  HTjetTree->Branch( "nGlobal", &nGlobal );
+  HTjetTree->Branch( "nVertices", &nVertices );
+  HTjetTree->Branch( "refMult", &refMult );
+  HTjetTree->Branch( "gRefMult", &gRefMult );
+  HTjetTree->Branch( "vpdVz", &vpdVz );
+  HTjetTree->Branch( "Vz", &Vz );
+  HTjetTree->Branch( "leadPt", &leadPt );
+  HTjetTree->Branch( "leadPtCorrected", &leadPtCorrected );
+  HTjetTree->Branch( "leadEta", &leadEta );
+  HTjetTree->Branch( "BbcAdcSumEast", &BbcAdcSumEast );
   HTjetTree->Branch( "leadPhi", &leadPhi );
-  // HTjetTree->Branch( "chgEastRho", &chgEastRho );
-  // HTjetTree->Branch( "chgMidRho", &chgMidRho );
-  // HTjetTree->Branch( "chgWestRho_te", &chgWestRho_te );
-  // HTjetTree->Branch( "chgEastRho_te", &chgEastRho_te );
-  // HTjetTree->Branch( "chgMidRho_te", &chgMidRho_te );
-  // HTjetTree->Branch( "chgWestRho", &chgWestRho );
-  // HTjetTree->Branch( "neuEastRho", &neuEastRho );
-  // HTjetTree->Branch( "neuMidRho", &neuMidRho );
-  // HTjetTree->Branch( "neuWestRho", &neuWestRho );
-  // HTjetTree->Branch( "leadArea", &leadArea );
-  // HTjetTree->Branch( "nUEpart_chg", &nUEpart_chg );
-  // HTjetTree->Branch( "nUEpart_neu", &nUEpart_neu );
+  HTjetTree->Branch( "chgEastRho", &chgEastRho );
+  HTjetTree->Branch( "chgMidRho", &chgMidRho );
+  HTjetTree->Branch( "chgWestRho_te", &chgWestRho_te );
+  HTjetTree->Branch( "chgEastRho_te", &chgEastRho_te );
+  HTjetTree->Branch( "chgMidRho_te", &chgMidRho_te );
+  HTjetTree->Branch( "chgWestRho", &chgWestRho );
+  HTjetTree->Branch( "neuEastRho", &neuEastRho );
+  HTjetTree->Branch( "neuMidRho", &neuMidRho );
+  HTjetTree->Branch( "neuWestRho", &neuWestRho );
+  HTjetTree->Branch( "leadArea", &leadArea );
+  HTjetTree->Branch( "nUEpart_chg", &nUEpart_chg );
+  HTjetTree->Branch( "nUEpart_neu", &nUEpart_neu );
   HTjetTree->Branch( "nJetsAbove5", &nJetsAbove5 );
   HTjetTree->Branch( "nHTtrig", &nHTtrig );
   HTjetTree->Branch( "dPhiTrigLead", &dPhiTrigLead );
@@ -71,11 +72,11 @@ int main ( int argc, const char** argv ) {         // funcions and cuts specifie
     
     name = "hChgUE" + etaBinName[e] + "Jet";
     title = etaBinString[e] + ";leading jet p_{T} (GeV);chg. UE part. p_{T} (GeV);chg. UE part. #eta";
-    hChgUE[e] = new TH3D(name, title, 55,4.5,59.5, 30,0.0,30.0, 40,-1.0,1.0);
+    hChgUE[e] = new TH3D(name, title, 55,4.0,59.0, 30,0.0,30.0, 20,-1.0,1.0);
 
     name = "hLeadPt" + etaBinName[e] + "Jet";
     title = etaBinString[e] + ";leading jet p_{T} (GeV)";
-    hLeadPt[e] = new TH1D(name, title, 55,4.5,59.5);
+    hLeadPt[e] = new TH1D(name, title, 55,4.0,59.0);
     
   }
 
@@ -109,20 +110,17 @@ int main ( int argc, const char** argv ) {         // funcions and cuts specifie
   double deltaPhi, deltaR;       double trigTowEta, trigTowPhi;
 
   // string efficFile = "src/trackeffic_loEA.root";
-  string efficFile = "src/trackeffic.root";
+  string efficFile = "src/trackeffic_hiEA.root";
   string UEcorrFile = "src/UEsubtractionPlots.root";
 
   // ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~  BEGIN EVENT LOOP!  ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~
   while ( Reader.NextEvent() ) {
-
     Reader.PrintStatus(10);
     rawParticles.clear();    chgParticles.clear();    neuParticles.clear();    rawJets.clear();    allJets.clear();    //  CLEAR VECTORS
-
     event = Reader.GetEvent();
     header = event->GetHeader();
     container = Reader.GetOutputContainer();
     Vz = header->GetPrimaryVertexZ();
-
     if (header->GetRunId() >= 16142059 && header->GetRunId() <= 16149001) { continue; }    //TEMPORARILY SKIPPING THESE RUNS
     if (header->GetRunId() == 16135031 || header->GetRunId() == 16135032) { continue; }
     if ( abs(Vz) > vzCut ) { continue; }
@@ -130,8 +128,8 @@ int main ( int argc, const char** argv ) {         // funcions and cuts specifie
     if ( header->GetBbcAdcSumEast() > 64000 ) { continue; }
     if ( header->GetBbcAdcSumEast() < 3559.12 ) { continue; }     //  neglect 90-100% event activity
 
-    // //  HIGH EVENT ACTIVITY
-    // if ( header->GetBbcAdcSumEast() < 26718.1 ) { continue; }  // LO: 3559.12-10126.1;  HI: 26718.1+
+    //  HIGH EVENT ACTIVITY
+    if ( header->GetBbcAdcSumEast() < 26718.1 ) { continue; }  // LO: 3559.12-10126.1;  HI: 26718.1+// 
 
     // //  LOW EVENT ACTIVITY
     // if ( header->GetBbcAdcSumEast() > 10126.1 ) { continue; }  // LO: 3559.12-10126.1;  HI: 26718.1+
@@ -142,7 +140,6 @@ int main ( int argc, const char** argv ) {         // funcions and cuts specifie
     //if ( UseHTevent( header, event, vzCut, Vz ) == false ) { continue; } // Skip events based on: Run#, vz cut, BBCSumE; only accept HT events
 	
     GatherParticles( container, rawParticles );
-
     GhostedAreaSpec gAreaSpec( 1.0, 1, 0.01 );
     AreaDefinition area_def(active_area_explicit_ghosts, gAreaSpec);
     ClusterSequenceArea jetCluster( rawParticles, jet_def, area_def); 
@@ -152,7 +149,6 @@ int main ( int argc, const char** argv ) {         // funcions and cuts specifie
     
     if ( rawJets.size()>0 ) {
       leadJet = rawJets[0]; 
-
       int trigTowId;
       TStarJetPicoTriggerInfo *trig;
       TStarJetPicoTower *tow, *triggerTower;
@@ -163,16 +159,13 @@ int main ( int argc, const char** argv ) {         // funcions and cuts specifie
 	if ( trig->isBHT2() && UseTriggerTower( trig->GetId()) ) { trigTowers.push_back( trig->GetId() ); }
       }
       sort(trigTowers.begin(), trigTowers.end());
-
       int nmatched = 0;
       for (int i=0; i<nTowers; ++i){				// loop throught selected towers in event
 	tow = (TStarJetPicoTower*)SelectedTowers->At(i);
 	if ( tow->GetEt()>=5.4 && count(trigTowers.begin(), trigTowers.end(), tow->GetId())) { // min 5.4 GeV tower and must be in list of HT towers
-
 	  towPJ.reset_PtYPhiM( tow->GetEt(), tow->GetEta(), tow->GetPhi(), 0.0 ); //reset_PtYPhiM!!
 	  deltaPhi = fabs( leadJet.delta_phi_to( towPJ ) );
 	  deltaR = leadJet.delta_R( towPJ );
-
 	  if ( deltaR<=R || fabs(deltaPhi)>=(pi-R) ) {  // require trigger
 	    if ( nmatched>0 && (tow->GetEt()<trigTowEt) ) { continue; }   // more than 1 trigger tower
 	    else {							// first trigger tower
@@ -187,11 +180,9 @@ int main ( int argc, const char** argv ) {         // funcions and cuts specifie
       //if (nmatched==1) { // only accept events with 1 HT triggers
       if (nmatched>0) {
 	nHTtrig = nmatched;
-
 	trigPhi = trigTowerPJ.phi();
 	dPhiTrigLead = fabs( leadJet.delta_phi_to( trigTowerPJ ) );
 	dRTrigLead = leadJet.delta_R( trigTowerPJ );
-
 	if ( dRTrigLead<=R || fabs(dPhiTrigLead)>=(pi-R) ) {
 	  
 	  Selector allJetSelector = SelectorPtMin(2.0) && ptMaxSelector && jetEtaSelector;
@@ -199,6 +190,7 @@ int main ( int argc, const char** argv ) {         // funcions and cuts specifie
 	  
 	  nJetsAbove5 = allJets.size();
 
+	  vpdVz = header->GetvpdVz();
 	  RunID = header->GetRunId();
 	  EventID = Reader.GetNOfCurrentEvent();
 	  nPrimary = header->GetNOfPrimaryTracks();
@@ -240,8 +232,8 @@ int main ( int argc, const char** argv ) {         // funcions and cuts specifie
 	  
 	  if (jeval==99) {continue;}
 	  
-	  for (int i=0; i<chgParticles.size(); ++i) { hChgUE[jeval]->Fill( leadPt, chgParticles[i].pt(), chgParticles[i].eta() ); }
-	  hLeadPt[jeval]->Fill( leadPt );
+	  for (int i=0; i<chgParticles.size(); ++i) { hChgUE[jeval]->Fill( leadPtCorrected, chgParticles[i].pt(), chgParticles[i].eta() ); }
+	  hLeadPt[jeval]->Fill( leadPtCorrected );
 
 	  // if ( leadPtCorrected >= 10.0 && leadPtCorrected <= 30.0 ) {
 
