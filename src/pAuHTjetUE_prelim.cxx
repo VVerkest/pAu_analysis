@@ -57,10 +57,10 @@ int main ( int argc, const char** argv ) {         // funcions and cuts specifie
   for (int p=0; p<nPtBins; ++p) {
     name = "hChgBgPtEta"; name += ptBinName[p];
     title = "Charged Background #phi vs. #eta ("; title += ptBinString[p]; title += ") ;p_{T} (GeV);#eta";
-    hChgBgPtEta[p] = new TH2D( name , title ,30,0,15,20,-1.0,1.0 );
+    hChgBgPtEta[p] = new TH2D( name , title ,30,0.0,30.0,20,-1.0,1.0 );
     name = "hNeuBgPtEta"; name += ptBinName[p];
     title = "Neutral Background #phi vs. #eta ("; title += ptBinString[p]; title += ") ;p_{T} (GeV);#eta";
-    hNeuBgPtEta[p] = new TH2D( name, title, 30,0,15,20,-1.0,1.0 );
+    hNeuBgPtEta[p] = new TH2D( name, title, 30,0.0,30.0,20,-1.0,1.0 );
   }
   
   JetDefinition jet_def(antikt_algorithm, R);     //  JET DEFINITION
@@ -80,7 +80,7 @@ int main ( int argc, const char** argv ) {         // funcions and cuts specifie
   int numEvents = number_of_events;        // total events in HT: 152,007,032
   InitReader( Reader, Chain, numEvents );
   double deltaPhi, deltaR;       double trigTowEta, trigTowPhi;
-  string efficFile = "src/trackeffic.root";
+  string efficFile = "src/trackeffic_hiEA.root";
   string UEcorrFile = "src/UEsubtractionPlots.root";
   // ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~  BEGIN EVENT LOOP!  ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~
   while ( Reader.NextEvent() ) {
@@ -97,8 +97,8 @@ int main ( int argc, const char** argv ) {         // funcions and cuts specifie
     if ( header->GetBbcAdcSumEast() > 64000 ) { continue; }
     if ( header->GetBbcAdcSumEast() < 3559.12 ) { continue; }     //  neglect 0-10% event activity
 
-    // //  HIGH EVENT ACTIVITY
-    // if ( header->GetBbcAdcSumEast() < 26718.1 ) { continue; }  // LO: 3559.12-10126.1;  HI: 26718.1+
+    //  HIGH EVENT ACTIVITY
+    if ( header->GetBbcAdcSumEast() < 26718.1 ) { continue; }  // LO: 3559.12-10126.1;  HI: 26718.1+
 
     // //  LOW EVENT ACTIVITY
     // if ( header->GetBbcAdcSumEast() > 10126.1 ) { continue; }  // LO: 3559.12-10126.1;  HI: 26718.1+
