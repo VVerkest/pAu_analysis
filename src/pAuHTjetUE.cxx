@@ -62,9 +62,17 @@ int main ( int argc, const char** argv ) {         // funcions and cuts specifie
   HTjetTree->Branch( "dRTrigLead", &dRTrigLead );
   HTjetTree->Branch( "trigPhi", &trigPhi );
 
-  // TH2D *hChgUePtEta[nPtBins];
-  // TH2D *hNeuUePtEta[nPtBins];
-
+  const int xbins = 55;
+  double xbinEdge[xbins+1];
+  const int zbins = 20;
+  double zbinEdge[zbins+1];  
+  for (int i=0; i<xbins+1; ++i) {
+    xbinEdge[i] = (double) i+4.0;
+    if (i<zbins+1) { zbinEdge[i] = (double)(-10.0 + i)/10.0; }
+  }
+  const int ybins = 14;
+  double ybinEdge[ybins+1] = { 0.20, 0.25, 0.30, 0.35, 0.40, 0.50, 0.60, 0.70, 0.80, 1.0, 2.0, 3.0, 5.0, 10.0, 15.0 };
+  
   TH3D *hChgUE[nEtaBins];
   TH1D *hLeadPt[nEtaBins];
 
@@ -72,22 +80,12 @@ int main ( int argc, const char** argv ) {         // funcions and cuts specifie
     
     name = "hChgUE" + etaBinName[e] + "Jet";
     title = etaBinString[e] + ";leading jet p_{T} (GeV);chg. UE part. p_{T} (GeV);chg. UE part. #eta";
-    hChgUE[e] = new TH3D(name, title, 55,4.0,59.0, 30,0.0,30.0, 20,-1.0,1.0);
+    hChgUE[e] = new TH3D(name, title, 55,4.0,59.0, 30,0.0,15.0, 20,-1.0,1.0); //xbins,xbinEdge,ybins,ybinEdge,zbins,zbinEdge
 
     name = "hLeadPt" + etaBinName[e] + "Jet";
     title = etaBinString[e] + ";leading jet p_{T} (GeV)";
     hLeadPt[e] = new TH1D(name, title, 55,4.0,59.0);
     
-  }
-
-  for (int e=0; e<nEtaBins; ++e) {
-
-    // name = "hChgUePtEta"; name += etaBinName[e];
-    // title = "Charged Underlying Event #phi vs. #eta ("; title += etaBinString[e]; title += ") ;p_{T} (GeV);#eta";
-    // hChgUePtEta[e] = new TH2D( name , title ,30,0,15,20,-1.0,1.0 );
-    // name = "hNeuUePtEta"; name += etaBinName[e];
-    // title = "Neutral Underlying Event #phi vs. #eta ("; title += etaBinString[e]; title += ") ;p_{T} (GeV);#eta";
-    // hNeuUePtEta[e] = new TH2D( name, title, 30,0,15,20,-1.0,1.0 );
   }
   
   JetDefinition jet_def(antikt_algorithm, R);     //  JET DEFINITION
@@ -136,9 +134,7 @@ int main ( int argc, const char** argv ) {         // funcions and cuts specifie
 
     TList *SelectedTowers = Reader.GetListOfSelectedTowers();
     nTowers = CountTowers( SelectedTowers );
-	
-    //if ( UseHTevent( header, event, vzCut, Vz ) == false ) { continue; } // Skip events based on: Run#, vz cut, BBCSumE; only accept HT events
-	
+		
     GatherParticles( container, rawParticles );
     GhostedAreaSpec gAreaSpec( 1.0, 1, 0.01 );
     AreaDefinition area_def(active_area_explicit_ghosts, gAreaSpec);
@@ -235,25 +231,6 @@ int main ( int argc, const char** argv ) {         // funcions and cuts specifie
 	  for (int i=0; i<chgParticles.size(); ++i) { hChgUE[jeval]->Fill( leadPtCorrected, chgParticles[i].pt(), chgParticles[i].eta() ); }
 	  hLeadPt[jeval]->Fill( leadPtCorrected );
 
-	  // if ( leadPtCorrected >= 10.0 && leadPtCorrected <= 30.0 ) {
-
-	  //   for ( int p=0; p<3; ++p ) {
-	  //       if ( leadPtCorrected >= ptLo[p]  &&  leadPtCorrected <= ptHi[p] ) { pval = p; }
-	  //     }
-	  //     if ( pval==99 /*|| jeval==99*/ ) { cerr<<"UNABLE TO FIND PT OR ETA RANGE FOR LEAD JET"<<endl<<leadPt<<endl<<endl; }
-	  //   }
-	  //   if ( pval==99 ) {continue;}
-
-	  //   for (int i=0; i<chgParticles.size(); ++i) { hChgUePtEta[pval]->Fill( chgParticles[i].pt(), chgParticles[i].eta() ); }
-	  //   for (int i=0; i<neuParticles.size(); ++i) { hNeuUePtEta[pval]->Fill( neuParticles[i].pt(), neuParticles[i].eta() ); }
-
-
- 
-
-	  
-	  // for (int i=0; i<chgParticles.size(); ++i) { hChgUePtEta[jeval]->Fill( chgParticles[i].pt(), chgParticles[i].eta() ); }
-	  // for (int i=0; i<neuParticles.size(); ++i) { hNeuUePtEta[jeval]->Fill( neuParticles[i].pt(), neuParticles[i].eta() ); }
-
 	  chgParticles.clear(); // clear vector!
 	  // GatherChargedUEwithEfficiency( leadJet, container, chgParticles, efficFile );   // gather UE
 	  CalculateUEsubtractedChargedRho(chgParticles,chgEastSum,chgMidSum,chgWestSum);
@@ -270,14 +247,10 @@ int main ( int argc, const char** argv ) {         // funcions and cuts specifie
 
   TFile *pAuFile = new TFile( outFile.c_str() ,"RECREATE");
 
-  //for (int p=0; p<nPtBins; ++p) {
-    // hChgUePtEta[p]->Write();  //  WRITE HISTOGRAMS & TREE
-    // hNeuUePtEta[p]->Write();
   for ( int e=0; e<nEtaBins; ++e ) {
     hChgUE[e]->Write();
     hLeadPt[e]->Write();
   }
-    //}
 
   HTjetTree->Write();  
 
