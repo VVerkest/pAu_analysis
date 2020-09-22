@@ -92,7 +92,7 @@ namespace Analysis {
 
   TH2D *ProjectUEHistograms( TH3D *, TString );
 
-  void TrackingEfficiency2DCorrection( TH2D*, TH2D*, TH1D * );
+  void TrackingEfficiency2DCorrection( TH2D*, TH2D*, TH1D *, TString );
 
   bool UseTriggerTower( int );
 

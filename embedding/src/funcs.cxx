@@ -423,7 +423,7 @@ namespace Analysis {
     TCanvas * can6 = new TCanvas( "can6" , "" ,700 ,500 );              // CANVAS 6
 
     can6->SetLogy();
-    for (int i=0; i<55; ++i) {  // det-level fractional pT contribution to part-level pT --> fc(pT_det)
+    for (int i=0; i<=55; ++i) {  // det-level fractional pT contribution to part-level pT --> fc(pT_det)
       int ptVal = i + 5;
       int binno = i + 1;
 
@@ -456,8 +456,10 @@ namespace Analysis {
 
     
     for (int i=0; i<21; ++i) {  // PROJECT FOR ALL PART-LEVEL BINS 10-30 GeV
-      int ptVal = i + 5;
-      int binno = i + 1;
+      int ptVal = i + 10;
+      int binno = i + 6;
+
+      std::cout<<h_PtResponse->GetXaxis()->GetBinCenter(binno)<<std::endl;
     
       TString name = "hPtResponse_"; name += ptVal; name += "GeV";
       h_Det[i] = (TH1D*) h_PtResponse->ProjectionY(name,binno,binno);
@@ -483,12 +485,11 @@ namespace Analysis {
   TH2D *ProjectUEHistograms( TH3D *h_ChgUE3D, TString plot_dir ) {
   
     TCanvas * can0 = new TCanvas( "can0" , "" ,700 ,500 );              // CANVAS 0
-    can0->SetLogy(0);
     can0->SetLogz();
   
     // SAVE 2D HISTO OF UE PT vs. LEADING JET PT
     TH2D* h_ChgUE2D = (TH2D*)h_ChgUE3D->Project3D("YX");
-    h_ChgUE2D->GetXaxis()->SetRangeUser(0.0,60.0);
+    h_ChgUE2D->GetXaxis()->SetRangeUser(4.5,59.5);
     h_ChgUE2D->GetYaxis()->SetRangeUser(0.0,15.0);
     h_ChgUE2D->GetYaxis()->SetTitleOffset(1.25);
     h_ChgUE2D->Draw("COLZ");
@@ -501,7 +502,7 @@ namespace Analysis {
   }
 
   
-  void TrackingEfficiency2DCorrection( TH2D* h_ChgUE2D_te, TH2D* h_ChgUE2D_uncorr, TH1D *h_Effic ){
+  void TrackingEfficiency2DCorrection( TH2D* h_ChgUE2D_te, TH2D* h_ChgUE2D_uncorr, TH1D *h_Effic, TString plot_dir ){
     
     double pt, effic, ptVal, corrVal, corrErr, jetPt; // eta, phi, e, px, py, pz, 
     int ptBin;
@@ -526,7 +527,19 @@ namespace Analysis {
 
       }
     }
-	
+
+    TCanvas * can = new TCanvas( "can" , "" ,700 ,500 );              // CANVAS 0
+    can->SetLogz();
+
+    h_ChgUE2D_te->SetAxisRange(0.0,15.0,"Y");
+    
+    h_ChgUE2D_te->Draw("COLZ");
+    TString saveName = plot_dir + "CorrChgUE2D.pdf";
+    can->SaveAs(saveName,"PDF");
+
+    can->Destructor();
+
+    h_ChgUE2D_te->SetAxisRange(0.0,30.0,"Y");
   }
   
 
