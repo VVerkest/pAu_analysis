@@ -14,6 +14,9 @@
 #include "TMathText.h"
 #include "TProfile.h"
 
+#include <stdio.h>
+#include <stdlib.h>
+#include <cstring>
 #include <string>
 #include <iostream>
 #include <sstream>
@@ -22,20 +25,39 @@
 
 using namespace std;
 
-int main() {
+void PrintInfo(int event, int max){
+  double percent = (double) event*100; percent /= (double) max;
+  cout<<"event number "<<event<<"/"<<max<<" \t"<<setprecision(3)<<percent<<"%"<<endl;
+}
+
+int main( int argc, char* argv[] ) { // specify starting event number
+
+  int inVal;
   
+  vector<string> arguments( argv+1, argv+argc );
+  if ( argc == 2 ) {
+    //inVal = atoi(arguments[1].c_str());
+    inVal = strtol(argv[1], NULL, 10);
+  }
+  else if ( argc == 1 ) { inVal = 0; }
+  else { cerr<< "incorrect number of command line arguments"; return -1; }
+
+  int startEvent = inVal*50000;
+  
+  TString outFileName = "CompareTrees/CompareTrees_"; outFileName += startEvent; outFileName += ".root";
+
   TH1::SetDefaultSumw2();  TH2::SetDefaultSumw2();  TH3::SetDefaultSumw2();
 
   const int nFiles = 2;
 
-  TString inFileName[nFiles] = { "out/UE/pAuHTjetUE_allEA_diffPt.root", "out/UE/pAuHTjetUE_30cmVzCut_3cmVzDiff_allEA__binShift.root" };
+  TString inFileName[nFiles] = { "out/UE/pAuHTjetUE_HILO_diffPt_sept.root", "out/UE/pAuHTjetUE_30cmVzCut_3cmVzDiff_HILO__binShift.root" };
 
   TFile *inFile[nFiles];
   TTree *jetTree[nFiles+1];
   double nEntries[nFiles+1]; 
 
   int RunID[nFiles+1], EventID[nFiles+1], nTowers[nFiles+1], nPrimary[nFiles+1], nGlobal[nFiles+1], nVertices[nFiles+1], refMult[nFiles+1],
-    gRefMult[nFiles+1], nUEpart_chg[nFiles+1], nUEpart_neu[nFiles+1], nHTtrig[nFiles+1];
+    gRefMult[nFiles+1], nUEpart_chg[nFiles+1], nUEpart_neu[nFiles+1], nHTtrig[nFiles+1], nJetsAbove5[nFiles+1];
   double Vz[nFiles+1], BbcAdcSumEast[nFiles+1], leadPt[nFiles+1], leadEta[nFiles+1], leadPhi[nFiles+1], chgEastRho[nFiles+1], chgMidRho[nFiles+1],
     chgWestRho[nFiles+1], neuEastRho[nFiles+1], neuMidRho[nFiles+1], neuWestRho[nFiles+1], leadArea[nFiles+1], eastRho[nFiles+1], midRho[nFiles+1],
     westRho[nFiles+1], leadPtCorrected[nFiles+1], chgEastRho_te[nFiles+1], chgMidRho_te[nFiles+1], chgWestRho_te[nFiles+1], rho_te[nFiles+1],
@@ -73,6 +95,7 @@ int main() {
     jetTree[i]->SetBranchAddress( "leadArea", &leadArea[i] );
     jetTree[i]->SetBranchAddress( "leadPtCorrected", &leadPtCorrected[i] );
     jetTree[i]->SetBranchAddress( "nHTtrig", &nHTtrig[i] );
+    jetTree[i]->SetBranchAddress( "nJetsAbove5", &nJetsAbove5[i] );
     jetTree[i]->SetBranchAddress( "dPhiTrigLead", &dPhiTrigLead[i] );
     jetTree[i]->SetBranchAddress( "dRTrigLead", &dRTrigLead[i] );
 
@@ -80,7 +103,7 @@ int main() {
 
   }
 
-  TFile *outFile = new TFile("CompareTrees.root","RECREATE");
+  TFile *outFile = new TFile(outFileName,"RECREATE");
 
   jetTree[2] = new TTree("newTree","new_tree");
   jetTree[2]->Branch( "RunID", &RunID[2] );
@@ -99,27 +122,34 @@ int main() {
   jetTree[2]->Branch( "leadArea", &leadArea[2] );
   jetTree[2]->Branch( "leadPtCorrected", &leadPtCorrected[2] );
   jetTree[2]->Branch( "nHTtrig", &nHTtrig[2] );
+  jetTree[2]->Branch( "nJetsAbove5", &nJetsAbove5[2] );
   jetTree[2]->Branch( "dPhiTrigLead", &dPhiTrigLead[2] );
   jetTree[2]->Branch( "dRTrigLead", &dRTrigLead[2] );
-  
-  int nMissed = 0;
-  for ( int j=0; j<nEntries[1]; ++j ) {
-    jetTree[1]->GetEvent(j);
 
-    while ( leadPt[1]<10.0 || leadPt[1]>30.0 ) {
+  int nMissed = 0;
+  int endEvent = startEvent + 50000;
+  int max_entry = jetTree[1]->GetEntries();
+  // int max_entry = 50000;
+  for ( int j=startEvent; j<endEvent; ++j ) {
+
+    if (j>=max_entry) { continue; }
+    
+    jetTree[1]->GetEvent(j);
+    if (j%1000==0) { PrintInfo(j,max_entry); }
+
+    while ( leadPtCorrected[1]<10.0 || leadPtCorrected[1]>30.0 ) {
+      if (j>=max_entry) { continue; }
       j+=1;
       jetTree[1]->GetEvent(j);
-      if (j%1000==0) { cout<<"event number "<<j<<"/"<<jetTree[1]->GetEntries()<<endl; }
+      if (j%1000==0) { PrintInfo(j,max_entry); }
     } // find event in new file with pt in range
+    if (j>=max_entry) { continue; }
 
-
-    TString drawString = "leadPt[0]>>hPt";
     TString selection = "RunID=="; selection += RunID[1]; selection += " && EventID=="; selection += EventID[1];
     // cout<<drawString<<" \t"<<selection<<endl;
-    jetTree[0]->Draw(drawString,selection);
+    int hasEvent = jetTree[0]->Scan("",selection);
 
-    if (hPt->GetEntries()==0) {
-      
+    if (hasEvent==0) {
       jetTree[1]->GetEvent(j);
       nMissed += 1;
       RunID[2] = RunID[1];
@@ -138,33 +168,19 @@ int main() {
       leadArea[2] = leadArea[1];
       leadPtCorrected[2] = leadPtCorrected[1];
       nHTtrig[2] = nHTtrig[1];
+      nJetsAbove5[2] = nJetsAbove5[1];
       dPhiTrigLead[2] = dPhiTrigLead[1];
       dRTrigLead[2] = dRTrigLead[1];
       jetTree[2]->Fill();
     }
-    // if (hPt->GetEntries()==0) { cout<<"RunID = "<<RunID[1]<<"\t EventID = "<<EventID[1]<<"\t leadPt = "<<leadPt[1]<<"\t Vz = "<<Vz[1]<<"\t BbcAdcSumEast = "<<BbcAdcSumEast[1]<<"\t leadEta = "<<leadEta[1]<<endl; }
     
-    
-    // if ( (RunID[0]!=RunID[1]) || (EventID[0]!=EventID[1]) ) {
-    // 	cout<<j<<"  "<<k<<"     ";
-    // 	k+=1;
-    // 	if ( k==nEntries[0] ) {
-    // 	  cout<<"RunID = "<<RunID<<"\t EventID = "<<EventID<<"\t leadPt = "<<leadPt<<"\t Vz = "<<Vz<<endl;
-    // 	  k=0;
-    // 	  continue;
-    // 	}
-    // }
-    // if ( k==0 ) { continue; }
-
-    // cout<<j<<endl;
-      
-    // if ( fabs(leadPt[0]-leadPt[1])>0.001 ) { cout<<"prelim lead pt = "<<leadPt[0]<<"GeV \t new lead pt = "<<leadPt[1]<<"GeV"<<endl; }
-    // if ( fabs(Vz[0]-Vz[1])>0.001 ) { cout<<"prelim Vz = "<<Vz[0]<<"cm \t new Vz = "<<Vz[1]<<"cm"<<endl; }
   }
 
   cout<<nMissed<<endl<<endl;
 
   jetTree[2]->Write();
-
+  outFile->Write();
+  outFile->Close();
+  
   return 0;
 }
