@@ -80,7 +80,7 @@ int main ( int argc, const char** argv ) {         // funcions and cuts specifie
     
     name = "hChgUE" + etaBinName[e] + "Jet";
     title = etaBinString[e] + ";leading jet p_{T} (GeV);chg. UE part. p_{T} (GeV);chg. UE part. #eta";
-    hChgUE[e] = new TH3D(name, title, 55,4.0,59.0, 30,0.0,15.0, 20,-1.0,1.0); //xbins,xbinEdge,ybins,ybinEdge,zbins,zbinEdge
+    hChgUE[e] = new TH3D(name, title, xbins,xbinEdge,ybins,ybinEdge,zbins,zbinEdge); //xbins,xbinEdge,ybins,ybinEdge,zbins,zbinEdge
 
     name = "hLeadPt" + etaBinName[e] + "Jet";
     title = etaBinString[e] + ";leading jet p_{T} (GeV)";
@@ -108,7 +108,7 @@ int main ( int argc, const char** argv ) {         // funcions and cuts specifie
   double deltaPhi, deltaR;       double trigTowEta, trigTowPhi;
 
   // string efficFile = "src/trackeffic_loEA.root";
-  string efficFile = "src/trackeffic_hiEA.root";
+  string efficFile = "src/trackeffic_loEA.root";
   string UEcorrFile = "src/UEsubtractionPlots.root";
 
   // ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~  BEGIN EVENT LOOP!  ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~
@@ -126,11 +126,11 @@ int main ( int argc, const char** argv ) {         // funcions and cuts specifie
     if ( header->GetBbcAdcSumEast() > 64000 ) { continue; }
     if ( header->GetBbcAdcSumEast() < 3559.12 ) { continue; }     //  neglect 90-100% event activity
 
-    //  HIGH EVENT ACTIVITY
-    if ( header->GetBbcAdcSumEast() < 26718.1 ) { continue; }  // LO: 3559.12-10126.1;  HI: 26718.1+// 
+    // //  HIGH EVENT ACTIVITY
+    // if ( header->GetBbcAdcSumEast() < 26718.1 ) { continue; }  // LO: 3559.12-10126.1;  HI: 26718.1+// 
 
-    // //  LOW EVENT ACTIVITY
-    // if ( header->GetBbcAdcSumEast() > 10126.1 ) { continue; }  // LO: 3559.12-10126.1;  HI: 26718.1+
+    //  LOW EVENT ACTIVITY
+    if ( header->GetBbcAdcSumEast() > 10126.1 ) { continue; }  // LO: 3559.12-10126.1;  HI: 26718.1+
 
     TList *SelectedTowers = Reader.GetListOfSelectedTowers();
     nTowers = CountTowers( SelectedTowers );
@@ -252,6 +252,7 @@ int main ( int argc, const char** argv ) {         // funcions and cuts specifie
     hLeadPt[e]->Write();
   }
 
+  HTjetTree->SetDirectory(pAuFile);
   HTjetTree->Write();  
 
   pAuFile->Write();
