@@ -1,10 +1,10 @@
 // Veronica Verkest
 // May 23, 2020
 
-void ptDifferentialUE_systematics(){
+void ptDifferentialUE_systematics_original(){
 
   //gStyle->SetErrorX(0.0001);
-  
+
   TH1::SetDefaultSumw2();  TH2::SetDefaultSumw2();  TH3::SetDefaultSumw2();
 
   const double pi = 3.14159265;
@@ -30,7 +30,7 @@ void ptDifferentialUE_systematics(){
   const int etaMarker[nEtaBins] = { 25, 27, 28 };
 
   const int nChgBins = 3;
-  const TString BackgroundChargeBias[nChgBins] = { "_chgUE", "_neuUE", "_allUE" };
+  const TString BackgroundChargeBias[nChgBins] = { "_chgBG", "_neuBG", "_allBG" };
   const TString BackgroundChargeString[nChgBins] = { "Charged", "Neutral", "Chg+Neu" };
   const int color[nChgBins] = { 807, 823, 874 };
   const int marker[nChgBins] = { 22, 23, 20 };
@@ -39,7 +39,7 @@ void ptDifferentialUE_systematics(){
   TString EAbinName[nEAbins] = { "Lo", "Hi" };
   TString EAbinString[nEAbins] = { "Low EA", "High EA" };
   TString BBCselection[nEAbins] = { "BbcAdcSumEast>3559.12 && BbcAdcSumEast<11503", "BbcAdcSumEast>26718.1" };
- 
+
   TString eastmidwest[nEtaBins] = { "East", "Mid", "West" };
   TString rhoVal[nEtaBins] = { "(chgEastRho_te+neuEastRho)", "(chgMidRho_te+neuMidRho)", "(chgWestRho_te+neuWestRho)" };
   TString ptSelection[nPtBins] = { "leadPt>10.0 && leadPt<15.0", "leadPt>=15.0 && leadPt<=20.0", "leadPt>20.0 && leadPt<30.0" };
@@ -49,28 +49,29 @@ void ptDifferentialUE_systematics(){
   const double midArea = 2*(0.6)*(pi - 2);   // (  0.6 in eta  ) X (  2*( pi-1 - 1 ) in phi  )
   const double westArea = 2*(0.7)*(pi - 2);   // (  0.7 in eta  ) X (  2*( pi-1 - 1 ) in phi  )
   double area[nEtaBins] = { eastArea, midArea, westArea };
-  
+
   int EAcolor[nEAbins] = { 884, 810 };
   int EAmarker[nEAbins] = { 24, 20 };
-  
-  int jeval, ueeval, pval, eaval;
+
+  int jeval, bgeval, pval, eaval;
   TString name, saveName, title, avg, sigma, drawString;
 
-  string dirName = "prelim";
-  
-  TString fileName[nEAbins] = { "out/UE/pAuHTjetUE_loEA_diffPt_sept.root", "out/UE/pAuHTjetUE_hiEA_diffPt_sept.root" };
+  // TString fileName[nEAbins] = { "out/UE/pAuHTjetUE_loEA_diffPt_sept.root", "out/UE/pAuHTjetUE_hiEA_diffPt_sept.root" };
+  TString fileName[nEAbins] = { "out/UE/pAuHTjetUE_loEA_diffPt_1GeVbins.root", "out/UE/pAuHTjetUE_hiEA_diffPt_1GeVbins.root" };
   TString efficFileName[nEAbins] = { "src/trackeffic_loEA.root", "src/trackeffic_hiEA.root" };
 
   TFile* inFile[nEAbins];
   TFile* efficFile[nEAbins];
-    
+
+  string dirName = "prelim";
+
   for (int i=0; i<nEAbins; ++i) {
     efficFile[i] = new TFile( efficFileName[i], "READ" );
   }
 
   const int eta_bins = 10;
   TH1D *hEff[eta_bins][nEAbins];
-  
+
   for (int i=0; i<eta_bins; ++i) {
     for (int j=0; j<nEAbins; ++j){    
       int binno = i+1;
@@ -79,18 +80,16 @@ void ptDifferentialUE_systematics(){
       else if (j==1) {name = "eff_s_bin_7_10_bbc__"; name += binno; name += "_"; name += binno; name += "_eta"; }
 
       hEff[i][j] = (TH1D*)efficFile[j]->Get(name);
-
-      cout<<name<<hEff[i][j]->GetTitle()<<"  "<<i<<endl;
-
+      
     }
   }
 
   const int ybins = 10;
-  double ybinEdge[ybins+1] = { -1, -0.8, -0.6, -0.4, -0.2, 0.0, 0.2, 0.4, 0.6, 0.8, 1.0 };
-  
+  double ybinEdge[ybins+1] = { -1.0, -0.8, -0.6, -0.4, -0.2, 0, 0.2, 0.4, 0.6, 0.8, 1.0 };
+
   //  Tree variables
   int RunID[nEAbins], EventID[nEAbins], nTowers[nEAbins], nPrimary[nEAbins], nGlobal[nEAbins], nVertices[nEAbins], refMult[nEAbins],
-    gRefMult[nEAbins], nUEpart_chg[nEAbins], nUEpart_neu[nEAbins];
+    gRefMult[nEAbins], nBGpart_chg[nEAbins], nBGpart_neu[nEAbins];
   double Vz[nEAbins], BbcAdcSumEast[nEAbins], leadPt[nEAbins], leadEta[nEAbins], leadPhi[nEAbins], chgEastRho[nEAbins], chgMidRho[nEAbins],
     chgWestRho[nEAbins], neuEastRho[nEAbins], neuMidRho[nEAbins], neuWestRho[nEAbins], leadArea[nEAbins], eastRho[nEAbins], midRho[nEAbins],
     westRho[nEAbins], leadPtCorrected[nEAbins], chgEastRho_te[nEAbins], chgMidRho_te[nEAbins], chgWestRho_te[nEAbins], rho_te[nEAbins], rho[nEAbins];
@@ -104,30 +103,34 @@ void ptDifferentialUE_systematics(){
 
     jetTree[i] = (TTree*) inFile[i]->Get("HTjetTree");
 
-    jetTree[i]->SetBranchAddress( "RunID", &RunID[i] );
-    jetTree[i]->SetBranchAddress( "EventID", &EventID[i] );
-    jetTree[i]->SetBranchAddress( "nTowers", &nTowers[i] );
-    jetTree[i]->SetBranchAddress( "nPrimary", &nPrimary[i] );
-    jetTree[i]->SetBranchAddress( "nGlobal", &nGlobal[i] );
-    jetTree[i]->SetBranchAddress( "nVertices", &nVertices[i] );
-    jetTree[i]->SetBranchAddress( "refMult", &refMult[i] );
-    jetTree[i]->SetBranchAddress( "gRefMult", &gRefMult[i] );
-    jetTree[i]->SetBranchAddress( "Vz", &Vz[i] );
+    // jetTree[i]->SetBranchAddress( "RunID", &RunID[i] );
+    // jetTree[i]->SetBranchAddress( "EventID", &EventID[i] );
+    // jetTree[i]->SetBranchAddress( "nTowers", &nTowers[i] );
+    // jetTree[i]->SetBranchAddress( "nPrimary", &nPrimary[i] );
+    // jetTree[i]->SetBranchAddress( "nGlobal", &nGlobal[i] );
+    // jetTree[i]->SetBranchAddress( "nVertices", &nVertices[i] );
+    // jetTree[i]->SetBranchAddress( "refMult", &refMult[i] );
+    // jetTree[i]->SetBranchAddress( "gRefMult", &gRefMult[i] );
+    // jetTree[i]->SetBranchAddress( "Vz", &Vz[i] );
     jetTree[i]->SetBranchAddress( "leadPt", &leadPt[i] );
-    jetTree[i]->SetBranchAddress( "BbcAdcSumEast", &BbcAdcSumEast[i] );
-    jetTree[i]->SetBranchAddress( "leadEta", &leadEta[i] );
-    jetTree[i]->SetBranchAddress( "leadPhi", &leadPhi[i] );
-    jetTree[i]->SetBranchAddress( "chgEastRho", &chgEastRho[i] );
-    jetTree[i]->SetBranchAddress( "chgMidRho", &chgMidRho[i] );
-    jetTree[i]->SetBranchAddress( "chgWestRho", &chgWestRho[i] );
-    jetTree[i]->SetBranchAddress( "chgEastRho_te", &chgEastRho_te[i] );
-    jetTree[i]->SetBranchAddress( "chgMidRho_te", &chgMidRho_te[i] );
-    jetTree[i]->SetBranchAddress( "chgWestRho_te", &chgWestRho_te[i] );
-    jetTree[i]->SetBranchAddress( "neuEastRho", &neuEastRho[i] );
-    jetTree[i]->SetBranchAddress( "neuMidRho", &neuMidRho[i] );
-    jetTree[i]->SetBranchAddress( "neuWestRho", &neuWestRho[i] );
-    jetTree[i]->SetBranchAddress( "leadArea", &leadArea[i] );
+    // jetTree[i]->SetBranchAddress( "BbcAdcSumEast", &BbcAdcSumEast[i] );
+    // jetTree[i]->SetBranchAddress( "leadEta", &leadEta[i] );
+    // jetTree[i]->SetBranchAddress( "leadPhi", &leadPhi[i] );
+    // jetTree[i]->SetBranchAddress( "chgEastRho", &chgEastRho[i] );
+    // jetTree[i]->SetBranchAddress( "chgMidRho", &chgMidRho[i] );
+    // jetTree[i]->SetBranchAddress( "chgWestRho", &chgWestRho[i] );
+    // jetTree[i]->SetBranchAddress( "chgEastRho_te", &chgEastRho_te[i] );
+    // jetTree[i]->SetBranchAddress( "chgMidRho_te", &chgMidRho_te[i] );
+    // jetTree[i]->SetBranchAddress( "chgWestRho_te", &chgWestRho_te[i] );
+    // jetTree[i]->SetBranchAddress( "neuEastRho", &neuEastRho[i] );
+    // jetTree[i]->SetBranchAddress( "neuMidRho", &neuMidRho[i] );
+    // jetTree[i]->SetBranchAddress( "neuWestRho", &neuWestRho[i] );
+    // jetTree[i]->SetBranchAddress( "leadArea", &leadArea[i] );
     jetTree[i]->SetBranchAddress( "leadPtCorrected", &leadPtCorrected[i] );
+    // jetTree[i]->SetBranchAddress( "nBGpart_chg", &nBGpart_chg[i] );
+    jetTree[i]->SetBranchAddress( "nBGpart_neu", &nBGpart_neu[i] );
+    // jetTree[i]->SetBranchAddress( "rho", &rho[i] );
+    // jetTree[i]->SetBranchAddress( "rho_te", &rho_te[i] );
 
     nEntries[i] = jetTree[i]->GetEntries();
 
@@ -136,16 +139,16 @@ void ptDifferentialUE_systematics(){
       hChgUEpt[i][p] = (TH2D*)inFile[i]->Get( name );
       name = "hNeuBgPtEta"; name += ptBinName[p];
       hNeuUEpt[i][p] = (TH2D*)inFile[i]->Get( name );
-    
+
       name = "hRho_"; name += EAbinName[i]; name += ptBinName[p];
-      hRho[i][p] = new TH1D(name,"UE;<#rho> [GeV/#it{c}]", 30,0.0,15.0);
-      
+      hRho[i][p] = new TH1D(name,"UE;<#rho> [GeV/#it{c}]", 60,0.0,60.0);
+
       name = "hNchg_"; name += EAbinName[i]; name += ptBinName[p];
       hNchg[i][p] = new TH1D( name,"# charged particles in UE", 50,0.0,50.0);
 
       name = "hNchg_te_"; name += EAbinName[i]; name += ptBinName[p];
       hNchg_te[i][p] = new TH1D( name,"# track effic. corr. charged particles in UE", 50,0.0,50.0);
-      
+
       name = "hNneu_"; name += EAbinName[i]; name += ptBinName[p];
       hNneu[i][p] = new TH1D( name,"# neutral particles in UE", 50,0.0,50.0);
     }
@@ -158,6 +161,7 @@ void ptDifferentialUE_systematics(){
     for (int i=0; i<nEntries[a]; ++i) {
       jetTree[a]->GetEntry(i);
       if ( !(leadPtCorrected[a]>ptLo[0] && leadPtCorrected[a]<ptHi[2]) ) { continue; }
+      
       // if ( !(leadPtCorrected[a]>ptLo[1] && leadPtCorrected[a]<ptHi[1]) ) { continue; }
       else {
 
@@ -168,37 +172,37 @@ void ptDifferentialUE_systematics(){
 	}
 	if ( pval==99 /*|| jeval==99*/ ) { cerr<<"UNABLE TO FIND PT OR ETA RANGE FOR LEAD JET"<<endl<<leadPtCorrected<<endl<<endl; }
 
-	hRho[a][pval]->Fill(leadPt[a]);
-	hNchg[a][pval]->Fill(nUEpart_chg[a]);
-	hNneu[a][pval]->Fill(nUEpart_neu[a]);
+	hRho[a][pval]->Fill(leadPtCorrected[a]);
+	// hNchg[a][pval]->Fill(nBGpart_chg[a]);
+	// hNneu[a][pval]->Fill(nBGpart_neu[a]);
       }
-      
+
     }
   }
 
-  
+
   for (int a=nEAbins-1; a>=0; --a) {
     for (int p=0; p<nPtBins; ++p) {
-
-      hChgUEpt[a][p]->Scale(1./hRho[a][p]->GetEntries());
-      cout<<EAbinString[a]<<"  "<<ptBinString[p]<<"  "<<hRho[a][p]->GetEntries()<<endl;
+      
+      hChgUEpt[a][p]->Scale(1./hRho[a][p]->GetEntries());      
       hNeuUEpt[a][p]->Scale(1./hRho[a][p]->GetEntries());
+      cout<<EAbinString[a]<<"  "<<ptBinString[p]<<"  "<<hRho[a][p]->GetEntries()<<endl;
 
     }
   }
-  
+
   TH1D *hChgPtDist[ybins][nEAbins][nPtBins];
-  
+
   int ecolor[ybins] = { 618, 633, 807, 800, 819, 419, 433, 862, 884, 619 };
   TString ybinEdgeString[ybins+1] = { "-1.0", "-0.8", "-0.6", "-0.4", "-0.2", "0.0", "0.2", "0.4", "0.6", "0.8", "1.0" };
-  
+
   TCanvas * cpt[nPtBins];
 
   TH1D *hTreeChgRho[nEAbins][nPtBins];
   TH1D *hChgDist[nEAbins][nPtBins];
 
   TLegend *legpt[nPtBins];
-  
+
   for (int p=0; p<nPtBins; ++p) {
     name = "cpt_"; name += p;
     cpt[p] = new TCanvas( name , "" ,700 ,500 );              // CANVAS 0
@@ -214,8 +218,6 @@ void ptDifferentialUE_systematics(){
 	hChgPtDist[i][a][p] = (TH1D*) hChgUEpt[a][p]->ProjectionX( name, binno, binno+1 );
 	title = "Charged UE p_{T} dist. for "; title += ptBinString[p]; title += " (";
 	title += ybinEdgeString[i]; title +="<#eta<"; title += ybinEdgeString[binno]; title += ");p_{T} [GeV/#it{c}]";
-
-
 	hChgPtDist[i][a][p]->SetTitle( title );
 	hChgPtDist[i][a][p]->GetYaxis()->SetRangeUser(0.000001,0.3);
 	if (i==0) { hChgPtDist[i][a][p]->Draw(""); }
@@ -241,7 +243,7 @@ void ptDifferentialUE_systematics(){
 
       name = "hNeuUEpt"; name += ptBinName[p]; name += EAbinName[a];
       hNeuUEpt[a][p]->SetName( name );
-      
+
       hChgUEpt_te[a][p] = (TH2D*) hChgUEpt[a][p]->Clone();       // create clone of 2D pt distributions
       name = "hChgUEpt"; name += ptBinName[p]; name += EAbinName[a]; name += "_te";
       hChgUEpt_te[a][p]->SetName( name );
@@ -259,19 +261,19 @@ void ptDifferentialUE_systematics(){
 
 	int fileNo = 99;
 	int ybin = iy+1;
-	
-	double binCenter = hChgUEpt_te[a][p]->GetYaxis()->GetBinCenter( ybin );
-	
-	for (int j=0; j<ybins; ++j) {
-	  if ( binCenter>ybinEdge[j] && binCenter<ybinEdge[j+1] ) { fileNo = j-1; continue; };
-	}
-	if ( fileNo==99 ) { cerr<<"CANNOT FIND EFFICIENCY HISTOGRAM   "<<binCenter<<endl; }
 
-	cout<<binCenter<<"  "<<fileNo<<"  "<<hEff[a][fileNo]->GetTitle()<<endl;
+	double binCenter = hChgUEpt_te[a][p]->GetYaxis()->GetBinCenter( ybin );
+
+	for (int j=0; j<ybins; ++j) {
+	  if ( binCenter>ybinEdge[j] && binCenter<ybinEdge[j+1] ) { fileNo = j; };
+	}
+	if ( fileNo==99 ) { cerr<<"CANNOT FIND EFFICIENCY HISTOGRAM"<<endl; }
+
+	// cout<<binCenter<<"  "<<fileNo<<"  "<<hEff[fileNo][a]->GetTitle()<<endl;
 
 	for(int ix = 1; ix <= hChgUEpt[a][p]->GetNbinsX(); ++ix){
 	  int xbin = ix+1;
-	  
+
 	  double pt = hChgUEpt[a][p]->GetXaxis()->GetBinCenter(xbin);
 	  if ( pt > 3.0 ) { pt = 3.0; }
 	  double ptbin = hEff[a][fileNo]->FindBin(pt);
@@ -288,7 +290,7 @@ void ptDifferentialUE_systematics(){
 	// sys1: trackeffic+0.05
 	for(int ix = 1; ix <= hChgUEpt[a][p]->GetNbinsX(); ++ix){
 	  int xbin = ix+1;
-	  
+
 	  double pt = hChgUEpt[a][p]->GetXaxis()->GetBinCenter(xbin);
 	  if ( pt > 3.0 ) { pt = 3.0; }
 	  double ptbin = hEff[a][fileNo]->FindBin(pt);
@@ -305,7 +307,7 @@ void ptDifferentialUE_systematics(){
 	// sys2: trackeffic-0.05
 	for(int ix = 1; ix <= hChgUEpt[a][p]->GetNbinsX(); ++ix){
 	  int xbin = ix+1;
-	  
+
 	  double pt = hChgUEpt[a][p]->GetXaxis()->GetBinCenter(xbin);
 	  if ( pt > 3.0 ) { pt = 3.0; }
 	  double ptbin = hEff[a][fileNo]->FindBin(pt);
@@ -318,8 +320,9 @@ void ptDifferentialUE_systematics(){
 	  hChgUEpt_te_sys2[a][p]->SetBinError( xbin, ybin, corr_err );
 	}
 
+
       }
-	
+
     }
   }
 
@@ -329,7 +332,7 @@ void ptDifferentialUE_systematics(){
   double nChg_err[nEtaBins][nEAbins][nPtBins];
   double meanChgPt[nEtaBins][nEAbins][nPtBins];
   double te_meanChgPt[nEtaBins][nEAbins][nPtBins];
-  
+
   double nChg_te[nEtaBins][nEAbins][nPtBins];
   double nChg_te_err[nEtaBins][nEAbins][nPtBins];
   double meanChgPt_err[nEtaBins][nEAbins][nPtBins];
@@ -341,7 +344,7 @@ void ptDifferentialUE_systematics(){
   double te_meanChgPt_sys2[nEtaBins][nEAbins][nPtBins];
 
   double chgRho[nEtaBins][nEAbins][nPtBins];
-  
+
   for (int a=nEAbins-1; a>=0; --a) {
     for ( int p=0; p<nPtBins; ++p) {
 
@@ -367,7 +370,6 @@ void ptDifferentialUE_systematics(){
 	hChgUEpt_te_sys2[a][p]->GetYaxis()->SetRangeUser( etaLo[e], etaHi[e] );
 	te_meanChgPt_sys2[e][a][p] = hChgUEpt_te_sys2[a][p]->GetMean(1);
 	nChg_te_sys2[e][a][p] = hChgUEpt_te_sys1[a][p]->Integral();
-
       }      
     }
   }
@@ -388,15 +390,15 @@ void ptDifferentialUE_systematics(){
 	sys2 = fabs( 1 - ( te_meanChgPt_sys2[e][a][p] / te_meanChgPt[e][a][p] ) );
 	te_meanChgPt_sys[e][a][p] = max( sys1, sys2 );
 
-	cout<<te_meanChgPt[e][a][p]<<"\t"; 
+  	cout<<te_meanChgPt[e][a][p]<<"\t"; 
       }
       cout<<endl;
     }
     cout<<endl;
   }
   cout<<endl;
-  
-  
+
+
   // ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ HISTOGRAMS ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~
 
 
@@ -406,7 +408,7 @@ void ptDifferentialUE_systematics(){
   double ptBinEdge[nPtBins+1] = { 10, 15, 20, 20 };
   double yEdge[2] = {0.5,1.8};
   int startBin[nPtBins] = { 11, 30, 59 };
-  
+
 
   TH2D *hscale0 = new TH2D("hscale0",";p_{T,lead}^{reco} [GeV/#it{c}];#LT #frac{d#it{N}_{ch}}{d#eta d#phi} #GT", 10,10,30,10,0.5,1.8);
   hscale0->GetYaxis()->SetTitleOffset(1);
@@ -418,11 +420,11 @@ void ptDifferentialUE_systematics(){
   hscale0->GetXaxis()->SetTitleSize(0.05);
 
   hscale0->GetXaxis()->SetNdivisions(6);
-  
+
   hscale0->SetName("");
   TCanvas *c0 = new TCanvas;  
   c0->SetMargin(0.125,0.05,0.125,0.05);
-  
+
   TH1D *hCHGdNdetadphi_te[nEAbins][nEtaBins];
   TH1D *hCHGdNdetadphi_te_sys[nEAbins][nEtaBins];
   hscale0->Draw();
@@ -431,7 +433,7 @@ void ptDifferentialUE_systematics(){
   hscale0->SetStats(0);
 
   TLegend *leg0;
-  
+
   leg0 = new TLegend(0.45, 0.67, 0.95, 0.95,NULL,"brNDC");    // LEGEND 0
   leg0->SetBorderSize(0);  leg0->SetLineColor(1);  leg0->SetLineStyle(1);
   leg0->SetLineWidth(1);  leg0->SetFillColorAlpha(0,0.0);  leg0->SetFillStyle(1001);
@@ -453,10 +455,10 @@ void ptDifferentialUE_systematics(){
       hCHGdNdetadphi_te[a][e]->SetMarkerSize( 2 );
 
       leg0->AddEntry(hCHGdNdetadphi_te[a][e],title,"lpf");
-      
+
       name = "hCHGdNdetadphi_te_sys_" + EAbinName[a] + etaBinName[e];
       hCHGdNdetadphi_te_sys[a][e] = new TH1D( name, "" , 79,9.25,29.75 );
-      
+
       hCHGdNdetadphi_te_sys[a][e]->SetStats(0);
       hCHGdNdetadphi_te_sys[a][e]->SetLineColorAlpha( etaColor[e], 0.0 );
       hCHGdNdetadphi_te_sys[a][e]->SetMarkerColorAlpha( etaColor[e], 0.0 );
@@ -469,11 +471,11 @@ void ptDifferentialUE_systematics(){
       else { hCHGdNdetadphi_te_sys[a][e]->SetFillColorAlpha( etaColor[e], 0.2 ); }
 
       //hCHGdNdetadphi_te[a][e];
-	
+
       for ( int p=0; p<nPtBins; ++p) {
-	
+
 	int binno = startBin[p] + (2*e);
-	
+
 	double value = (double) ( nChg_te[e][a][p] / area[e] );
 	hCHGdNdetadphi_te[a][e]->SetBinContent( binno, value );
 	hCHGdNdetadphi_te[a][e]->SetBinError( binno, nChg_te_err[e][a][p] );
@@ -482,7 +484,7 @@ void ptDifferentialUE_systematics(){
 	  hCHGdNdetadphi_te_sys[a][e]->SetBinContent( binno+i, value );
 	  hCHGdNdetadphi_te_sys[a][e]->SetBinError( binno+i, value*nChg_te_sys[e][a][p] );
 	}
-	
+
       }
     }
   }
@@ -498,17 +500,16 @@ void ptDifferentialUE_systematics(){
     }
   }
 
-  
+
   TPaveText *sp1 = new TPaveText(0.175,0.75,0.5,1.0,"NDC");
-  //sp1->AddText("STAR Preliminary");
-  sp1->AddText("");
+  sp1->AddText("STAR Preliminary");
   sp1->SetTextSize(0.04);
   sp1->SetTextColor(kRed);
   sp1->SetFillColorAlpha(0,0.0);
   sp1->SetLineColorAlpha(0,0.0);
   sp1->Draw("NB");
 
-  
+
   TLatex *tex0 = new TLatex(0.175,0.8,"p+Au #sqrt{#it{s}_{NN}} = 200 GeV");
   tex0->SetTextFont(63);
   tex0->SetTextSize(16);
@@ -546,13 +547,15 @@ void ptDifferentialUE_systematics(){
   //tex4->Draw();
 
   //c0->SetGridx();
+
+
   
   leg0->Draw();
   name = "plots/UE/"+dirName+"/CHGdNdetadphi_te_pt_systematics.pdf";
   c0->SaveAs(name,"PDF");
   //c0->Close();
 
- 
+
   TCanvas *c1 = new TCanvas;
   c1->SetMargin(0.125,0.05,0.125,0.05);
 
@@ -588,7 +591,7 @@ void ptDifferentialUE_systematics(){
       hChg_pt_te[a][e]->SetMarkerColor( etaColor[e] );
       hChg_pt_te[a][e]->SetMarkerStyle( EAmarker[a] );
       hChg_pt_te[a][e]->SetMarkerSize( 2 );
-      
+
       name = "hChg_MeanPt_te_sys_" + EAbinName[a] + etaBinName[e];
       hChg_pt_te_sys[a][e] = new TH1D( name, "" , 79,9.25,29.75 );
 
@@ -603,9 +606,9 @@ void ptDifferentialUE_systematics(){
       }
       else { hChg_pt_te_sys[a][e]->SetFillColorAlpha( etaColor[e], 0.2 ); }
       //hCHGdNdetadphi_te[a][e];
-	
+
       for ( int p=0; p<nPtBins; ++p) {
-	
+
 	int binno = startBin[p] + (2*e);
 
 	double value = te_meanChgPt[e][a][p];
@@ -616,7 +619,7 @@ void ptDifferentialUE_systematics(){
 	  hChg_pt_te_sys[a][e]->SetBinContent( binno+i, value );
 	  hChg_pt_te_sys[a][e]->SetBinError( binno+i, value*nChg_te_sys[e][a][p] );
 	}
-		
+
       }
     }
   }
@@ -647,19 +650,17 @@ void ptDifferentialUE_systematics(){
 
 
   TFile *outFile = new TFile("src/ptdifferentialUE.root","RECREATE");
-  
+
   for (int a=0; a<nEAbins; ++a) {
     for (int p=0; p<nPtBins; ++p) {
 
       hChgUEpt[a][p]->Write();
       hChgUEpt_te[a][p]->Write();
       hNeuUEpt[a][p]->Write();
-	
+
     }
   }
-  c0->Write();
-  c1->Write();
-      
+
   outFile->Write();
-  
+
 }

@@ -1,7 +1,7 @@
 // Veronica Verkest
-// May 23, 2020
+// September 13, 2020
 
-void ptDifferentialUE_systematics(){
+void ptDifferentialUE_systematics_new(){
 
   //gStyle->SetErrorX(0.0001);
   
@@ -41,6 +41,7 @@ void ptDifferentialUE_systematics(){
   TString BBCselection[nEAbins] = { "BbcAdcSumEast>3559.12 && BbcAdcSumEast<11503", "BbcAdcSumEast>26718.1" };
  
   TString eastmidwest[nEtaBins] = { "East", "Mid", "West" };
+  TString emw[nEtaBins] = { "east", "mid", "west" };
   TString rhoVal[nEtaBins] = { "(chgEastRho_te+neuEastRho)", "(chgMidRho_te+neuMidRho)", "(chgWestRho_te+neuWestRho)" };
   TString ptSelection[nPtBins] = { "leadPt>10.0 && leadPt<15.0", "leadPt>=15.0 && leadPt<=20.0", "leadPt>20.0 && leadPt<30.0" };
   TString etaSelection[nEtaBins] = { "leadEta>=-0.6 && leadEta<=-0.3", "leadEta>-0.3 && leadEta<0.3", "leadEta>=0.3 && leadEta<=0.6" };
@@ -56,146 +57,133 @@ void ptDifferentialUE_systematics(){
   int jeval, ueeval, pval, eaval;
   TString name, saveName, title, avg, sigma, drawString;
 
-  string dirName = "prelim";
+  string dirName = "prelim_new";
   
-  TString fileName[nEAbins] = { "out/UE/pAuHTjetUE_loEA_diffPt_sept.root", "out/UE/pAuHTjetUE_hiEA_diffPt_sept.root" };
+  TString fileName[nEAbins] = { "out/UE/pAuHTjetUE_30cmVzCut_3cmVzDiff_loEA_variableBins.root", "out/UE/pAuHTjetUE_30cmVzCut_3cmVzDiff_hiEA_variableBins.root" };
   TString efficFileName[nEAbins] = { "src/trackeffic_loEA.root", "src/trackeffic_hiEA.root" };
+
+  const int eta_bins = 10;
+  double etabinEdge[eta_bins+1] = { -1.0, -0.8, -0.6, -0.4, -0.2, 0, 0.2, 0.4, 0.6, 0.8, 1.0 };
 
   TFile* inFile[nEAbins];
   TFile* efficFile[nEAbins];
+  // TF1* funcpp[nEAbins][eta_bins];
     
   for (int i=0; i<nEAbins; ++i) {
     efficFile[i] = new TFile( efficFileName[i], "READ" );
   }
 
-  const int eta_bins = 10;
   TH1D *hEff[eta_bins][nEAbins];
-  
+  // TF1* funcpp[eta_bins][nEAbins];
+  TF1* efficFit[eta_bins][nEAbins];
+
+  TCanvas *can = new TCanvas;  
+
   for (int i=0; i<eta_bins; ++i) {
     for (int j=0; j<nEAbins; ++j){    
       int binno = i+1;
-
+    
       if (j==0 ) { name = "eff_s_bin_1_3_bbc__"; name += binno; name += "_"; name += binno; name += "_eta"; }
       else if (j==1) {name = "eff_s_bin_7_10_bbc__"; name += binno; name += "_"; name += binno; name += "_eta"; }
-
+    
       hEff[i][j] = (TH1D*)efficFile[j]->Get(name);
 
-      cout<<name<<hEff[i][j]->GetTitle()<<"  "<<i<<endl;
+      name = EAbinName[j] + "EA_effic_etaBin"; name += i;
+      // funcpp[i][j] = new TF1(name,"[0]-0.06-[1]*exp([2]/x)+[3]*exp(-0.5*((x-[4])/[5])**2)/sqrt(2*pi*[5]*[5])-[6]*exp(-0.5*((x-[7])/[8])**2)/sqrt(2*pi*[8]*[8])+([9]-[10]*([16]-[11])^2-[12]*([16]-[11])^4-[13]*([16]-[11])^6-[14]*([16]-[11])^8)*exp(-[15]*x)",0.,10.);
+      // double etaParameter = (etabinEdge[i] + etabinEdge[i+1])/2.0;
+      // funcpp[i][j]->SetParameter(16,etaParameter);
+      // hEff[i][j]->Fit( funcpp[i][j] );
 
+
+      // TF1 *efficFit = new TF1(name,"[0]+[1]*log(x*[2])",0.,10.);
+      hEff[i][j]->SetAxisRange(0.0,1.3,"Y");
+      hEff[i][j]->SetAxisRange(0.0,15.0,"X");
+      hEff[i][j]->Fit( "pol4" );
+      hEff[i][j]->Draw();
+      
+      saveName = "plots/UE/" + dirName + "/" + name + ".pdf";
+      can->SaveAs(saveName,"PDF");
+
+      efficFit[i][j] = hEff[i][j]->GetFunction("pol4");
     }
   }
 
-  const int ybins = 10;
-  double ybinEdge[ybins+1] = { -1, -0.8, -0.6, -0.4, -0.2, 0.0, 0.2, 0.4, 0.6, 0.8, 1.0 };
-  
-  //  Tree variables
-  int RunID[nEAbins], EventID[nEAbins], nTowers[nEAbins], nPrimary[nEAbins], nGlobal[nEAbins], nVertices[nEAbins], refMult[nEAbins],
-    gRefMult[nEAbins], nUEpart_chg[nEAbins], nUEpart_neu[nEAbins];
-  double Vz[nEAbins], BbcAdcSumEast[nEAbins], leadPt[nEAbins], leadEta[nEAbins], leadPhi[nEAbins], chgEastRho[nEAbins], chgMidRho[nEAbins],
-    chgWestRho[nEAbins], neuEastRho[nEAbins], neuMidRho[nEAbins], neuWestRho[nEAbins], leadArea[nEAbins], eastRho[nEAbins], midRho[nEAbins],
-    westRho[nEAbins], leadPtCorrected[nEAbins], chgEastRho_te[nEAbins], chgMidRho_te[nEAbins], chgWestRho_te[nEAbins], rho_te[nEAbins], rho[nEAbins];
+  const int xbins = 55;
+  double xbinEdge[xbins+1];
+  const int zbins = 20;
+  double zbinEdge[zbins+1];  
+  for (int i=0; i<xbins+1; ++i) {
+    xbinEdge[i] = (double) i+4.0;
+    if (i<zbins+1) { zbinEdge[i] = (double)(-10.0 + i)/10.0; }
+  }
+  const int ybins = 14;
+  double ybinEdge[ybins+1] = { 0.20, 0.25, 0.30, 0.35, 0.40, 0.50, 0.60, 0.70, 0.80, 1.0, 2.0, 3.0, 5.0, 10.0, 15.0 };
 
-  TH2D *hChgUEpt[nEAbins][nPtBins]; TH2D *hNeuUEpt[nEAbins][nPtBins];
-  TH1D *hRho[nEAbins][nPtBins];  TH1D *hNchg[nEAbins][nPtBins];  TH1D *hNchg_te[nEAbins][nPtBins];  TH1D *hNneu[nEAbins][nPtBins];
-  TTree *jetTree[nEAbins]; int nEntries[nEAbins];
+  
+  TH3D *h_UE3D[nEAbins][nEtaBins];
+  TH1D *h_leadPt[nEAbins][nEtaBins];
+  
+  TH2D *hChgUEpt[nEAbins][nPtBins];
+  TH1D *hLeadPt[nEAbins][nPtBins];
+  TH1D *hNchg[nEAbins][nPtBins];
+  TH1D *hNchg_te[nEAbins][nPtBins];
+  int nEntries[nEAbins];
+
+  TH3D *hChgUE3D[nEAbins]; 
+  TH1D *hALLleadPt[nEAbins];
 
   for (int i=0; i<nEAbins;++i){
     inFile[i] = new TFile( fileName[i], "READ" );
 
-    jetTree[i] = (TTree*) inFile[i]->Get("HTjetTree");
+    name = "hChgUE3D_" + EAbinName[i];
+    hChgUE3D[i] = new TH3D(name,";leading jet p_{T} (GeV);chg. UE part. p_{T} (GeV);chg. UE part. #eta", xbins,xbinEdge,ybins,ybinEdge,zbins,zbinEdge);
 
-    jetTree[i]->SetBranchAddress( "RunID", &RunID[i] );
-    jetTree[i]->SetBranchAddress( "EventID", &EventID[i] );
-    jetTree[i]->SetBranchAddress( "nTowers", &nTowers[i] );
-    jetTree[i]->SetBranchAddress( "nPrimary", &nPrimary[i] );
-    jetTree[i]->SetBranchAddress( "nGlobal", &nGlobal[i] );
-    jetTree[i]->SetBranchAddress( "nVertices", &nVertices[i] );
-    jetTree[i]->SetBranchAddress( "refMult", &refMult[i] );
-    jetTree[i]->SetBranchAddress( "gRefMult", &gRefMult[i] );
-    jetTree[i]->SetBranchAddress( "Vz", &Vz[i] );
-    jetTree[i]->SetBranchAddress( "leadPt", &leadPt[i] );
-    jetTree[i]->SetBranchAddress( "BbcAdcSumEast", &BbcAdcSumEast[i] );
-    jetTree[i]->SetBranchAddress( "leadEta", &leadEta[i] );
-    jetTree[i]->SetBranchAddress( "leadPhi", &leadPhi[i] );
-    jetTree[i]->SetBranchAddress( "chgEastRho", &chgEastRho[i] );
-    jetTree[i]->SetBranchAddress( "chgMidRho", &chgMidRho[i] );
-    jetTree[i]->SetBranchAddress( "chgWestRho", &chgWestRho[i] );
-    jetTree[i]->SetBranchAddress( "chgEastRho_te", &chgEastRho_te[i] );
-    jetTree[i]->SetBranchAddress( "chgMidRho_te", &chgMidRho_te[i] );
-    jetTree[i]->SetBranchAddress( "chgWestRho_te", &chgWestRho_te[i] );
-    jetTree[i]->SetBranchAddress( "neuEastRho", &neuEastRho[i] );
-    jetTree[i]->SetBranchAddress( "neuMidRho", &neuMidRho[i] );
-    jetTree[i]->SetBranchAddress( "neuWestRho", &neuWestRho[i] );
-    jetTree[i]->SetBranchAddress( "leadArea", &leadArea[i] );
-    jetTree[i]->SetBranchAddress( "leadPtCorrected", &leadPtCorrected[i] );
-
-    nEntries[i] = jetTree[i]->GetEntries();
-
-    for (int p=0; p<nPtBins; ++p) {
-      name = "hChgBgPtEta"; name += ptBinName[p];
-      hChgUEpt[i][p] = (TH2D*)inFile[i]->Get( name );
-      name = "hNeuBgPtEta"; name += ptBinName[p];
-      hNeuUEpt[i][p] = (TH2D*)inFile[i]->Get( name );
+    name = "hALLleadPt_" + EAbinName[i];
+    hALLleadPt[i] = new TH1D(name,";leading jet p_{T} (GeV)", 55,4.0,59.0);
+      
+    for (int e=0; e<nEtaBins; ++e) {
+      name = "hChgUE_" + emw[e] + "EtaJet";
+      h_UE3D[i][e] = (TH3D*)inFile[i]->Get(name);
+      hChgUE3D[i]->Add( h_UE3D[i][e] );
+      name = "hLeadPt_" + emw[e] + "EtaJet";
+      h_leadPt[i][e] = (TH1D*)inFile[i]->Get(name);
+      hALLleadPt[i]->Add( h_leadPt[i][e] );
+    }
     
-      name = "hRho_"; name += EAbinName[i]; name += ptBinName[p];
-      hRho[i][p] = new TH1D(name,"UE;<#rho> [GeV/#it{c}]", 30,0.0,15.0);
-      
-      name = "hNchg_"; name += EAbinName[i]; name += ptBinName[p];
-      hNchg[i][p] = new TH1D( name,"# charged particles in UE", 50,0.0,50.0);
+    for (int p=0; p<nPtBins; ++p) {
 
-      name = "hNchg_te_"; name += EAbinName[i]; name += ptBinName[p];
-      hNchg_te[i][p] = new TH1D( name,"# track effic. corr. charged particles in UE", 50,0.0,50.0);
+      hChgUE3D[i]->GetXaxis()->SetRangeUser(ptLo[p],ptHi[p]); // X=leadPt, Y=UEpt, Z=UEeta
+      hALLleadPt[i]->GetXaxis()->SetRangeUser(ptLo[p],ptHi[p]);
+	
+      name = "hChgUE" + EAbinName[i] + ptBinString[p];
+      hChgUEpt[i][p] = (TH2D*)hChgUE3D[i]->Project3D( "ZY" );
+      hChgUEpt[i][p]->SetName(name);
       
-      name = "hNneu_"; name += EAbinName[i]; name += ptBinName[p];
-      hNneu[i][p] = new TH1D( name,"# neutral particles in UE", 50,0.0,50.0);
+      name = "hLeadPt_"; name += EAbinName[i]; name += ptBinName[p];
+      hLeadPt[i][p] = (TH1D*)hALLleadPt[i]->DrawClone(name);
+      hLeadPt[i][p]->SetEntries(hALLleadPt[i]->Integral());
     }
 
 
   }
 
-
-  for (int a=nEAbins-1; a>=0; --a) {
-    for (int i=0; i<nEntries[a]; ++i) {
-      jetTree[a]->GetEntry(i);
-      if ( !(leadPtCorrected[a]>ptLo[0] && leadPtCorrected[a]<ptHi[2]) ) { continue; }
-      // if ( !(leadPtCorrected[a]>ptLo[1] && leadPtCorrected[a]<ptHi[1]) ) { continue; }
-      else {
-
-	pval = 99;
-
-	for ( int p=0; p<3; ++p ) {
-	  if ( leadPtCorrected[a] >= ptLo[p]  &&  leadPtCorrected[a] <= ptHi[p] ) { pval = p; }
-	}
-	if ( pval==99 /*|| jeval==99*/ ) { cerr<<"UNABLE TO FIND PT OR ETA RANGE FOR LEAD JET"<<endl<<leadPtCorrected<<endl<<endl; }
-
-	hRho[a][pval]->Fill(leadPt[a]);
-	hNchg[a][pval]->Fill(nUEpart_chg[a]);
-	hNneu[a][pval]->Fill(nUEpart_neu[a]);
-      }
-      
-    }
-  }
 
   
   for (int a=nEAbins-1; a>=0; --a) {
     for (int p=0; p<nPtBins; ++p) {
 
-      hChgUEpt[a][p]->Scale(1./hRho[a][p]->GetEntries());
-      cout<<EAbinString[a]<<"  "<<ptBinString[p]<<"  "<<hRho[a][p]->GetEntries()<<endl;
-      hNeuUEpt[a][p]->Scale(1./hRho[a][p]->GetEntries());
+      hChgUEpt[a][p]->Scale(1./hLeadPt[a][p]->GetEntries());
+      cout<<EAbinString[a]<<"  "<<ptBinString[p]<<"  "<<hLeadPt[a][p]->GetEntries()<<endl;
 
     }
   }
   
-  TH1D *hChgPtDist[ybins][nEAbins][nPtBins];
+  TH1D *hChgPtDist[eta_bins][nEAbins][nPtBins];
   
-  int ecolor[ybins] = { 618, 633, 807, 800, 819, 419, 433, 862, 884, 619 };
-  TString ybinEdgeString[ybins+1] = { "-1.0", "-0.8", "-0.6", "-0.4", "-0.2", "0.0", "0.2", "0.4", "0.6", "0.8", "1.0" };
+  int ecolor[eta_bins] = { 618, 633, 807, 800, 819, 419, 433, 862, 884, 619 };
+  TString etabinEdgeString[eta_bins+1] = { "-1.0", "-0.8", "-0.6", "-0.4", "-0.2", "0.0", "0.2", "0.4", "0.6", "0.8", "1.0" };
   
   TCanvas * cpt[nPtBins];
-
-  TH1D *hTreeChgRho[nEAbins][nPtBins];
-  TH1D *hChgDist[nEAbins][nPtBins];
 
   TLegend *legpt[nPtBins];
   
@@ -204,7 +192,7 @@ void ptDifferentialUE_systematics(){
     cpt[p] = new TCanvas( name , "" ,700 ,500 );              // CANVAS 0
     cpt[p]->SetLogy();
     for (int a=nEAbins-1; a>=0; --a) {
-      for (int i=0; i<ybins; ++i) {
+      for (int i=0; i<eta_bins; ++i) {
 	int binno = i+1;
 	name = "hChgpTdist"; name += ptBinName[p]; name += EAbinName[a]; name += "EA_etabin"; name += binno;
 	hChgUEpt[a][p]->GetYaxis()->SetRange( binno, binno+1 );
@@ -213,9 +201,7 @@ void ptDifferentialUE_systematics(){
 	hChgUEpt[a][p]->SetMarkerStyle( ptMarker[p] );	
 	hChgPtDist[i][a][p] = (TH1D*) hChgUEpt[a][p]->ProjectionX( name, binno, binno+1 );
 	title = "Charged UE p_{T} dist. for "; title += ptBinString[p]; title += " (";
-	title += ybinEdgeString[i]; title +="<#eta<"; title += ybinEdgeString[binno]; title += ");p_{T} [GeV/#it{c}]";
-
-
+	title += etabinEdgeString[i]; title +="<#eta<"; title += etabinEdgeString[binno]; title += ");p_{T} [GeV/#it{c}]";
 	hChgPtDist[i][a][p]->SetTitle( title );
 	hChgPtDist[i][a][p]->GetYaxis()->SetRangeUser(0.000001,0.3);
 	if (i==0) { hChgPtDist[i][a][p]->Draw(""); }
@@ -239,9 +225,6 @@ void ptDifferentialUE_systematics(){
       name = "hChgUEpt"; name += ptBinName[p]; name += EAbinName[a];  // rename these!
       hChgUEpt[a][p]->SetName( name );
 
-      name = "hNeuUEpt"; name += ptBinName[p]; name += EAbinName[a];
-      hNeuUEpt[a][p]->SetName( name );
-      
       hChgUEpt_te[a][p] = (TH2D*) hChgUEpt[a][p]->Clone();       // create clone of 2D pt distributions
       name = "hChgUEpt"; name += ptBinName[p]; name += EAbinName[a]; name += "_te";
       hChgUEpt_te[a][p]->SetName( name );
@@ -257,67 +240,73 @@ void ptDifferentialUE_systematics(){
 
       for (int iy=0; iy<hChgUEpt_te[a][p]->GetNbinsY(); ++iy) {  // loop over 20 eta bins
 
-	int fileNo = 99;
-	int ybin = iy+1;
+  	int fileNo = 99;
+  	int ybin = iy+1;
 	
-	double binCenter = hChgUEpt_te[a][p]->GetYaxis()->GetBinCenter( ybin );
+  	double binCenter = hChgUEpt_te[a][p]->GetYaxis()->GetBinCenter( ybin );
+
+	for (int j=0; j<eta_bins; ++j) {
+	  if ( binCenter>etabinEdge[j] && binCenter<etabinEdge[j+1] ) { fileNo = j; };
+	}
+  	if ( fileNo==99 ) { cerr<<"CANNOT FIND EFFICIENCY HISTOGRAM"<<endl; }
+
+	// cout<<fileNo<<"  "<<binCenter<<"  "<<hEff[fileNo][a]->GetTitle()<<endl;
+
+  	for(int ix = 1; ix <= hChgUEpt[a][p]->GetNbinsX(); ++ix){
+  	  int xbin = ix+1;
+	  
+  	  double pt = hChgUEpt[a][p]->GetXaxis()->GetBinCenter(xbin);
+  	  if ( pt > 3.0 ) { pt = 3.0; }
+  	  double ptbin = hEff[a][fileNo]->FindBin(pt);
+	  
+  	  // double eff = hEff[a][fileNo]->GetBinContent(ptbin);
+	  double eff = efficFit[a][fileNo]->Eval( hChgUEpt[a][p]->GetXaxis()->GetBinCenter(xbin) );
+	  
+	  double old_value = hChgUEpt[a][p]->GetBinContent(xbin,ybin);
+  	  double old_err = hChgUEpt[a][p]->GetBinError(xbin,ybin);
+  	  double corr_value = (double) old_value/eff;
+  	  double corr_err = (double) old_err/eff;
+  	  hChgUEpt_te[a][p]->SetBinContent( xbin, ybin, corr_value);
+  	  hChgUEpt_te[a][p]->SetBinError( xbin, ybin, corr_err );
+  	}
+
+
+  	// sys1: trackeffic+0.05
+  	for(int ix = 1; ix <= hChgUEpt[a][p]->GetNbinsX(); ++ix){
+  	  int xbin = ix+1;
+	  
+  	  double pt = hChgUEpt[a][p]->GetXaxis()->GetBinCenter(xbin);
+  	  if ( pt > 3.0 ) { pt = 3.0; }
+  	  double ptbin = hEff[a][fileNo]->FindBin(pt);
+  	  // double eff = hEff[a][fileNo]->GetBinContent(ptbin) + 0.05;
+ 	  double eff = efficFit[a][fileNo]->Eval( hChgUEpt[a][p]->GetXaxis()->GetBinCenter(xbin) ) + 0.05;
+ 	  double old_value = hChgUEpt[a][p]->GetBinContent(xbin,ybin);
+  	  double old_err = hChgUEpt[a][p]->GetBinError(xbin,ybin);
+  	  double corr_value = (double) old_value/eff;
+  	  double corr_err = (double) old_err/eff;
+  	  hChgUEpt_te_sys1[a][p]->SetBinContent( xbin, ybin, corr_value);
+  	  hChgUEpt_te_sys1[a][p]->SetBinError( xbin, ybin, corr_err );
+  	}
+
+
+  	// sys2: trackeffic-0.05
+  	for(int ix = 1; ix <= hChgUEpt[a][p]->GetNbinsX(); ++ix){
+  	  int xbin = ix+1;
+	  
+  	  double pt = hChgUEpt[a][p]->GetXaxis()->GetBinCenter(xbin);
+  	  if ( pt > 3.0 ) { pt = 3.0; }
+  	  double ptbin = hEff[a][fileNo]->FindBin(pt);
+  	  // double eff = hEff[a][fileNo]->GetBinContent(ptbin) - 0.05;
+	  double eff = efficFit[a][fileNo]->Eval( hChgUEpt[a][p]->GetXaxis()->GetBinCenter(xbin) ) - 0.05;
+  	  double old_value = hChgUEpt[a][p]->GetBinContent(xbin,ybin);
+  	  double old_err = hChgUEpt[a][p]->GetBinError(xbin,ybin);
+  	  double corr_value = (double) old_value/eff;
+  	  double corr_err = (double) old_err/eff;
+  	  hChgUEpt_te_sys2[a][p]->SetBinContent( xbin, ybin, corr_value);
+  	  hChgUEpt_te_sys2[a][p]->SetBinError( xbin, ybin, corr_err );
+  	}
+
 	
-	for (int j=0; j<ybins; ++j) {
-	  if ( binCenter>ybinEdge[j] && binCenter<ybinEdge[j+1] ) { fileNo = j-1; continue; };
-	}
-	if ( fileNo==99 ) { cerr<<"CANNOT FIND EFFICIENCY HISTOGRAM   "<<binCenter<<endl; }
-
-	cout<<binCenter<<"  "<<fileNo<<"  "<<hEff[a][fileNo]->GetTitle()<<endl;
-
-	for(int ix = 1; ix <= hChgUEpt[a][p]->GetNbinsX(); ++ix){
-	  int xbin = ix+1;
-	  
-	  double pt = hChgUEpt[a][p]->GetXaxis()->GetBinCenter(xbin);
-	  if ( pt > 3.0 ) { pt = 3.0; }
-	  double ptbin = hEff[a][fileNo]->FindBin(pt);
-	  double eff = hEff[a][fileNo]->GetBinContent(ptbin);
-	  double old_value = hChgUEpt[a][p]->GetBinContent(xbin,ybin);
-	  double old_err = hChgUEpt[a][p]->GetBinError(xbin,ybin);
-	  double corr_value = (double) old_value/eff;
-	  double corr_err = (double) old_err/eff;
-	  hChgUEpt_te[a][p]->SetBinContent( xbin, ybin, corr_value);
-	  hChgUEpt_te[a][p]->SetBinError( xbin, ybin, corr_err );
-	}
-
-
-	// sys1: trackeffic+0.05
-	for(int ix = 1; ix <= hChgUEpt[a][p]->GetNbinsX(); ++ix){
-	  int xbin = ix+1;
-	  
-	  double pt = hChgUEpt[a][p]->GetXaxis()->GetBinCenter(xbin);
-	  if ( pt > 3.0 ) { pt = 3.0; }
-	  double ptbin = hEff[a][fileNo]->FindBin(pt);
-	  double eff = hEff[a][fileNo]->GetBinContent(ptbin) + 0.05;
-	  double old_value = hChgUEpt[a][p]->GetBinContent(xbin,ybin);
-	  double old_err = hChgUEpt[a][p]->GetBinError(xbin,ybin);
-	  double corr_value = (double) old_value/eff;
-	  double corr_err = (double) old_err/eff;
-	  hChgUEpt_te_sys1[a][p]->SetBinContent( xbin, ybin, corr_value);
-	  hChgUEpt_te_sys1[a][p]->SetBinError( xbin, ybin, corr_err );
-	}
-
-
-	// sys2: trackeffic-0.05
-	for(int ix = 1; ix <= hChgUEpt[a][p]->GetNbinsX(); ++ix){
-	  int xbin = ix+1;
-	  
-	  double pt = hChgUEpt[a][p]->GetXaxis()->GetBinCenter(xbin);
-	  if ( pt > 3.0 ) { pt = 3.0; }
-	  double ptbin = hEff[a][fileNo]->FindBin(pt);
-	  double eff = hEff[a][fileNo]->GetBinContent(ptbin) - 0.05;
-	  double old_value = hChgUEpt[a][p]->GetBinContent(xbin,ybin);
-	  double old_err = hChgUEpt[a][p]->GetBinError(xbin,ybin);
-	  double corr_value = (double) old_value/eff;
-	  double corr_err = (double) old_err/eff;
-	  hChgUEpt_te_sys2[a][p]->SetBinContent( xbin, ybin, corr_value);
-	  hChgUEpt_te_sys2[a][p]->SetBinError( xbin, ybin, corr_err );
-	}
-
       }
 	
     }
@@ -347,26 +336,26 @@ void ptDifferentialUE_systematics(){
 
       for ( int e=0; e<nEtaBins; ++e) {
 
-	hChgUEpt[a][p]->GetYaxis()->SetRangeUser( etaLo[e], etaHi[e] );	
-	chgRho[e][a][p] = ( hChgUEpt[a][p]->GetMean(1) * hChgUEpt[a][p]->Integral() ) / area[e];
+  	hChgUEpt[a][p]->GetYaxis()->SetRangeUser( etaLo[e], etaHi[e] );	
+  	chgRho[e][a][p] = ( hChgUEpt[a][p]->GetMean(1) * hChgUEpt[a][p]->Integral() ) / area[e];
 
 
-	//  WITH TRACKING EFFICIENCY
-	hChgUEpt_te[a][p]->GetYaxis()->SetRangeUser( etaLo[e], etaHi[e] );
-	te_meanChgPt[e][a][p] = hChgUEpt_te[a][p]->GetMean(1);
-	te_meanChgPt_err[e][a][p] = hChgUEpt_te[a][p]->GetMeanError(1);
+  	//  WITH TRACKING EFFICIENCY
+  	hChgUEpt_te[a][p]->GetYaxis()->SetRangeUser( etaLo[e], etaHi[e] );
+  	te_meanChgPt[e][a][p] = hChgUEpt_te[a][p]->GetMean(1);
+  	te_meanChgPt_err[e][a][p] = hChgUEpt_te[a][p]->GetMeanError(1);
 
-	nChg_te[e][a][p] = hChgUEpt_te[a][p]->Integral();
-	nChg_te_err[e][a][p] = hChgUEpt_te[a][p]->GetMeanError();
+  	nChg_te[e][a][p] = hChgUEpt_te[a][p]->Integral();
+  	nChg_te_err[e][a][p] = hChgUEpt_te[a][p]->GetMeanError();
 
-	// TRACKING EFFICIENCY SYSTEMATICS
-	hChgUEpt_te_sys1[a][p]->GetYaxis()->SetRangeUser( etaLo[e], etaHi[e] );
-	te_meanChgPt_sys1[e][a][p] = hChgUEpt_te_sys1[a][p]->GetMean(1);
-	nChg_te_sys1[e][a][p] = hChgUEpt_te_sys1[a][p]->Integral();
+  	// TRACKING EFFICIENCY SYSTEMATICS
+  	hChgUEpt_te_sys1[a][p]->GetYaxis()->SetRangeUser( etaLo[e], etaHi[e] );
+  	te_meanChgPt_sys1[e][a][p] = hChgUEpt_te_sys1[a][p]->GetMean(1);
+  	nChg_te_sys1[e][a][p] = hChgUEpt_te_sys1[a][p]->Integral();
 
-	hChgUEpt_te_sys2[a][p]->GetYaxis()->SetRangeUser( etaLo[e], etaHi[e] );
-	te_meanChgPt_sys2[e][a][p] = hChgUEpt_te_sys2[a][p]->GetMean(1);
-	nChg_te_sys2[e][a][p] = hChgUEpt_te_sys1[a][p]->Integral();
+  	hChgUEpt_te_sys2[a][p]->GetYaxis()->SetRangeUser( etaLo[e], etaHi[e] );
+  	te_meanChgPt_sys2[e][a][p] = hChgUEpt_te_sys2[a][p]->GetMean(1);
+  	nChg_te_sys2[e][a][p] = hChgUEpt_te_sys1[a][p]->Integral();
 
       }      
     }
@@ -379,16 +368,16 @@ void ptDifferentialUE_systematics(){
     for ( int p=0; p<nPtBins; ++p) {
       for ( int e=0; e<nEtaBins; ++e) {
 
-	//nChg_te
-	double sys1 = fabs( 1 - ( nChg_te_sys1[e][a][p]/nChg_te[e][a][p] ) );
-	double sys2 = fabs( 1 - ( nChg_te_sys2[e][a][p]/nChg_te[e][a][p] ) );
-	nChg_te_sys[e][a][p] = max( sys1, sys2 );
+  	//nChg_te
+  	double sys1 = fabs( 1 - ( nChg_te_sys1[e][a][p]/nChg_te[e][a][p] ) );
+  	double sys2 = fabs( 1 - ( nChg_te_sys2[e][a][p]/nChg_te[e][a][p] ) );
+  	nChg_te_sys[e][a][p] = max( sys1, sys2 );
 
-	sys1 = fabs( 1 - ( te_meanChgPt_sys1[e][a][p] / te_meanChgPt[e][a][p] ) );
-	sys2 = fabs( 1 - ( te_meanChgPt_sys2[e][a][p] / te_meanChgPt[e][a][p] ) );
-	te_meanChgPt_sys[e][a][p] = max( sys1, sys2 );
+  	sys1 = fabs( 1 - ( te_meanChgPt_sys1[e][a][p] / te_meanChgPt[e][a][p] ) );
+  	sys2 = fabs( 1 - ( te_meanChgPt_sys2[e][a][p] / te_meanChgPt[e][a][p] ) );
+  	te_meanChgPt_sys[e][a][p] = max( sys1, sys2 );
 
-	cout<<te_meanChgPt[e][a][p]<<"\t"; 
+  	cout<<te_meanChgPt[e][a][p]<<"\t"; 
       }
       cout<<endl;
     }
@@ -463,8 +452,8 @@ void ptDifferentialUE_systematics(){
       hCHGdNdetadphi_te_sys[a][e]->SetMarkerSize( 0 );
 
       if (a==0) {
-	hCHGdNdetadphi_te_sys[a][e]->SetFillStyle(3002);
-	hCHGdNdetadphi_te_sys[a][e]->SetFillColor( etaColor[e]);
+  	hCHGdNdetadphi_te_sys[a][e]->SetFillStyle(3002);
+  	hCHGdNdetadphi_te_sys[a][e]->SetFillColor( etaColor[e]);
       }
       else { hCHGdNdetadphi_te_sys[a][e]->SetFillColorAlpha( etaColor[e], 0.2 ); }
 
@@ -472,16 +461,16 @@ void ptDifferentialUE_systematics(){
 	
       for ( int p=0; p<nPtBins; ++p) {
 	
-	int binno = startBin[p] + (2*e);
+  	int binno = startBin[p] + (2*e);
 	
-	double value = (double) ( nChg_te[e][a][p] / area[e] );
-	hCHGdNdetadphi_te[a][e]->SetBinContent( binno, value );
-	hCHGdNdetadphi_te[a][e]->SetBinError( binno, nChg_te_err[e][a][p] );
+  	double value = (double) ( nChg_te[e][a][p] / area[e] );
+  	hCHGdNdetadphi_te[a][e]->SetBinContent( binno, value );
+  	hCHGdNdetadphi_te[a][e]->SetBinError( binno, nChg_te_err[e][a][p] );
 
-	for (int i=-3; i<4; ++i) {
-	  hCHGdNdetadphi_te_sys[a][e]->SetBinContent( binno+i, value );
-	  hCHGdNdetadphi_te_sys[a][e]->SetBinError( binno+i, value*nChg_te_sys[e][a][p] );
-	}
+  	for (int i=-3; i<4; ++i) {
+  	  hCHGdNdetadphi_te_sys[a][e]->SetBinContent( binno+i, value );
+  	  hCHGdNdetadphi_te_sys[a][e]->SetBinError( binno+i, value*nChg_te_sys[e][a][p] );
+  	}
 	
       }
     }
@@ -598,24 +587,24 @@ void ptDifferentialUE_systematics(){
       hChg_pt_te_sys[a][e]->SetMarkerSize( 0.0 );
 
       if (a==0) {
-	hChg_pt_te_sys[a][e]->SetFillStyle(3002);
-	hChg_pt_te_sys[a][e]->SetFillColor( etaColor[e]);
+  	hChg_pt_te_sys[a][e]->SetFillStyle(3002);
+  	hChg_pt_te_sys[a][e]->SetFillColor( etaColor[e]);
       }
       else { hChg_pt_te_sys[a][e]->SetFillColorAlpha( etaColor[e], 0.2 ); }
       //hCHGdNdetadphi_te[a][e];
 	
       for ( int p=0; p<nPtBins; ++p) {
 	
-	int binno = startBin[p] + (2*e);
+  	int binno = startBin[p] + (2*e);
 
-	double value = te_meanChgPt[e][a][p];
-	hChg_pt_te[a][e]->SetBinContent( binno, value );
-	hChg_pt_te[a][e]->SetBinError( binno, te_meanChgPt_err[e][a][p] );
+  	double value = te_meanChgPt[e][a][p];
+  	hChg_pt_te[a][e]->SetBinContent( binno, value );
+  	hChg_pt_te[a][e]->SetBinError( binno, te_meanChgPt_err[e][a][p] );
 
-	for (int i=-2; i<3; ++i) {
-	  hChg_pt_te_sys[a][e]->SetBinContent( binno+i, value );
-	  hChg_pt_te_sys[a][e]->SetBinError( binno+i, value*nChg_te_sys[e][a][p] );
-	}
+  	for (int i=-2; i<3; ++i) {
+  	  hChg_pt_te_sys[a][e]->SetBinContent( binno+i, value );
+  	  hChg_pt_te_sys[a][e]->SetBinError( binno+i, value*nChg_te_sys[e][a][p] );
+  	}
 		
       }
     }
@@ -646,20 +635,20 @@ void ptDifferentialUE_systematics(){
   //c1->SetGridx();
 
 
-  TFile *outFile = new TFile("src/ptdifferentialUE.root","RECREATE");
+  // TFile *outFile = new TFile("src/ptdifferentialUE.root","RECREATE");
   
-  for (int a=0; a<nEAbins; ++a) {
-    for (int p=0; p<nPtBins; ++p) {
+  // for (int a=0; a<nEAbins; ++a) {
+  //   for (int p=0; p<nPtBins; ++p) {
 
-      hChgUEpt[a][p]->Write();
-      hChgUEpt_te[a][p]->Write();
-      hNeuUEpt[a][p]->Write();
+  //     hChgUEpt[a][p]->Write();
+  //     hChgUEpt_te[a][p]->Write();
+  //     hNeuUEpt[a][p]->Write();
 	
-    }
-  }
-  c0->Write();
-  c1->Write();
+  //   }
+  // }
+  // c0->Write();
+  // c1->Write();
       
-  outFile->Write();
+  // outFile->Write();
   
 }
