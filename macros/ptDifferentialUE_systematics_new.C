@@ -3,7 +3,7 @@
 
 void ptDifferentialUE_systematics_new(){
 
-  //gStyle->SetErrorX(0.0001);
+  //gStyle->SetErrorX(0.0001);  // gStyle->SetOptFit(1);
   
   TH1::SetDefaultSumw2();  TH2::SetDefaultSumw2();  TH3::SetDefaultSumw2();
 
@@ -73,8 +73,8 @@ void ptDifferentialUE_systematics_new(){
     efficFile[i] = new TFile( efficFileName[i], "READ" );
   }
 
+  TF1 *eff = new TF1("eff","((100.+log(x/200.0))/200.)*exp([0]+[1]*x)+[2]",0.2,15.0);
   TH1D *hEff[eta_bins][nEAbins];
-  // TF1* funcpp[eta_bins][nEAbins];
   TF1* efficFit[eta_bins][nEAbins];
 
   TCanvas *can = new TCanvas;  
@@ -89,22 +89,19 @@ void ptDifferentialUE_systematics_new(){
       hEff[i][j] = (TH1D*)efficFile[j]->Get(name);
 
       name = EAbinName[j] + "EA_effic_etaBin"; name += i;
-      // funcpp[i][j] = new TF1(name,"[0]-0.06-[1]*exp([2]/x)+[3]*exp(-0.5*((x-[4])/[5])**2)/sqrt(2*pi*[5]*[5])-[6]*exp(-0.5*((x-[7])/[8])**2)/sqrt(2*pi*[8]*[8])+([9]-[10]*([16]-[11])^2-[12]*([16]-[11])^4-[13]*([16]-[11])^6-[14]*([16]-[11])^8)*exp(-[15]*x)",0.,10.);
-      // double etaParameter = (etabinEdge[i] + etabinEdge[i+1])/2.0;
-      // funcpp[i][j]->SetParameter(16,etaParameter);
-      // hEff[i][j]->Fit( funcpp[i][j] );
 
-
-      // TF1 *efficFit = new TF1(name,"[0]+[1]*log(x*[2])",0.,10.);
       hEff[i][j]->SetAxisRange(0.0,1.3,"Y");
       hEff[i][j]->SetAxisRange(0.0,15.0,"X");
-      hEff[i][j]->Fit( "pol4" );
+      hEff[i][j]->Fit( "eff", "EM" );
+
+      efficFit[i][j] = hEff[i][j]->GetFunction("eff");
+      efficFit[i][j]->SetName(name);
+      
       hEff[i][j]->Draw();
       
       saveName = "plots/UE/" + dirName + "/" + name + ".pdf";
       can->SaveAs(saveName,"PDF");
 
-      efficFit[i][j] = hEff[i][j]->GetFunction("pol4");
     }
   }
 
@@ -135,7 +132,7 @@ void ptDifferentialUE_systematics_new(){
   for (int i=0; i<nEAbins;++i){
     inFile[i] = new TFile( fileName[i], "READ" );
 
-    name = "hChgUE3D_" + EAbinName[i];
+    name = "hChgUE3D_" + EAbinName[i]; //55,4.0,59.0, 30,0.0,15.0, 20,-1.0,1.0);//
     hChgUE3D[i] = new TH3D(name,";leading jet p_{T} (GeV);chg. UE part. p_{T} (GeV);chg. UE part. #eta", xbins,xbinEdge,ybins,ybinEdge,zbins,zbinEdge);
 
     name = "hALLleadPt_" + EAbinName[i];
@@ -149,7 +146,7 @@ void ptDifferentialUE_systematics_new(){
       h_leadPt[i][e] = (TH1D*)inFile[i]->Get(name);
       hALLleadPt[i]->Add( h_leadPt[i][e] );
     }
-    
+
     for (int p=0; p<nPtBins; ++p) {
 
       hChgUE3D[i]->GetXaxis()->SetRangeUser(ptLo[p],ptHi[p]); // X=leadPt, Y=UEpt, Z=UEeta
@@ -256,16 +253,18 @@ void ptDifferentialUE_systematics_new(){
   	  int xbin = ix+1;
 	  
   	  double pt = hChgUEpt[a][p]->GetXaxis()->GetBinCenter(xbin);
-  	  if ( pt > 3.0 ) { pt = 3.0; }
+  	  // if ( pt > 3.0 ) { pt = 3.0; }
   	  double ptbin = hEff[a][fileNo]->FindBin(pt);
 	  
   	  // double eff = hEff[a][fileNo]->GetBinContent(ptbin);
 	  double eff = efficFit[a][fileNo]->Eval( hChgUEpt[a][p]->GetXaxis()->GetBinCenter(xbin) );
+	  // double eff_err = efficFit[a][fileNo]->Eval( hChgUEpt[a][p]->GetXaxis()->GetBinCenter(xbin) );
 	  
 	  double old_value = hChgUEpt[a][p]->GetBinContent(xbin,ybin);
-  	  double old_err = hChgUEpt[a][p]->GetBinError(xbin,ybin);
   	  double corr_value = (double) old_value/eff;
-  	  double corr_err = (double) old_err/eff;
+  	  double old_err = hChgUEpt[a][p]->GetBinError(xbin,ybin);
+	  double relativeError = sqrt( (old_err*old_err) + ( hEff[a][fileNo]->GetBinError(ptbin)*hEff[a][fileNo]->GetBinError(ptbin)) );
+  	  double corr_err = corr_value*relativeError;
   	  hChgUEpt_te[a][p]->SetBinContent( xbin, ybin, corr_value);
   	  hChgUEpt_te[a][p]->SetBinError( xbin, ybin, corr_err );
   	}
@@ -276,14 +275,16 @@ void ptDifferentialUE_systematics_new(){
   	  int xbin = ix+1;
 	  
   	  double pt = hChgUEpt[a][p]->GetXaxis()->GetBinCenter(xbin);
-  	  if ( pt > 3.0 ) { pt = 3.0; }
+  	  // if ( pt > 3.0 ) { pt = 3.0; }
   	  double ptbin = hEff[a][fileNo]->FindBin(pt);
   	  // double eff = hEff[a][fileNo]->GetBinContent(ptbin) + 0.05;
  	  double eff = efficFit[a][fileNo]->Eval( hChgUEpt[a][p]->GetXaxis()->GetBinCenter(xbin) ) + 0.05;
+	  
  	  double old_value = hChgUEpt[a][p]->GetBinContent(xbin,ybin);
-  	  double old_err = hChgUEpt[a][p]->GetBinError(xbin,ybin);
   	  double corr_value = (double) old_value/eff;
-  	  double corr_err = (double) old_err/eff;
+  	  double old_err = hChgUEpt[a][p]->GetBinError(xbin,ybin);
+	  double relativeError = sqrt( (old_err*old_err) + ( hEff[a][fileNo]->GetBinError(ptbin)*hEff[a][fileNo]->GetBinError(ptbin)) );
+  	  double corr_err = corr_value*relativeError;
   	  hChgUEpt_te_sys1[a][p]->SetBinContent( xbin, ybin, corr_value);
   	  hChgUEpt_te_sys1[a][p]->SetBinError( xbin, ybin, corr_err );
   	}
@@ -294,14 +295,15 @@ void ptDifferentialUE_systematics_new(){
   	  int xbin = ix+1;
 	  
   	  double pt = hChgUEpt[a][p]->GetXaxis()->GetBinCenter(xbin);
-  	  if ( pt > 3.0 ) { pt = 3.0; }
+  	  // if ( pt > 3.0 ) { pt = 3.0; }
   	  double ptbin = hEff[a][fileNo]->FindBin(pt);
   	  // double eff = hEff[a][fileNo]->GetBinContent(ptbin) - 0.05;
 	  double eff = efficFit[a][fileNo]->Eval( hChgUEpt[a][p]->GetXaxis()->GetBinCenter(xbin) ) - 0.05;
   	  double old_value = hChgUEpt[a][p]->GetBinContent(xbin,ybin);
-  	  double old_err = hChgUEpt[a][p]->GetBinError(xbin,ybin);
   	  double corr_value = (double) old_value/eff;
-  	  double corr_err = (double) old_err/eff;
+  	  double old_err = hChgUEpt[a][p]->GetBinError(xbin,ybin);
+	  double relativeError = sqrt( (old_err*old_err) + ( hEff[a][fileNo]->GetBinError(ptbin)*hEff[a][fileNo]->GetBinError(ptbin)) );
+  	  double corr_err = corr_value*relativeError;
   	  hChgUEpt_te_sys2[a][p]->SetBinContent( xbin, ybin, corr_value);
   	  hChgUEpt_te_sys2[a][p]->SetBinError( xbin, ybin, corr_err );
   	}
@@ -355,7 +357,7 @@ void ptDifferentialUE_systematics_new(){
 
   	hChgUEpt_te_sys2[a][p]->GetYaxis()->SetRangeUser( etaLo[e], etaHi[e] );
   	te_meanChgPt_sys2[e][a][p] = hChgUEpt_te_sys2[a][p]->GetMean(1);
-  	nChg_te_sys2[e][a][p] = hChgUEpt_te_sys1[a][p]->Integral();
+  	nChg_te_sys2[e][a][p] = hChgUEpt_te_sys2[a][p]->Integral();
 
       }      
     }
@@ -635,7 +637,7 @@ void ptDifferentialUE_systematics_new(){
   //c1->SetGridx();
 
 
-  // TFile *outFile = new TFile("src/ptdifferentialUE.root","RECREATE");
+  TFile *outFile = new TFile("test.root","RECREATE");
   
   // for (int a=0; a<nEAbins; ++a) {
   //   for (int p=0; p<nPtBins; ++p) {
@@ -648,7 +650,15 @@ void ptDifferentialUE_systematics_new(){
   // }
   // c0->Write();
   // c1->Write();
-      
-  // outFile->Write();
+
+  for (int i=0; i<eta_bins; ++i) {
+    for (int j=0; j<nEAbins; ++j){
+      efficFit[i][j]->Write();
+      hEff[i][j]->Write();
+    }
+  }
+
+  
+  outFile->Write();
   
 }
