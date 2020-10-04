@@ -59,7 +59,7 @@ $(BDIR)/%  : $(ODIR)/%.o
 ###############################################################################
 ############################# Main Targets ####################################
 ###############################################################################
-all : $(BDIR)/pAu_QA $(BDIR)/pAu_analysis_MB $(BDIR)/pAu_analysis_HT $(BDIR)/pAu_HT_jets $(BDIR)/pAu_HT_dijets $(BDIR)/pAu_HT_jetTree $(BDIR)/pAu_HT_jetPlot $(BDIR)/find_bad_towers $(BDIR)/find_bad_trigger_towers $(BDIR)/pAuHTjetUE $(BDIR)/pAuHTjetUE_prelim $(BDIR)/pAuHTdijetUE $(BDIR)/EAdistribution $(BDIR)/pAu_HT_jet_trigger $(BDIR)/CompareTrees
+all : $(BDIR)/pAu_QA $(BDIR)/pAu_analysis_MB $(BDIR)/pAu_analysis_HT $(BDIR)/pAu_HT_jets $(BDIR)/pAu_HT_dijets $(BDIR)/pAu_HT_jetTree $(BDIR)/pAu_HT_jetPlot $(BDIR)/find_bad_towers $(BDIR)/find_bad_trigger_towers $(BDIR)/pAuHTjetUE $(BDIR)/pAuHTjetUE_prelim $(BDIR)/pAuHTdijetUE $(BDIR)/EAdistribution $(BDIR)/pAu_HT_jet_trigger $(BDIR)/CompareTrees $(BDIR)/differentialUEplots
 
 $(ODIR)/pAuQAFunctions.o : $(SDIR)/pAuQAFunctions.cxx $(SDIR)/pAuQAFunctions.hh
 $(ODIR)/pAu_QA.o : $(SDIR)/pAu_QA.cxx $(SDIR)/pAuQAFunctions.hh
@@ -69,6 +69,7 @@ $(ODIR)/pAu_analysis_HT.o : $(SDIR)/pAu_analysis_HT.cxx
 $(ODIR)/pAu_HT_jets.o : $(SDIR)/pAu_HT_jets.cxx $(SDIR)/pAu_HT_jetParameters.hh $(SDIR)/bemc_helper.h
 $(ODIR)/pAu_HT_jet_trigger.o : $(SDIR)/pAu_HT_jet_trigger.cxx $(SDIR)/pAu_HT_jetParameters.hh
 $(ODIR)/pAuHTjetUE.o : $(SDIR)/pAuHTjetUE.cxx $(SDIR)/pAu_HT_jetParameters.hh
+$(ODIR)/differentialUEplots.o : $(SDIR)/differentialUEplots.cxx $(SDIR)/differentialUEplots.hh $(SDIR)/pAu_HT_jetParameters.hh
 $(ODIR)/pAuHTjetUE_prelim.o : $(SDIR)/pAuHTjetUE_prelim.cxx $(SDIR)/pAu_HT_jetParameters.hh
 $(ODIR)/pAuHTdijetUE.o : $(SDIR)/pAuHTdijetUE.cxx $(SDIR)/pAu_HT_jetParameters.hh
 $(ODIR)/EAdistribution.o : $(SDIR)/EAdistribution.cxx $(SDIR)/pAu_HT_jetParameters.hh
@@ -86,6 +87,7 @@ $(BDIR)/pAu_analysis_HT :	$(ODIR)/pAu_analysis_HT.o	$(ODIR)/pAuFunctions.o
 $(BDIR)/pAu_HT_jets :	$(ODIR)/pAu_HT_jets.o	$(ODIR)/pAuFunctions.o
 $(BDIR)/pAu_HT_jet_trigger :	$(ODIR)/pAu_HT_jet_trigger.o	$(ODIR)/pAuFunctions.o
 $(BDIR)/pAuHTjetUE :	$(ODIR)/pAuHTjetUE.o	$(ODIR)/pAuFunctions.o
+$(BDIR)/differentialUEplots :	$(ODIR)/differentialUEplots.o
 $(BDIR)/pAuHTjetUE_prelim :	$(ODIR)/pAuHTjetUE_prelim.o	$(ODIR)/pAuFunctions.o
 $(BDIR)/pAuHTdijetUE :	$(ODIR)/pAuHTdijetUE.o	$(ODIR)/pAuFunctions.o
 $(BDIR)/EAdistribution :	$(ODIR)/EAdistribution.o	$(ODIR)/pAuFunctions.o
