@@ -21,7 +21,7 @@ namespace pAuAnalysis {
     TFile *ef = new TFile( efficiencyFile.c_str(), "READ" );
     
     for ( int j=0; j<nBins; ++j ) {   // pull in efficiency histograms
-      TString name = prefix + (j+1) + "_" + (j+1) + "_eta";
+      TString name = prefix; name += (j+1); name += "_"; name += (j+1); name += "_eta";
       hEffic[j] = (TH1D*)ef->Get( name );
     }
     
@@ -308,7 +308,7 @@ namespace pAuAnalysis {
     TFile *ef = new TFile( efficiencyFile.c_str(), "READ" );
     
     for ( int j=0; j<nBins; ++j ) {   // pull in efficiency histograms
-      TString name = prefix + (j+1) + "_" + (j+1) + "_eta";
+      TString name = prefix; name += (j+1); name += "_"; name += (j+1); name += "_eta";
       hEffic[j] = (TH1D*)ef->Get( name );
     }
     
@@ -478,6 +478,8 @@ namespace pAuAnalysis {
     
     double leadPtCorr = leadjet.pt() - leadjet.area()*rhoValue;
 
+    UEfile->Close();
+    
     return leadPtCorr;
   }
 
