@@ -15,7 +15,7 @@ int main ( int argc, const char** argv ) {         // funcions and cuts specifie
   vector<string> arguments( argv+1, argv+argc );
   if ( argc ==  4 ) {    inFile = arguments[0];    outFile = arguments[1];    number_of_events = atoi(arguments[2].c_str()); }
   else if ( argc==1 ) { inFile="production_pAu200_2015/HT/pAu_2015_200_HT*.root"; outFile="out/UE/pAuHTjetUE.root"; number_of_events=-1; }
-  else { cerr<< "incorrect number of command line arguments"; return -1; }
+  else { cerr<< "incorrect number of command line arguments"; return 5000; }
 
   TH1::SetDefaultSumw2();  TH2::SetDefaultSumw2();  TH3::SetDefaultSumw2();
 
@@ -62,6 +62,13 @@ int main ( int argc, const char** argv ) {         // funcions and cuts specifie
   HTjetTree->Branch( "dRTrigLead", &dRTrigLead );
   HTjetTree->Branch( "trigPhi", &trigPhi );
 
+  // TH2D *hChgUePtEta[nPtBins];
+  // TH2D *hNeuUePtEta[nPtBins];
+
+  TH2D *hFitPoints = new TH2D ("hFitPoints",";nHitFit;nHitsPossible",200,0.,200.,200,0.,200.);
+  
+  TH3D *hChgUE[nEtaBins];
+  TH1D *hLeadPt[nEtaBins];
   const int xbins = 55;
   double xbinEdge[xbins+1];
   const int zbins = 20;
@@ -73,19 +80,26 @@ int main ( int argc, const char** argv ) {         // funcions and cuts specifie
   const int ybins = 14;
   double ybinEdge[ybins+1] = { 0.20, 0.25, 0.30, 0.35, 0.40, 0.50, 0.60, 0.70, 0.80, 1.0, 2.0, 3.0, 5.0, 10.0, 15.0 };
   
-  TH3D *hChgUE[nEtaBins];
-  TH1D *hLeadPt[nEtaBins];
-
   for (int e=0; e<nEtaBins; ++e) {
     
     name = "hChgUE" + etaBinName[e] + "Jet";
     title = etaBinString[e] + ";leading jet p_{T} (GeV);chg. UE part. p_{T} (GeV);chg. UE part. #eta";
-    hChgUE[e] = new TH3D(name, title, xbins,xbinEdge,ybins,ybinEdge,zbins,zbinEdge); //xbins,xbinEdge,ybins,ybinEdge,zbins,zbinEdge
+    hChgUE[e] = new TH3D(name, title, xbins,xbinEdge,ybins,ybinEdge,zbins,zbinEdge);
 
     name = "hLeadPt" + etaBinName[e] + "Jet";
     title = etaBinString[e] + ";leading jet p_{T} (GeV)";
     hLeadPt[e] = new TH1D(name, title, 55,4.0,59.0);
     
+  }
+
+  for (int e=0; e<nEtaBins; ++e) {
+
+    // name = "hChgUePtEta"; name += etaBinName[e];
+    // title = "Charged Underlying Event #phi vs. #eta ("; title += etaBinString[e]; title += ") ;p_{T} (GeV);#eta";
+    // hChgUePtEta[e] = new TH2D( name , title ,30,0,15,20,-1.0,1.0 );
+    // name = "hNeuUePtEta"; name += etaBinName[e];
+    // title = "Neutral Underlying Event #phi vs. #eta ("; title += etaBinString[e]; title += ") ;p_{T} (GeV);#eta";
+    // hNeuUePtEta[e] = new TH2D( name, title, 30,0,15,20,-1.0,1.0 );
   }
   
   JetDefinition jet_def(antikt_algorithm, R);     //  JET DEFINITION
@@ -108,7 +122,7 @@ int main ( int argc, const char** argv ) {         // funcions and cuts specifie
   double deltaPhi, deltaR;       double trigTowEta, trigTowPhi;
 
   // string efficFile = "src/trackeffic_loEA.root";
-  string efficFile = "src/trackeffic_loEA.root";
+  string efficFile = "src/trackeffic_hiEA.root";
   string UEcorrFile = "src/UEsubtractionPlots.root";
 
   // ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~  BEGIN EVENT LOOP!  ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~
@@ -126,12 +140,22 @@ int main ( int argc, const char** argv ) {         // funcions and cuts specifie
     if ( header->GetBbcAdcSumEast() > 64000 ) { continue; }
     if ( header->GetBbcAdcSumEast() < 3559.12 ) { continue; }     //  neglect 90-100% event activity
 
-    // //  HIGH EVENT ACTIVITY
-    // if ( header->GetBbcAdcSumEast() < 26718.1 ) { continue; }  // LO: 3559.12-10126.1;  HI: 26718.1+// 
+    //  HIGH EVENT ACTIVITY
+    if ( header->GetBbcAdcSumEast() < 26718.1 ) { continue; }  // LO: 3559.12-10126.1;  HI: 26718.1+// 
 
-    //  LOW EVENT ACTIVITY
-    if ( header->GetBbcAdcSumEast() > 10126.1 ) { continue; }  // LO: 3559.12-10126.1;  HI: 26718.1+
+    // //  LOW EVENT ACTIVITY
+    // if ( header->GetBbcAdcSumEast() > 10126.1 ) { continue; }  // LO: 3559.12-10126.1;  HI: 26718.1+
 
+    TClonesArray *pEventTracks = new TClonesArray("TStarJetPicoPrimaryTrack");
+    pEventTracks = event->GetPrimaryTracks();
+
+    for ( int t=0; t<header->GetNOfPrimaryTracks(); ++t ) {
+      TStarJetPicoPrimaryTrack *tr = (TStarJetPicoPrimaryTrack*) pEventTracks->At(t);
+      int NHitsPoss = tr->GetNOfPossHits();
+      int NFittedHits = tr->GetNOfFittedHits();
+      hFitPoints->Fill(NFittedHits,NHitsPoss);
+    }
+    
     TList *SelectedTowers = Reader.GetListOfSelectedTowers();
     nTowers = CountTowers( SelectedTowers );
 		
@@ -216,7 +240,7 @@ int main ( int argc, const char** argv ) {         // funcions and cuts specifie
 	  neuEastRho = neuEastSum/eastArea;
 	  neuMidRho = neuMidSum/midArea;
 	  neuWestRho = neuWestSum/westArea;
-
+	  
 	  pval = 99;    jeval = 99;
 
 	  for ( int e=0; e<nEtaBins; ++e ) {
@@ -228,11 +252,11 @@ int main ( int argc, const char** argv ) {         // funcions and cuts specifie
 	  
 	  if (jeval==99) {continue;}
 	  
-	  for (int i=0; i<chgParticles.size(); ++i) { hChgUE[jeval]->Fill( leadPtCorrected, chgParticles[i].pt(), chgParticles[i].eta() ); }
-	  hLeadPt[jeval]->Fill( leadPtCorrected );
+	  for (int i=0; i<chgParticles.size(); ++i) { hChgUE[jeval]->Fill( leadPt, chgParticles[i].pt(), chgParticles[i].eta() ); }
+	  hLeadPt[jeval]->Fill( leadPt );
 
 	  chgParticles.clear(); // clear vector!
-	  // GatherChargedUEwithEfficiency( leadJet, container, chgParticles, efficFile );   // gather UE
+
 	  CalculateUEsubtractedChargedRho(chgParticles,chgEastSum,chgMidSum,chgWestSum);
 	  chgEastRho_te = chgEastSum/eastArea;
 	  chgMidRho_te = chgMidSum/midArea;
@@ -247,14 +271,13 @@ int main ( int argc, const char** argv ) {         // funcions and cuts specifie
 
   TFile *pAuFile = new TFile( outFile.c_str() ,"RECREATE");
 
-  for ( int e=0; e<nEtaBins; ++e ) {
+  for ( int e=0; e<nEtaBins; ++e ) {  //  WRITE HISTOGRAMS & TREE
     hChgUE[e]->Write();
     hLeadPt[e]->Write();
   }
-
-  HTjetTree->SetDirectory(pAuFile);
   HTjetTree->Write();  
-
+  hFitPoints->Write();
+  
   pAuFile->Write();
   pAuFile->Close();
 
