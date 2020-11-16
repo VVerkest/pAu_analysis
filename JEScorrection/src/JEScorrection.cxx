@@ -77,7 +77,7 @@ int main () {
 
     TCanvas * can1 = new TCanvas( "can1" , "" ,700 ,500 );
     can1->SetLogy();
-    title = "LeadPt_" + lohi[a] + "EA.pdf";
+    title = directory + "LeadPt_" + lohi[a] + "EA.pdf";
     hleadPt->Draw();
     can1->SaveAs(title,"PDF");
     
