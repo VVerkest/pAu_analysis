@@ -69,13 +69,19 @@ int main () {
       name = "hLeadPt" + etaBinName[e] + "Jet";
       hLeadJetPt[e] = (TH1D*)UEfile->Get(name);
       hleadPt->Add(hLeadJetPt[e]);
-    
-      name = "hChgUE" + etaBinName[e] + "Jet";
-      hUE3D[e] = (TH3D*)UEfile->Get(name);    
-      hChgUE3D->Add(hUE3D[e]);
+                                                     // ";leading jet p_{T} (GeV);chg. UE part. p_{T} (GeV);chg. UE part. #eta"
+      name = "hChgUE" + etaBinName[e] + "Jet";  // X: lead pT
+      hUE3D[e] = (TH3D*)UEfile->Get(name);      // Y: UE pT
+      hChgUE3D->Add(hUE3D[e]);                  // Z: UE eta
     }
 
     TCanvas * can1 = new TCanvas( "can1" , "" ,700 ,500 );
+    can1->SetLogy();
+    title = "LeadPt_" + lohi[a] + "EA.pdf";
+    hleadPt->Draw();
+    can1->SaveAs(title,"PDF");
+    
+    can1->SetLogy(0);
     can1->SetLogz();
     for (int i=0; i<55; ++i) {
       int ptLo = i + 4;
@@ -87,7 +93,8 @@ int main () {
       if (hChgUE2D[i]->GetEntries()==0){ continue;}
 
       double nJets = hleadPt->Integral(binno,binno);
-      hChgUE2D[i]->Scale( 1./nJets );
+      double realRate = 1.-hFakeJets->GetBinContent(binno);
+      hChgUE2D[i]->Scale( realRate/nJets );
 
       name = "hChgUE2D_"; name += ptLo; name += "to"; name += ptLo+1; name += "GeVdetJets";
       hChgUE2D[i]->SetName(name);
