@@ -20,7 +20,7 @@ namespace Analysis {
   }  
 
 
-  void GenerateWeightedPtResponse( TH1D *h_DetWt[3], TH1D *h_Det[21], TH1D *h_MissedJets, TString plot_dir ) {
+  void GenerateWeightedPtResponse( TH1D *h_DetWt[3], TH1D *h_Det[21], TH1D *h_MissedProb, TString plot_dir ) {
 
     for (int p=0; p<nPtBins; ++p) {
       TString name = "hPtResponse"; name += ptBinName[p];
@@ -34,7 +34,8 @@ namespace Analysis {
 	int ptVal = i + 5;
 	int binno = i + 1;
 	if ( ptVal >= ptLo[p] && ptVal <= ptHi[p] ) {
-	  double wt = 1./h_MissedJets->GetBinContent(binno);  // weight according to misses at part-level
+	  // std::cout<<h_MissedProb->GetBinContent(binno)<<std::endl;
+	  double wt = 1.+h_MissedProb->GetBinContent(binno);  // weight according to misses at part-level
 	  h_DetWt[p]->Add(h_Det[i],wt);
 	}
       }    
@@ -75,6 +76,9 @@ namespace Analysis {
       h_FakeJets->Add(hFakes[e]);
     }
 
+    TString title = "Fakes;fake det-level leading jet p_{T} (GeV);prob.";
+    h_FakeJets->SetTitle(title);
+    
     TCanvas * can2 = new TCanvas( "can2" , "" ,700 ,500 );              // CANVAS 2
     can2->SetLogy();
 
@@ -82,6 +86,8 @@ namespace Analysis {
     int nEvents = nAccepted + nMissed + nFakes;
 
     double scale = (double)nMissed/nEvents;
+    title = h_MissedJets->GetTitle(); title += ";prob.";
+    h_MissedJets->SetTitle(title);
     h_MissedJets->Scale(scale/h_MissedJets->Integral());
     h_MissedJets->Draw();
     TString saveName = plot_dir + "MissedJets.pdf";
@@ -98,6 +104,46 @@ namespace Analysis {
     saveName = plot_dir + "pTresponse.pdf";
     can3->SaveAs(saveName,"PDF");  // SAVE 2D PT RESPONSE
 
+    can2->cd();
+    TH1D *hDetPt = new TH1D("hDetPt",";det-level leading jet p_{T}",55,4.0,59.0);
+    hDetPt = (TH1D*)h_PtResponse->ProjectionY();
+    hDetPt->Scale(1./hDetPt->Integral());
+    // h_FakeProb->Add(h_FakeJets);
+    // h_FakeProb->Divide(hDetPt);
+    // TString name = "hFakeProb";
+    // title = ";missing part-level leading jet p_{T} (GeV);prob.";
+    // h_FakeProb->SetNameTitle(name, title);
+
+    // h_FakeProb->Draw();
+    // saveName = plot_dir + "EmbeddingFakeJetProb.pdf";
+    // can2->SaveAs(saveName,"PDF");
+
+    
+    TH1D *hPartPt = new TH1D("hPartPt",";part-level leading jet p_{T}",55,4.0,59.0);
+    hPartPt = (TH1D*)h_PtResponse->ProjectionX();
+    hPartPt->Scale(1./hPartPt->Integral());
+    // h_MissedProb->Add(h_MissedJets);
+    // h_MissedProb->Divide(hPartPt);
+    // name = "hMissProb";
+    // title = ";missing part-level leading jet p_{T} (GeV);prob.";
+    // h_MissedProb->SetNameTitle( name, title );
+
+    // h_MissedProb->Draw();
+    // saveName = plot_dir + "EmbeddingMissedJetProb.pdf";
+    // can2->SaveAs(saveName,"PDF");
+
+    can2->SetLogy();
+    hPartPt->Draw();
+    saveName = plot_dir + "EmbeddingPartLevelPt.pdf";
+    can2->SaveAs(saveName,"PDF");
+
+    hDetPt->Draw();
+    saveName = plot_dir + "EmbeddingDetLevelPt.pdf";
+    can2->SaveAs(saveName,"PDF");
+
+
+    can2->Destructor();
+    can3->Destructor();
   }
 
 
@@ -126,6 +172,7 @@ namespace Analysis {
     can->SetLogy();
     gStyle->SetOptStat(0);
     h_PartJetUE->SetStats(kFALSE);
+    h_PartJetUE->SetAxisRange(0.000001,4.,"Y");
     h_PartJetUE->Draw();
 
     TString text = "#LT p_{T}^{ch}#GT = "; text += mean;//h_PartJetUE->GetMean(1);

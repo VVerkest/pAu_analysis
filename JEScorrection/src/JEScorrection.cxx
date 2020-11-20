@@ -115,6 +115,9 @@ int main () {
 	ProjectAndPlotByEta( hAddedChgUE2D_corr[p], hPartJetUE[e][p], e, p, a, directory, outFile );
       }
     }
+
+    hFakeJets->Delete();
+    hMissedJets->Delete();
   }
   
   outFile->Close();
