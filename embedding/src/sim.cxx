@@ -95,21 +95,21 @@ int main (int argc, const char ** argv) {
   vector<PseudoJet> p_Particles, d_Particles, p_Jets, d_Jets, p_leadMatches, p_matches, d_matches, fakeJets, missedJets;
   PseudoJet p_leadJet, d_leadJet;
 
-  TH2D *hResponse= new TH2D("hResponse",  ";part-level leading jet p_{T} (GeV);det-level leading jet p_{T} (GeV)",55,4.5,59.5, 55,4.5,59.5);
+  TH2D *hResponse= new TH2D("hResponse",  ";part-level leading jet p_{T} (GeV);det-level leading jet p_{T} (GeV)",55,4.0,59.0, 55,4.0,59.0);
 
   TH2D *hPtResponse[nEtaBins];
   TH1D *hFakes[nEtaBins];
-  TH1D *hMisses = new TH1D( "hMisses","Misses;missing part-level leading jet p_{T} (GeV)",55,4.5,59.5);
+  TH1D *hMisses = new TH1D( "hMisses","Misses;missing part-level leading jet p_{T} (GeV)",55,4.0,59.0);
 
   for (int e=0; e<nEtaBins; ++e) {
     
     name = "hPtResponse" + etaBinName[e] + "Jet";
     title = etaBinString[e] + ";part-level leading jet p_{T} (GeV);det-level leading jet p_{T} (GeV)";
-    hPtResponse[e] = new TH2D(name, title,55,4.5,59.5, 55,4.5,59.5);
+    hPtResponse[e] = new TH2D(name, title,55,4.0,59.0, 55,4.0,59.0);
 
     name = "hFakes" + etaBinName[e] + "Jet";
     title = etaBinString[e] + "  ~  Fakes;missing part-level leading jet p_{T} (GeV)";
-    hFakes[e] = new TH1D(name, title, 55,4.5,59.5);
+    hFakes[e] = new TH1D(name, title, 55,4.0,59.0);
     
   }
 
