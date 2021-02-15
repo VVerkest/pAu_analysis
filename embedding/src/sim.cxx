@@ -95,6 +95,8 @@ int main (int argc, const char ** argv) {
   vector<PseudoJet> p_Particles, d_Particles, p_Jets, d_Jets, p_leadMatches, p_matches, d_matches, fakeJets, missedJets;
   PseudoJet p_leadJet, d_leadJet;
 
+  TH2D *hResponse= new TH2D("hResponse",  ";part-level leading jet p_{T} (GeV);det-level leading jet p_{T} (GeV)",55,4.5,59.5, 55,4.5,59.5);
+
   TH2D *hPtResponse[nEtaBins];
   TH1D *hFakes[nEtaBins];
   TH1D *hMisses = new TH1D( "hMisses","Misses;missing part-level leading jet p_{T} (GeV)",55,4.5,59.5);
@@ -236,6 +238,7 @@ int main (int argc, const char ** argv) {
     d_leadPt = d_leadJet.pt();     d_leadEta = d_leadJet.eta();     d_leadPhi = d_leadJet.phi();
     
     hPtResponse[eval]->Fill( p_leadPt, d_leadPt, mc_weight );
+    hResponse->Fill( p_leadPt, d_leadPt, mc_weight );
     hTrigEtEtaPhi->Fill( trigTowerPJ.e(), trigTowerPJ.eta(), trigTowerPJ.phi(), mc_weight );
     
     eventTree->Fill();
@@ -245,6 +248,8 @@ int main (int argc, const char ** argv) {
     hPtResponse[e]->Write();
     hFakes[e]->Write();
   }
+
+  hResponse->Write();
   
   hTrigEtEtaPhi->Write();
   hMisses->Write();
