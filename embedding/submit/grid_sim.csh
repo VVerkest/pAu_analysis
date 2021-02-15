@@ -57,6 +57,7 @@ echo "now submitting this script: "
 echo qsub -V -l mem=4GB -o $LogFile -e $ErrFile -N $1 -- ${ExecPath}/submit/qwrap.sh ${ExecPath} $execute $arg
     
 
-qsub -V -q erhiq -l mem=4GB -o $LogFile -e $ErrFile -N sim -- ${ExecPath}/submit/qwrap.sh ${ExecPath} $execute $arg
-
+#qsub -V -q erhiq -l mem=4GB -o $LogFile -e $ErrFile -N $1 -- ${ExecPath}/submit/qwrap.sh ${ExecPath} $execute $arg
+sbatch --mem-per-cpu=8GB -q express -p erhip -o $LogFile -e $ErrFile -t 45 --job-name=sim $1 -- ${ExecPath}/submit/qwrap.sh ${ExecPath} $execute $arg
+    
 end
