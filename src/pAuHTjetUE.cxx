@@ -64,8 +64,6 @@ int main ( int argc, const char** argv ) {         // funcions and cuts specifie
 
   // TH2D *hChgUePtEta[nPtBins];
   // TH2D *hNeuUePtEta[nPtBins];
-
-  TH2D *hFitPoints = new TH2D ("hFitPoints",";nHitFit;nHitsPossible",200,0.,200.,200,0.,200.);
   
   TH3D *hChgUE[nEtaBins];
   TH1D *hLeadPt[nEtaBins];
@@ -77,8 +75,15 @@ int main ( int argc, const char** argv ) {         // funcions and cuts specifie
     xbinEdge[i] = (double) i+4.0;
     if (i<zbins+1) { zbinEdge[i] = (double)(-10.0 + i)/10.0; }
   }
-  const int ybins = 14;
-  double ybinEdge[ybins+1] = { 0.20, 0.25, 0.30, 0.35, 0.40, 0.50, 0.60, 0.70, 0.80, 1.0, 2.0, 3.0, 5.0, 10.0, 15.0 };
+  const int ybins = 15;
+  double ybinEdge[ybins+1] = { 0.20, 0.25, 0.30, 0.35, 0.40, 0.50, 0.60, 0.70, 0.80, 1.0, 1.5, 2.0, 3.0, 5.0, 10.0, 15.0 };
+
+  // const int ybins = 30;
+  // double ybinEdge[ybins+1];
+  // for (int i=0; i<=ybins; ++i) { ybinEdge[i] = 0.5*i; }
+
+  TH2D *hLeadPtVsUEpT = new TH2D("hLeadPtVsUEpT",";leading jet p_{T} (GeV);chg. UE part. p_{T} (GeV)",xbins,xbinEdge,ybins,ybinEdge);
+  TH1D *hLead = new TH1D("hLead", ";leading jet p_{T} (GeV)", 55,4.0,59.0);
   
   for (int e=0; e<nEtaBins; ++e) {
     
@@ -121,7 +126,7 @@ int main ( int argc, const char** argv ) {         // funcions and cuts specifie
   InitReader( Reader, Chain, numEvents );
   double deltaPhi, deltaR;       double trigTowEta, trigTowPhi;
 
-  // string efficFile = "src/trackeffic_loEA.root";
+  //string efficFile = "src/trackeffic_loEA.root";
   string efficFile = "src/trackeffic_hiEA.root";
   string UEcorrFile = "src/UEsubtractionPlots.root";
 
@@ -140,21 +145,11 @@ int main ( int argc, const char** argv ) {         // funcions and cuts specifie
     if ( header->GetBbcAdcSumEast() > 64000 ) { continue; }
     if ( header->GetBbcAdcSumEast() < 3559.12 ) { continue; }     //  neglect 90-100% event activity
 
-    //  HIGH EVENT ACTIVITY
-    if ( header->GetBbcAdcSumEast() < 26718.1 ) { continue; }  // LO: 3559.12-10126.1;  HI: 26718.1+// 
+    // //  HIGH EVENT ACTIVITY
+    // if ( header->GetBbcAdcSumEast() < 26718.1 ) { continue; }  // LO: 3559.12-10126.1;  HI: 26718.1+// 
 
     // //  LOW EVENT ACTIVITY
-    // if ( header->GetBbcAdcSumEast() > 10126.1 ) { continue; }  // LO: 3559.12-10126.1;  HI: 26718.1+
-
-    TClonesArray *pEventTracks = new TClonesArray("TStarJetPicoPrimaryTrack");
-    pEventTracks = event->GetPrimaryTracks();
-
-    for ( int t=0; t<header->GetNOfPrimaryTracks(); ++t ) {
-      TStarJetPicoPrimaryTrack *tr = (TStarJetPicoPrimaryTrack*) pEventTracks->At(t);
-      int NHitsPoss = tr->GetNOfPossHits();
-      int NFittedHits = tr->GetNOfFittedHits();
-      hFitPoints->Fill(NFittedHits,NHitsPoss);
-    }
+    //if ( header->GetBbcAdcSumEast() > 10126.1 ) { continue; }  // LO: 3559.12-10126.1;  HI: 26718.1+
     
     TList *SelectedTowers = Reader.GetListOfSelectedTowers();
     nTowers = CountTowers( SelectedTowers );
@@ -252,8 +247,12 @@ int main ( int argc, const char** argv ) {         // funcions and cuts specifie
 	  
 	  if (jeval==99) {continue;}
 	  
-	  for (int i=0; i<chgParticles.size(); ++i) { hChgUE[jeval]->Fill( leadPt, chgParticles[i].pt(), chgParticles[i].eta() ); }
+	  for (int i=0; i<chgParticles.size(); ++i) {
+	    hChgUE[jeval]->Fill( leadPt, chgParticles[i].pt(), chgParticles[i].eta() );
+	    hLeadPtVsUEpT->Fill( leadPt, chgParticles[i].pt());
+	  }
 	  hLeadPt[jeval]->Fill( leadPt );
+	  hLead->Fill( leadPt );
 
 	  chgParticles.clear(); // clear vector!
 
@@ -276,7 +275,9 @@ int main ( int argc, const char** argv ) {         // funcions and cuts specifie
     hLeadPt[e]->Write();
   }
   HTjetTree->Write();  
-  hFitPoints->Write();
+
+  hLeadPtVsUEpT->Write();
+  hLead->Write();
   
   pAuFile->Write();
   pAuFile->Close();
