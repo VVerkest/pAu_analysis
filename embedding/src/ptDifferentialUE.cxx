@@ -122,7 +122,7 @@ int main () {
 	    if ( fileNo==99 ) { cerr<<"CANNOT FIND EFFICIENCY HISTOGRAM"<<endl; return -1; }
 
 	    double ptbin = hEffic[fileNo]->FindBin(pt);
-	    double eff = hEffic[fileNo]->GetBinContent(ptbin);
+	    double eff = 1.;//hEffic[fileNo]->GetBinContent(ptbin);
 
 	    double old_value = hUE2D[jp][e]->GetBinContent(xbin,ybin);
 	    double old_err = hUE2D[jp][e]->GetBinError(xbin,ybin);

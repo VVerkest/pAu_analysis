@@ -59,7 +59,7 @@ using std::unordered_map; using std::make_shared; using std::shared_ptr;
 
 namespace Analysis {
 
-  const int nEffEtaBins = 20;
+  const int nEffEtaBins = 10;
                                         
   int CountTowers( TList* );
   
@@ -84,19 +84,23 @@ namespace Analysis {
   void MissesFakesAndMatches(std::vector<fastjet::PseudoJet> &, std::vector<fastjet::PseudoJet> &,
 			     std::vector<fastjet::PseudoJet> &, std::vector<fastjet::PseudoJet> &);
 
-  void ProjectAndSaveFinalUEPlots( TH1D *, TString, TString );
+  void ProjectAndSaveFinalUEPlots( TH1D *, TString, double, TString );
   
-  void ProjectAndScaleUEHistogramForAllPt( TH2D *, TH1D *, TH1D *[55], TH1D *[nPtBins], TString );
+  void ProjectAndScaleUEHistogramForAllPt( TH2D *, TH1D *, TH1D *[55], TH1D *[nPtBins], TString, TString );
   
   void ProjectPartLevelJetPt( TH2D*, TH1D*[21], TString );
 
-  TH2D *ProjectUEHistograms( TH3D *, TString );
+  TH2D *ProjectUEHistograms( TH3D *, int, TString );
+
+  void StackAndSaveNchPlots( TH1D *[3][3], TH2D *, TString, TString );
+
+  void StackAndSavePtPlots( TH1D *[3][3], TH2D *, TString, TString );
 
   void TrackingEfficiency2DCorrection( TH2D*, TH2D*, TH1D *, TString );
 
   bool UseTriggerTower( int );
 
-  void WeightUEPtByLeadPtAndFakes( TH1D *[nPtBins], TH1D *[55], TH1D *[nPtBins], TH1D *, TH1D *, TString );
+  void WeightUEPtByLeadPtAndFakes( TH1D *[nPtBins], TH1D *[55], TH1D *[nPtBins], TH1D *, TH1D *, TString, TString );
   
 }
 

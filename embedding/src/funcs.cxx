@@ -87,7 +87,7 @@ namespace Analysis {
 
     for (int p=0; p<nPtBins; ++p) {
       TString name = "hPtResponse"; name += ptBinName[p];
-      h_DetWt[p] = new TH1D( name, ";det-level leading jet p_{T} (GeV)",55,4.5,59.5);
+      h_DetWt[p] = new TH1D( name, ";det-level leading jet p_{T} (GeV)",55,4.0,59.0);
     }
 
     TCanvas * can5 = new TCanvas( "can5" , "" ,700 ,500 );              // CANVAS 5
@@ -388,7 +388,7 @@ namespace Analysis {
   }
 
   
-  void ProjectAndSaveFinalUEPlots( TH1D *h_WtUEpt, TString suffix, TString plot_dir ){
+  void ProjectAndSaveFinalUEPlots( TH1D *h_WtUEpt, TString suffix, double area, TString plot_dir ){
 
     TString canvasName = "can8" + suffix;
     TCanvas * can8 = new TCanvas( canvasName , "" ,700 ,500 );              // CANVAS 8
@@ -407,7 +407,9 @@ namespace Analysis {
     text = text(0,26);
     DrawText(text, 0.6, 0.7, 20);
 
-    text = "#LT#frac{dN_{ch}}{d#eta d#phi}#GT = "; text += h_WtUEpt->Integral()/AREA;
+    // std::cout<<h_WtUEpt->Integral()<<std::endl;
+    
+    text = "#LT#frac{dN_{ch}}{d#eta d#phi}#GT = "; text += h_WtUEpt->Integral()/area;
     text = text(0,42);
     DrawText( text, 0.6, 0.55, 20 );
       
@@ -418,7 +420,7 @@ namespace Analysis {
   }
   
 
-  void ProjectAndScaleUEHistogramForAllPt( TH2D *h_ChgUE2D, TH1D *h_leadPt, TH1D *h_UEpt[55], TH1D *h_WtUEpt[nPtBins], TString dir_name ){
+  void ProjectAndScaleUEHistogramForAllPt( TH2D *h_ChgUE2D, TH1D *h_leadPt, TH1D *h_UEpt[55], TH1D *h_WtUEpt[nPtBins], TString dir_name, TString suf ){
   
     TCanvas * can6 = new TCanvas( "can6" , "" ,700 ,500 );              // CANVAS 6
 
@@ -430,7 +432,7 @@ namespace Analysis {
       TString name = "hUEpt_"; name += ptVal; name += "GeV";
       h_UEpt[i] = (TH1D*)h_ChgUE2D->ProjectionY(name,binno,binno);
 
-      if ( (int)h_leadPt->GetBinCenter(binno) != ptVal ) { std::cerr<<"failed pT matching"<<std::endl; }
+      if ( (int)(h_leadPt->GetBinCenter(binno)+0.5) != ptVal ) { std::cerr<<"failed pT matching"<<std::endl; }
       int nJets = h_leadPt->GetBinContent( binno );
       if (nJets>0){
 	h_UEpt[i]->Scale(1./nJets);
@@ -446,9 +448,9 @@ namespace Analysis {
       }
     }
     can6->BuildLegend(0.68,0.1,0.9,0.9);
-    TString saveName = dir_name + "UEptByLeadPt.pdf";
+    TString saveName = dir_name + "UEptByLeadPt_" + suf + "UE.pdf";
     can6->SaveAs(saveName,"PDF");
-
+    can6->Destructor();
   }
   
 
@@ -459,7 +461,7 @@ namespace Analysis {
       int ptVal = i + 10;
       int binno = i + 6;
 
-      std::cout<<h_PtResponse->GetXaxis()->GetBinCenter(binno)<<std::endl;
+      // std::cout<<h_PtResponse->GetXaxis()->GetBinCenter(binno)<<std::endl;
     
       TString name = "hPtResponse_"; name += ptVal; name += "GeV";
       h_Det[i] = (TH1D*) h_PtResponse->ProjectionY(name,binno,binno);
@@ -482,64 +484,180 @@ namespace Analysis {
   }
 
 
-  TH2D *ProjectUEHistograms( TH3D *h_ChgUE3D, TString plot_dir ) {
+  TH2D *ProjectUEHistograms( TH3D *h_ChgUE3D, int etaBin, TString plot_dir ) {
   
     TCanvas * can0 = new TCanvas( "can0" , "" ,700 ,500 );              // CANVAS 0
     can0->SetLogz();
+    can0->SetLogy(0);
   
+    h_ChgUE3D->GetZaxis()->SetRangeUser(zbinEdge[etaBin],zbinEdge[etaBin+1]);
+
     // SAVE 2D HISTO OF UE PT vs. LEADING JET PT
     TH2D* h_ChgUE2D = (TH2D*)h_ChgUE3D->Project3D("YX");
-    h_ChgUE2D->GetXaxis()->SetRangeUser(4.5,59.5);
-    h_ChgUE2D->GetYaxis()->SetRangeUser(0.0,15.0);
+    TString name = "hChgUE2D_etaBin"; name += etaBin;
+    // std::cout<<name<<std::endl;
+    h_ChgUE2D->SetName(name);
+    h_ChgUE2D->GetXaxis()->SetRangeUser(4.0,59.0);
+    // h_ChgUE2D->GetYaxis()->SetRangeUser(0.0,15.0);
     h_ChgUE2D->GetYaxis()->SetTitleOffset(1.25);
     h_ChgUE2D->Draw("COLZ");
-    TString saveName = plot_dir + "ChgUE2D.pdf";
+    TString saveName = plot_dir + "ChgUE2D_etaBin"; saveName += etaBin; saveName += ".pdf";
     can0->SaveAs(saveName,"PDF");
-    h_ChgUE2D->GetXaxis()->SetRangeUser(4.5,59.5);
-    h_ChgUE2D->GetYaxis()->SetRangeUser(0.0,30.0);
+    // h_ChgUE2D->GetXaxis()->SetRangeUser(4.0,59.0);
+    // h_ChgUE2D->GetYaxis()->SetRangeUser(0.0,30.0);
+
+    can0->Destructor();
+    
+    h_ChgUE3D->GetZaxis()->SetRangeUser(zbinEdge[0],zbinEdge[zbins]);
 
     return h_ChgUE2D;
   }
 
+
+
   
+
+  void StackAndSaveNchPlots( TH1D *hPt[3][3], TH2D *hscale, TString save_name, TString dir_name ) {
+    auto hs = new THStack("hs","Stacked 1D histograms colored using kOcean palette");
+
+    const int etaColor[nEtaBins] = { 877, 596, 814 };
+    int EAmarker[2] = { 24, 20 };
+
+    const int n_bins = 3;
+    double bin_edge[n_bins+1] = { 10.0, 15.0, 20.0, 30.0 };
+    double shiftedBins[n_bins+1];
+
+    TH1D *hNch[nEtaBins]; 
+
+    for (int e=0; e<nEtaBins; ++e) {
+      hscale->GetXaxis()->SetBinLabel(e+1,ptBinString[e]);
+      for (int i=0; i<=n_bins; ++i) { shiftedBins[i] = bin_edge[i] + 0.3*(e-1); }
+      TString name = "hNch" + etaBinName[e];
+      hNch[e] = new TH1D(name,";leading jet p_{T} (GeV);#LT p_{T}^{ch}#GT (GeV)",n_bins,shiftedBins);
+      hNch[e]->SetLineColor(etaColor[e]);
+      hNch[e]->SetMarkerColor(etaColor[e]);
+      hNch[e]->SetMarkerStyle(EAmarker[1]);
+      hNch[e]->SetMarkerColor(etaColor[e]);
+      for (int p=0; p<nPtBins; ++p) {
+	hPt[e][p]->SetMarkerColor(etaColor[e]);
+	hPt[e][p]->SetLineColor(etaColor[e]);
+	hPt[e][p]->SetMarkerStyle(EAmarker[1]);
+	hPt[e][p]->SetMarkerColor(etaColor[e]);
+	hNch[e]->SetBinContent(p+1,hPt[e][p]->Integral()/area[e]);
+	hNch[e]->SetBinError(p+1,hPt[e][p]->GetMeanError(1));
+      }
+      hNch[e]->GetYaxis()->SetRangeUser(0.5,1.8);
+      hs->Add(hNch[e]);
+    }
+    TCanvas * can = new TCanvas( "can" , "" ,700 ,500 );
+
+    hscale->SetStats(0);
+    hscale->Draw();
+    hs->Draw("SAMEnostackEX0");   // draw the stack
+    TString name = dir_name + save_name;
+    can->SaveAs( name, "PDF");
+
+    can->Destructor();
+    // hNch->Destructor();
+  }
+
+
+
+  void StackAndSavePtPlots( TH1D *hPt[3][3], TH2D *hscale, TString save_name, TString dir_name ) {
+    auto hs = new THStack("hs","Stacked 1D histograms colored using kOcean palette");
+
+    const int etaColor[nEtaBins] = { 877, 596, 814 };
+    int EAmarker[2] = { 24, 20 };
+
+    const int n_bins = 3;
+    double bin_edge[n_bins+1] = { 10.0, 15.0, 20.0, 30.0 };
+    double shiftedBins[n_bins+1];
+
+    TH1D *hMeanPt[nEtaBins]; 
+
+    for (int e=0; e<nEtaBins; ++e) {
+      hscale->GetXaxis()->SetBinLabel(e+1,ptBinString[e]);
+      for (int i=0; i<=n_bins; ++i) { shiftedBins[i] = bin_edge[i] + 0.3*(e-1); }
+      TString name = "hMeanPt" + etaBinName[e];
+      hMeanPt[e] = new TH1D(name,";leading jet p_{T} (GeV);#LT p_{T}^{ch}#GT (GeV)",n_bins,shiftedBins);
+      hMeanPt[e]->SetAxisRange(0.55,0.85,"Y");
+      hMeanPt[e]->SetLineColor(etaColor[e]);
+      hMeanPt[e]->SetMarkerColor(etaColor[e]);
+      hMeanPt[e]->SetMarkerStyle(EAmarker[1]);
+      hMeanPt[e]->SetMarkerColor(etaColor[e]);
+      for (int p=0; p<nPtBins; ++p) {
+	hPt[e][p]->SetMarkerColor(etaColor[e]);
+	hPt[e][p]->SetLineColor(etaColor[e]);
+	hPt[e][p]->SetMarkerStyle(EAmarker[1]);
+	hPt[e][p]->SetMarkerColor(etaColor[e]);
+	hMeanPt[e]->SetBinContent(p+1,hPt[e][p]->GetMean(1));
+	hMeanPt[e]->SetBinError(p+1,hPt[e][p]->GetMeanError(1));
+      }
+      hMeanPt[e]->SetAxisRange(0.55,0.85,"Y");
+      hMeanPt[e]->GetYaxis()->SetRangeUser(0.55,0.85);
+      hs->Add(hMeanPt[e]);
+    }
+    TCanvas * can = new TCanvas( "can" , "" ,700 ,500 );
+
+    hscale->SetStats(0);
+    hscale->Draw();
+    hs->Draw("SAMEnostackEX0");   // draw the stack
+    TString name = dir_name + save_name;
+    can->SaveAs( name, "PDF");
+
+    can->Destructor();
+    // hMeanPt->Destructor();
+  }
+
+  
+
   void TrackingEfficiency2DCorrection( TH2D* h_ChgUE2D_te, TH2D* h_ChgUE2D_uncorr, TH1D *h_Effic, TString plot_dir ){
     
-    double pt, effic, ptVal, corrVal, corrErr, jetPt; // eta, phi, e, px, py, pz, 
+    double pt, effic, ptVal, corrVal, oldErr, relErr, corrErr, jetPt; // eta, phi, e, px, py, pz, 
     int ptBin;
-	
+
+    TF1 *eff = new TF1("eff","((100.+log(x/200.0))/200.)*exp([0]+[1]*x)+[2]",0.2,15.0);
+    h_Effic->Fit( "eff", "EM" );
+    TF1* efficFit = (TF1*)h_Effic->GetFunction("eff");
+    
     for ( int iy=1; iy<=h_ChgUE2D_uncorr->GetNbinsY(); ++iy ) {  // loop over chg UE pT bins (y)
       pt = h_ChgUE2D_uncorr->GetYaxis()->GetBinCenter(iy);
-      if ( pt > 3.0 ) { pt = 3.0; }
+
       ptBin = h_Effic->FindBin( pt );    // find histogram bin corresponding to track pt
-      effic = h_Effic->GetBinContent( ptBin );
+      effic = efficFit->Eval( h_ChgUE2D_uncorr->GetYaxis()->GetBinCenter(iy) );
 	
       for ( int ix=1; ix<=h_ChgUE2D_uncorr->GetNbinsX(); ++ix ) { // loop over all lead jet pt bins (x)
 
 	ptVal = h_ChgUE2D_uncorr->GetYaxis()->GetBinCenter(iy);
 	corrVal = h_ChgUE2D_uncorr->GetBinContent(ix,iy)/effic;      // calculate corrected bin content and error
-	corrErr = h_ChgUE2D_uncorr->GetBinError(ix,iy)/effic;       // (divide bin content and error by efficiency)
+	oldErr = h_ChgUE2D_uncorr->GetBinError(ix,iy);
 	jetPt = h_ChgUE2D_uncorr->GetXaxis()->GetBinCenter(ix);
-	ptBin = h_ChgUE2D_uncorr->GetYaxis()->FindBin( ptVal );
-	  
-	// h_ChgUE2D_te->Fill( jetPt, ptVal, corrVal );
-	h_ChgUE2D_te->SetBinContent( ix, ptBin, corrVal );
-	h_ChgUE2D_te->SetBinError( ix, ptBin, corrErr );
 
+	relErr = sqrt( (oldErr*oldErr) + (h_Effic->GetBinError(ptBin)*h_Effic->GetBinError(ptBin)) );
+	
+	// h_ChgUE2D_te->Fill( jetPt, ptVal, corrVal );
+	h_ChgUE2D_te->SetBinContent( ix, iy, corrVal );
+	h_ChgUE2D_te->SetBinError( ix, iy, corrVal*relErr );
+
+	// std::cout<< h_ChgUE2D_uncorr<<"  "<<h_ChgUE2D_uncorr->GetBinContent(ix,iy)<<std::endl;
+	// std::cout<< h_ChgUE2D_uncorr->GetBinContent(ix,iy)<< "  "<<corrVal <<"  "<< ptVal<< " "<< effic<<"  "<<std::endl;
       }
     }
+
+    h_ChgUE2D_te->SetEntries(h_ChgUE2D_uncorr->GetEntries());
 
     TCanvas * can = new TCanvas( "can" , "" ,700 ,500 );              // CANVAS 0
     can->SetLogz();
 
-    h_ChgUE2D_te->SetAxisRange(0.0,15.0,"Y");
+    // h_ChgUE2D_te->SetAxisRange(0.0,15.0,"Y");
     
     h_ChgUE2D_te->Draw("COLZ");
-    TString saveName = plot_dir + "CorrChgUE2D.pdf";
+    TString saveName = plot_dir + h_ChgUE2D_te->GetName() + ".pdf";
     can->SaveAs(saveName,"PDF");
 
     can->Destructor();
 
-    h_ChgUE2D_te->SetAxisRange(0.0,30.0,"Y");
+    // h_ChgUE2D_te->SetAxisRange(0.0,30.0,"Y");
   }
   
 
@@ -554,7 +672,7 @@ namespace Analysis {
   }
 
   
-  void WeightUEPtByLeadPtAndFakes( TH1D *h_WtUEpt[nPtBins],TH1D *h_UEpt[55],TH1D *h_DetWt[nPtBins],TH1D *h_leadPt,TH1D *h_FakeJets,TString plot_dir ){
+  void WeightUEPtByLeadPtAndFakes( TH1D *h_WtUEpt[nPtBins],TH1D *h_UEpt[55],TH1D *h_DetWt[nPtBins],TH1D *h_leadPt,TH1D *h_FakeJets,TString plot_dir, TString suf ){
 
     for (int i=0; i<55; ++i) {  // det-level fractional pT contribution to part-level pT --> fc(pT_det)
       int ptVal = i + 5;
@@ -575,9 +693,9 @@ namespace Analysis {
     }
     can7->SetLogy();
     can7->BuildLegend(0.4,0.68,0.9,0.9);
-    TString saveName = plot_dir + "weightedUEptByLeadPt.pdf";
+    TString saveName = plot_dir + "weightedUEptByLeadPt_" + suf + "UE.pdf";
     can7->SaveAs(saveName,"PDF");
-
+    can7->Destructor();
   }
   
 
