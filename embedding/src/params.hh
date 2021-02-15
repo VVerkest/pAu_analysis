@@ -109,7 +109,6 @@ namespace Analysis {
   const TString EAbinName[nEAbins] = { "Lo", "Hi" };
   const TString EAbinString[nEAbins] = { "Low EA", "High EA" }; 
   const TString eastmidwest[nEtaBins] = { "East", "Mid", "West" };
-  const TString emw[nEtaBins] = { "east", "mid", "west" };
 
   const double NEF_max = 0.9;             //neutral energy fraction of jet must be < 90% (not used for PYTHIA) !!!!!
 
