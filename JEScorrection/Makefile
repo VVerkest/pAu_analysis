@@ -59,13 +59,15 @@ $(BDIR)/%  : $(ODIR)/%.o
 ###############################################################################
 ############################# Main Targets ####################################
 ###############################################################################
-all : $(BDIR)/JEScorrection
+all : $(BDIR)/JEScorrection $(BDIR)/newJEScorrection
 
 $(ODIR)/funcs.o : $(SDIR)/funcs.cxx $(SDIR)/funcs.hh $(SDIR)/params.hh
 $(ODIR)/JEScorrection.o : $(SDIR)/JEScorrection.cxx $(SDIR)/params.hh
+$(ODIR)/newJEScorrection.o : $(SDIR)/newJEScorrection.cxx $(SDIR)/params.hh
 
 #data analysis
 $(BDIR)/JEScorrection :	$(ODIR)/JEScorrection.o	$(ODIR)/funcs.o
+$(BDIR)/newJEScorrection :	$(ODIR)/newJEScorrection.o	$(ODIR)/funcs.o
 
 
 ###############################################################################

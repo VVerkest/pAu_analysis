@@ -72,7 +72,7 @@ namespace Analysis {
 
   void StackAndSavePtPlots( TH1D *[3][3], TH2D *, TString, TString );
 
-  void TrackingEfficiencyByPtAndEta( TH2D* [55], TH2D*[55], TFile *, TString, TString );
+  void TrackingEfficiencyByPtAndEta( TH2D* [nPtBins], TH2D*[nPtBins], TFile *, TString, TString );
 
   void WeightAndAddCorrected2Ds( TH2D *, TH1D *, TH2D *[55], TString );
   

@@ -35,7 +35,7 @@ namespace Analysis {
 	int binno = i + 1;
 	if ( ptVal >= ptLo[p] && ptVal <= ptHi[p] ) {
 	  // std::cout<<h_MissedProb->GetBinContent(binno)<<std::endl;
-	  double wt = 1.+h_MissedProb->GetBinContent(binno);  // weight according to misses at part-level
+	  double wt = 1+h_MissedProb->GetBinContent(binno);  // weight according to misses at part-level
 	  h_DetWt[p]->Add(h_Det[i],wt);
 	}
       }    
@@ -148,15 +148,20 @@ namespace Analysis {
 
 
   void ProjectAndPlotByEta( TH2D *h_AddedChgUE2D_corr, TH1D *h_PartJetUE, int eval, int pval, int aval, TString dir_name, TFile *outfile ){
-    h_AddedChgUE2D_corr->SetAxisRange(etaLo[eval],etaHi[eval],"Y");
+    // h_AddedChgUE2D_corr->SetAxisRange(etaLo[eval],etaHi[eval],"Y");
+    h_AddedChgUE2D_corr->GetYaxis()->SetRangeUser(etaLo[eval],etaHi[eval]);
     h_PartJetUE = (TH1D*)h_AddedChgUE2D_corr->ProjectionX();
     TString name = "hPartJetUE"; name += ptBinName[pval] + etaBinName[eval] + "_" + lohi[aval];
     h_PartJetUE->SetName(name);
     double mean = 0.;
 
+    // std::cout<<h_PartJetUE->Integral("width")/area[eval]<<std::endl;
+    
     for (int i=0; i<h_PartJetUE->GetNbinsX(); ++i) {
       int binno = i+1;
-    
+
+      if (h_PartJetUE->GetBinContent( binno )==0){ continue; }
+      
       mean += h_PartJetUE->GetBinContent( binno )*h_PartJetUE->GetBinCenter( binno );///h_PartJetUE->Integral("width");
 
       double width = h_PartJetUE->GetXaxis()->GetBinWidth(binno);
@@ -166,8 +171,12 @@ namespace Analysis {
     outfile->cd();
     h_PartJetUE->Write();
 
+    std::cout<<mean<<std::endl;
+    std::cout<<mean/h_PartJetUE->Integral("width")<<std::endl<<std::endl;
     mean /= h_PartJetUE->Integral("width");
 
+    mean = h_PartJetUE->GetMean(1);
+    
     TCanvas * can = new TCanvas( "can" , "" ,700 ,500 );
     can->SetLogy();
     gStyle->SetOptStat(0);
@@ -349,7 +358,7 @@ namespace Analysis {
 
 
 
-  void TrackingEfficiencyByPtAndEta( TH2D* h_ChgUE2D[55], TH2D* h_ChgUE2D_corr[55], TFile *effic_File, TString ea_string, TString dir_name ){
+  void TrackingEfficiencyByPtAndEta( TH2D* h_ChgUE2D[nPtBins], TH2D* h_ChgUE2D_corr[nPtBins], TFile *effic_File, TString ea_string, TString dir_name ){
     //  X: UE pT,   Y: UE eta
     TH1D *hEffic;
     TString name, saveName, bbcBins;
@@ -383,10 +392,13 @@ namespace Analysis {
     
       for (int ix=1; ix<ybins+1; ++ix){ // loop over UE pt bins
 
-	for (int i=0; i<55; ++i) {
+	for (int i=0; i<nPtBins; ++i) {
 
 	  ptVal = h_ChgUE2D[i]->GetXaxis()->GetBinCenter( ix );
 	  effic = efficFit->Eval( ptVal );
+	  // effic = hEffic->GetBinContent( ix );
+	  // if (ptVal>=3.) { effic = hEffic->GetBinContent( hEffic->FindBin(3.) ); }
+
 	  oldVal = h_ChgUE2D[i]->GetBinContent(ix,iy);
 	  if ( oldVal==0.0 ) { continue; }
 	  oldErr = h_ChgUE2D[i]->GetBinError(ix,iy);
@@ -402,7 +414,7 @@ namespace Analysis {
       }
     }
 
-    for (int i=0; i<55; ++i) {
+    for (int i=0; i<nPtBins; ++i) {
       h_ChgUE2D_corr[i]->SetEntries(h_ChgUE2D[i]->GetEntries());
       if (h_ChgUE2D_corr[i]->GetEntries()==0){ continue; }
       h_ChgUE2D_corr[i]->Draw("COLZ");
