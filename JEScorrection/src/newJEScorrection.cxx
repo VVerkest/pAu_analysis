@@ -166,13 +166,6 @@ int main () {
   hLead->Write();
   hResponse->Write();
 
-  // const int n_bins = 3;
-  // double bin_edge[n_bins+1] = { 10.0, 15.0, 20.0, 30.0 };
-  // const int n_ybins = 3;
-  // double y_bin_edge[n_ybins+1] = { 0.55,0.65,0.75,0.85 };
-  // TH2D *meanPt_hscale = new TH2D("meanPt_hscale",";leading jet p_{T} (GeV);#LT p_{T}^{ch}#GT (GeV)",n_bins,bin_edge,n_ybins,y_bin_edge);
-  // double y_bin_edge2[n_ybins+1] = { 0.5,1.2,1.5,1.8 };
-  // TH2D *nCh_hscale = new TH2D("nCh_hscale",";(GeV);#LT#frac{dN_{ch}}{d#eta d#phi}#GT (GeV)",n_bins,bin_edge,n_ybins,y_bin_edge2);
   TH1D *hUE;//[nPtBins][nEtaBins][nEAbins];
 
   
