@@ -19,7 +19,7 @@ double CalculateGeometricMean( TH1D* h ) {
 }
 
 
-TH1D GenerateFractionalContribution( TH2D* response, double pTlo, double pThi, TString dir ) {
+TH1D* GenerateFractionalContribution( TH2D* response, double pTlo, double pThi, TString dir ) {
   int lo = (int)pTlo;     int hi = (int)pThi;
 
   TCanvas *can = new TCanvas();
@@ -39,7 +39,7 @@ TH1D GenerateFractionalContribution( TH2D* response, double pTlo, double pThi, T
 
   can->Destructor();
   
-  return *response1D;
+  return response1D;
 }
 
 
@@ -145,14 +145,23 @@ int main () {
   const int marker[55] = { 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32,
 			   33, 34, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29 };
 
-  // const int ybins = 15;
-  // double ybinEdge[ybins+1] = { 0.20, 0.25, 0.30, 0.35, 0.40, 0.50, 0.60, 0.70, 0.80, 1.0, 1.5, 2.0, 3.0, 5.0, 10.0, 15.0 };
-
   int jeval, ueeval, pval, eaval;
   TString name, saveName, title, avg, sigma, drawString;
+  TString dirName = "plots/test/";
+  // TString dirName = "plots/";
 
-  TString dirName = "plots/test";
+  TCanvas *c0 = new TCanvas("c0");
+  c0->SetLogy();
 
+
+  // for (int a=0; a<nEAbins; ++a) {
+  //   dirname += lohi[a]; dirname += "/";
+
+
+  // }
+
+  
+  
   TFile* inFile = new TFile("../out/UE/pAuHTjetUE_inclusive.root", "READ");
   TH2D *hUE2D = (TH2D*)inFile->Get("hLeadPtVsUEpT");
   TH1D *hLead = (TH1D*)inFile->Get("hLead");
@@ -169,88 +178,6 @@ int main () {
   TH1D *hUE;//[nPtBins][nEtaBins][nEAbins];
 
   
-  TCanvas *c0 = new TCanvas("c0");
-  c0->SetLogy();
-
-
-  TH1D *hUE1D_stack[55];
-
-  //  UEpT_varBinning_allLeadPt
-  //  projects and saves the UE pT distribution (scaled by Njets) for a part-level leading jet of 4<=pT<=59 GeV
-  for (int i=0; i<55; ++i) {
-    int ptLo = i+4, ptHi = i+5, binno = i+1;
-    name = "hUE1D_stack_"; name += ptLo; name += "to"; name += ptHi; name += "GeV";
-    hUE1D_stack[i] = (TH1D*)hUE2D->ProjectionY(name,binno,binno);
-    hUE1D_stack[i]->GetYaxis()->SetTitle("#frac{1}{N_{jets}} #frac{dN_{UE}}{dp_{T}^{UE}}");
-    hUE1D_stack[i]->SetMarkerColor(925 + (5*i));
-    hUE1D_stack[i]->SetLineColor(925 + (5*i));
-    // hUE1D_stack[i]->SetMarkerColor(1170 - (5*i));
-    // hUE1D_stack[i]->SetLineColor(1170 - (5*i));
-    hUE1D_stack[i]->SetMarkerStyle(marker[i]);
-    hUE1D_stack[i]->SetMarkerSize(1.);
-    hUE1D_stack[i]->SetStats(0);
-    hUE1D_stack[i]->GetXaxis()->CenterTitle();
-    hUE1D_stack[i]->GetXaxis()->SetTitleOffset(1.);
-    if ( hUE1D_stack[i]->Integral()!=0 ) {
-      hUE1D_stack[i]->Scale(1./hLead->Integral(binno,binno));
-      hUE1D_stack[i]->SetAxisRange(0.2,17.,"X");
-      hUE1D_stack[i]->SetAxisRange(0.000001,5.,"Y");
-      hUE1D_stack[i]->Draw("SAME");
-      // hUE1D_stack[i]->Write();
-    }
-  }
-
-  c0->BuildLegend(0.83,0.,1.,1.);
-  saveName = dirName; saveName += "/UEpT_varBinning_allLeadPt.pdf";
-  c0->SaveAs(saveName,"PDF");
-
-
-  //  Response_10_30
-  //  for a part-level leading jet 10-30 GeV, this is the (normalized to unity) fractional contibution of det-level leading jets by pT
-  hResponse->GetXaxis()->SetRangeUser(10.,30.);
-  TH1D *hResponse_10_30 = (TH1D*)hResponse->ProjectionY("hResponse_10_30");
-  hResponse_10_30->Scale(1./hResponse_10_30->Integral());
-  // c0->SetLogy(0);
-  hResponse_10_30->GetYaxis()->SetTitle("frac. contribution to a 10-30 GeV part. jet");
-  hResponse_10_30->Draw();
-  hResponse_10_30->Write();
-  saveName = dirName + "/Response_10_30.pdf";
-  c0->SaveAs(saveName,"PDF");
-  hResponse->GetXaxis()->SetRange(1, -1);
-
-
-  //  UEpT_varBinning_10_30
-  //  UE pT distribution (scaled by Njets) for det-level jets 10-30 GeV
-  hUE2D->GetXaxis()->SetRangeUser(10.,30.);
-  name = "hUE1D_10_30GeV";
-  TH1D *hUE1D_10_30 = (TH1D*)hUE2D->ProjectionY(name);
-  int binlo = 10-3; int binhi = 30-4;
-  hUE1D_10_30->Scale(1./hLead->Integral(7,26));
-  hUE1D_10_30->GetYaxis()->SetTitle("#frac{1}{N_{jets}} #frac{dN_{UE}}{dp_{T}^{UE}}");
-  hUE1D_10_30->Draw();
-  saveName = dirName + "/UEpT_varBinning_10_30.pdf";
-  c0->SaveAs(saveName,"PDF");
-  // cout<<"mean: "<<hUE1D_10_30->GetMean()<<endl;
-  // cout<<"integral: "<<hUE1D_10_30->Integral()<<endl<<endl;
-
-
-  //  UEpT_10_30
-  //  UE pT distribution (scaled by Njets, adjusted for bin width, and re-scaled to preserve integral) for det-level jets 10-30 GeV
-  TH1D *hUE1D_10_30_dbw = (TH1D*)hUE1D_10_30->Clone("hUE1D_10_30_dbw");
-  for (int i=1; i<=hUE1D_10_30_dbw->GetNbinsX(); ++i) { hUE1D_10_30_dbw->SetBinContent(i,hUE1D_10_30_dbw->GetBinContent(i)/hUE1D_10_30_dbw->GetBinWidth(i)); }
-  hUE1D_10_30_dbw->Scale(hUE1D_10_30->Integral()/hUE1D_10_30_dbw->Integral());
-  // cout<<"geometric mean: "<< CalculateGeometricMean(hUE1D_10_30_dbw) <<endl;
-  // cout<<"integral: "<<hUE1D_10_30_dbw->Integral()<<endl<<endl;
-  hUE1D_10_30_dbw->Draw();
-  saveName = dirName + "/UEpT_10_30.pdf";
-  c0->SaveAs(saveName,"PDF");
-
-
-
-
-
-
-  
   TH1D *hUE1D[55], *hUE1D_dbw[55];
   for (int i=0; i<55; ++i) {
     name = "hUE1D_"; name +=(i+4); name+="_"; name+=(i+5);
@@ -259,61 +186,37 @@ int main () {
     hUE1D_dbw[i] = new TH1D(name,"",ybins,ybinEdge);
 
     ProjectScaleAndSaveUE1D( hUE2D, *hUE1D[i], hLead, *hUE1D_dbw[i], i+4., i+5., dirName );
-    name = "hUE1D_"; name +=(i+4); name+="_"; name+=(i+5);
-    // hUE1D[i]->SetName(name);
     hUE1D[i]->Write();
-    name += "_dbw";
-    // hUE1D_dbw[i]->SetName(name);
     hUE1D_dbw[i]->Write();
   }
 
 
+  TH1D *hResponseProj[nPtBins]; TH1D* hUE_partProj[nPtBins];
 
-  TH1D hResponse_10_15 = GenerateFractionalContribution( hResponse, 10., 15., dirName );
-  TH1D* hUE_part_10_15 = (TH1D*) WeightAndSumByFC( &hResponse_10_15, hUE1D_dbw );
-  hUE_part_10_15->SetName("hUE_part_10_15");
-  hUE_part_10_15->SetAxisRange(0.0000001,1,"Y");
-  hUE_part_10_15->Draw();
-  TString text = "#LT #frac{dN^{ch}}{d#eta d#phi} #GT = "; text+=RoundDecimal(hUE_part_10_15->Integral()/AREA,3);
-  DrawText(text,0.6,0.7,20);
-  text = "#LT p_{T}^{ch} #GT = "; text+=RoundDecimal(CalculateGeometricMean(hUE_part_10_15),3);
-  DrawText(text,0.6,0.6,20);
-  hUE_part_10_15->Write();
-  name = dirName + "/UE_part_10_15.pdf";
-  c0->SaveAs(name,"PDF");
-  cout<<hUE_part_10_15->Integral()/AREA<<endl<<CalculateGeometricMean(hUE_part_10_15)<<endl;
+  for (int p=0; p<nPtBins; ++p) {
 
-  
+    name = "hResponse" + ptBinName[p];
+    hResponseProj[p] = GenerateFractionalContribution( hResponse, ptLo[p], ptHi[p], dirName );
+    hResponseProj[p]->SetName(name);
 
-  TH1D hResponse_15_20 = GenerateFractionalContribution( hResponse, 15., 20., dirName );
-  TH1D* hUE_part_15_20 = (TH1D*) WeightAndSumByFC( &hResponse_15_20, hUE1D_dbw );
-  hUE_part_15_20->SetName("hUE_part_15_20");
-  hUE_part_15_20->SetAxisRange(0.0000001,1,"Y");
-  hUE_part_15_20->Write();
-  hUE_part_15_20->Draw();
-  text = "#LT #frac{dN^{ch}}{d#eta d#phi} #GT = "; text+=RoundDecimal(hUE_part_15_20->Integral()/AREA,3);
-  DrawText(text,0.6,0.7,20);
-  text = "#LT p_{T}^{ch} #GT = "; text+=RoundDecimal(CalculateGeometricMean(hUE_part_15_20),3);
-  DrawText(text,0.6,0.6,20);  name = dirName + "/UE_part_15_20.pdf";
-  c0->SaveAs(name,"PDF");
-  cout<<hUE_part_15_20->Integral()/AREA<<endl<<CalculateGeometricMean(hUE_part_15_20)<<endl;
+    name = "hUE_part" + ptBinName[p];
+    hUE_partProj[p] = (TH1D*) WeightAndSumByFC( hResponseProj[p], hUE1D_dbw );
+    hUE_partProj[p]->SetName(name);
+    hUE_partProj[p]->SetAxisRange(0.0000001,1,"Y");
+    hUE_partProj[p]->Draw();
+    
+    TString text = "#LT #frac{dN^{ch}}{d#eta d#phi} #GT = "; text+=RoundDecimal(hUE_partProj[p]->Integral()/AREA,3);
+    DrawText(text,0.6,0.7,20);
+    text = "#LT p_{T}^{ch} #GT = "; text+=RoundDecimal(CalculateGeometricMean(hUE_partProj[p]),3);
+    DrawText(text,0.6,0.6,20);
+    hUE_partProj[p]->Write();
+    name = dirName + "/UE_part_" + ptBinName[p] + ".pdf";
+    c0->SaveAs(name,"PDF");
+    cout<<hUE_partProj[p]->Integral()/AREA<<endl<<CalculateGeometricMean(hUE_partProj[p])<<endl;
+    
+  }
 
-  
-
-  TH1D hResponse_20_30 = GenerateFractionalContribution( hResponse, 20., 30., dirName );
-  TH1D* hUE_part_20_30 = (TH1D*) WeightAndSumByFC( &hResponse_20_30, hUE1D_dbw );
-  hUE_part_20_30->SetName("hUE_part_20_30");
-  hUE_part_20_30->SetAxisRange(0.0000001,1,"Y");
-  hUE_part_20_30->Write();
-  hUE_part_20_30->Draw();
-  text = "#LT #frac{dN^{ch}}{d#eta d#phi} #GT = "; text+=RoundDecimal(hUE_part_20_30->Integral()/AREA,3);
-  DrawText(text,0.6,0.7,20);
-  text = "#LT p_{T}^{ch} #GT = "; text+=RoundDecimal(CalculateGeometricMean(hUE_part_20_30),3);
-  DrawText(text,0.6,0.6,20);  name = dirName + "/UE_part_20_30.pdf";
-  c0->SaveAs(name,"PDF");
-  cout<<hUE_part_20_30->Integral()/AREA<<endl<<CalculateGeometricMean(hUE_part_20_30)<<endl;
-  
-  
+   
   embFile->Close();
   inFile->Close();
   outFile->Write();
