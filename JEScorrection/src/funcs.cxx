@@ -17,7 +17,43 @@ namespace Analysis {
     //tex->SetTextFont(42);
     tex->SetNDC();
     tex->Draw();
-  }  
+  }
+
+
+  double CalculateGeometricMean( TH1D* h ) {
+    double geoMean = 0;
+    double totalContent = 0;
+    for (int i=1; i<=h->GetNbinsX(); ++i) {
+      geoMean += h->GetBinCenter(i)*h->GetBinContent(i)*h->GetBinWidth(i);
+      totalContent += h->GetBinContent(i)*h->GetBinWidth(i);
+    }
+    geoMean /= totalContent;
+    return geoMean;
+  }
+
+
+  TH1D* GenerateFractionalContribution( TH2D* response, double pTlo, double pThi, TString dir, TString lohiEA ) {
+    int lo = (int)pTlo;     int hi = (int)pThi;
+
+    TCanvas *can = new TCanvas();
+    can->SetLogy();
+
+    response->GetXaxis()->SetRangeUser(pTlo,pThi);
+    TString name = "hResponse_" + lohiEA + "EA_"; name+=lo; name+="_"; name+=hi;
+    TH1D *response1D = (TH1D*)response->ProjectionY(name);
+    response1D->Scale(1./response1D->Integral());
+    TString title = "frac. contribution to a "; title+=lo; title+="-"; title+=hi; title+=" GeV part. jet";
+    response1D->GetYaxis()->SetTitle(title);
+    response1D->Draw();
+    // response1D->Write();
+    TString saveName = dir + "/response_" + lohiEA + "EA_"; saveName+=lo; saveName+="_"; saveName+=hi; saveName+=".pdf";
+    can->SaveAs(saveName,"PDF");
+    response->GetXaxis()->SetRange(1, -1);
+
+    can->Destructor();
+  
+    return response1D;
+  }
 
 
   void GenerateWeightedPtResponse( TH1D *h_DetWt[3], TH1D *h_Det[21], TH1D *h_MissedProb, TString plot_dir ) {
@@ -263,6 +299,71 @@ namespace Analysis {
   }
 
 
+  void ProjectScaleAndSaveUE1D( TH2D* UE2D, TH1D &UE1D, TH1D* lead, TH1D &UE1D_dbw, double pTlo, double pThi, TString dir, TString lohiEA ){
+
+    TString name, saveName;
+  
+    TCanvas *can = new TCanvas();
+    can->SetLogy();
+  
+    int lo = (int)pTlo;     int hi = (int)pThi;
+    
+    //  UEpT_varBinning_pTlo_pThi
+    //  UE pT distribution (scaled by Njets) for det-level jets pTlo-pThi GeV
+    UE2D->GetXaxis()->SetRangeUser( pTlo, pThi );
+    name = "hUE1D_" + lohiEA + "EA_"; name+=pTlo; name+="_"; name+=pThi; name +="GeV";
+    TH1D* htemp = (TH1D*)UE2D->ProjectionY(name);
+    UE1D = *htemp;
+    int binlo = lo-3; int binhi = hi-4;
+    UE1D.Scale(1./lead->Integral(lo-3,hi-4));
+    UE1D.GetYaxis()->SetTitle("#frac{1}{N_{jets}} #frac{dN_{UE}}{dp_{T}^{UE}}");
+    if (UE1D.GetEntries()>0) {
+      UE1D.SetAxisRange(0.0000001,1.,"Y");
+      UE1D.Draw();
+      saveName = dir + "/UEpT_varBinning_" + lohiEA + "EA_"; saveName+=pTlo; saveName+="_"; saveName+=pThi; saveName +=".pdf";
+      can->SaveAs(saveName,"PDF");
+      std::cout<<"mean: "<<UE1D.GetMean()<<std::endl;
+      std::cout<<"integral: "<<UE1D.Integral()<<std::endl<<std::endl;
+    }
+
+    //  UEpT_pTlo_pThi
+    //  UE pT distribution (scaled by Njets, adjusted for bin width, and re-scaled to preserve integral) for det-level jets pTlo-pThi GeV
+    name = "hUE1D_" + lohiEA + "EA_"; name+=pTlo; name+="_"; name+=pThi; name +="_dbw";
+
+    UE1D_dbw = *htemp;
+    binlo = lo-3; binhi = hi-4;
+    UE1D_dbw.Scale(1./lead->Integral(lo-3,hi-4));
+    UE1D_dbw.GetYaxis()->SetTitle("#frac{1}{N_{jets}} #frac{dN_{UE}}{dp_{T}^{UE}}");
+  
+    for (int i=1; i<=UE1D_dbw.GetNbinsX(); ++i) { UE1D_dbw.SetBinContent(i,UE1D_dbw.GetBinContent(i)/UE1D_dbw.GetBinWidth(i)); }
+    UE1D_dbw.Scale(UE1D.Integral()/UE1D_dbw.Integral());
+    if (UE1D_dbw.GetEntries()>0) {
+      std::cout<<"geometric mean: "<< CalculateGeometricMean(&UE1D_dbw) <<std::endl;
+      std::cout<<"integral: "<<UE1D_dbw.Integral()<<std::endl<<std::endl;
+      UE1D_dbw.SetAxisRange(0.0000001,1.,"Y");
+      UE1D_dbw.Draw();
+      saveName = dir + "/UEpT_" + lohiEA + "EA_"; saveName+=pTlo; saveName+="_"; saveName+=pThi; saveName +="_dbw.pdf";
+      can->SaveAs(saveName,"PDF");
+    }
+
+    // UE1D.Write();
+    // UE1D_dbw.Write();
+    can->Destructor();
+  }
+
+  
+  TString RoundDecimal(double val, int nDigitsAfterDecimal ) {
+    double n = val;
+    n += 5/pow(10,nDigitsAfterDecimal+1);
+    TString rounded = "";
+    rounded += n;
+    int nDigitsBeforeDecimal = 1 + rounded.First(".");  
+    int input = nDigitsBeforeDecimal + nDigitsAfterDecimal;
+    rounded = rounded(0,input);
+    return rounded;
+  }
+
+
 
   // void StackAndSaveNchPlots( TH1D *hPt[3][3], TH2D *hscale, TString save_name, TString dir_name ) {
   //   auto hs = new THStack("hs","Stacked 1D histograms colored using kOcean palette");
@@ -448,6 +549,24 @@ namespace Analysis {
 
     can->Destructor();
 
+  }
+
+
+  TH1D* WeightAndSumByFC1D( TH1D* FC, TH1D* UE1D[55] ){
+
+    const int bins = 15;
+    double binEdge[bins+1] = { 0.20, 0.25, 0.30, 0.35, 0.40, 0.50, 0.60, 0.70, 0.80, 1.0, 1.5, 2.0, 3.0, 5.0, 10.0, 15.0 };
+    TH1D* UE_part = new TH1D("UE_part","",bins,binEdge);
+
+    for (int i=0; i<FC->GetNbinsX(); ++i) {
+      int binno = i+4;
+      double wt = FC->GetBinContent(binno);
+      if (wt==0) { continue; }
+      UE_part->Add(UE1D[i], wt);
+    }
+
+    UE_part->Write();
+    return UE_part;
   }
   
 

@@ -7,122 +7,18 @@
 using namespace std;
 using namespace Analysis;
 
-double CalculateGeometricMean( TH1D* h ) {
-  double geoMean = 0;
-  double totalContent = 0;
-  for (int i=1; i<=h->GetNbinsX(); ++i) {
-    geoMean += h->GetBinCenter(i)*h->GetBinContent(i)*h->GetBinWidth(i);
-    totalContent += h->GetBinContent(i)*h->GetBinWidth(i);
-  }
-  geoMean /= totalContent;
-  return geoMean;
-}
 
-
-TH1D* GenerateFractionalContribution( TH2D* response, double pTlo, double pThi, TString dir ) {
-  int lo = (int)pTlo;     int hi = (int)pThi;
-
-  TCanvas *can = new TCanvas();
-  can->SetLogy();
-
-  response->GetXaxis()->SetRangeUser(pTlo,pThi);
-  TString name = "hResponse_"; name+=lo; name+="_"; name+=hi;
-  TH1D *response1D = (TH1D*)response->ProjectionY(name);
-  response1D->Scale(1./response1D->Integral());
-  TString title = "frac. contribution to a "; title+=lo; title+="-"; title+=hi; title+=" GeV part. jet";
-  response1D->GetYaxis()->SetTitle(title);
-  response1D->Draw();
-  // response1D->Write();
-  TString saveName = dir + "/response_"; saveName+=lo; saveName+="_"; saveName+=hi; saveName+=".pdf";
-  can->SaveAs(saveName,"PDF");
-  response->GetXaxis()->SetRange(1, -1);
-
-  can->Destructor();
-  
-  return response1D;
-}
-
-
-void ProjectScaleAndSaveUE1D( TH2D* UE2D, TH1D &UE1D, TH1D* lead, TH1D &UE1D_dbw, double pTlo, double pThi, TString dir ){
-
-  TString name, saveName;
-  
-  TCanvas *can = new TCanvas();
-  can->SetLogy();
-  
-  int lo = (int)pTlo;     int hi = (int)pThi;
-    
-  //  UEpT_varBinning_pTlo_pThi
-  //  UE pT distribution (scaled by Njets) for det-level jets pTlo-pThi GeV
-  UE2D->GetXaxis()->SetRangeUser( pTlo, pThi );
-  name = "hUE1D_"; name+=pTlo; name+="_"; name+=pThi; name +="GeV";
-  TH1D* htemp = (TH1D*)UE2D->ProjectionY(name);
-  UE1D = *htemp;
-  int binlo = lo-3; int binhi = hi-4;
-  UE1D.Scale(1./lead->Integral(lo-3,hi-4));
-  UE1D.GetYaxis()->SetTitle("#frac{1}{N_{jets}} #frac{dN_{UE}}{dp_{T}^{UE}}");
-  if (UE1D.GetEntries()>0) {
-    UE1D.SetAxisRange(0.0000001,1.,"Y");
-    UE1D.Draw();
-    saveName = dir + "/UEpT_varBinning_"; saveName+=pTlo; saveName+="_"; saveName+=pThi; saveName +=".pdf";
-    can->SaveAs(saveName,"PDF");
-    cout<<"mean: "<<UE1D.GetMean()<<endl;
-    cout<<"integral: "<<UE1D.Integral()<<endl<<endl;
-  }
-
-  //  UEpT_pTlo_pThi
-  //  UE pT distribution (scaled by Njets, adjusted for bin width, and re-scaled to preserve integral) for det-level jets pTlo-pThi GeV
-  name = "hUE1D_"; name+=pTlo; name+="_"; name+=pThi; name +="_dbw";
-
-  UE1D_dbw = *htemp;
-  binlo = lo-3; binhi = hi-4;
-  UE1D_dbw.Scale(1./lead->Integral(lo-3,hi-4));
-  UE1D_dbw.GetYaxis()->SetTitle("#frac{1}{N_{jets}} #frac{dN_{UE}}{dp_{T}^{UE}}");
-  
-  for (int i=1; i<=UE1D_dbw.GetNbinsX(); ++i) { UE1D_dbw.SetBinContent(i,UE1D_dbw.GetBinContent(i)/UE1D_dbw.GetBinWidth(i)); }
-  UE1D_dbw.Scale(UE1D.Integral()/UE1D_dbw.Integral());
-  if (UE1D_dbw.GetEntries()>0) {
-    cout<<"geometric mean: "<< CalculateGeometricMean(&UE1D_dbw) <<endl;
-    cout<<"integral: "<<UE1D_dbw.Integral()<<endl<<endl;
-    UE1D_dbw.SetAxisRange(0.0000001,1.,"Y");
-    UE1D_dbw.Draw();
-    saveName = dir + "/UEpT_"; saveName+=pTlo; saveName+="_"; saveName+=pThi; saveName +="_dbw.pdf";
-    can->SaveAs(saveName,"PDF");
-  }
-
-  // UE1D.Write();
-  // UE1D_dbw.Write();
-  can->Destructor();
-}
-
-
-TString RoundDecimal(double val, int nDigitsAfterDecimal ) {
-  double n = val;
-  n += 5/pow(10,nDigitsAfterDecimal+1);
-  TString rounded = "";
-  rounded += n;
-  int nDigitsBeforeDecimal = 1 + rounded.First(".");  
-  int input = nDigitsBeforeDecimal + nDigitsAfterDecimal;
-  rounded = rounded(0,input);
-  return rounded;
-}
-
-
-TH1D* WeightAndSumByFC( TH1D* FC, TH1D* UE1D[55] ){
-
-  const int bins = 15;
-  double binEdge[bins+1] = { 0.20, 0.25, 0.30, 0.35, 0.40, 0.50, 0.60, 0.70, 0.80, 1.0, 1.5, 2.0, 3.0, 5.0, 10.0, 15.0 };
-  TH1D* UE_part = new TH1D("UE_part","",bins,binEdge);
+void WeightAndSumByFC2D( TH1D* FC, TH2D* UE2D[55], TH2D *UE2Dpart ){
 
   for (int i=0; i<FC->GetNbinsX(); ++i) {
+    
     int binno = i+4;
+    
     double wt = FC->GetBinContent(binno);
     if (wt==0) { continue; }
-    UE_part->Add(UE1D[i], wt);
-  }
+    UE2Dpart->Add(UE2D[i], wt);
 
-  UE_part->Write();
-  return UE_part;
+  }
 }
 
 
@@ -131,7 +27,10 @@ TH1D* WeightAndSumByFC( TH1D* FC, TH1D* UE1D[55] ){
 int main () {
 
   TH1::SetDefaultSumw2();  TH2::SetDefaultSumw2();  TH3::SetDefaultSumw2();
-  
+
+  TCanvas *c0 = new TCanvas("c0");
+  c0->SetLogy();
+
   const double pi = 3.14159265;
   const double AREA = 4*(pi - 2);   // (  2 in eta  ) X (  2*( pi-1 - 1 ) in phi  )
 
@@ -147,79 +46,129 @@ int main () {
 
   int jeval, ueeval, pval, eaval;
   TString name, saveName, title, avg, sigma, drawString;
-  TString dirName = "plots/test/";
-  // TString dirName = "plots/";
+  TString dirName = "plots/new";
 
-  TCanvas *c0 = new TCanvas("c0");
-  c0->SetLogy();
+  // ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ 
+  //                                           READ IN FILES & HISTOGRAMS
+  // ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ 
+  
+  TFile *inFile[nEAbins], *embFile[nEAbins];
+  TFile* outFile = new TFile("out/test1.root", "RECREATE");
 
+  TH2D *hUE2D[nEAbins][55];
+  TH3D *hUE3D[nEAbins][nEtaBins];
+  TH3D *hUE3Dsum[nEAbins];
+  TH1D *hLead[nEAbins][nEtaBins];
+  TH1D *hLeadSum[nEAbins];
+  TH2D *hResponse[nEAbins][nEtaBins];
+  TH2D *hResponseSum[nEAbins];
+  TH1D *hFakes[nEAbins][nEtaBins];
+  TH1D *hFakesSum[nEAbins];
+  TH1D *hMisses[nEAbins];
+  
+  for (int a=0; a<nEAbins; ++a) {
+    //dirName += lohi[a];
 
-  // for (int a=0; a<nEAbins; ++a) {
-  //   dirname += lohi[a]; dirname += "/";
+    name = "../out/UE/pAuHTjetUE_" + lohi[a] + "EA_uncorrected.root";
+    inFile[a] = new TFile(name, "READ");
+    name = "hUE3Dsum_" + lohi[a] + "EA";
+    hUE3Dsum[a] = new TH3D(name,";leading jet p_{T} (GeV);chg. UE part. p_{T} (GeV);chg. UE part. #eta",xbins,xbinEdge,ybins,ybinEdge,zbins,zbinEdge);
+    name = "hLead_" + lohi[a];
+    hLeadSum[a] = new TH1D(name,";leading jet p_{T} (GeV)", 55,4.0,59.0);
+    name = "hResponseSum_" + lohi[a] + "EA";
+    hResponseSum[a] = new TH2D(name,"part-level leading jet p_{T} (GeV);det-level leading jet p_{T} (GeV)",55,4.0,59.0, 55,4.0,59.0);
+    name = "hFakesSum_" + lohi[a] + "EA";
+    hFakesSum[a] = new TH1D(name,"det-level leading jet p_{T} (GeV)", 55,4.0,59.0);
 
+    for (int e=0; e<nEtaBins; ++e) {
+      name = "hChgUE_" + emw[e] + "EtaJet";
+      hUE3D[a][e] = (TH3D*)inFile[a]->Get(name);
+      name += "_" + lohi[a];
+      hUE3D[a][e]->SetName(name);
+      hUE3Dsum[a]->Add(hUE3D[a][e]);
 
-  // }
+      name = "hLeadPt_" + emw[e] + "EtaJet";
+      hLead[a][e] = (TH1D*)inFile[a]->Get(name);
+      name += "_" + lohi[a];
+      hLead[a][e]->SetName(name);
+      hLeadSum[a]->Add(hLead[a][e]);
+
+      name = "hFakes_" + emw[e] + "EtaJet";
+      hFakes[a][e] = (TH1D*)inFile[a]->Get(name);
+      name += "_" + lohi[a];
+      hFakes[a][e]->SetName(name);
+      hFakesSum[a]->Add(hFakes[a][e]);
+    }
+    
+    name = "../embedding/out/sim/pAu2015embedding_" + lohi[a] + "EA.root";
+    embFile[a] = new TFile(name, "READ");
+
+    hMisses[a] = (TH1D*)embFile[a]->Get("hMisses");
+
+    for (int e=0; e<nEtaBins; ++e) {
+      name = "hPtResponse_" + emw[e] + "EtaJet";
+      hResponse[a][e] = (TH2D*)embFile[a]->Get(name);
+      name = "hResponse_" + lohi[a] + "EA_" + emw[e] + "Jet";
+      hResponse[a][e]->SetName(name);
+      hResponseSum[a]->Add(hResponse[a][e]);
+    }
+
+  }
 
   
   
-  TFile* inFile = new TFile("../out/UE/pAuHTjetUE_inclusive.root", "READ");
-  TH2D *hUE2D = (TH2D*)inFile->Get("hLeadPtVsUEpT");
-  TH1D *hLead = (TH1D*)inFile->Get("hLead");
-
-  TFile* embFile = new TFile("../embedding/out/sim/pAu2015embedding_inclusive.root", "READ");
-  TH2D *hResponse = (TH2D*)embFile->Get("hResponse");
+  // ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ 
+  //                                             DETECTOR-TO-PARTICLE-LEVEL
+  // ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~
   
-  TFile* outFile = new TFile("out/test.root", "RECREATE");
+  for (int a=0; a<nEAbins; ++a) {
+    for (int jp=0; jp<55; ++jp) {
+      int binno = jp+1;  int plo=jp+4;  int phi=jp+5;
+      hUE3Dsum[a]->GetXaxis()->SetRange(binno,binno);
+      hUE2D[a][jp] = (TH2D*)hUE3Dsum[a]->Project3D("ZY");  // UE PT IS ON X-AXIS
+      name = "hUE2Dsum_" + lohi[a] + "_"; name+=plo; name+="_"; name+=phi; name+="GeV_det";
+      hUE2D[a][jp]->SetName(name);
+      hUE2D[a][jp]->Scale(1./hLeadSum[a]->Integral(binno,binno));// NORMALIZE TO NJETS
+      hUE3Dsum[a]->GetXaxis()->SetRange(1,-1);
+    }
+  }
+
+  TH1D *FC_part[nEAbins][20];
+  TH2D *hUE2D_part[nEAbins][20];
+
+  for (int a=0; a<nEAbins; ++a) {
+    for (int pp=0; pp<20; ++pp) {
+      int plo = pp+10;  int phi = pp+11;  double p_lo = 10.0 + (1.0*pp);  double p_hi = 11.0 + (1.0*pp);
+      
+      FC_part[a][pp] = GenerateFractionalContribution( hResponseSum[a], p_lo, p_hi, dirName, lohi[a] );
+      
+      name = "hUE2D_" + lohi[a] + "_"; name+=plo; name+="_"; name+=phi; name+="GeV_part";
+      hUE2D_part[a][pp] = new TH2D(name,";chg. UE part. p_{T} (GeV);chg. UE part. #eta",ybins,ybinEdge,zbins,zbinEdge);
+
+      WeightAndSumByFC2D( FC_part[a][pp], hUE2D[a], hUE2D_part[a][pp] );
+    }
+  }
+
+  
+  //  SUM 2D HISTOGRAMS AND ACCOUNT FOR MISSED JETS
+
+
+  
+  //  PERFORM 2D TRACKING EFFICINECY CORRECTION
+  //  PROJECT HISTOGRAMS BY UE ETA
+
+  
+
   outFile->cd();
-  hUE2D->Write();
-  hLead->Write();
-  hResponse->Write();
 
-  TH1D *hUE;//[nPtBins][nEtaBins][nEAbins];
-
-  
-  TH1D *hUE1D[55], *hUE1D_dbw[55];
-  for (int i=0; i<55; ++i) {
-    name = "hUE1D_"; name +=(i+4); name+="_"; name+=(i+5);
-    hUE1D[i] = new TH1D(name,"",ybins,ybinEdge);
-    name += "_dbw";
-    hUE1D_dbw[i] = new TH1D(name,"",ybins,ybinEdge);
-
-    ProjectScaleAndSaveUE1D( hUE2D, *hUE1D[i], hLead, *hUE1D_dbw[i], i+4., i+5., dirName );
-    hUE1D[i]->Write();
-    hUE1D_dbw[i]->Write();
+  for (int a=0; a<nEAbins; ++a) {
+    for (int jp=0; jp<55; ++jp) {
+      // hUE2D[a][jp]->Write();
+    }
+    for (int pp=0; pp<20; ++pp) { hUE2D_part[a][pp]->Write();}
+    embFile[a]->Close();
+    inFile[a]->Close();
   }
-
-
-  TH1D *hResponseProj[nPtBins]; TH1D* hUE_partProj[nPtBins];
-
-  for (int p=0; p<nPtBins; ++p) {
-
-    name = "hResponse" + ptBinName[p];
-    hResponseProj[p] = GenerateFractionalContribution( hResponse, ptLo[p], ptHi[p], dirName );
-    hResponseProj[p]->SetName(name);
-
-    name = "hUE_part" + ptBinName[p];
-    hUE_partProj[p] = (TH1D*) WeightAndSumByFC( hResponseProj[p], hUE1D_dbw );
-    hUE_partProj[p]->SetName(name);
-    hUE_partProj[p]->SetAxisRange(0.0000001,1,"Y");
-    hUE_partProj[p]->Draw();
-    
-    TString text = "#LT #frac{dN^{ch}}{d#eta d#phi} #GT = "; text+=RoundDecimal(hUE_partProj[p]->Integral()/AREA,3);
-    DrawText(text,0.6,0.7,20);
-    text = "#LT p_{T}^{ch} #GT = "; text+=RoundDecimal(CalculateGeometricMean(hUE_partProj[p]),3);
-    DrawText(text,0.6,0.6,20);
-    hUE_partProj[p]->Write();
-    name = dirName + "/UE_part_" + ptBinName[p] + ".pdf";
-    c0->SaveAs(name,"PDF");
-    cout<<hUE_partProj[p]->Integral()/AREA<<endl<<CalculateGeometricMean(hUE_partProj[p])<<endl;
-    
-  }
-
-   
-  embFile->Close();
-  inFile->Close();
-  outFile->Write();
   outFile->Close();
 
   return 0;

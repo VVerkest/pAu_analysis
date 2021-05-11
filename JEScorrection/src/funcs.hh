@@ -58,6 +58,10 @@ namespace Analysis {
                                         
   void DrawText(const char*, float, float, int);
 
+  double CalculateGeometricMean( TH1D* );
+
+  TH1D* GenerateFractionalContribution( TH2D*, double, double, TString, TString );
+  
   void GenerateWeightedPtResponse( TH1D *[3], TH1D *[21], TH1D *, TString );
 
   void GetEmbeddingHistograms( TFile *, TH2D *, TH1D *, TH1D *, TString );
@@ -72,9 +76,15 @@ namespace Analysis {
 
   void StackAndSavePtPlots( TH1D *[3][3], TH2D *, TString, TString );
 
+  void ProjectScaleAndSaveUE1D( TH2D*, TH1D &, TH1D*, TH1D &, double, double, TString, TString );
+
+  TString RoundDecimal(double, int );
+  
   void TrackingEfficiencyByPtAndEta( TH2D* [nPtBins], TH2D*[nPtBins], TFile *, TString, TString );
 
   void WeightAndAddCorrected2Ds( TH2D *, TH1D *, TH2D *[55], TString );
+
+  TH1D* WeightAndSumByFC1D( TH1D*, TH1D*[55] );
   
   void WeightUEPtByLeadPtAndFakes( TH1D *[nPtBins], TH1D *[55], TH1D *[nPtBins], TH1D *, TH1D *, TString, TString );
   
