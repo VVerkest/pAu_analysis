@@ -55,9 +55,10 @@ void ptDifferentialUEplots(){
   int jeval, ueeval, pval, eaval;
   TString name, saveName, title, avg, sigma, drawString;
 
-  string directory = "plots/";
+  string directory = "plots/halfGeVbins/";
 
-  auto hs = new THStack("hs","Stacked 1D histograms colored using kOcean palette");
+  auto hs_n = new THStack("hs_n","dNch/dEtadPhi");
+  auto hs_pt = new THStack("hs_pt","mean pT");
 
   const int etaColor[nEtaBins] = { 877, 596, 814 };
 
@@ -67,25 +68,36 @@ void ptDifferentialUEplots(){
   const int n_ybins = 3;
   double y_bin_edge[n_ybins+1] = { 0.55,0.65,0.75,0.85 };
   TH2D *meanPt_hscale = new TH2D("meanPt_hscale",";leading jet p_{T} (GeV);#LT p_{T}^{ch}#GT (GeV)",n_bins,bin_edge,n_ybins,y_bin_edge);
+
+  double bin_edge2[n_bins+1] = { 0.0, 1.0, 2.0, 3.0 };
   double y_bin_edge2[n_ybins+1] = { 0.5,1.2,1.5,1.8 };
-  TH2D *nCh_hscale = new TH2D("nCh_hscale",";(GeV);#LT#frac{dN_{ch}}{d#eta d#phi}#GT (GeV)",n_bins,bin_edge,n_ybins,y_bin_edge2);
+  TH2D *nCh_hscale = new TH2D("nCh_hscale",";leading jet p_{T} (GeV);#LT#frac{dN_{ch}}{d#eta d#phi}#GT",n_bins,bin_edge,n_ybins,y_bin_edge2);
 
   TH1D *hPt[nPtBins][nEtaBins][nEAbins];
-  
-  TFile *inFile = new TFile("out/pAuUE_pt.root","READ");
+
+  // TFile *inFile = new TFile("out/pAuUE_pt.root","READ");
+  TFile *inFile = new TFile("out/pAuUE_pt_halfGeVbins.root","READ");
   
   TH1D *hNch[nEtaBins][nEAbins]; 
+  TH1D *hMeanPt[nEtaBins][nEAbins];
   
   for (int a=1; a>=0; --a) {
     for (int e=0; e<nEtaBins; ++e) {
       nCh_hscale->GetXaxis()->SetBinLabel(e+1,ptBinString[e]);
       for (int i=0; i<=n_bins; ++i) { shiftedBins[i] = bin_edge[i] + 0.3*(e-1); }
       name = "hNch" + etaBinName[e] + EAbinName[a];
-      hNch[e][a] = new TH1D(name,";leading jet p_{T} (GeV);#LT p_{T}^{ch}#GT (GeV)",n_bins,shiftedBins);
+      hNch[e][a] = new TH1D(name,";leading jet p_{T} (GeV);#LT#frac{dN_{ch}}{d#eta d#phi}#GT",n_bins,shiftedBins);
       hNch[e][a]->SetLineColor(etaColor[e]);
       hNch[e][a]->SetMarkerColor(etaColor[e]);
       hNch[e][a]->SetMarkerStyle(EAmarker[a]);
       hNch[e][a]->SetMarkerColor(etaColor[e]);
+
+      name = "hMeanPt" + etaBinName[e] + EAbinName[a];
+      hMeanPt[e][a] = new TH1D(name,";;#LT p_{T}^{ch}#GT (GeV)",n_bins,shiftedBins);
+      hMeanPt[e][a]->SetLineColor(etaColor[e]);
+      hMeanPt[e][a]->SetMarkerColor(etaColor[e]);
+      hMeanPt[e][a]->SetMarkerStyle(EAmarker[a]);
+      hMeanPt[e][a]->SetMarkerColor(etaColor[e]);
       for (int p=0; p<nPtBins; ++p) {
 
     	name = "hPartJetUE" + ptBinName[p] + etaBinName[e] + "_" + lohi[a];
@@ -99,22 +111,43 @@ void ptDifferentialUEplots(){
     	hPt[p][e][a]->SetMarkerColor(etaColor[e]);
 	
     	hNch[e][a]->SetBinContent(p+1,hPt[p][e][a]->Integral("WIDTH")/area[e]);
-	
     	// hNch[e][a]->SetBinError(p+1,hPt[p][e][a]->GetMeanError(1));
-	
+
+	double mean = 0.;
+	double totalContent = 0.;
+	for (int i=0; i<hPt[p][e][a]->GetNbinsX(); ++i) {
+	  int binno = i+1;
+	  double width = hPt[p][e][a]->GetXaxis()->GetBinWidth(binno);
+	  mean += hPt[p][e][a]->GetBinContent( binno )*hPt[p][e][a]->GetBinCenter( binno )*width;///hPt[p][e][a]->Integral("width");
+	  totalContent += hPt[p][e][a]->GetBinContent( binno )*width;
+	}
+	mean /= hPt[p][e][a]->Integral("width");
+	cout<<mean/totalContent<<endl;
+	hMeanPt[e][a]->SetBinContent(p+1,mean);
       }
       hNch[e][a]->GetYaxis()->SetRangeUser(0.5,1.8);
-      hs->Add(hNch[e][a]);
+      hs_n->Add(hNch[e][a]);
+      hs_pt->Add(hMeanPt[e][a]);
     }
   }
   TCanvas * can = new TCanvas( "can" , "" ,700 ,500 );
   
   nCh_hscale->SetStats(0);
   nCh_hscale->Draw();
-  hs->Draw("SAMEnostackEX0pf");   // draw the stack
+  hs_n->Draw("SAMEnostackEX0pf");   // draw the stack
   name = directory + "nCh.pdf";
   can->SaveAs( name, "PDF");
+
+  meanPt_hscale->SetStats(0);
+  meanPt_hscale->Draw();
+  hs_pt->Draw("SAMEnostackEX0pf");   // draw the stack
+  name = directory + "meanPt.pdf";
+  can->SaveAs( name, "PDF");
+
   
   can->Destructor();
 
 }
+
+    
+

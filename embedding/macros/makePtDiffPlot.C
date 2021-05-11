@@ -40,7 +40,7 @@ void makePtDiffPlot(){
   int jeval, ueeval, pval, eaval;
   TString name, saveName, title, avg, sigma, drawString;
 
-  TString dirName = "plots/prelim_new";
+  TString dirName = "plots/prelim";
 
 
   

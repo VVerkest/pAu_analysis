@@ -13,7 +13,6 @@ int main () {
   
   TString name, title;
   TFile *outFile = new TFile("out/pAuUE_pt_halfGeVbins.root","RECREATE");
-  // TFile *outFile = new TFile("out/pAuUE_pt_halfGeVbins.root","RECREATE");
 
   const int n_bins = 3;
   double bin_edge[n_bins+1] = { 10.0, 15.0, 20.0, 30.0 };
@@ -23,6 +22,7 @@ int main () {
   double y_bin_edge2[n_ybins+1] = { 0.5,1.2,1.5,1.8 };
   TH2D *nCh_hscale = new TH2D("nCh_hscale",";(GeV);#LT#frac{dN_{ch}}{d#eta d#phi}#GT (GeV)",n_bins,bin_edge,n_ybins,y_bin_edge2);
   TH1D *hUE[nPtBins][nEtaBins][nEAbins];
+
 
   
   for (int a=0; a<nEAbins; ++a) {
@@ -37,13 +37,11 @@ int main () {
     
     for (int p=0; p<nPtBins; ++p) {
       name = "hChgUE2D" + ptBinName[p];
-      hChgUE2D[p] = new TH2D(name,";chg. UE part. p_{T} (GeV);chg. UE part. #eta",ybins,ybinEdge,zbins,zbinEdge);
+      hAddedChgUE2D[p] = new TH2D(name,";chg. UE part. p_{T} (GeV);chg. UE part. #eta",ybins,ybinEdge,zbins,zbinEdge);
 
       name = "hChgUE2D"+ ptBinName[p] + "_corr";
       hChgUE2D_corr[p] = new TH2D(name,";chg. UE part. p_{T} (GeV);chg. UE part. #eta",ybins,ybinEdge,zbins,zbinEdge);
 
-      name = "hAddedChgUE2D"+ ptBinName[p] + "_corr";
-      hAddedChgUE2D[p] = new TH2D(name,";chg. UE part. p_{T} (GeV);chg. UE part. #eta",ybins,ybinEdge,zbins,zbinEdge);
       for (int e=0; e<nEtaBins; ++e) {
 	name = "hWtUEpt"; name += ptBinName[p] + etaBinName[e];
 	TString title = ptBinString[p]; title += ";ch UE p_{T} (GeV)";
@@ -82,19 +80,18 @@ int main () {
     }
 
 
-    for (int p=0; p<nPtBins; ++p) {
-      hChgUE3D->GetXaxis()->SetRangeUser(ptLo[p],ptHi[p]);
-      cout<<hChgUE3D->GetXaxis()->GetFirst()<<"  \t"<<hChgUE3D->GetXaxis()->GetLast()<<endl;
-      hChgUE2D[p] = (TH2D*) hChgUE3D->Project3D("ZY");
-      int ptlobin = hleadPt->FindBin( ptLo[p] + 0.5 );
-      int pthibin = hleadPt->FindBin( ptHi[p] - 0.5 );
-      // cout<<ptBinName[p]<<":  "<<ptlobin<<"  "<<pthibin<<endl;
-      // cout<<hleadPt->GetBinLowEdge(ptlobin)<<"  "<<hleadPt->GetBinLowEdge(pthibin)+hleadPt->GetBinWidth(pthibin)<<endl;
-      hChgUE2D[p]->Scale(1./hleadPt->Integral(ptlobin,pthibin));
-      // for (int e=0; e<nEtaBins; ++e) { ProjectAndPlotByEta( hChgUE2D[p], hPartJetUE[e][p], e, p, a, directory, outFile ); }
-    }
+    // for (int p=0; p<nPtBins; ++p) {
+    //   hChgUE3D->GetXaxis()->SetRangeUser(ptLo[p],ptHi[p]);
+    //   hChgUE2D_corr[p] = (TH2D*) hChgUE3D->Project3D("ZY");
+    //   // int ptlobin = hleadPt->FindBin( ptLo[p] + 0.5 );
+    //   // int pthibin = hleadPt->FindBin( ptHi[p] - 0.5 );
+    //   // cout<<ptBinName[p]<<":  "<<ptlobin<<"  "<<pthibin<<endl;
+    //   // cout<<hleadPt->GetBinLowEdge(ptlobin)<<"  "<<hleadPt->GetBinLowEdge(pthibin)+hleadPt->GetBinWidth(pthibin)<<endl;
+    //   // hChgUE2D_corr[p]->Scale(1./hleadPt->Integral(ptlobin,pthibin));
+    //   // for (int e=0; e<nEtaBins; ++e) { ProjectAndPlotByEta( hChgUE2D_corr[p], hPartJetUE[e][p], e, p, a, directory, outFile ); }
+    // }
 
-    /*TCanvas * can1 = new TCanvas( "can1" , "" ,700 ,500 );
+    TCanvas * can1 = new TCanvas( "can1" , "" ,700 ,500 );
     can1->SetLogy();
     title = directory + "LeadPt_" + lohi[a] + "EA.pdf";
     hleadPt->Draw();
@@ -121,19 +118,17 @@ int main () {
     
       name = directory + name + ".pdf";
       can1->SaveAs(name,"PDF");
-    }*/
+    }
 
     ////////////////////////////////////////// EFFICIENCY FILES FOR UE TRACKING CORRECTION //////////////////////////////////////////
     TFile *efficFile = new TFile("../embedding/src/trackeffic_20etaBins.root","READ");
     
-    // for (int p=0; p<nPtBins; ++p) { WeightAndAddCorrected2Ds( hAddedChgUE2D[p], hDetWt[p], hChgUE2D, directory ); }
+    for (int p=0; p<nPtBins; ++p) { WeightAndAddCorrected2Ds( hAddedChgUE2D[p], hDetWt[p], hChgUE2D, directory ); }
 
-    TrackingEfficiencyByPtAndEta( hChgUE2D, hChgUE2D_corr, efficFile, lohi[a], directory );
-    // TrackingEfficiencyByPtAndEta( hChgUE2D, hChgUE2D_corr, efficFile, lohi[a], directory );
+    TrackingEfficiencyByPtAndEta( hAddedChgUE2D, hChgUE2D_corr, efficFile, lohi[a], directory );
 
     for (int p=0; p<nPtBins; ++p) {
-      for (int e=0; e<nEtaBins; ++e) { ProjectAndPlotByEta( hChgUE2D[p], hPartJetUE[e][p], e, p, a, directory, outFile ); }
-      // for (int e=0; e<nEtaBins; ++e) { ProjectAndPlotByEta( hChgUE2D_corr[p], hPartJetUE[e][p], e, p, a, directory, outFile ); }
+      for (int e=0; e<nEtaBins; ++e) { ProjectAndPlotByEta( hChgUE2D_corr[p], hPartJetUE[e][p], e, p, a, directory, outFile ); }
     }
 
     hFakeJets->Delete();

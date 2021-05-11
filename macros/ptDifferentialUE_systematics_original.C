@@ -57,7 +57,7 @@ void ptDifferentialUE_systematics_original(){
   TString name, saveName, title, avg, sigma, drawString;
 
   // TString fileName[nEAbins] = { "out/UE/pAuHTjetUE_loEA_diffPt_sept.root", "out/UE/pAuHTjetUE_hiEA_diffPt_sept.root" };
-  TString fileName[nEAbins] = { "out/UE/pAuHTjetUE_loEA_diffPt_1GeVbins.root", "out/UE/pAuHTjetUE_hiEA_diffPt_1GeVbins.root" };
+  TString fileName[nEAbins] = { "out/UE/pAuHTjetUE_loEA_diffPt_sept.root", "out/UE/pAuHTjetUE_hiEA_diffPt_sept.root" };
   TString efficFileName[nEAbins] = { "src/trackeffic_loEA.root", "src/trackeffic_hiEA.root" };
 
   TFile* inFile[nEAbins];
@@ -369,7 +369,7 @@ void ptDifferentialUE_systematics_original(){
 
 	hChgUEpt_te_sys2[a][p]->GetYaxis()->SetRangeUser( etaLo[e], etaHi[e] );
 	te_meanChgPt_sys2[e][a][p] = hChgUEpt_te_sys2[a][p]->GetMean(1);
-	nChg_te_sys2[e][a][p] = hChgUEpt_te_sys1[a][p]->Integral();
+	nChg_te_sys2[e][a][p] = hChgUEpt_te_sys2[a][p]->Integral();
       }      
     }
   }
