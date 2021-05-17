@@ -1,6 +1,5 @@
 //  pAuHTjetUE.cxx
 //  Veronica Verkest		November 8, 2019
-//  makes plots using the output file from newJEScorrection
 
 #include "pAuFunctions.hh"
 #include "pAu_HT_jetParameters.hh"      //  BbcAdcEastSum VS. BbcAdcSumEast!!
