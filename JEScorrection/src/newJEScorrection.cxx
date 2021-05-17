@@ -143,7 +143,9 @@ int main () {
       hUE2D[a][jp] = (TH2D*)hUE3Dsum[a]->Project3D("ZY");  // UE PT IS ON X-AXIS
       name = "hUE2Dsum_" + lohi[a] + "_"; name+=plo; name+="_"; name+=phi; name+="GeV_det";
       hUE2D[a][jp]->SetName(name);
-      hUE2D[a][jp]->Scale(1./hLeadSum[a]->Integral(binno,binno));// NORMALIZE TO NJETS
+      hUE2D[a][jp]->Scale(1./hUE2D[a][jp]->Integral());
+      hUE2D[a][jp]->Scale(hUE2D[a][jp]->GetEntries()/hLeadSum[a]->Integral(binno,binno));// NORMALIZE TO NJETS
+      // cout<<hUE2D[a][jp]->Integral()<<"\t"<<hUE2D[a][jp]->GetEntries()<<endl;
       hUE3Dsum[a]->GetXaxis()->SetRange(1,-1);
     }
   }
@@ -182,7 +184,9 @@ int main () {
 	if ( p_lo>=ptLo[p] && p_hi<=ptHi[p] ) { pval = p; }    // cout<< p_lo <<"\t"<< p_hi <<"\t \t "<< ptBinName[pval] <<endl<<endl;  // THIS HAS BEEN TESTED :)
       }
 
-      double weight = hMatched_part[a]->Integral(pp+4,pp+4)/hMatched_part[a]->Integral( binRange[pval], binRange[pval+1]-1 );   // cout<<plo<<"-"<<phi<<":  "<<weight<<endl;   cout<<weight<<endl;
+      double weight = hMatched_part[a]->Integral(plo,phi)/hMatched_part[a]->Integral( binRange[pval], binRange[pval+1]-1 );
+      //cout<<hMatched_part[a]->GetBinLowEdge(binRange[pval])<<"\t"<<hMatched_part[a]->GetBinLowEdge(binRange[pval+1])<<"\t"<<ptBinName[pval]<<"\t"<<weight<<endl;
+      //cout<<plo<<"-"<<phi<<":  "<<weight<<endl;   cout<<weight<<endl;
       hUE2D_partSum[a][pval]->Add( hUE2D_part[a][pp], weight );
     }
   }
@@ -237,14 +241,21 @@ int main () {
 
   outFile->cd();
 
-  for (int a=0; a<nEAbins; ++a) { hMatched_part[a]->Write();  hMatched_det[a]->Write(); }
-
   for (int a=0; a<nEAbins; ++a) {
-    for (int jp=0; jp<55; ++jp) { hUE2D[a][jp]->Write(); }
+    hMatched_part[a]->Write();
+    hMatched_det[a]->Write();
+    hUE3Dsum[a]->Write();  // int over nLead per area is good
+    hLeadSum[a]->Write();
+    hResponseSum[a]->Write();
+    hFakesSum[a]->Write();
   }
 
   for (int a=0; a<nEAbins; ++a) {
-    for (int pp=0; pp<20; ++pp) { hUE2D_part[a][pp]->Write();}
+    for (int jp=0; jp<55; ++jp) { hUE2D[a][jp]->Write(); }  // integral is good
+  }
+
+  for (int a=0; a<nEAbins; ++a) {
+    for (int pp=0; pp<20; ++pp) { hUE2D_part[a][pp]->Write();}  // integral is good
   }
 
   for (int a=0; a<nEAbins; ++a) {
