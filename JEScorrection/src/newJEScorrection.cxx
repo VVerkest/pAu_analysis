@@ -221,8 +221,7 @@ int main () {
 	
 	for (int i=0; i<hUE1D_part_dbw[a][p][e]->GetNbinsX(); ++i) {  // DIVIDE BIN CONTENT BY WIDTH
 	  int binno = i+1;
-	  double newBinContent = hUE1D_part_dbw[a][p][e]
-	    ->GetBinContent(binno)/hUE1D_part_dbw[a][p][e]->GetBinWidth(binno);
+	  double newBinContent = hUE1D_part_dbw[a][p][e]->GetBinContent(binno)/hUE1D_part_dbw[a][p][e]->GetBinWidth(binno);
 	  hUE1D_part_dbw[a][p][e]->SetBinContent(binno,newBinContent);
 	}
 	hUE1D_part_dbw[a][p][e]->Scale(hUE1D_part[a][p][e]->Integral()/hUE1D_part_dbw[a][p][e]->Integral());  // PRESERVE INTEGRAL VALUE
