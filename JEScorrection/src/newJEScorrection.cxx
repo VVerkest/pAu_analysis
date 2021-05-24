@@ -193,6 +193,23 @@ int main () {
 
 
   //  PERFORM 2D TRACKING EFFICINECY CORRECTION
+  TH2D* hUE2D_partCorr[nEAbins][nPtBins];
+  TFile *efficFile = new TFile("src/trackeffic.root","READ");
+  for (int a=0; a<nEAbins; ++a) {
+    for (int p=0; p<nPtBins; ++p) {
+      name = "hUE2Dcorr_" + lohi[a] + ptBinName[p];
+      hUE2D_partCorr[a][p] = new TH2D(name,";chg. UE part. p_{T} (GeV);chg. UE part. #eta",ybins,ybinEdge,zbins,zbinEdge);
+      name = dirName + "/";
+    }
+    TrackingEfficiencyByPtAndEta( hUE2D_partSum[a], hUE2D_partCorr[a], efficFile, lohi[a], name );
+  }
+
+
+
+
+
+
+  
   
   //  PROJECT HISTOGRAMS BY UE ETA
   TH1D *hUE1D_part[nEAbins][nPtBins][nEtaBins];
@@ -203,8 +220,8 @@ int main () {
       // hMatched_part[a]->GetXaxis()->SetRange(1,-1);
      for (int e=0; e<nEtaBins; ++e) {
 	name = "hUE1D_part_" + lohi[a] + "EA" + ptBinName[p] + etaBinName[e];
-	hUE2D_partSum[a][p]->GetYaxis()->SetRangeUser(etaLo[e],etaHi[e]);
-	hUE1D_part[a][p][e] = (TH1D*)hUE2D_partSum[a][p]->ProjectionX(name);
+	hUE2D_partCorr[a][p]->GetYaxis()->SetRangeUser(etaLo[e],etaHi[e]);
+	hUE1D_part[a][p][e] = (TH1D*)hUE2D_partCorr[a][p]->ProjectionX(name);
       }
     }
   }
@@ -261,6 +278,10 @@ int main () {
     for (int p=0; p<nPtBins; ++p) { hUE2D_partSum[a][p]->Write(); }
   }
 
+  for (int a=0; a<nEAbins; ++a) {
+    for (int p=0; p<nPtBins; ++p) { hUE2D_partCorr[a][p]->Write(); }
+  }
+    
   for (int a=0; a<nEAbins; ++a) {
     for (int p=0; p<nPtBins; ++p) {
       for (int e=0; e<nEtaBins; ++e) { hUE1D_part[a][p][e]->Write(); }
