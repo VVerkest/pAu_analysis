@@ -474,7 +474,7 @@ namespace Analysis {
     // TF1 *eff = new TF1("eff","(1+log(x/200.))*(exp([0]+[1]*x))+[2]",0.2,15.0);
     TF1 *eff = new TF1("eff","((100.+log(x/200.0))/200.)*exp([0]+[1]*x)+[2]",0.2,15.0);
   
-    if ( ea_string=="lo" ) { bbcBins = "2_3"; }
+    if ( ea_string=="lo" ) { bbcBins = "1_3"; }
     else if ( ea_string=="hi" ) { bbcBins = "8_10"; }
     else { std::cerr<< "invalid EA string provided!" <<std::endl; }
   
@@ -482,6 +482,8 @@ namespace Analysis {
     
       name = "eff_s_bin_" + bbcBins + "_bbc__"; name += iy; name += "_"; name += iy; name += "_eta";
       TH1D *hEffic = (TH1D*)effic_File->Get(name);
+      std::cout<<name<<std::endl;
+     
       hEffic->Fit( "eff", "EMR" );
       TF1* efficFit = (TF1*)hEffic->GetFunction("eff");
 
