@@ -459,7 +459,7 @@ namespace Analysis {
 
 
 
-  void TrackingEfficiencyByPtAndEta( TH2D* h_ChgUE2D[nPtBins], TH2D* h_ChgUE2D_corr[nPtBins], TFile *effic_File, TString ea_string, TString dir_name ){
+  void TrackingEfficiencyByPtAndEta( TH2D* h_ChgUE2D[55], TH2D* h_ChgUE2D_corr[55], TFile *effic_File, TString ea_string, TString dir_name ){
     //  X: UE pT,   Y: UE eta
     TH1D *hEffic;
     TString name, saveName, bbcBins;
@@ -482,7 +482,6 @@ namespace Analysis {
     
       name = "eff_s_bin_" + bbcBins + "_bbc__"; name += iy; name += "_"; name += iy; name += "_eta";
       TH1D *hEffic = (TH1D*)effic_File->Get(name);
-      std::cout<<name<<std::endl;
      
       hEffic->Fit( "eff", "EMR" );
       TF1* efficFit = (TF1*)hEffic->GetFunction("eff");
@@ -491,12 +490,10 @@ namespace Analysis {
     
       saveName = dir_name + name + ".pdf";
       can->SaveAs(saveName, "PDF");
-      std::cout<<std::endl<<std::endl;
     
       for (int ix=1; ix<ybins+1; ++ix){ // loop over UE pt bins
 
-	for (int i=0; i<nPtBins; ++i) {
-
+	for (int i=0; i<55; ++i) {
 	  ptVal = h_ChgUE2D[i]->GetXaxis()->GetBinCenter( ix );
 	  effic = efficFit->Eval( ptVal );
 	  // effic = hEffic->GetBinContent( ix );
@@ -510,14 +507,14 @@ namespace Analysis {
 	  efficErr = hEffic->GetBinError( hEffic->FindBin( ptVal) );
 	  relErr = sqrt( oldErr*oldErr + efficErr*efficErr );
 	  newErr = newVal*relErr;
-      
+
 	  h_ChgUE2D_corr[i]->SetBinContent(ix,iy,newVal);
 	  h_ChgUE2D_corr[i]->SetBinError(ix,iy,newErr);
 	}
       }
     }
 
-    for (int i=0; i<nPtBins; ++i) {
+    for (int i=0; i<55; ++i) {
       h_ChgUE2D_corr[i]->SetEntries(h_ChgUE2D[i]->GetEntries());
       if (h_ChgUE2D_corr[i]->GetEntries()==0){ continue; }
       h_ChgUE2D_corr[i]->Draw("COLZ");
