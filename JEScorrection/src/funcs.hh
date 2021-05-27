@@ -79,8 +79,10 @@ namespace Analysis {
   void ProjectScaleAndSaveUE1D( TH2D*, TH1D &, TH1D*, TH1D &, double, double, TString, TString );
 
   TString RoundDecimal(double, int );
+
+  void TrackingEfficiencyByPtAndEta( TH2D* [nPtBins], TH2D* [nPtBins], TFile *, TString, TString );
   
-  void TrackingEfficiencyByPtAndEta( TH2D* [nPtBins], TH2D*[nPtBins], TFile *, TString, TString );
+  void TrackingEfficiencyByPtAndEta55( TH2D* [nPtBins], TH2D*[nPtBins], TFile *, TString, TString );
 
   void WeightAndAddCorrected2Ds( TH2D *, TH1D *, TH2D *[55], TString );
 
