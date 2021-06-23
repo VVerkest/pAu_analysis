@@ -142,6 +142,12 @@ int main (int argc, const char ** argv) {
       cerr<<"UNMATCHED EVENT OR RUN";        // PART AND DET EVENTS MUST MATCH
       continue;
     }
+
+    //  HIGH EVENT ACTIVITY
+    if ( d_header->GetBbcAdcSumEast() < 26718.1 ) { continue; }  // LO: 3559.12-10126.1;  HI: 26718.1+// 
+
+    // //  LOW EVENT ACTIVITY
+    //if ( d_header->GetBbcAdcSumEast() > 10126.1 ) { continue; }  // LO: 3559.12-10126.1;  HI: 26718.1+
     
     GatherParticles( d_container, d_Particles );     GatherParticles( p_container, p_Particles );
 
