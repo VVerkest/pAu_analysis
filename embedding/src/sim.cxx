@@ -209,7 +209,7 @@ int main (int argc, const char ** argv) {
     // if (nTowersMatched==0) { continue; } // require HT trigger to be within lead det jet
     if (nTowersMatched==0) {
       // hFakes[eval]->Fill( d_leadJet.pt(), mc_weight );
-      hMisses->Fill(p_Jets[0].pt(), mc_weight);
+      if (p_Jets.size()>0) { hMisses->Fill(p_Jets[0].pt(), mc_weight); }
       continue;
     } // require HT trigger to be within lead det jet
 
