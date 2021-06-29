@@ -11,8 +11,7 @@ set numevents = -1
 #set base = /tier2/home/groups/rhi/STAR/Data/EmbedPythiaRun15pAu200_picos/P18ih/pAu_200_REREproduction_2015/out/HT2/pt-hat
 set base = /tier2/home/groups/rhi/STAR/Data/EmbedPythiaRun15pAu200_picos/P18ih/pAu_200_REREproduction_2015_JPfix2/out/JP2/    
 set outDir = sim
-# set outFile = pAu2015embedding
-set outFile = pAu2015embedding_test
+set outFile = pAu2015embedding
 
 # Create the folder name for output
 #set outFile = stock
