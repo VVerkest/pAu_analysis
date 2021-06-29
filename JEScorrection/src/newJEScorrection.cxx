@@ -24,11 +24,29 @@ void WeightAndSumByFC2D( TH1D* FC, TH2D* UE2D[55], TH2D *UE2Dpart ){
     sum += wt;
 
   }
-
-  // std::cout<<sum<<std::endl;
   
 }
 
+
+
+void WeightAndSumByFC2D_fakesCorrection( TH1D* FC, TH1D* FakeProb, TH2D* UE2D[55], TH2D *UE2Dpart ){
+
+  double sum = 0.;
+  
+  for (int i=0; i<FC->GetNbinsX(); ++i) {
+    
+    int binno = i+4;
+    // cout<<FakeProb->Integral(1+i,1+i)<<endl;
+    
+    double wt = FC->Integral(binno,binno)*( 1. - FakeProb->Integral(1+i,1+i) );
+    if (wt==0) { continue; }
+    UE2Dpart->Add(UE2D[i], wt);
+
+    sum += wt;
+
+  }
+  
+}
 
 
 
@@ -64,8 +82,11 @@ int main () {
   // TFile* outFile = new TFile("out/varBins.root", "RECREATE");
   // TString dirName = "plots/new/varBins";
   
-  TFile* outFile = new TFile("out/test1.root", "RECREATE");
-  TString dirName = "plots/new";
+  // TFile* outFile = new TFile("out/test1.root", "RECREATE");
+  // TString dirName = "plots/new";
+  
+  TFile* outFile = new TFile("out/JEScorrection.root", "RECREATE");
+  TString dirName = "plots/JEScorrection";
 
   // TFile* outFile = new TFile("out/halfGevUEbins.root", "RECREATE");
   // TString dirName = "plots/halfGevUEbins";
@@ -113,13 +134,13 @@ int main () {
     }
 
 
-    name = "../embedding/out/sim/pAu2015embedding_" + lohi[a] + "EA.root";
+    name = "../embedding/out/sim/pAu2015embedding_" + lohi[a] + "EA_new.root";
     embFile[a] = new TFile(name, "READ");
 
     hMisses[a] = (TH1D*)embFile[a]->Get("hMisses");
     name = "hMisses_" + lohi[a] + "EA";
     hMisses[a]->SetName(name);
-    hMisses[a]->Scale(1./hMisses[a]->Integral());
+    // hMisses[a]->Scale(1./hMisses[a]->Integral());
     
     for (int e=0; e<nEtaBins; ++e) {
       name = "hPtResponse_" + emw[e] + "EtaJet";
@@ -134,8 +155,8 @@ int main () {
       hFakes[a][e]->SetName(name);
       hFakesSum[a]->Add(hFakes[a][e]);
     }
-    hResponseSum[a]->Scale(1./hResponseSum[a]->Integral());
-    hFakesSum[a]->Scale(1./hFakesSum[a]->Integral());
+    // hResponseSum[a]->Scale(1./hResponseSum[a]->Integral());
+    // hFakesSum[a]->Scale(1./hFakesSum[a]->Integral());
   }
 
   TH1D *hMatched_part[nEAbins], *hMatched_det[nEAbins];//
@@ -143,37 +164,46 @@ int main () {
     hMatched_part[a] = (TH1D*)hResponseSum[a]->ProjectionX();
     name = "hMatched_part_" + lohi[a] + "EA";
     hMatched_part[a]->SetName(name);
-    hMatched_part[a]->Scale(1./hMatched_part[a]->Integral()); // normalize to Nmatched
+    // hMatched_part[a]->Scale(1./hMatched_part[a]->Integral()); // normalize to Nmatched
 
     hMatched_det[a] = (TH1D*)hResponseSum[a]->ProjectionY();
     name = "hMatched_det_" + lohi[a] + "EA";
     hMatched_det[a]->SetName(name);
-    hMatched_det[a]->Scale(1./hMatched_det[a]->Integral()); // normalize to Nmatched
+    // hMatched_det[a]->Scale(1./hMatched_det[a]->Integral()); // normalize to Nmatched
   }
-
+  
   // ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ 
   //                                           FAKE AND MISSED JETS
   // ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~
 
-  TH1D *hFakeProb[nEAbins], *hMissProb[nEAbins];//, *hMatchPlusFake[nEAbins], *hMatchPlusMiss[nEAbins];
+  TH1D *hFakeProb[nEAbins], *hMissProb[nEAbins], *hPart[nEAbins];//, *hMatchPlusFake[nEAbins], *hMatchPlusMiss[nEAbins];
 
   for (int a=0; a<nEAbins; ++a) {
     name = "hFakeProb_" + lohi[a] + "EA";
-    hFakeProb[a] = new TH1D( name, "Fake Jet Probability; det-level leading jet p_{\mathrm{T}} [GeV]", 55,4.0,59.0 );
+    hFakeProb[a] = new TH1D( name, "Fake Jet Probability; det-level leading jet p_{#mathrm{T}} [GeV]", 55,4.0,59.0 );
     name = "hMissProb_" + lohi[a] + "EA";
-    hMissProb[a] = new TH1D( name, "Missed Jet Probability; part-level leading jet p_{\mathrm{T}} [GeV]", 55,4.0,59.0);
+    hMissProb[a] = new TH1D( name, "Missed Jet Probability; part-level leading jet p_{#mathrm{T}} [GeV]", 55,4.0,59.0);
     
     for (int jp=0; jp<55; ++jp) {
       int binno = jp+1;
-      double FakeProb = hMatched_det[a]->GetBinContent(binno) / ( hMatched_det[a]->GetBinContent(binno) + hFakesSum[a]->GetBinContent(binno) );
+      double FakeProb = hFakesSum[a]->GetBinContent(binno) / ( hMatched_det[a]->GetBinContent(binno) + hFakesSum[a]->GetBinContent(binno) );
+      if ( isnan(FakeProb) ) { FakeProb = 0.; }
       hFakeProb[a]->SetBinContent( binno, FakeProb );
-      double MissProb = hMatched_part[a]->GetBinContent(binno) / ( hMatched_part[a]->GetBinContent(binno) + hMisses[a]->GetBinContent(binno) );
+      double MissProb = hMisses[a]->GetBinContent(binno) / ( hMatched_part[a]->GetBinContent(binno) + hMisses[a]->GetBinContent(binno) );
+      if ( isnan(MissProb) ) { MissProb = 0.; }
       hMissProb[a]->SetBinContent( binno, MissProb );
     }
-    
+
+    name = "hPart_" + lohi[a] + "EA";
+    title = "Particle-level p_{#mathrm{T}}; part-level leading jet p_{#mathrm{T}} [GeV]";
+    hPart[a] = (TH1D*)hMatched_part[a]->Clone(name);
+    hPart[a]->SetNameTitle(name,title);
+    hPart[a]->Add(hMisses[a]);
+    // hPart[a]->Multiply(hMissProb[a]);
+    // hPart[a]->Add(hMatched_part[a]);
   }
 
-  
+    
   // ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ 
   //                                             DETECTOR-TO-PARTICLE-LEVEL
   // ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~
@@ -203,7 +233,6 @@ int main () {
     TrackingEfficiencyByPtAndEta55( hUE2D[a], hUE2D_detCorr[a], efficFile, lohi[a], name );
   }
   
-
   
   TH1D *FC_part[nEAbins][20];
   TH2D *hUE2D_part[nEAbins][20];
@@ -219,7 +248,8 @@ int main () {
       name = "hUE2D_" + lohi[a] + "_"; name+=plo; name+="_"; name+=phi; name+="GeV_part";
       hUE2D_part[a][pp] = new TH2D(name,";chg. UE part. p_{T} (GeV);chg. UE part. #eta",ybins,ybinEdge,zbins,zbinEdge);
 
-      WeightAndSumByFC2D( FC_part[a][pp], hUE2D_detCorr[a], hUE2D_part[a][pp] );
+      // WeightAndSumByFC2D( FC_part[a][pp], hUE2D_detCorr[a], hUE2D_part[a][pp] );
+      WeightAndSumByFC2D_fakesCorrection( FC_part[a][pp], hFakeProb[a], hUE2D_detCorr[a], hUE2D_part[a][pp] );
     }
   }
 
@@ -242,7 +272,12 @@ int main () {
       for (int p=0; p<nPtBins; ++p) {
   	if ( p_lo>=ptLo[p] && p_hi<=ptHi[p] ) { pval = p; }    // cout<< p_lo <<"\t"<< p_hi <<"\t \t "<< ptBinName[pval] <<endl<<endl;  // THIS HAS BEEN TESTED :)
       }
-      double weight = hMatched_part[a]->Integral(hMatched_part[a]->FindBin(plo),hMatched_part[a]->FindBin(plo))/hMatched_part[a]->Integral( binRange[pval], binRange[pval+1]-1 );
+      
+      double weight = hPart[a]->Integral(hPart[a]->FindBin(plo),hPart[a]->FindBin(plo))/hPart[a]->Integral( binRange[pval], binRange[pval+1]-1 ); // THIS IS WITH MISSED JET CORRECTION
+      // double weight = hMatched_part[a]->Integral(hMatched_part[a]->FindBin(plo),hMatched_part[a]->FindBin(plo))/hMatched_part[a]->Integral( binRange[pval], binRange[pval+1]-1 ); // THIS WEIGHT COMES FROM THE CROSS SECTION
+      //cout<<(1. + hMissProb[a]->Integral(binno,binno) )<<"\t"<<(1. + hMissProb[a]->Integral(binno,binno) )<<endl;
+      //weight = weight * (1. + hMissProb[a]->Integral(binno,binno) ); // MISSED JET CORRECTION
+      
       //cout<<hMatched_part[a]->GetBinLowEdge(binRange[pval])<<"\t"<<hMatched_part[a]->GetBinLowEdge(binRange[pval+1])<<"\t"<<ptBinName[pval]<<"\t"<<weight<<endl;
       //cout<<plo<<"-"<<phi<<":  "<<weight<<endl;   cout<<weight<<endl;
       hUE2D_partSum[a][pval]->Add( hUE2D_detCorr[a][pp], weight );
@@ -372,6 +407,8 @@ int main () {
     hUE3Dsum[a]->Write();  // int over nLead per area is good
     hLeadSum[a]->Write();
     hResponseSum[a]->Write();
+    hFakeProb[a]->Write();
+    hMissProb[a]->Write();
   }
 
   c0->SetLogy(0);
