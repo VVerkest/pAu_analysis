@@ -50,8 +50,18 @@ void DifferentialUEplots(){
   int jeval, ueeval, pval, eaval;
   TString name, saveName, title, avg, sigma, drawString;
 
-  string directory = "plots/new/";
-
+  TFile* inFile = new TFile("out/JEScorrection.root", "READ");
+  TString directory = "plots/JEScorrection/";
+  // TFile *inFile = new TFile("out/test1.root","READ");
+  // string directory = "plots/new/";
+  // TFile *inFile = new TFile("out/varBins.root","READ");
+  // string directory = "plots/new/varBins/";
+  // // TFile *inFile = new TFile("out/noCorrection.root","READ");
+  // TFile *inFile = new TFile("out/noCorrection_1GeVbins.root","READ");
+  // string directory = "plots/noCorrection/";
+  // TFile *inFile = new TFile("out/halfGevUEbins.root","READ");
+  // string directory = "plots/halfGevUEbins/";
+  
   auto hs_n = new THStack("hs_n","dNch/dEtadPhi");
   auto hs_pt = new THStack("hs_pt","mean pT");
 
@@ -61,17 +71,18 @@ void DifferentialUEplots(){
   double bin_edge[n_bins+1] = { 10.0, 15.0, 20.0, 30.0 };
   double shiftedBins[n_bins+1];
   const int n_ybins = 3;
-  double y_bin_edge[n_ybins+1] = { 0.55,0.65,0.75,0.85 };
+  // double y_bin_edge[n_ybins+1] = { 0.55,0.65,0.75,0.85 };
+  double y_bin_edge[n_ybins+1] = { 0.45,0.65,0.75,0.95 };
   TH2D *meanPt_hscale = new TH2D("meanPt_hscale",";leading jet p_{T} (GeV);#LT p_{T}^{ch}#GT (GeV)",n_bins,bin_edge,n_ybins,y_bin_edge);
 
   double bin_edge2[n_bins+1] = { 0.0, 1.0, 2.0, 3.0 };
-  double y_bin_edge2[n_ybins+1] = { 0.5,1.2,1.5,1.8 };
+  // double y_bin_edge2[n_ybins+1] = { 0.5,1.2,1.5,1.8 };
+  double y_bin_edge2[n_ybins+1] = { 0.6,1.2,1.5,1.9 };
   TH2D *nCh_hscale = new TH2D("nCh_hscale",";leading jet p_{T} (GeV);#LT#frac{dN_{ch}}{d#eta d#phi}#GT",n_bins,bin_edge,n_ybins,y_bin_edge2);
 
   TH1D *hPt[nPtBins][nEtaBins][nEAbins];
   TH1D *hPt_dbw[nPtBins][nEtaBins][nEAbins];
 
-  TFile *inFile = new TFile("out/test1.root","READ");
   
   TH1D *hNch[nEtaBins][nEAbins]; 
   TH1D *hMeanPt[nEtaBins][nEAbins];
@@ -105,11 +116,14 @@ void DifferentialUEplots(){
     	hPt[p][e][a]->SetLineColor(etaColor[e]);
     	hPt[p][e][a]->SetMarkerStyle(EAmarker[a]);
     	hPt[p][e][a]->SetMarkerColor(etaColor[e]);
-	
-    	hNch[e][a]->SetBinContent(p+1,hPt[p][e][a]->Integral()/area[e]);
-    	// hNch[e][a]->SetBinError(p+1,hPt[p][e][a]->GetMeanError(1));
+
+	double intErr;
+	double integral = hPt[p][e][a]->IntegralAndError(1,hPt[p][e][a]->GetNbinsX(),intErr);
+    	hNch[e][a]->SetBinContent(p+1,integral/area[e]);
+    	hNch[e][a]->SetBinError(p+1,intErr);
 
 	hMeanPt[e][a]->SetBinContent(p+1,hPt[p][e][a]->GetMean(1));
+	hMeanPt[e][a]->SetBinError(p+1,hPt[p][e][a]->GetMeanError(1));
       }
       hNch[e][a]->GetYaxis()->SetRangeUser(0.5,1.8);
       hs_n->Add(hNch[e][a]);
