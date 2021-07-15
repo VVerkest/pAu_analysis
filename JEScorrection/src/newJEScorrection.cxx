@@ -14,6 +14,9 @@ void WeightAndSumByFC2D( TH1D* FC, TH2D* UE2D[55], TH2D *UE2Dpart ){
   double sum = 0.;
   
   for (int i=0; i<FC->GetNbinsX(); ++i) {
+
+    // std::cout<< UE2D[i] <<std::endl;
+    // std::cout<< UE2D[i]->GetXaxis()->GetXbins()->At(5) <<std::endl<<std::endl;
     
     int binno = i+4;
     
@@ -32,18 +35,49 @@ void WeightAndSumByFC2D( TH1D* FC, TH2D* UE2D[55], TH2D *UE2Dpart ){
 void WeightAndSumByFC2D_fakesCorrection( TH1D* FC, TH1D* FakeProb, TH2D* UE2D[55], TH2D *UE2Dpart ){
 
   double sum = 0.;
+
+  const int ybins = UE2D[0]->GetNbinsX();
+  const int zbins = UE2D[0]->GetNbinsY();
+  double ybinEdge[ybins+1];
+  double zbinEdge[zbins+1];
   
+  for (int x=0; x<=ybins; ++x){ ybinEdge[x] = UE2D[0]->GetXaxis()->GetXbins()->At(x); }
+  for (int y=0; y<=zbins; ++y){ zbinEdge[y] = UE2D[0]->GetYaxis()->GetXbins()->At(y); }
+
+
   for (int i=0; i<FC->GetNbinsX(); ++i) {
     
     int binno = i+4;
-    // cout<<FakeProb->Integral(1+i,1+i)<<endl;
+    // cout<<FakeProb->Integral(1+i,1+i)<<"\t"<<FakeProb->GetBinContent(1+i)<<endl;
     
-    double wt = FC->Integral(binno,binno)*( 1. - FakeProb->Integral(1+i,1+i) );
-    if (wt==0) { continue; }
-    UE2Dpart->Add(UE2D[i], wt);
+    double wt = FC->GetBinContent(binno)*( 1. - FakeProb->GetBinContent(1+i) );
+    if (wt==0 || FC->GetBinContent(binno)==0) { continue; }
 
+    double FC_relError = FC->GetBinError(binno)/FC->GetBinContent(binno);
+    double Fake_relError = FakeProb->GetBinError(i+1)/FakeProb->GetBinContent(i+1);
+    if ( isnan(Fake_relError) ) { Fake_relError = 0.; }
+    double error = wt*sqrt( (FC_relError*FC_relError) + (Fake_relError*Fake_relError) );  // FILL HISTO WITH wt AND THIS ERROR, MULTIPLY UE2D BY THIS, THEN SUM
+    if ( isnan(error) ) { error = 0.; }
+
+    std::cout<< FC_relError <<"\t"<< Fake_relError <<"\t"<< error <<std::endl;
+    
+    TH2D *hWeightWithError = new TH2D("hWeightWithError",";chg. UE part. p_{T} (GeV);chg. UE part. #eta",ybins,ybinEdge,zbins,zbinEdge);
+    for (int x=1; x<=ybins; ++x){
+      for (int y=1; y<=zbins; ++y){
+	hWeightWithError->SetBinContent( x, y, wt );
+	// hWeightWithError->SetBinContent( x, y, 1.0 );
+	hWeightWithError->SetBinError( x, y, error );
+      }
+    }
+
+    // UE2Dpart->Add(UE2D[i], wt);
+
+    hWeightWithError->Multiply( UE2D[i] );
+    // hWeightWithError->Scale(wt);
+    UE2Dpart->Add(hWeightWithError);
+    
     sum += wt;
-
+    hWeightWithError->Delete();
   }
   
 }
@@ -241,7 +275,7 @@ int main () {
     for (int pp=0; pp<20; ++pp) {
       int plo = pp+10;  int phi = pp+11;  double p_lo = 10.0 + (1.0*pp);  double p_hi = 11.0 + (1.0*pp);
       
-      FC_part[a][pp] = GenerateFractionalContribution( hResponseSum[a], p_lo, p_hi, dirName, lohi[a] );  // issue is here!!
+      FC_part[a][pp] = GenerateFractionalContribution( hResponseSum[a], p_lo, p_hi, dirName, lohi[a] );
       name = "FC_part_" + lohi[a] + "_"; name+=plo; name+="_"; name+=phi; name+="GeV_part";
       FC_part[a][pp]->SetName(name);
       
@@ -250,6 +284,7 @@ int main () {
 
       // WeightAndSumByFC2D( FC_part[a][pp], hUE2D_detCorr[a], hUE2D_part[a][pp] );
       WeightAndSumByFC2D_fakesCorrection( FC_part[a][pp], hFakeProb[a], hUE2D_detCorr[a], hUE2D_part[a][pp] );
+      // cout<<hUE2D_part[a][pp]->GetName()<<endl;
     }
   }
 
@@ -273,101 +308,58 @@ int main () {
   	if ( p_lo>=ptLo[p] && p_hi<=ptHi[p] ) { pval = p; }    // cout<< p_lo <<"\t"<< p_hi <<"\t \t "<< ptBinName[pval] <<endl<<endl;  // THIS HAS BEEN TESTED :)
       }
       
-      double weight = hPart[a]->Integral(hPart[a]->FindBin(plo),hPart[a]->FindBin(plo))/hPart[a]->Integral( binRange[pval], binRange[pval+1]-1 ); // THIS IS WITH MISSED JET CORRECTION
       // double weight = hMatched_part[a]->Integral(hMatched_part[a]->FindBin(plo),hMatched_part[a]->FindBin(plo))/hMatched_part[a]->Integral( binRange[pval], binRange[pval+1]-1 ); // THIS WEIGHT COMES FROM THE CROSS SECTION
-      //cout<<(1. + hMissProb[a]->Integral(binno,binno) )<<"\t"<<(1. + hMissProb[a]->Integral(binno,binno) )<<endl;
-      //weight = weight * (1. + hMissProb[a]->Integral(binno,binno) ); // MISSED JET CORRECTION
+
+      double intError;
+      double integral = hPart[a]->IntegralAndError( binRange[pval], binRange[pval+1]-1, intError);
+      // cout<< integral << "\t" << intError <<endl;
+
+      double weight = hPart[a]->GetBinContent(hPart[a]->FindBin(plo))/hPart[a]->Integral( binRange[pval], binRange[pval+1]-1 ); // THIS IS WITH MISSED JET CORRECTION
+
+      if (weight==0. || isnan(weight)) { continue; }
+
+
+      double bin_relError = hPart[a]->GetBinError(hPart[a]->FindBin(plo))/hPart[a]->GetBinContent(hPart[a]->FindBin(plo));
+      double int_relError = intError/integral;
+      double error = weight*sqrt( (bin_relError*bin_relError) + (int_relError*int_relError) );  // FILL HISTO WITH weight AND THIS ERROR, MULTIPLY UE2D BY THIS, THEN SUM
       
-      //cout<<hMatched_part[a]->GetBinLowEdge(binRange[pval])<<"\t"<<hMatched_part[a]->GetBinLowEdge(binRange[pval+1])<<"\t"<<ptBinName[pval]<<"\t"<<weight<<endl;
-      //cout<<plo<<"-"<<phi<<":  "<<weight<<endl;   cout<<weight<<endl;
-      hUE2D_partSum[a][pval]->Add( hUE2D_detCorr[a][pp], weight );
+      TH2D *hWeightWithError = new TH2D("hWeightWithError",";chg. UE part. p_{T} (GeV);chg. UE part. #eta",ybins,ybinEdge,zbins,zbinEdge);
+      for (int x=1; x<=ybins; ++x){
+      	for (int y=1; y<=zbins; ++y){
+      	  hWeightWithError->SetBinContent( x, y, weight );
+      	  // hWeightWithError->SetBinContent( x, y, 1.0 );
+      	  hWeightWithError->SetBinError( x, y, error );
+      	}
+      }
+
+      // cout<<hUE2D_part[a][pp]->GetMean(1)<<endl;
+
+      hWeightWithError->Multiply(hUE2D_part[a][pp]);
+      hUE2D_partSum[a][pval]->Add( hWeightWithError );
+      hWeightWithError->Delete();
+
+      // hUE2D_partSum[a][pval]->Add( hUE2D_part[a][pp], weight );
+      // cout<< weight <<endl;
+      // cout<<hUE2D_partSum[a][pval]->GetMean(1)<<endl;
     }
   }
   // ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ 1GeV BINS ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~
 
-
-
-  // // ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ VARIABLE BINS ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ 
-  // //  PERFORM 2D TRACKING EFFICINECY CORRECTION
-  // TH2D* hUE2D_detCorr[nEAbins][55];
-  // TFile *efficFile = new TFile("src/trackeffic.root","READ");
-
-  // for (int a=0; a<nEAbins; ++a) {
-  //   for (int jp=0; jp<55; ++jp) {
-  //     int binno = jp+1;  int plo=jp+4;  int phi=jp+5;
-  //     hUE3Dsum[a]->GetXaxis()->SetRange(binno,binno);
-  //     hUE2D[a][jp] = (TH2D*)hUE3Dsum[a]->Project3D("ZY");  // UE PT IS ON X-AXIS
-  //     name = "hUE2Dsum_" + lohi[a] + "_"; name+=plo; name+="_"; name+=phi; name+="GeV_det";
-  //     hUE2D[a][jp]->SetName(name);
-  //     hUE2D[a][jp]->Scale(1./hUE2D[a][jp]->Integral());
-  //     hUE2D[a][jp]->Scale(hUE2D[a][jp]->GetEntries()/hLeadSum[a]->Integral(binno,binno));// NORMALIZE TO NJETS
-  //     // cout<<hUE2D[a][jp]->Integral()<<"\t"<<hUE2D[a][jp]->GetEntries()<<endl;
-  //     hUE3Dsum[a]->GetXaxis()->SetRange(1,-1);
-
-  //     name = "hUE2Dcorr_" + lohi[a] + "_"; name+=plo; name+="_"; name+=phi; name+="GeV_det";
-  //     hUE2D_detCorr[a][jp] = new TH2D(name,";chg. UE part. p_{T} (GeV);chg. UE part. #eta",ybins,ybinEdge,zbins,zbinEdge);
-  //     name = dirName + "/";
-  //   }
-  //   TrackingEfficiencyByPtAndEta55( hUE2D[a], hUE2D_detCorr[a], efficFile, lohi[a], name );
-  // }
-  
-
-  
-  // TH1D *FC_part[nEAbins][nPtBins];
-  // TH2D *hUE2D_partSum[nEAbins][nPtBins];
-
-  // for (int a=0; a<nEAbins; ++a) {
-  //   for (int p=0; p<nPtBins; ++p) {
-  //     double p_lo = ptLo[p];  double p_hi = ptHi[p];
-      
-  //     FC_part[a][p] = GenerateFractionalContribution( hResponseSum[a], p_lo, p_hi, dirName, lohi[a] );
-  //     name = "FC_part_" + lohi[a] + ptBinName[p] + "_part";
-  //     FC_part[a][p]->SetName(name);
-
-  //     name = "hUE2Dpart_" + lohi[a] + ptBinName[p];
-  //     hUE2D_partSum[a][p] = new TH2D(name,";chg. UE part. p_{T} (GeV);chg. UE part. #eta",ybins,ybinEdge,zbins,zbinEdge);
-
-  //     WeightAndSumByFC2D( FC_part[a][p], hUE2D_detCorr[a], hUE2D_partSum[a][p] );
-  //   }
-  // }
-  
-
-
-  // // int binRange[nPtBins+1] = {7,12,17,27};  // SUM 2D HISTOGRAMS (AND ACCOUNT FOR MISSED JETS)
-  // // for (int a=0; a<nEAbins; ++a) {
-  // //   for (int pp=0; pp<20; ++pp) {
-  // //     int plo = pp+10;  int phi = pp+11;  double p_lo = 10.0 + (1.0*pp);  double p_hi = 11.0 + (1.0*pp);    int pval = 99;
-  // //     int binno = pp+7;
-  // //     //  cout<<binno<<endl; cout<<plo<<"-"<<phi<<endl;  cout<<hMatched_part[a]->GetXaxis()->GetBinLowEdge(binno)<<"-"<<hMatched_part[a]->GetXaxis()->GetBinLowEdge(binno+1)<<endl<<endl;    
-  // //     for (int p=0; p<nPtBins; ++p) {
-  // // 	if ( p_lo>=ptLo[p] && p_hi<=ptHi[p] ) { pval = p; }    // cout<< p_lo <<"\t"<< p_hi <<"\t \t "<< ptBinName[pval] <<endl<<endl;  // THIS HAS BEEN TESTED :)
-  // //     }
-  // //     double weight = hMatched_part[a]->Integral(plo,phi)/hMatched_part[a]->Integral( binRange[pval], binRange[pval+1]-1 );
-  // //     //cout<<hMatched_part[a]->GetBinLowEdge(binRange[pval])<<"\t"<<hMatched_part[a]->GetBinLowEdge(binRange[pval+1])<<"\t"<<ptBinName[pval]<<"\t"<<weight<<endl;
-  // //     //cout<<plo<<"-"<<phi<<":  "<<weight<<endl;   cout<<weight<<endl;
-  // //     hUE2D_partSum[a][pval]->Add( hUE2D_detCorr[a][pp], weight );
-  // //   }
-  // // }
-  // // ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ VARIABLE BINS ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ 
-
-
-  
   
   //  PROJECT HISTOGRAMS BY UE ETA
   TH1D *hUE1D_part[nEAbins][nPtBins][nEtaBins];
   for (int a=0; a<nEAbins; ++a) {
     for (int p=0; p<nPtBins; ++p) {
-      // hMatched_part[a]->GetXaxis()->SetRangeUser(ptLo[p],ptHi[p]);
-      // hUE2D_partSum[a][p]->Scale(1./hMatched_part[a]->Integral());  cout<<hMatched_part[a]->Integral()<<endl;
-      // hMatched_part[a]->GetXaxis()->SetRange(1,-1);
      for (int e=0; e<nEtaBins; ++e) {
 	name = "hUE1D_part_" + lohi[a] + "EA" + ptBinName[p] + etaBinName[e];
 	hUE2D_partSum[a][p]->GetYaxis()->SetRangeUser(etaLo[e],etaHi[e]);
 	hUE1D_part[a][p][e] = (TH1D*)hUE2D_partSum[a][p]->ProjectionX(name);
+	hUE1D_part[a][p][e]->SetName(name);
+	// cout<<hUE1D_part[a][p][e]->Integral()<<endl;
       }
+     hUE2D_partSum[a][p]->GetYaxis()->SetRangeUser(etaLo[0],etaHi[2]);
     }
   }
-
 
   //  DIVIDE HISTOGRAMS BY BIN WIDTHS
   TH1D *hUE1D_part_dbw[nEAbins][nPtBins][nEtaBins];
@@ -387,14 +379,6 @@ int main () {
       }
     }
   }
-
-
-
-
-
-
-
-
   
 
   outFile->cd();
@@ -456,6 +440,7 @@ int main () {
 	name = dirName + "/" + hUE1D_part[a][p][e]->GetName() + ".pdf";
 	hUE1D_part[a][p][e]->Draw("COLZ");
 	c0->SaveAs(name,"PDF");
+	// cout<<hUE1D_part[a][p][e]->Integral()<<endl;
       }
     }
   }

@@ -542,11 +542,12 @@ namespace Analysis {
     can->SetLogz();
     gStyle->SetOptFit(1);
 
-    TF1 *eff = new TF1("eff","((200.+log(x/200.0))/200.)*exp([0]+[1]*x)+[2]",0.2,15.0);
+    // TF1 *eff = new TF1("eff","((200.+log(x/200.0))/200.)*exp([0]+[1]*x)+[2]",0.2,15.0);
     // TF1 *eff = new TF1("eff","(([2]+log(x/100.0)))*exp([0]+[1]*x)",0.2,15.0);
     // TF1 *eff = new TF1("eff","(1+log(x/200.))*(exp([0]+[1]*x))+[2]",0.2,15.0);
-    // TF1 *eff = new TF1("eff","((100.+log(x/200.0))/200.)*exp([0]+[1]*x)+[2]",0.2,15.0);
-  
+    TF1 *eff = new TF1("eff","((100.+log(x/200.0))/200.)*exp([0]+[1]*x)+[2]",0.2,15.0);
+    eff->SetParameter( 0, 1.5);
+    
     if ( ea_string=="lo" ) { bbcBins = "1_3"; }
     else if ( ea_string=="hi" ) { bbcBins = "8_10"; }
     else { std::cerr<< "invalid EA string provided!" <<std::endl; }
@@ -555,20 +556,21 @@ namespace Analysis {
     
       name = "eff_s_bin_" + bbcBins + "_bbc__"; name += iy; name += "_"; name += iy; name += "_eta";
       TH1D *hEffic = (TH1D*)effic_File->Get(name);
-     
       hEffic->Fit( "eff", "EMR" );
       TF1* efficFit = (TF1*)hEffic->GetFunction("eff");
-
       hEffic->Draw();
     
       saveName = dir_name + name + ".pdf";
       can->SaveAs(saveName, "PDF");
-    
+      std::cout<<std::endl;
+
       for (int ix=1; ix<ybins+1; ++ix){ // loop over UE pt bins
 
 	for (int i=0; i<55; ++i) {
 	  ptVal = h_ChgUE2D[i]->GetXaxis()->GetBinCenter( ix );
+	  
 	  effic = efficFit->Eval( ptVal );
+	  
 	  // effic = hEffic->GetBinContent( ix );
 	  // if (ptVal>=3.) { effic = hEffic->GetBinContent( hEffic->FindBin(3.) ); }
 
@@ -577,9 +579,25 @@ namespace Analysis {
 	  oldErr = h_ChgUE2D[i]->GetBinError(ix,iy);
 	  
 	  newVal = oldVal/effic;
-	  efficErr = hEffic->GetBinError( hEffic->FindBin( ptVal) );
-	  relErr = sqrt( oldErr*oldErr + efficErr*efficErr );
+	  
+	  double p0 = efficFit->GetParameter(0);
+	  double p1 = efficFit->GetParameter(1);
+	  double p2 = efficFit->GetParameter(2);
+	  double p0err = efficFit->GetParError(0);
+	  double p1err = efficFit->GetParError(1);
+	  double p2err = efficFit->GetParError(2);
+
+	  efficErr = sqrt( (((100.+log(ptVal/200.0))/200.)*exp(p0+p1*ptVal))*(((100.+log(ptVal/200.0))/200.)*exp(p0+p1*ptVal))*( (p0err*p0err) + (p1err*p1err*ptVal*ptVal) ) + (p2err*p2err) );
+	  
+	  // efficErr = hEffic->GetBinError( hEffic->FindBin( ptVal) );
+	  // efficErr = ((100.+log(ptVal/200.0))/200.)*exp(p0err+p1err*ptVal)+p2err;
+	  // efficErr = fabs(1. - (((100.+log(ptVal/200.0))/200.)*exp((p0+p0err)+(p1+p1err)*ptVal)+(p2+p2err)) / (((100.+log(ptVal/200.0))/200.)*exp(p0+p1*ptVal)+p2) );
+	  
+	  relErr = sqrt( (oldErr/oldVal)*(oldErr/oldVal) + (efficErr/effic)*(efficErr/effic) );
 	  newErr = newVal*relErr;
+
+	  // std::cout<< "oldErr: " << oldErr << "\t newErr: " << newErr <<std::endl;
+	  // std::cout<< efficErr/hEffic->GetBinError( hEffic->FindBin( ptVal) ) <<std::endl;
 
 	  h_ChgUE2D_corr[i]->SetBinContent(ix,iy,newVal);
 	  h_ChgUE2D_corr[i]->SetBinError(ix,iy,newErr);
