@@ -57,13 +57,13 @@ void ptDifferentialUE_systematics_original(){
   TString name, saveName, title, avg, sigma, drawString;
 
   // TString fileName[nEAbins] = { "out/UE/pAuHTjetUE_loEA_diffPt_sept.root", "out/UE/pAuHTjetUE_hiEA_diffPt_sept.root" };
-  TString fileName[nEAbins] = { "out/UE/pAuHTjetUE_loEA_diffPt_sept.root", "out/UE/pAuHTjetUE_hiEA_diffPt_sept.root" };
+  TString fileName[nEAbins] = { "out/UE/pAuHTjetUE_loEA_diffPt.root", "out/UE/pAuHTjetUE_hiEA_diffPt.root" };
   TString efficFileName[nEAbins] = { "src/trackeffic_loEA.root", "src/trackeffic_hiEA.root" };
 
   TFile* inFile[nEAbins];
   TFile* efficFile[nEAbins];
 
-  string dirName = "prelim";
+  string dirName = "test";
 
   for (int i=0; i<nEAbins; ++i) {
     efficFile[i] = new TFile( efficFileName[i], "READ" );
@@ -227,6 +227,8 @@ void ptDifferentialUE_systematics_original(){
 
     legpt[p] = (TLegend*) cpt[p]->BuildLegend(0.4,0.45,0.75,0.8);
     legpt[p]->SetFillColorAlpha(0,0);  legpt[p]->SetLineWidth(0);
+    name = "plots/UE/"+dirName+"/ptByEta" + ptBinName[p] + ".pdf";
+    cpt[p]->SaveAs(name,"PDF");
     cpt[p]->Close();
   }
 
@@ -272,7 +274,8 @@ void ptDifferentialUE_systematics_original(){
 	// cout<<binCenter<<"  "<<fileNo<<"  "<<hEff[fileNo][a]->GetTitle()<<endl;
 
 	for(int ix = 1; ix <= hChgUEpt[a][p]->GetNbinsX(); ++ix){
-	  int xbin = ix+1;
+	  // int xbin = ix+1;
+	  int xbin = ix;
 
 	  double pt = hChgUEpt[a][p]->GetXaxis()->GetBinCenter(xbin);
 	  if ( pt > 3.0 ) { pt = 3.0; }
@@ -289,9 +292,11 @@ void ptDifferentialUE_systematics_original(){
 
 	// sys1: trackeffic+0.05
 	for(int ix = 1; ix <= hChgUEpt[a][p]->GetNbinsX(); ++ix){
-	  int xbin = ix+1;
+	  // int xbin = ix+1;
+	  int xbin = ix;
 
 	  double pt = hChgUEpt[a][p]->GetXaxis()->GetBinCenter(xbin);
+	  // cout<<pt<<endl;
 	  if ( pt > 3.0 ) { pt = 3.0; }
 	  double ptbin = hEff[a][fileNo]->FindBin(pt);
 	  double eff = hEff[a][fileNo]->GetBinContent(ptbin) + 0.05;
@@ -306,7 +311,8 @@ void ptDifferentialUE_systematics_original(){
 
 	// sys2: trackeffic-0.05
 	for(int ix = 1; ix <= hChgUEpt[a][p]->GetNbinsX(); ++ix){
-	  int xbin = ix+1;
+	  // int xbin = ix+1;
+	  int xbin = ix;
 
 	  double pt = hChgUEpt[a][p]->GetXaxis()->GetBinCenter(xbin);
 	  if ( pt > 3.0 ) { pt = 3.0; }
@@ -411,6 +417,7 @@ void ptDifferentialUE_systematics_original(){
 
 
   TH2D *hscale0 = new TH2D("hscale0",";p_{T,lead}^{reco} [GeV/#it{c}];#LT #frac{d#it{N}_{ch}}{d#eta d#phi} #GT", 10,10,30,10,0.5,1.8);
+  // TH2D *hscale0 = new TH2D("hscale0",";p_{T,lead}^{reco} [GeV/#it{c}];#LT #frac{d#it{N}_{ch}}{d#eta d#phi} #GT", 10,10,30,10,0.6,1.9);
   hscale0->GetYaxis()->SetTitleOffset(1);
   hscale0->GetXaxis()->SetTitleOffset(1.0);
   hscale0->GetYaxis()->SetTitleSize(0.05);
@@ -561,6 +568,7 @@ void ptDifferentialUE_systematics_original(){
 
   double yEdge1[2] = { 0.55, 0.85 };
   TH2D *hscale3 = new TH2D("hscale3",";p_{T,lead}^{reco} [GeV/#it{c}];#LT p_{T}^{ch} #GT [GeV/#it{c}]", 10,10,30,10,0.55,0.85);
+  // TH2D *hscale3 = new TH2D("hscale3",";p_{T,lead}^{reco} [GeV/#it{c}];#LT p_{T}^{ch} #GT [GeV/#it{c}]", 10,10,30,10,0.50,0.95);
   hscale3->GetYaxis()->SetTitleOffset(1.0);
   hscale3->GetYaxis()->SetTitleSize(0.05);
   hscale3->GetXaxis()->SetTitleOffset(1.0);
