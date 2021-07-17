@@ -542,10 +542,10 @@ namespace Analysis {
     can->SetLogz();
     gStyle->SetOptFit(1);
 
-    TF1 *eff = new TF1("eff","((200.+log(x/200.0))/200.)*exp([0]+[1]*x)+[2]",0.2,15.0);
+    // TF1 *eff = new TF1("eff","((200.+log(x/200.0))/200.)*exp([0]+[1]*x)+[2]",0.2,15.0);
     // TF1 *eff = new TF1("eff","(([2]+log(x/100.0)))*exp([0]+[1]*x)",0.2,15.0);
     // TF1 *eff = new TF1("eff","(1+log(x/200.))*(exp([0]+[1]*x))+[2]",0.2,15.0);
-    // TF1 *eff = new TF1("eff","((100.+log(x/200.0))/200.)*exp([0]+[1]*x)+[2]",0.2,15.0);
+    TF1 *eff = new TF1("eff","((100.+log(x/200.0))/200.)*exp([0]+[1]*x)+[2]",0.2,15.0);
   
     if ( ea_string=="lo" ) { bbcBins = "1_3"; }
     else if ( ea_string=="hi" ) { bbcBins = "8_10"; }
