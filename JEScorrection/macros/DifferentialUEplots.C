@@ -120,7 +120,7 @@ void DifferentialUEplots(){
 	double intErr;
 	double integral = hPt[p][e][a]->IntegralAndError(1,hPt[p][e][a]->GetNbinsX(),intErr);
     	hNch[e][a]->SetBinContent(p+1,integral/area[e]);
-    	hNch[e][a]->SetBinError(p+1,intErr);
+    	hNch[e][a]->SetBinError(p+1,intErr/area[e]);
 
 	hMeanPt[e][a]->SetBinContent(p+1,hPt[p][e][a]->GetMean(1));
 	hMeanPt[e][a]->SetBinError(p+1,hPt[p][e][a]->GetMeanError(1));
