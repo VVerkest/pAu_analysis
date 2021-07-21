@@ -126,8 +126,8 @@ int main ( int argc, const char** argv ) {         // funcions and cuts specifie
   InitReader( Reader, Chain, numEvents );
   double deltaPhi, deltaR;       double trigTowEta, trigTowPhi;
 
-  //string efficFile = "src/trackeffic_loEA.root";
-  string efficFile = "src/trackeffic_hiEA.root";
+  string efficFile = "src/trackeffic_loEA.root";
+  // string efficFile = "src/trackeffic_hiEA.root";
   string UEcorrFile = "src/UEsubtractionPlots.root";
 
   // ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~  BEGIN EVENT LOOP!  ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~
@@ -145,11 +145,11 @@ int main ( int argc, const char** argv ) {         // funcions and cuts specifie
     if ( header->GetBbcAdcSumEast() > 64000 ) { continue; }
     if ( header->GetBbcAdcSumEast() < 3559.12 ) { continue; }     //  neglect 90-100% event activity
 
-    //  HIGH EVENT ACTIVITY
-    if ( header->GetBbcAdcSumEast() < 26718.1 ) { continue; }  // LO: 3559.12-10126.1;  HI: 26718.1+// 
+    // //  HIGH EVENT ACTIVITY
+    // if ( header->GetBbcAdcSumEast() < 26718.1 ) { continue; }  // LO: 3559.12-10126.1;  HI: 26718.1+// 
 
-    // //  LOW EVENT ACTIVITY
-    //if ( header->GetBbcAdcSumEast() > 10126.1 ) { continue; }  // LO: 3559.12-10126.1;  HI: 26718.1+
+    //  LOW EVENT ACTIVITY
+    if ( header->GetBbcAdcSumEast() > 10126.1 ) { continue; }  // LO: 3559.12-10126.1;  HI: 26718.1+
     
     TList *SelectedTowers = Reader.GetListOfSelectedTowers();
     nTowers = CountTowers( SelectedTowers );
