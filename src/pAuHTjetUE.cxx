@@ -75,12 +75,12 @@ int main ( int argc, const char** argv ) {         // funcions and cuts specifie
     xbinEdge[i] = (double) i+4.0;
     if (i<zbins+1) { zbinEdge[i] = (double)(-10.0 + i)/10.0; }
   }
-  const int ybins = 15;
-  double ybinEdge[ybins+1] = { 0.20, 0.25, 0.30, 0.35, 0.40, 0.50, 0.60, 0.70, 0.80, 1.0, 1.5, 2.0, 3.0, 5.0, 10.0, 15.0 };
+  // const int ybins = 15;
+  // double ybinEdge[ybins+1] = { 0.20, 0.25, 0.30, 0.35, 0.40, 0.50, 0.60, 0.70, 0.80, 1.0, 1.5, 2.0, 3.0, 5.0, 10.0, 15.0 };
 
-  // const int ybins = 30;
-  // double ybinEdge[ybins+1];
-  // for (int i=0; i<=ybins; ++i) { ybinEdge[i] = 0.5*i; }
+  const int ybins = 30;
+  double ybinEdge[ybins+1];
+  for (int i=0; i<=ybins; ++i) { ybinEdge[i] = 0.5*i; }
 
   TH2D *hLeadPtVsUEpT = new TH2D("hLeadPtVsUEpT",";leading jet p_{T} (GeV);chg. UE part. p_{T} (GeV)",xbins,xbinEdge,ybins,ybinEdge);
   TH1D *hLead = new TH1D("hLead", ";leading jet p_{T} (GeV)", 55,4.0,59.0);
@@ -145,8 +145,8 @@ int main ( int argc, const char** argv ) {         // funcions and cuts specifie
     if ( header->GetBbcAdcSumEast() > 64000 ) { continue; }
     if ( header->GetBbcAdcSumEast() < 3559.12 ) { continue; }     //  neglect 90-100% event activity
 
-    // //  HIGH EVENT ACTIVITY
-    // if ( header->GetBbcAdcSumEast() < 26718.1 ) { continue; }  // LO: 3559.12-10126.1;  HI: 26718.1+// 
+    //  HIGH EVENT ACTIVITY
+    if ( header->GetBbcAdcSumEast() < 26718.1 ) { continue; }  // LO: 3559.12-10126.1;  HI: 26718.1+// 
 
     // //  LOW EVENT ACTIVITY
     //if ( header->GetBbcAdcSumEast() > 10126.1 ) { continue; }  // LO: 3559.12-10126.1;  HI: 26718.1+
@@ -221,6 +221,7 @@ int main ( int argc, const char** argv ) {         // funcions and cuts specifie
 	  leadArea = leadJet.area();
 
 	  //  UNDERLYING EVENT ESTIMATION
+	  GatherChargedUEwithEfficiency( leadJet, container, chgParticles, efficFile );
 	  GatherChargedUE( leadJet, container, chgParticles );
 	  GatherNeutralUE( leadJet, container, neuParticles );
 
@@ -251,8 +252,8 @@ int main ( int argc, const char** argv ) {         // funcions and cuts specifie
 	    hChgUE[jeval]->Fill( leadPt, chgParticles[i].pt(), chgParticles[i].eta() );
 	    hLeadPtVsUEpT->Fill( leadPt, chgParticles[i].pt());
 	  }
-	  hLeadPt[jeval]->Fill( leadPt );
-	  hLead->Fill( leadPt );
+	  hLeadPt[jeval]->Fill( leadPtCorrected );
+	  hLead->Fill( leadPtCorrected );
 
 	  chgParticles.clear(); // clear vector!
 
