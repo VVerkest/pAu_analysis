@@ -339,12 +339,12 @@ namespace pAuAnalysis {
 	  if ( (eta>=etaLo[j]) && (eta<=etaHi[j]) ) { etaBin = j; continue; }
 	}
 	if ( etaBin==999 ) { std::cerr<<"error finding charged track eta bin; eta = "<<eta<<std::endl; continue; }
-	for ( int j=0; j<72; ++j ) { ptBin = hEffic[etaBin]->FindBin( pt ); }    // find histogram bin corresponding to track pt
+	ptBin = hEffic[etaBin]->FindBin( pt );    // find histogram bin corresponding to track pt
 
 	effic = hEffic[etaBin]->GetBinContent( ptBin );
       }
 
-      //std::cout<<"pT: "<<current.pt()<<"  effic="<<effic;
+      std::cout<<"pT: "<<current.pt()<<"  effic="<<effic;
       current/=effic;
       //std::cout<<"    corr pT:"<<current.pt()<<std::endl;  //debug
       
