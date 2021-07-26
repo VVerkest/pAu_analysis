@@ -334,6 +334,8 @@ namespace pAuAnalysis {
 	pt = current.pt();
 	eta = current.eta();
 
+	if (pt>3.) { pt = 3.; }
+
 	etaBin = 999;
 	for ( int j=0; j<nBins; ++j ) {     // find efficiency histogram corresponding to track eta
 	  if ( (eta>=etaLo[j]) && (eta<=etaHi[j]) ) { etaBin = j; continue; }
@@ -344,7 +346,7 @@ namespace pAuAnalysis {
 	effic = hEffic[etaBin]->GetBinContent( ptBin );
       }
 
-      std::cout<<"pT: "<<current.pt()<<"  effic="<<effic;
+      // std::cout<<"pT: "<<current.pt()<<"  effic="<<effic<<endl;
       current/=effic;
       //std::cout<<"    corr pT:"<<current.pt()<<std::endl;  //debug
       
