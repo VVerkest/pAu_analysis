@@ -661,7 +661,10 @@ void ptDifferentialUE_systematics_original(){
 
   for (int a=0; a<nEAbins; ++a) {
     for (int p=0; p<nPtBins; ++p) {
-
+      
+      hChgUEpt[a][p]->GetYaxis()->SetRange(1,-1);
+      hChgUEpt_te[a][p]->GetYaxis()->SetRange(1,-1);
+      hNeuUEpt[a][p]->GetYaxis()->SetRange(1,-1);
       hChgUEpt[a][p]->Write();
       hChgUEpt_te[a][p]->Write();
       hNeuUEpt[a][p]->Write();
