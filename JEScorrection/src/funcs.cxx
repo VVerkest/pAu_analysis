@@ -567,6 +567,7 @@ namespace Analysis {
       for (int ix=1; ix<ybins+1; ++ix){ // loop over UE pt bins
 
 	for (int i=0; i<55; ++i) {
+	// // for (int i=0; i<3; ++i) {
 	  ptVal = h_ChgUE2D[i]->GetXaxis()->GetBinCenter( ix );
 	  effic = efficFit->Eval( ptVal );
 	  // effic = hEffic->GetBinContent( ix );
@@ -583,17 +584,20 @@ namespace Analysis {
 
 	  h_ChgUE2D_corr[i]->SetBinContent(ix,iy,newVal);
 	  h_ChgUE2D_corr[i]->SetBinError(ix,iy,oldErr);
+	  // h_ChgUE2D_corr[i]->SetBinContent(ix,iy,oldVal);  	  h_ChgUE2D_corr[i]->SetBinError(ix,iy,oldErr);  // NO TRACKING EFFICIENCY!
 	}
       }
     }
 
     for (int i=0; i<55; ++i) {
+    // for (int i=0; i<3; ++i) {
       h_ChgUE2D_corr[i]->SetEntries(h_ChgUE2D[i]->GetEntries());
       if (h_ChgUE2D_corr[i]->GetEntries()==0){ continue; }
       h_ChgUE2D_corr[i]->Draw("COLZ");
       name = dir_name + h_ChgUE2D_corr[i]->GetName() + ".pdf";
       can->SaveAs(name, "PDF");
 
+      // std::cout<<h_ChgUE2D_corr[i]->GetName()<<std::endl;
       // std::cout<<h_ChgUE2D_corr[i]->Integral()/AREA<<std::endl;
 
     }

@@ -50,8 +50,8 @@ void DifferentialUEplots(){
   int jeval, ueeval, pval, eaval;
   TString name, saveName, title, avg, sigma, drawString;
 
-  TFile* inFile = new TFile("out/JEScorrection.root", "READ");
-  TString directory = "plots/JEScorrection/";
+  // TFile* inFile = new TFile("out/JEScorrection.root", "READ");
+  // TString directory = "plots/JEScorrection/";
   // TFile *inFile = new TFile("out/test1.root","READ");
   // string directory = "plots/new/";
   // TFile *inFile = new TFile("out/varBins.root","READ");
@@ -62,6 +62,12 @@ void DifferentialUEplots(){
   // TFile *inFile = new TFile("out/halfGevUEbins.root","READ");
   // string directory = "plots/halfGevUEbins/";
   
+  // string directory = "plots/noCorrection_halfGeVbins/";
+  // TFile *inFile = new TFile("out/noCorrection_halfGeVbins_new.root","READ");
+
+  string directory = "plots/noCorrection_halfGeVbins_prelimTrackEffic/";
+  TFile *inFile = new TFile("out/noCorrection_halfGeVbins_prelimTrackEffic.root","READ");
+
   auto hs_n = new THStack("hs_n","dNch/dEtadPhi");
   auto hs_pt = new THStack("hs_pt","mean pT");
 
@@ -118,12 +124,17 @@ void DifferentialUEplots(){
     	hPt[p][e][a]->SetMarkerColor(etaColor[e]);
 
 	double intErr;
-	double integral = hPt[p][e][a]->IntegralAndError(1,hPt[p][e][a]->GetNbinsX(),intErr);
+	double integral = hPt[p][e][a]->IntegralAndError(1,hPt[p][e][a]->GetNbinsX(),intErr,"");  // "WIDTH" option gives the same value as dividing by 2
     	hNch[e][a]->SetBinContent(p+1,integral/area[e]);
+    	// hNch[e][a]->SetBinContent(p+1,hPt[p][e][a]->Integral()/(area[e]));
+	// cout<<hPt[p][e][a]->Integral(1,hPt[p][e][a]->GetNbinsX())/(area[e])<<endl;
+	
     	hNch[e][a]->SetBinError(p+1,intErr/area[e]);
 
 	hMeanPt[e][a]->SetBinContent(p+1,hPt[p][e][a]->GetMean(1));
 	hMeanPt[e][a]->SetBinError(p+1,hPt[p][e][a]->GetMeanError(1));
+
+	cout<<hPt[p][e][a]->GetName()<<"  \t"<<integral/(area[e])<<"  \t"<<hPt[p][e][a]->GetMean(1)<<endl;
       }
       hNch[e][a]->GetYaxis()->SetRangeUser(0.5,1.8);
       hs_n->Add(hNch[e][a]);

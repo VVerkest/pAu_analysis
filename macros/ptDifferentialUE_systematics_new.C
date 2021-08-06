@@ -58,8 +58,8 @@ void ptDifferentialUE_systematics_new(){
   TString name, saveName, title, avg, sigma, drawString;
 
   string dirName = "prelim_new";
-  
-  TString fileName[nEAbins] = { "out/UE/pAuHTjetUE_30cmVzCut_3cmVzDiff_loEA_variableBins.root", "out/UE/pAuHTjetUE_30cmVzCut_3cmVzDiff_hiEA_variableBins.root" };
+  // TString fileName[nEAbins] = { "out/UE/pAuHTjetUE_30cmVzCut_3cmVzDiff_loEA_variableBins.root", "out/UE/pAuHTjetUE_30cmVzCut_3cmVzDiff_hiEA_variableBins.root" };
+  TString fileName[nEAbins] = { "out/UE/pAuHTjetUE_halfGeVbins_loEA_uncorrected.root", "out/UE/pAuHTjetUE_halfGeVbins_hiEA_uncorrected.root" };
   TString efficFileName[nEAbins] = { "src/trackeffic_loEA.root", "src/trackeffic_hiEA.root" };
 
   const int eta_bins = 10;
@@ -113,9 +113,10 @@ void ptDifferentialUE_systematics_new(){
     xbinEdge[i] = (double) i+4.0;
     if (i<zbins+1) { zbinEdge[i] = (double)(-10.0 + i)/10.0; }
   }
-  const int ybins = 14;
-  double ybinEdge[ybins+1] = { 0.20, 0.25, 0.30, 0.35, 0.40, 0.50, 0.60, 0.70, 0.80, 1.0, 2.0, 3.0, 5.0, 10.0, 15.0 };
-
+  // const int ybins = 14;
+  // double ybinEdge[ybins+1] = { 0.20, 0.25, 0.30, 0.35, 0.40, 0.50, 0.60, 0.70, 0.80, 1.0, 2.0, 3.0, 5.0, 10.0, 15.0 };
+  const int ybins = 30;
+  const double ybinEdge[ybins+1] = { 0.0, 0.5, 1.0, 1.5, 2.0, 2.5, 3.0, 3.5, 4.0, 4.5, 5.0, 5.5, 6.0, 6.5, 7.0, 7.5, 8.0, 8.5, 9.0, 9.5, 10.0, 10.5, 11.0, 11.5, 12.0, 12.5, 13.0, 13.5, 14.0, 14.5, 15.0 };
   
   TH3D *h_UE3D[nEAbins][nEtaBins];
   TH1D *h_leadPt[nEAbins][nEtaBins];
@@ -250,7 +251,7 @@ void ptDifferentialUE_systematics_new(){
 	// cout<<fileNo<<"  "<<binCenter<<"  "<<hEff[fileNo][a]->GetTitle()<<endl;
 
   	for(int ix = 1; ix <= hChgUEpt[a][p]->GetNbinsX(); ++ix){
-  	  int xbin = ix+1;
+  	  int xbin = ix;
 	  
   	  double pt = hChgUEpt[a][p]->GetXaxis()->GetBinCenter(xbin);
   	  // if ( pt > 3.0 ) { pt = 3.0; }
@@ -272,7 +273,7 @@ void ptDifferentialUE_systematics_new(){
 
   	// sys1: trackeffic+0.05
   	for(int ix = 1; ix <= hChgUEpt[a][p]->GetNbinsX(); ++ix){
-  	  int xbin = ix+1;
+  	  int xbin = ix;
 	  
   	  double pt = hChgUEpt[a][p]->GetXaxis()->GetBinCenter(xbin);
   	  // if ( pt > 3.0 ) { pt = 3.0; }
@@ -292,7 +293,7 @@ void ptDifferentialUE_systematics_new(){
 
   	// sys2: trackeffic-0.05
   	for(int ix = 1; ix <= hChgUEpt[a][p]->GetNbinsX(); ++ix){
-  	  int xbin = ix+1;
+  	  int xbin = ix;
 	  
   	  double pt = hChgUEpt[a][p]->GetXaxis()->GetBinCenter(xbin);
   	  // if ( pt > 3.0 ) { pt = 3.0; }
@@ -399,7 +400,7 @@ void ptDifferentialUE_systematics_new(){
   int startBin[nPtBins] = { 11, 30, 59 };
   
 
-  TH2D *hscale0 = new TH2D("hscale0",";p_{T,lead}^{reco} [GeV/#it{c}];#LT #frac{d#it{N}_{ch}}{d#eta d#phi} #GT", 10,10,30,10,0.5,1.8);
+  TH2D *hscale0 = new TH2D("hscale0",";p_{T,lead}^{reco} [GeV/#it{c}];#LT #frac{d#it{N}_{ch}}{d#eta d#phi} #GT", 10,10,30,10,0.6,1.9);
   hscale0->GetYaxis()->SetTitleOffset(1);
   hscale0->GetXaxis()->SetTitleOffset(1.0);
   hscale0->GetYaxis()->SetTitleSize(0.05);
@@ -548,7 +549,7 @@ void ptDifferentialUE_systematics_new(){
   c1->SetMargin(0.125,0.05,0.125,0.05);
 
   double yEdge1[2] = { 0.55, 0.85 };
-  TH2D *hscale3 = new TH2D("hscale3",";p_{T,lead}^{reco} [GeV/#it{c}];#LT p_{T}^{ch} #GT [GeV/#it{c}]", 10,10,30,10,0.55,0.85);
+  TH2D *hscale3 = new TH2D("hscale3",";p_{T,lead}^{reco} [GeV/#it{c}];#LT p_{T}^{ch} #GT [GeV/#it{c}]", 10,10,30,10,0.45,0.95);
   hscale3->GetYaxis()->SetTitleOffset(1.0);
   hscale3->GetYaxis()->SetTitleSize(0.05);
   hscale3->GetXaxis()->SetTitleOffset(1.0);
@@ -639,15 +640,15 @@ void ptDifferentialUE_systematics_new(){
 
   TFile *outFile = new TFile("test.root","RECREATE");
   
-  // for (int a=0; a<nEAbins; ++a) {
-  //   for (int p=0; p<nPtBins; ++p) {
+  for (int a=0; a<nEAbins; ++a) {
+    for (int p=0; p<nPtBins; ++p) {
 
-  //     hChgUEpt[a][p]->Write();
-  //     hChgUEpt_te[a][p]->Write();
-  //     hNeuUEpt[a][p]->Write();
+      hChgUEpt[a][p]->Write();
+      hChgUEpt_te[a][p]->Write();
+      // hNeuUEpt[a][p]->Write();
 	
-  //   }
-  // }
+    }
+  }
   // c0->Write();
   // c1->Write();
 
