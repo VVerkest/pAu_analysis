@@ -49,7 +49,7 @@ void WeightAndSumByFC2D_fakesCorrection( TH1D* FC, TH1D* FakeProb, TH2D* UE2D[55
     UE2Dpart->Add(UE2D[i], wt);
     sum += wt;
   }
-  std::cout<<sum<<std::endl;
+  // std::cout<<sum<<std::endl;
 }
 
 
@@ -84,9 +84,16 @@ int main () {
   
   TFile *inFile[nEAbins], *embFile[nEAbins];
   // TFile* outFile = new TFile("out/5gevBins.root", "RECREATE");
-  TFile* outFile = new TFile("out/JEScorrection.root", "RECREATE");
-  TString dirName = "plots/JEScorrection";
- 
+  // TFile* outFile = new TFile("out/JEScorrection.root", "RECREATE");
+  // TString dirName = "plots/JEScorrection";
+
+  // double efficShift = 0.04;
+  // TFile* outFile = new TFile("out/JEScorrection_teSys1.root", "RECREATE");
+  // TString dirName = "plots/JEScorrection/teSys1";
+  double efficShift = -0.04;
+  TFile* outFile = new TFile("out/JEScorrection_teSys2.root", "RECREATE");
+  TString dirName = "plots/JEScorrection/teSys2";
+
   TH2D *hUE2D[nEAbins][55];
   TH3D *hUE3D[nEAbins][nEtaBins];
   TH3D *hUE3Dsum[nEAbins];
@@ -102,8 +109,8 @@ int main () {
   for (int a=0; a<nEAbins; ++a) {
     //dirName += lohi[a];
 
-    // name = "../out/UE/pAuHTjetUE_" + lohi[a] + "EA_uncorrected.root";
-    name = "../out/UE/pAuHTjetUE_halfGeVbins_" + lohi[a] + "EA_leadPtUncorrected.root";
+    name = "../out/UE/pAuHTjetUE_" + lohi[a] + "EA_uncorrected.root";
+    // name = "../out/UE/pAuHTjetUE_halfGeVbins_" + lohi[a] + "EA_leadPtUncorrected.root";
     inFile[a] = new TFile(name, "READ");
     name = "hUE3Dsum_" + lohi[a] + "EA";
     hUE3Dsum[a] = new TH3D(name,";leading jet p_{T} (GeV);chg. UE part. p_{T} (GeV);chg. UE part. #eta",xbins,xbinEdge,ybins,ybinEdge,zbins,zbinEdge);
@@ -222,7 +229,7 @@ int main () {
       hUE2D_detCorr[a][jp] = new TH2D(name,";chg. UE part. p_{T} (GeV);chg. UE part. #eta",ybins,ybinEdge,zbins,zbinEdge);
       name = dirName + "/";
     }
-    TrackingEfficiencyByPtAndEta55( hUE2D[a], hUE2D_detCorr[a], efficFile, lohi[a], name );
+    TrackingEfficiencyByPtAndEta55( hUE2D[a], hUE2D_detCorr[a], efficFile, lohi[a], name, efficShift );
   }
   
   // for (int a=0; a<nEAbins; ++a) {
@@ -247,8 +254,8 @@ int main () {
       name = "hUE2D_" + lohi[a] + "_"; name+=plo; name+="_"; name+=phi; name+="GeV_part";
       hUE2D_part[a][pp] = new TH2D(name,";chg. UE part. p_{T} (GeV);chg. UE part. #eta",ybins,ybinEdge,zbins,zbinEdge);
 
-      WeightAndSumByFC2D( FC_part[a][pp], hUE2D_detCorr[a], hUE2D_part[a][pp] );
-      // WeightAndSumByFC2D_fakesCorrection( FC_part[a][pp], hFakeProb[a], hUE2D_detCorr[a], hUE2D_part[a][pp] );
+      // WeightAndSumByFC2D( FC_part[a][pp], hUE2D_detCorr[a], hUE2D_part[a][pp] );
+      WeightAndSumByFC2D_fakesCorrection( FC_part[a][pp], hFakeProb[a], hUE2D_detCorr[a], hUE2D_part[a][pp] );
     }
   }
 
@@ -277,9 +284,9 @@ int main () {
 
 
 
-      double weight = hMatched_part[a]->GetBinContent(hMatched_part[a]->FindBin(plo))/hMatched_part[a]->Integral( binRange[pval], binRange[pval+1]-1 ); // THIS WEIGHT COMES FROM THE CROSS SECTION
+      // double weight = hMatched_part[a]->GetBinContent(hMatched_part[a]->FindBin(plo))/hMatched_part[a]->Integral( binRange[pval], binRange[pval+1]-1 ); // THIS WEIGHT COMES FROM THE CROSS SECTION
 
-      // double weight = hPart[a]->GetBinContent(hPart[a]->FindBin(plo))/hPart[a]->Integral( binRange[pval], binRange[pval+1]-1 ); // THIS IS WITH MISSED JET CORRECTION
+      double weight = hPart[a]->GetBinContent(hPart[a]->FindBin(plo))/hPart[a]->Integral( binRange[pval], binRange[pval+1]-1 ); // THIS IS WITH MISSED JET CORRECTION
       // // double weight = hPart[a]->GetBinContent(hPart[a]->FindBin(plo))/hPart[a]->Integral( hPart[a]->FindBin(ptLo[pval]), hPart[a]->FindBin(ptHi[pval])-1 ); // THIS IS WITH MISSED JET CORRECTION
 
       // cout<<hPart[a]->FindBin(ptLo[pval])<<"  \t"<<hPart[a]->FindBin(ptHi[pval])<<endl;
