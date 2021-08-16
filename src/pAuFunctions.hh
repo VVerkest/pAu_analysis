@@ -64,7 +64,6 @@ namespace pAuAnalysis {
   
   const double R = 0.4;
   const double VertexZCut = vzCut;
-  const double dcaCut = 3.0;   // DCA<=3.0 cm
   const double etaCut = 1.0;       // |eta|<=1
   const double partMinPt = 0.2;      //  particle Pt >= 0.2 GeV
   const double jetMinPt = 2.0;      //  Jet Pt >= 2.0 GeV
