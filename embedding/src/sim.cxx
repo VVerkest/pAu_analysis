@@ -100,6 +100,7 @@ int main (int argc, const char ** argv) {
   TH2D *hPtResponse[nEtaBins];
   TH1D *hFakes[nEtaBins];
   TH1D *hMisses = new TH1D( "hMisses","Misses;missing part-level leading jet p_{T} (GeV)",55,4.0,59.0);
+  TH1D *hMissPart[nEtaBins];
 
   for (int e=0; e<nEtaBins; ++e) {
     
@@ -110,6 +111,9 @@ int main (int argc, const char ** argv) {
     name = "hFakes" + etaBinName[e] + "Jet";
     title = etaBinString[e] + "  ~  Fakes;missing part-level leading jet p_{T} (GeV)";
     hFakes[e] = new TH1D(name, title, 55,4.0,59.0);
+
+    name = "hMissPart" + etaBinName[e] + "Jet";
+    hMissPart[e] = new TH1D( name,"Misses;missing part-level leading jet p_{T} (GeV)",55,4.0,59.0);
     
   }
 
@@ -167,6 +171,11 @@ int main (int argc, const char ** argv) {
 
     if ( d_Jets.size()==0 ) {
       hMisses->Fill( p_Jets[0].pt(), mc_weight );
+      int eval = 99;
+      for (int ebin=0; ebin<nEtaBins; ++ebin) {
+	if ( p_Jets[0].eta()>=etaLo[ebin] && p_Jets[0].eta()<=etaHi[ebin]) {eval = ebin;}
+      }
+      hMissPart[eval]->Fill( p_Jets[0].pt(), mc_weight );
       continue;
     } // missed jet
 
@@ -258,6 +267,7 @@ int main (int argc, const char ** argv) {
   for (int e=0;e<nEtaBins; ++e ) {
     hPtResponse[e]->Write();
     hFakes[e]->Write();
+    hMissPart[e]->Write();
   }
 
   hResponse->Write();
