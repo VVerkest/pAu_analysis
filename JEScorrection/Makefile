@@ -59,17 +59,19 @@ $(BDIR)/%  : $(ODIR)/%.o
 ###############################################################################
 ############################# Main Targets ####################################
 ###############################################################################
-all : $(BDIR)/JEScorrection $(BDIR)/newJEScorrection $(BDIR)/noJEScorrection $(BDIR)/noJEScorrection_prelimTrackEffic
+all : $(BDIR)/JEScorrection $(BDIR)/PtDiffJEScorrection $(BDIR)/EtaDiffJEScorrection $(BDIR)/noJEScorrection $(BDIR)/noJEScorrection_prelimTrackEffic
 
 $(ODIR)/funcs.o : $(SDIR)/funcs.cxx $(SDIR)/funcs.hh $(SDIR)/params.hh
 $(ODIR)/JEScorrection.o : $(SDIR)/JEScorrection.cxx $(SDIR)/params.hh
-$(ODIR)/newJEScorrection.o : $(SDIR)/newJEScorrection.cxx $(SDIR)/params.hh
+$(ODIR)/PtDiffJEScorrection.o : $(SDIR)/PtDiffJEScorrection.cxx $(SDIR)/params.hh
+$(ODIR)/EtaDiffJEScorrection.o : $(SDIR)/EtaDiffJEScorrection.cxx $(SDIR)/params.hh
 $(ODIR)/noJEScorrection.o : $(SDIR)/noJEScorrection.cxx $(SDIR)/params.hh
 $(ODIR)/noJEScorrection_prelimTrackEffic.o : $(SDIR)/noJEScorrection_prelimTrackEffic.cxx $(SDIR)/params.hh
 
 #data analysis
 $(BDIR)/JEScorrection :	$(ODIR)/JEScorrection.o	$(ODIR)/funcs.o
-$(BDIR)/newJEScorrection :	$(ODIR)/newJEScorrection.o	$(ODIR)/funcs.o
+$(BDIR)/PtDiffJEScorrection :	$(ODIR)/PtDiffJEScorrection.o	$(ODIR)/funcs.o
+$(BDIR)/EtaDiffJEScorrection :	$(ODIR)/EtaDiffJEScorrection.o	$(ODIR)/funcs.o
 $(BDIR)/noJEScorrection :	$(ODIR)/noJEScorrection.o	$(ODIR)/funcs.o
 $(BDIR)/noJEScorrection_prelimTrackEffic :	$(ODIR)/noJEScorrection_prelimTrackEffic.o	$(ODIR)/funcs.o
 
