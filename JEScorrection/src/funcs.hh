@@ -82,7 +82,7 @@ namespace Analysis {
 
   void TrackingEfficiencyByPtAndEta( TH2D* [nPtBins], TH2D* [nPtBins], TFile *, TString, TString );
   
-  void TrackingEfficiencyByPtAndEta55( TH2D* [nPtBins], TH2D*[nPtBins], TFile *, TString, TString );
+  void TrackingEfficiencyByPtAndEta55( TH2D* [nPtBins], TH2D*[nPtBins], TFile *, TString, TString, double );
 
   void WeightAndAddCorrected2Ds( TH2D *, TH1D *, TH2D *[55], TString );
 

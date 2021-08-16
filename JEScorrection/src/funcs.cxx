@@ -532,7 +532,7 @@ namespace Analysis {
 
 
   
-  void TrackingEfficiencyByPtAndEta55( TH2D* h_ChgUE2D[55], TH2D* h_ChgUE2D_corr[55], TFile *effic_File, TString ea_string, TString dir_name ){
+  void TrackingEfficiencyByPtAndEta55( TH2D* h_ChgUE2D[55], TH2D* h_ChgUE2D_corr[55], TFile *effic_File, TString ea_string, TString dir_name, double EfficShift = 0. ){
     //  X: UE pT,   Y: UE eta
     TH1D *hEffic;
     TString name, saveName, bbcBins;
@@ -570,6 +570,12 @@ namespace Analysis {
 	// // for (int i=0; i<3; ++i) {
 	  ptVal = h_ChgUE2D[i]->GetXaxis()->GetBinCenter( ix );
 	  effic = efficFit->Eval( ptVal );
+	  effic += EfficShift;
+	  // std::cout<< efficFit->Eval( ptVal ) <<" + "<< EfficShift <<" = "<< effic << std::endl;
+
+	  if ( effic > 1.0 ) { effic = 1.0; } 
+	  if ( effic < 0.0 ) { effic = 0.0; } 
+	  
 	  // effic = hEffic->GetBinContent( ix );
 	  // if (ptVal>=3.) { effic = hEffic->GetBinContent( hEffic->FindBin(3.) ); }
 
