@@ -1,58 +1,12 @@
 // Veronica Verkest
 // February 24, 2020
-// plotting macro: DifferentialUEplots.C
+// plotting macro: PtDifferentialUEplots.C
 
 #include "params.hh"
 #include "funcs.hh"
 
 using namespace std;
 using namespace Analysis;
-
-
-void WeightAndSumByFC2D( TH1D* FC, TH2D* UE2D[55], TH2D *UE2Dpart ){
-
-  double sum = 0.;
-
-  for (int i=0; i<FC->GetNbinsX(); ++i) {
-    
-    int binno = i+1;
-    
-    double wt = FC->GetBinContent(binno);
-    // std::cout<<FC->GetBinCenter(binno)<<std::endl;
-    if (wt==0) { continue; }
-    UE2Dpart->Add(UE2D[i], wt);
-
-    sum += wt;
-
-  }
-
-  // std::cout<<sum<<std::endl;
-  
-}
-
-
-void WeightAndSumByFC2D_fakesCorrection( TH1D* FC, TH1D* FakeProb, TH2D* UE2D[55], TH2D *UE2Dpart ){
-
-  double sum = 0.;
-  
-  for (int i=0; i<FC->GetNbinsX(); ++i) {
-    int binno = i+1;
-    FC->SetBinContent( binno, FC->GetBinContent(binno)*( 1. - FakeProb->GetBinContent(1+i) ) );
-  }
-
-  FC->Scale(1./FC->Integral());
-
-  for (int i=0; i<FC->GetNbinsX(); ++i) {
-    int binno = i+1;
-    double wt = FC->GetBinContent(binno);
-    if (wt==0) { continue; }
-    UE2Dpart->Add(UE2D[i], wt);
-    sum += wt;
-  }
-  // std::cout<<sum<<std::endl;
-}
-
-
 
 int main () {
 

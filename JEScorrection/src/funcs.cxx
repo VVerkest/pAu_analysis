@@ -650,6 +650,50 @@ namespace Analysis {
     UE_part->Write();
     return UE_part;
   }
+
+
+  void WeightAndSumByFC2D( TH1D* FC, TH2D* UE2D[55], TH2D *UE2Dpart ){
+
+    double sum = 0.;
+
+    for (int i=0; i<FC->GetNbinsX(); ++i) {
+    
+      int binno = i+1;
+    
+      double wt = FC->GetBinContent(binno);
+      // std::cout<<FC->GetBinCenter(binno)<<std::endl;
+      if (wt==0) { continue; }
+      UE2Dpart->Add(UE2D[i], wt);
+
+      sum += wt;
+
+    }
+
+    // std::cout<<sum<<std::endl;
+  
+  }
+
+
+  void WeightAndSumByFC2D_fakesCorrection( TH1D* FC, TH1D* FakeProb, TH2D* UE2D[55], TH2D *UE2Dpart ){
+
+    double sum = 0.;
+  
+    for (int i=0; i<FC->GetNbinsX(); ++i) {
+      int binno = i+1;
+      FC->SetBinContent( binno, FC->GetBinContent(binno)*( 1. - FakeProb->GetBinContent(1+i) ) );
+    }
+
+    FC->Scale(1./FC->Integral());
+
+    for (int i=0; i<FC->GetNbinsX(); ++i) {
+      int binno = i+1;
+      double wt = FC->GetBinContent(binno);
+      if (wt==0) { continue; }
+      UE2Dpart->Add(UE2D[i], wt);
+      sum += wt;
+    }
+    // std::cout<<sum<<std::endl;
+  }
   
 
   void WeightUEPtByLeadPtAndFakes( TH1D *h_WtUEpt[nPtBins],TH1D *h_UEpt[55],TH1D *h_DetWt[nPtBins],TH1D *h_leadPt,TH1D *h_FakeJets,TString plot_dir, TString suf ){

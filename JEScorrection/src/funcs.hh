@@ -87,7 +87,11 @@ namespace Analysis {
   void WeightAndAddCorrected2Ds( TH2D *, TH1D *, TH2D *[55], TString );
 
   TH1D* WeightAndSumByFC1D( TH1D*, TH1D*[55] );
+
+  void WeightAndSumByFC2D( TH1D*, TH2D*[55], TH2D * );
   
+  void WeightAndSumByFC2D_fakesCorrection( TH1D*, TH1D*, TH2D*[55], TH2D * );
+
   void WeightUEPtByLeadPtAndFakes( TH1D *[nPtBins], TH1D *[55], TH1D *[nPtBins], TH1D *, TH1D *, TString, TString );
   
 }
