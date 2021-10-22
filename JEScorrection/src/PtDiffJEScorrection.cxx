@@ -4,7 +4,7 @@
 
 #include "params.hh"
 #include "funcs.hh"
-
+#include <ROOT/TIOFeatures.hxx>
 using namespace std;
 using namespace Analysis;
 
@@ -38,12 +38,15 @@ int main () {
   
   TFile *inFile[nEAbins], *embFile[nEAbins];
   // TFile* outFile = new TFile("out/5gevBins.root", "RECREATE");
+
+  // double efficShift = 0.0;
   // TFile* outFile = new TFile("out/JEScorrection.root", "RECREATE");
   // TString dirName = "plots/JEScorrection";
 
   // double efficShift = 0.04;
   // TFile* outFile = new TFile("out/JEScorrection_teSys1.root", "RECREATE");
   // TString dirName = "plots/JEScorrection/teSys1";
+
   double efficShift = -0.04;
   TFile* outFile = new TFile("out/JEScorrection_teSys2.root", "RECREATE");
   TString dirName = "plots/JEScorrection/teSys2";
@@ -165,8 +168,8 @@ int main () {
 
   //  PERFORM 2D TRACKING EFFICINECY CORRECTION
   TH2D* hUE2D_detCorr[nEAbins][55];
-  TFile *efficFile = new TFile("src/trackeffic.root","READ");
-
+  TFile *efficFile = new TFile("src/trackeffic_oct20.root","READ");
+ 
   for (int a=0; a<nEAbins; ++a) {
     for (int jp=0; jp<55; ++jp) {
       int binno = jp+1;  int plo=jp+4;  int phi=jp+5;
@@ -224,7 +227,6 @@ int main () {
 
 
 
-
   // ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ 1GeV BINS ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~
   int binRange[nPtBins+1] = {7,12,17,27};  // SUM 2D HISTOGRAMS (AND ACCOUNT FOR MISSED JETS)
   for (int a=0; a<nEAbins; ++a) {
@@ -257,7 +259,7 @@ int main () {
 
 
 
-  
+
   
   //  PROJECT HISTOGRAMS BY UE ETA
   TH1D *hUE1D_part[nEAbins][nPtBins][nEtaBins];

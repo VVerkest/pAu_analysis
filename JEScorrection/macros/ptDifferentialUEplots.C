@@ -55,7 +55,7 @@ void ptDifferentialUEplots(){
   int jeval, ueeval, pval, eaval;
   TString name, saveName, title, avg, sigma, drawString;
 
-  string directory = "plots/halfGeVbins/";
+  string directory = "plots/JEScorrection/";
 
   auto hs_n = new THStack("hs_n","dNch/dEtadPhi");
   auto hs_pt = new THStack("hs_pt","mean pT");
@@ -76,7 +76,7 @@ void ptDifferentialUEplots(){
   TH1D *hPt[nPtBins][nEtaBins][nEAbins];
 
   // TFile *inFile = new TFile("out/pAuUE_pt.root","READ");
-  TFile *inFile = new TFile("out/pAuUE_pt_halfGeVbins.root","READ");
+  TFile *inFile = new TFile("out/JEScorrection.root","READ");
   
   TH1D *hNch[nEtaBins][nEAbins]; 
   TH1D *hMeanPt[nEtaBins][nEAbins];
@@ -100,10 +100,9 @@ void ptDifferentialUEplots(){
       hMeanPt[e][a]->SetMarkerColor(etaColor[e]);
       for (int p=0; p<nPtBins; ++p) {
 
-    	name = "hPartJetUE" + ptBinName[p] + etaBinName[e] + "_" + lohi[a];
-	cout<<name<<endl;
+    	// name = "hPartJetUE" + ptBinName[p] + etaBinName[e] + "_" + lohi[a];
+    	name = "hUE1D_part_" + lohi[a] + "EA" + ptBinName[p] + etaBinName[e];
     	hPt[p][e][a] = (TH1D*)inFile->Get(name);
-	cout<<hPt[p][e][a]<<endl;
 	
     	hPt[p][e][a]->SetMarkerColor(etaColor[e]);
     	hPt[p][e][a]->SetLineColor(etaColor[e]);
@@ -122,7 +121,6 @@ void ptDifferentialUEplots(){
 	  totalContent += hPt[p][e][a]->GetBinContent( binno )*width;
 	}
 	mean /= hPt[p][e][a]->Integral("width");
-	cout<<mean/totalContent<<endl;
 	hMeanPt[e][a]->SetBinContent(p+1,mean);
       }
       hNch[e][a]->GetYaxis()->SetRangeUser(0.5,1.8);

@@ -50,8 +50,8 @@ void DifferentialUEplots(){
   int jeval, ueeval, pval, eaval;
   TString name, saveName, title, avg, sigma, drawString;
 
-  // TFile* inFile = new TFile("out/JEScorrection.root", "READ");
-  // TString directory = "plots/JEScorrection/";
+  TFile* inFile = new TFile("out/JEScorrection.root", "READ");
+  TString directory = "plots/JEScorrection/";
   // TFile *inFile = new TFile("out/test1.root","READ");
   // string directory = "plots/new/";
   // TFile *inFile = new TFile("out/varBins.root","READ");
@@ -65,8 +65,8 @@ void DifferentialUEplots(){
   // string directory = "plots/noCorrection_halfGeVbins/";
   // TFile *inFile = new TFile("out/noCorrection_halfGeVbins_new.root","READ");
 
-  string directory = "plots/noCorrection_halfGeVbins_prelimTrackEffic/";
-  TFile *inFile = new TFile("out/noCorrection_halfGeVbins_prelimTrackEffic.root","READ");
+  // string directory = "plots/noCorrection_halfGeVbins_prelimTrackEffic/";
+  // TFile *inFile = new TFile("out/noCorrection_halfGeVbins_prelimTrackEffic.root","READ");
 
   auto hs_n = new THStack("hs_n","dNch/dEtadPhi");
   auto hs_pt = new THStack("hs_pt","mean pT");

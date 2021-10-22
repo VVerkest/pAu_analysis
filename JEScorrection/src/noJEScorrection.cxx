@@ -47,16 +47,14 @@ int main () {
 
   int jeval, ueeval, pval, eaval;
   TString name, saveName, title, avg, sigma, drawString;
-  // TString dirName = "plots/noCorrection";
-  TString dirName = "plots/noCorrection_halfGeVbins";
+  TString dirName = "plots/noCorrection";
 
   // ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ 
   //                                           READ IN FILES & HISTOGRAMS
   // ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ 
   
   TFile *inFile[nEAbins], *embFile[nEAbins];
-  // TFile* outFile = new TFile("out/noCorrection_1GeVbins.root", "RECREATE");
-  TFile* outFile = new TFile("out/noCorrection_halfGeVbins_new.root", "RECREATE");
+  TFile* outFile = new TFile("out/noCorrection.root", "RECREATE");
 
   TH2D *hUE2D[nEAbins][55];
   TH3D *hUE3D[nEAbins][nEtaBins];
@@ -74,7 +72,7 @@ int main () {
     //dirName += lohi[a];
 
     // name = "../out/UE/pAuHTjetUE_" + lohi[a] + "EA_uncorrected.root";
-    name = "../out/UE/pAuHTjetUE_halfGeVbins_" + lohi[a] + "EA_uncorrected.root";
+    name = "../out/UE/pAuHTjetUE_" + lohi[a] + "EA_leadPtUncorrected.root"; // pAuHTjetUE_hiEA_leadPtUncorrected.root
     // name = "../out/UE/pAuHTjetUE_halfGeVbins_" + lohi[a] + "EA_leadPtUncorrected.root";
     
     inFile[a] = new TFile(name, "READ");
@@ -185,7 +183,7 @@ int main () {
   // ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ 1GeV BINS ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~
   //  PERFORM 2D TRACKING EFFICINECY CORRECTION
   TH2D* hUE2D_detCorr[nEAbins][55];
-  TFile *efficFile = new TFile("src/trackeffic.root","READ");
+  TFile *efficFile = new TFile("src/trackeffic_oct20.root","READ");
 
   for (int a=0; a<nEAbins; ++a) {
     for (int jp=0; jp<55; ++jp) {
@@ -194,8 +192,10 @@ int main () {
       hUE2D[a][jp] = (TH2D*)hUE3Dsum[a]->Project3D("ZY");  // UE PT IS ON X-AXIS
       name = "hUE2Dsum_" + lohi[a] + "_"; name+=plo; name+="_"; name+=phi; name+="GeV_det";
       hUE2D[a][jp]->SetName(name);
-      hUE2D[a][jp]->Scale(1./hUE2D[a][jp]->Integral());
-      hUE2D[a][jp]->Scale(hUE2D[a][jp]->GetEntries()/hLeadSum[a]->Integral(binno,binno));// NORMALIZE TO NJETS
+      if (hLeadSum[a]->GetBinContent(binno)!=0) {
+	hUE2D[a][jp]->Scale(1./hUE2D[a][jp]->Integral());
+	hUE2D[a][jp]->Scale(hUE2D[a][jp]->GetEntries()/hLeadSum[a]->Integral(binno,binno));// NORMALIZE TO NJETS
+      }
       // cout<<hUE2D[a][jp]->Integral()<<"\t"<<hUE2D[a][jp]->GetEntries()<<endl;
       hUE3Dsum[a]->GetXaxis()->SetRange(1,-1);
 
@@ -203,9 +203,8 @@ int main () {
       hUE2D_detCorr[a][jp] = new TH2D(name,";chg. UE part. p_{T} (GeV);chg. UE part. #eta",ybins,ybinEdge,zbins,zbinEdge);
       name = dirName + "/";
     }
-    TrackingEfficiencyByPtAndEta55( hUE2D[a], hUE2D_detCorr[a], efficFile, lohi[a], name );
+    TrackingEfficiencyByPtAndEta55( hUE2D[a], hUE2D_detCorr[a], efficFile, lohi[a], name, 0.0 );
   }
-
 
 
 
@@ -232,6 +231,7 @@ int main () {
       // cout<< binRange[pval] <<"\t"<< binRange[pval+1]-1 <<endl;
       // cout<<plo<<endl;//"-"<<phi<<":  "<<weight<<endl;   cout<<weight<<endl;
       hUE2D_partCorr[a][pval]->Add( hUE2D_detCorr[a][pp], weight );
+      // if (!isnan(weight) && weight>=0. ) { hUE2D_partCorr[a][pval]->Add( hUE2D_detCorr[a][pp], weight ); }
       // hUE2D_partCorr[a][pval]->Add( hUE2D[a][pp], weight );  // WITHOUT TRACKING EFFICIENCY CORRECTION
     }
   }

@@ -481,8 +481,7 @@ namespace Analysis {
     
       name = "eff_s_bin_" + bbcBins + "_bbc__"; name += iy; name += "_"; name += iy; name += "_eta";
       TH1D *hEffic = (TH1D*)effic_File->Get(name);
-      std::cout<<name<<std::endl;
-     
+      
       hEffic->Fit( "eff", "EMR" );
       TF1* efficFit = (TF1*)hEffic->GetFunction("eff");
 
@@ -550,53 +549,56 @@ namespace Analysis {
     if ( ea_string=="lo" ) { bbcBins = "1_3"; }
     else if ( ea_string=="hi" ) { bbcBins = "8_10"; }
     else { std::cerr<< "invalid EA string provided!" <<std::endl; }
-  
-    for (int iy=1; iy<zbins+1; ++iy){ // loop over UE eta bins
     
+    for (int iy=1; iy<zbins+1; ++iy){ // loop over UE eta bins
+
       name = "eff_s_bin_" + bbcBins + "_bbc__"; name += iy; name += "_"; name += iy; name += "_eta";
       TH1D *hEffic = (TH1D*)effic_File->Get(name);
-     
-      hEffic->Fit( "eff", "EMR" );
+
+      // hEffic->Fit( "eff", "EMR" );
+      hEffic->Fit( "eff", "","",0.2,15.0 );
+
       TF1* efficFit = (TF1*)hEffic->GetFunction("eff");
 
       hEffic->Draw();
-    
+
       saveName = dir_name + name + ".pdf";
       can->SaveAs(saveName, "PDF");
     
       for (int ix=1; ix<ybins+1; ++ix){ // loop over UE pt bins
 
-	for (int i=0; i<55; ++i) {
-	// // for (int i=0; i<3; ++i) {
-	  ptVal = h_ChgUE2D[i]->GetXaxis()->GetBinCenter( ix );
-	  effic = efficFit->Eval( ptVal );
-	  effic += EfficShift;
-	  // std::cout<< efficFit->Eval( ptVal ) <<" + "<< EfficShift <<" = "<< effic << std::endl;
+      	for (int i=0; i<55; ++i) {
+      	// // for (int i=0; i<3; ++i) {
+      	  ptVal = h_ChgUE2D[i]->GetXaxis()->GetBinCenter( ix );
+      	  effic = efficFit->Eval( ptVal );
+      	  effic += EfficShift;
+      	  // std::cout<< efficFit->Eval( ptVal ) <<" + "<< EfficShift <<" = "<< effic << std::endl;
 
-	  if ( effic > 1.0 ) { effic = 1.0; } 
-	  if ( effic < 0.0 ) { effic = 0.0; } 
+      	  if ( effic > 1.0 ) { effic = 1.0; } 
+      	  if ( effic < 0.0 ) { effic = 0.0; } 
 	  
-	  // effic = hEffic->GetBinContent( ix );
-	  // if (ptVal>=3.) { effic = hEffic->GetBinContent( hEffic->FindBin(3.) ); }
+      	  // effic = hEffic->GetBinContent( ix );
+      	  // if (ptVal>=3.) { effic = hEffic->GetBinContent( hEffic->FindBin(3.) ); }
 
-	  oldVal = h_ChgUE2D[i]->GetBinContent(ix,iy);
-	  if ( oldVal==0.0 ) { continue; }
-	  oldErr = h_ChgUE2D[i]->GetBinError(ix,iy);
+      	  oldVal = h_ChgUE2D[i]->GetBinContent(ix,iy);
+      	  if ( oldVal==0.0 ) { continue; }
+      	  oldErr = h_ChgUE2D[i]->GetBinError(ix,iy);
 	  
-	  newVal = oldVal/effic;
-	  // efficErr = hEffic->GetBinError( hEffic->FindBin( ptVal) );
-	  // relErr = sqrt( oldErr*oldErr + efficErr*efficErr );
-	  // newErr = newVal*relErr;
+      	  newVal = oldVal/effic;
+      	  // efficErr = hEffic->GetBinError( hEffic->FindBin( ptVal) );
+      	  // relErr = sqrt( oldErr*oldErr + efficErr*efficErr );
+      	  // newErr = newVal*relErr;
 
-	  h_ChgUE2D_corr[i]->SetBinContent(ix,iy,newVal);
-	  h_ChgUE2D_corr[i]->SetBinError(ix,iy,oldErr);
-	  // h_ChgUE2D_corr[i]->SetBinContent(ix,iy,oldVal);  	  h_ChgUE2D_corr[i]->SetBinError(ix,iy,oldErr);  // NO TRACKING EFFICIENCY!
-	}
+      	  h_ChgUE2D_corr[i]->SetBinContent(ix,iy,newVal);
+      	  h_ChgUE2D_corr[i]->SetBinError(ix,iy,oldErr);
+      	  // h_ChgUE2D_corr[i]->SetBinContent(ix,iy,oldVal);  	  h_ChgUE2D_corr[i]->SetBinError(ix,iy,oldErr);  // NO TRACKING EFFICIENCY!
+      	}
       }
     }
 
     for (int i=0; i<55; ++i) {
     // for (int i=0; i<3; ++i) {
+      // if (h_ChgUE2D[i]->GetEntries()==0){ continue; }
       h_ChgUE2D_corr[i]->SetEntries(h_ChgUE2D[i]->GetEntries());
       if (h_ChgUE2D_corr[i]->GetEntries()==0){ continue; }
       h_ChgUE2D_corr[i]->Draw("COLZ");

@@ -1,6 +1,6 @@
 // Veronica Verkest
 // February 24, 2020
-// plotting macro: PtDifferentialUEplots.C
+// plotting macro: EtaDifferentialUEplots.C
 
 #include "params.hh"
 #include "funcs.hh"
@@ -71,7 +71,7 @@ int main () {
       hLead[a][e]->SetName(name);
     }
 
-    name = "../embedding/out/sim/pAu2015embedding_" + lohi[a] + "EA_new.root";
+    name = "../embedding/out/sim/pAu2015embedding_" + lohi[a] + "EA.root";
     embFile[a] = new TFile(name, "READ");
 
     hMisses[a] = (TH1D*)embFile[a]->Get("hMisses");
@@ -153,7 +153,7 @@ int main () {
 
   //  PERFORM 2D TRACKING EFFICINECY CORRECTION   hUE2D[nEAbins][nEtaBins][55]
   TH2D* hUE2D_detCorr[nEAbins][nEtaBins][55];
-  TFile *efficFile = new TFile("src/trackeffic.root","READ");
+  TFile *efficFile = new TFile("src/trackeffic_oct20.root","READ");
 
   for (int a=0; a<nEAbins; ++a) {
     for (int e=0; e<nEtaBins; ++e) {
