@@ -55,7 +55,8 @@ void ptDifferentialUEplots(){
   int jeval, ueeval, pval, eaval;
   TString name, saveName, title, avg, sigma, drawString;
 
-  string directory = "plots/JEScorrection/";
+  // string directory = "plots/JEScorrection/";
+  string directory = "plots/noCorrection/";
 
   auto hs_n = new THStack("hs_n","dNch/dEtadPhi");
   auto hs_pt = new THStack("hs_pt","mean pT");
@@ -76,7 +77,8 @@ void ptDifferentialUEplots(){
   TH1D *hPt[nPtBins][nEtaBins][nEAbins];
 
   // TFile *inFile = new TFile("out/pAuUE_pt.root","READ");
-  TFile *inFile = new TFile("out/JEScorrection.root","READ");
+  // TFile *inFile = new TFile("out/JEScorrection.root","READ");
+  TFile *inFile = new TFile("out/noCorrection.root","READ");
   
   TH1D *hNch[nEtaBins][nEAbins]; 
   TH1D *hMeanPt[nEtaBins][nEAbins];
