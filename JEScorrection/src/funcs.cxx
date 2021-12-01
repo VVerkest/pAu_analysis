@@ -530,7 +530,7 @@ namespace Analysis {
 
 
 
-  
+  //    TrackingEfficiencyByPtAndEta55( hUE2D[a], hUE2D_detCorr[a], efficFile, lohi[a], name, efficShift );
   void TrackingEfficiencyByPtAndEta55( TH2D* h_ChgUE2D[55], TH2D* h_ChgUE2D_corr[55], TFile *effic_File, TString ea_string, TString dir_name, double EfficShift = 0. ){
     //  X: UE pT,   Y: UE eta
     TH1D *hEffic;
@@ -579,6 +579,7 @@ namespace Analysis {
 	  
       	  // effic = hEffic->GetBinContent( ix );
       	  // if (ptVal>=3.) { effic = hEffic->GetBinContent( hEffic->FindBin(3.) ); }
+      	  // if (ptVal>=3.) { effic = efficFit->Eval( 3. ); }
 
       	  oldVal = h_ChgUE2D[i]->GetBinContent(ix,iy);
       	  if ( oldVal==0.0 ) { continue; }
@@ -605,8 +606,10 @@ namespace Analysis {
       name = dir_name + h_ChgUE2D_corr[i]->GetName() + ".pdf";
       can->SaveAs(name, "PDF");
 
-      // std::cout<<h_ChgUE2D_corr[i]->GetName()<<std::endl;
-      // std::cout<<h_ChgUE2D_corr[i]->Integral()/AREA<<std::endl;
+      std::cout<<h_ChgUE2D_corr[i]->GetName()<<std::endl;
+      std::cout<<h_ChgUE2D_corr[i]->Integral()/AREA<<std::endl<<std::endl;
+      std::cout<<h_ChgUE2D[i]->GetName()<<std::endl;
+      std::cout<<h_ChgUE2D[i]->Integral()/AREA<<std::endl;
 
     }
     can->Destructor();
