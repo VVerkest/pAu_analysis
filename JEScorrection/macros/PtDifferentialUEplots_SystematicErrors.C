@@ -182,18 +182,20 @@ void PtDifferentialUEplots_SystematicErrors(){
 	
 	double integral_sys1 = hPt_sys1[p][e][a]->Integral(1,hPt_sys1[p][e][a]->GetNbinsX())/area[e];
 	double integral_sys2 = hPt_sys2[p][e][a]->Integral(1,hPt_sys2[p][e][a]->GetNbinsX())/area[e];
+	cout<< hNch[e][a]->GetBinContent(p+1) << "  \t" << integral_sys1 << "  \t" << integral_sys2 << endl;
+	cout<< fabs( hNch[e][a]->GetBinContent(p+1) - integral_sys1 ) << "  \t" << fabs( hNch[e][a]->GetBinContent(p+1) - integral_sys2 ) << endl;
 
 	double sys1 = fabs( 1 - ( integral_sys1 / hNch[e][a]->GetBinContent(p+1) ) );
 	double sys2 = fabs( 1 - ( integral_sys2 / hNch[e][a]->GetBinContent(p+1) ) );
 	hNch_sys[e][a]->SetBinContent( p+1, hNch[e][a]->GetBinContent(p+1) );
-	hNch_sys[e][a]->SetBinError( p+1, max( sys1, sys2 ) );
+	hNch_sys[e][a]->SetBinError( p+1, hNch[e][a]->GetBinContent(p+1)*max( sys1, sys2 ) );
 
 	double meanPt_sys1 = hPt_sys1[p][e][a]->GetMean(1);
 	double meanPt_sys2 = hPt_sys2[p][e][a]->GetMean(1);
 	sys1 = fabs( 1 - ( meanPt_sys1 / hMeanPt[e][a]->GetBinContent(p+1) ) );
 	sys2 = fabs( 1 - ( meanPt_sys2 / hMeanPt[e][a]->GetBinContent(p+1) ) );
 	hMeanPt_sys[e][a]->SetBinContent( p+1, hMeanPt[e][a]->GetBinContent(p+1) );
-	hMeanPt_sys[e][a]->SetBinError( p+1, max( sys1, sys2 ) );
+	hMeanPt_sys[e][a]->SetBinError( p+1, hMeanPt[e][a]->GetBinContent(p+1)*max( sys1, sys2 ) );
 
       }
 
