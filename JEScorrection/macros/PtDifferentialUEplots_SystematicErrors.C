@@ -50,15 +50,15 @@ void PtDifferentialUEplots_SystematicErrors(){
   int jeval, ueeval, pval, eaval;
   TString name, saveName, title, avg, sigma, drawString;
 
-  // TFile* inFile = new TFile("out/JEScorrection.root", "READ");
-  // TFile* sysFile1 = new TFile("out/JEScorrection_teSys1.root", "READ");
-  // TFile* sysFile2 = new TFile("out/JEScorrection_teSys2.root", "READ");
-  // TString directory = "plots/JEScorrection/systematicErrors/";
+  TFile* inFile = new TFile("out/JEScorrection.root", "READ");
+  TFile* sysFile1 = new TFile("out/JEScorrection_teSys1.root", "READ");
+  TFile* sysFile2 = new TFile("out/JEScorrection_teSys2.root", "READ");
+  TString directory = "plots/JEScorrection/systematicErrors/";
 
-  TFile* inFile = new TFile("out/noCorrection.root", "READ");
-  TFile* sysFile1 = new TFile("out/noCorrection_teSys1.root", "READ");
-  TFile* sysFile2 = new TFile("out/noCorrection_teSys2.root", "READ");
-  TString directory = "plots/noCorrection/systematicErrors/";
+  // TFile* inFile = new TFile("out/noCorrection.root", "READ");
+  // TFile* sysFile1 = new TFile("out/noCorrection_teSys1.root", "READ");
+  // TFile* sysFile2 = new TFile("out/noCorrection_teSys2.root", "READ");
+  // TString directory = "plots/noCorrection/systematicErrors/";
   
   auto hs_n = new THStack("hs_n","dNch/dEtadPhi");
   auto hs_pt = new THStack("hs_pt","mean pT");

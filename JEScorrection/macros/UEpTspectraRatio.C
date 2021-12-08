@@ -60,9 +60,9 @@ void UEpTspectraRatio(){
 
   TString directory = "plots/compare/";
 
-  // TFile* file1 = new TFile("out/JEScorrection.root", "READ");
-  TFile* file1 = new TFile("out/noCorrection_halfGeVbins_new.root", "READ");
-  TFile* file2 = new TFile("out/noCorrection_halfGeVbins_prelimTrackEffic.root", "READ");
+  TFile* file1 = new TFile("out/JEScorrection.root", "READ");
+  TFile* file2 = new TFile("out/noCorrection.root", "READ");
+  // TFile* file2 = new TFile("out/noCorrection_halfGeVbins_prelimTrackEffic.root", "READ");
 
   TH1D *hPt[nPtBins][nEtaBins][nEAbins];
   TH1D *hPt2[nPtBins][nEtaBins][nEAbins];
@@ -93,8 +93,8 @@ void UEpTspectraRatio(){
     }
   }
 
-  // double canFrac[4] = { 0.0, 0.33333, 0.66667, 1.0 };
-  double canFrac[4] = { 1.0, 0.66667, 0.33333, 0.0 };
+  double canFrac[4] = { 0.0, 0.33333, 0.66667, 1.0 };
+  // double canFrac[4] = { 1.0, 0.66667, 0.33333, 0.0 };
 
   TCanvas * can = new TCanvas( "can" , "" ,1400 ,1000 );
   TPad *pad[nPtBins][nEtaBins];
@@ -108,7 +108,7 @@ void UEpTspectraRatio(){
   }
 
   // TH2D *hScale = new TH2D("hScale","", 15,0.2,15., 5, 0.0, 2. );
-  TH2D *hScale = new TH2D("hScale","", 15,0.2,15., 5, 0.8, 1.2 );
+  TH2D *hScale = new TH2D("hScale","", 15,0.2,15., 5, 0.5, 1.5 );
   hScale->SetStats(0);
   
   for (int p=0; p<nPtBins; ++p) {  // pT along horizontal

@@ -52,10 +52,10 @@ void PtPlotRatio(){
 
   TString directory = "plots/compare/";
 
-  // TFile* file1 = new TFile("out/JEScorrection.root", "READ");
-  // TFile* file2 = new TFile("out/noCorrection_1GeVbins.root", "READ");
-  TFile* file1 = new TFile("out/noCorrection_halfGeVbins_new.root", "READ");
-  TFile* file2 = new TFile("out/noCorrection_halfGeVbins_prelimTrackEffic.root", "READ");
+  TFile* file1 = new TFile("out/JEScorrection.root", "READ");
+  TFile* file2 = new TFile("out/noCorrection.root", "READ");
+  // TFile* file1 = new TFile("out/noCorrection_halfGeVbins_new.root", "READ");
+  // TFile* file2 = new TFile("out/noCorrection_halfGeVbins_prelimTrackEffic.root", "READ");
   
   auto hs_n = new THStack("hs_n","dNch/dEtadPhi");
   auto hs_pt = new THStack("hs_pt","mean pT");
