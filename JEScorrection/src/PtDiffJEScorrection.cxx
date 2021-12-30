@@ -8,6 +8,24 @@
 using namespace std;
 using namespace Analysis;
 
+void ReweightPrior( TH1D *Part, TString FileName, TString suffix ){
+
+  TFile *priorFile = new TFile(FileName,"READ");
+  TString name = "ratio" + suffix;
+  TH1D *priorWeight = (TH1D*)priorFile->Get(name);
+  
+  TH1D *temp = (TH1D*)Part->Clone();
+  Part->Reset();
+
+  for (int i=1; i<Part->GetNbinsX(); ++i) {
+    double wt = priorWeight->GetBinContent( priorWeight->FindBin( Part->GetBinCenter(i) ) );
+    cout<<Part->GetBinCenter(i)<<" \t"<<priorWeight->GetBinLowEdge( priorWeight->FindBin( Part->GetBinCenter(i) ) )<<" \t"<<priorWeight->GetBinLowEdge( 1+priorWeight->FindBin( Part->GetBinCenter(i) ) )<<" \t"<<wt<<endl;
+    Part->SetBinContent( i, temp->GetBinContent(i)*wt );
+  }
+  
+}
+
+
 int main () {
 
   TH1::SetDefaultSumw2();  TH2::SetDefaultSumw2();  TH3::SetDefaultSumw2();
@@ -15,23 +33,30 @@ int main () {
   TCanvas *c0 = new TCanvas("c0");
   c0->SetLogy();
 
+  const int nFiles = 3;
   int jeval, ueeval, pval, eaval;
   TString name, saveName, title, avg, sigma, drawString;
   TString detSuffix[3] = { "_det_nom", "_det_TS", "_det_TU" };
+  bool PRIOR;
+  TString priorFileName = "SYSTEMATICS/pt_ratios_from_Isaac.root";
 
-  const int nFiles = 3;
-  double effic_Shift[nFiles] = { 0., 0.05, -0.05};  
-  TString dir_Name[nFiles] = { "plots/JEScorrection", "plots/JEScorrection/teSys1", "plots/JEScorrection/teSys2" };
-  TString outFileName[nFiles] = { "out/JEScorrection.root", "out/JEScorrection_teSys1.root", "out/JEScorrection_teSys2.root" };
+  // double effic_Shift[nFiles] = { 0., 0.05, -0.05};    //  TRACKING EFFICIENCY SYSTEMATIC UNCERTAINTY
+  // TString dir_Name[nFiles] = { "plots/JEScorrection", "plots/JEScorrection/teSys1", "plots/JEScorrection/teSys2" };
+  // TString outFileName[nFiles] = { "out/JEScorrection.root", "out/JEScorrection_teSys1.root", "out/JEScorrection_teSys2.root" };
+  // PRIOR = false;
 
+  PRIOR = true;
+  double effic_Shift[nFiles] = { 0., 0., 0.};  //  JES CORRECTION SYSTEMATIC UNCERTAINTIES
+  TString dir_Name[nFiles], outFileName[nFiles], priorHistName[nFiles];
+  for ( int f=0; f<nFiles; ++f ) {
+    dir_Name[f] =  "SYSTEMATICS/plots/JEScorrection" + detSuffix[f];
+    outFileName[f] = "SYSTEMATICS/out/JEScorrection" + detSuffix[f] + ".root";
+    priorHistName[f] = "ratio" + detSuffix[f];
+  }
+  
   // ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ 
   //                                           READ IN FILES & HISTOGRAMS
   // ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ 
-  
-  // double efficShift = 0.;  
-  // TString dirName = "SYSTEMATICS/plots/JEScorrection" + detSuffix[0];
-  // saveName = "SYSTEMATICS/out/JEScorrection" + detSuffix[0] + ".root";
-  // TFile* outFile = new TFile(saveName, "RECREATE");
 
   for ( int f=0; f<nFiles; ++f ) {
     double efficShift = effic_Shift[f];  
@@ -134,6 +159,13 @@ int main () {
     }
 
 
+    //  APPLY PRIOR WEIGHTING
+    if ( PRIOR==true ) {
+      for (int a=0; a<nEAbins; ++a) {
+	ReweightPrior( hPart[a], priorFileName, detSuffix[f] );
+      }
+    }
+    
 
     // ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ 1GeV BINS ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~
     //  PERFORM 2D TRACKING EFFICINECY CORRECTION
@@ -285,6 +317,7 @@ int main () {
       embFile[a]->Close();
       inFile[a]->Close();
     }
+    outFile->Write();
     outFile->Close();
 
   } //end file loop
