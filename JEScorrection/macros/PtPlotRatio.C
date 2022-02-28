@@ -50,10 +50,14 @@ void PtPlotRatio(){
   int jeval, ueeval, pval, eaval;
   TString name, saveName, title, avg, sigma, drawString;
 
-  TString directory = "plots/compare/";
+  // TString directory = "plots/compare/";
+  // TString directory = "SYSTEMATICS/plots/";
+  TString directory = "SYSTEMATICS/plots/JEScorrection_pos_";
 
   TFile* file1 = new TFile("out/JEScorrection.root", "READ");
-  TFile* file2 = new TFile("out/noCorrection.root", "READ");
+  TFile *file2 = new TFile("SYSTEMATICS/out/JEScorrection_pos.root","READ");
+  // TFile *file2 = new TFile("SYSTEMATICS/out/JEScorrection_det_nom.root","READ");
+  // TFile* file2 = new TFile("out/noCorrection.root", "READ");
   // TFile* file1 = new TFile("out/noCorrection_halfGeVbins_new.root", "READ");
   // TFile* file2 = new TFile("out/noCorrection_halfGeVbins_prelimTrackEffic.root", "READ");
   
@@ -188,7 +192,7 @@ void PtPlotRatio(){
   pad2->SetTopMargin(0);
   pad2->Draw();
 
-  TH2D *hRatioScale = new TH2D("hRatioScale","", 5,10,30, 5,0.95,1.05 );
+  TH2D *hRatioScale = new TH2D("hRatioScale","", 5,10,30, 5,0.995,1.005 );
   hRatioScale->SetStats(0);
     
   pad1->cd();
