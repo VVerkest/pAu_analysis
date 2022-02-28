@@ -26,6 +26,24 @@ void ReweightPrior( TH1D *Part, TString FileName, TString suffix ){
 }
 
 
+void FunkyReweightPrior( TH1D *Part, TString FileName, TString suffix ){
+
+  TFile *priorFile = new TFile(FileName,"READ");
+  TString name = suffix;
+  TH1D *priorWeight = (TH1D*)priorFile->Get(name);
+  
+  TH1D *temp = (TH1D*)Part->Clone();
+  Part->Reset();
+
+  for (int i=1; i<Part->GetNbinsX(); ++i) {
+    double wt = priorWeight->GetBinContent( priorWeight->FindBin( Part->GetBinCenter(i) ) );
+    cout<<Part->GetBinCenter(i)<<" \t"<<priorWeight->GetBinLowEdge( priorWeight->FindBin( Part->GetBinCenter(i) ) )<<" \t"<<priorWeight->GetBinLowEdge( 1+priorWeight->FindBin( Part->GetBinCenter(i) ) )<<" \t"<<wt<<endl;
+    Part->SetBinContent( i, temp->GetBinContent(i)*wt );
+  }
+  
+}
+
+
 int main () {
 
   TH1::SetDefaultSumw2();  TH2::SetDefaultSumw2();  TH3::SetDefaultSumw2();
@@ -36,24 +54,36 @@ int main () {
   const int nFiles = 3;
   int jeval, ueeval, pval, eaval;
   TString name, saveName, title, avg, sigma, drawString;
-  TString detSuffix[3] = { "_det_nom", "_det_TS", "_det_TU" };
+  // TString detSuffix[3] = { "_det_nom", "_det_TS", "_det_TU" };
+  TString detSuffix[3] = { "one", "pos", "neg" };
   bool PRIOR;
-  TString priorFileName = "SYSTEMATICS/pt_ratios_from_Isaac.root";
 
-  // double effic_Shift[nFiles] = { 0., 0.05, -0.05};    //  TRACKING EFFICIENCY SYSTEMATIC UNCERTAINTY
-  // TString dir_Name[nFiles] = { "plots/JEScorrection", "plots/JEScorrection/teSys1", "plots/JEScorrection/teSys2" };
-  // TString outFileName[nFiles] = { "out/JEScorrection.root", "out/JEScorrection_teSys1.root", "out/JEScorrection_teSys2.root" };
-  // PRIOR = false;
+  double effic_Shift[nFiles] = { 0., 0.05, -0.05};    //  TRACKING EFFICIENCY SYSTEMATIC UNCERTAINTY
+  TString dir_Name[nFiles] = { "plots/JEScorrection", "plots/JEScorrection/teSys1", "plots/JEScorrection/teSys2" };
+  TString outFileName[nFiles] = { "out/JEScorrection.root", "out/JEScorrection_teSys1.root", "out/JEScorrection_teSys2.root" };
+  PRIOR = false;
 
-  PRIOR = true;
-  double effic_Shift[nFiles] = { 0., 0., 0.};  //  JES CORRECTION SYSTEMATIC UNCERTAINTIES
-  TString dir_Name[nFiles], outFileName[nFiles], priorHistName[nFiles];
-  for ( int f=0; f<nFiles; ++f ) {
-    dir_Name[f] =  "SYSTEMATICS/plots/JEScorrection" + detSuffix[f];
-    outFileName[f] = "SYSTEMATICS/out/JEScorrection" + detSuffix[f] + ".root";
-    priorHistName[f] = "ratio" + detSuffix[f];
-  }
+  TString priorFileName = "SYSTEMATICS/f.root";
+
+
+  // PRIOR = true;
+
+  // TString priorFileName = "SYSTEMATICS/pt_ratios_from_Isaac.root";
+  // double effic_Shift[nFiles] = { 0., 0., 0.};  //  JES CORRECTION SYSTEMATIC UNCERTAINTIES
+  // TString dir_Name[nFiles], outFileName[nFiles], priorHistName[nFiles];
+  // for ( int f=0; f<nFiles; ++f ) {
+  //   dir_Name[f] =  "SYSTEMATICS/plots/JEScorrection" + detSuffix[f];
+  //   outFileName[f] = "SYSTEMATICS/out/JEScorrection" + detSuffix[f] + ".root";
+  //   priorHistName[f] = "ratio" + detSuffix[f];
+  // }
   
+  // double effic_Shift[nFiles] = { 0., 0., 0.};  //  JES CORRECTION SYSTEMATIC UNCERTAINTIES
+  // TString dir_Name[nFiles], outFileName[nFiles], priorHistName[nFiles];
+  // for ( int f=0; f<nFiles; ++f ) {
+  //   dir_Name[f] =  "SYSTEMATICS/plots/JEScorrection_" + detSuffix[f];
+  //   outFileName[f] = "SYSTEMATICS/out/JEScorrection_" + detSuffix[f] + ".root";
+  //   priorHistName[f] = detSuffix[f];
+  // }  
   // ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ 
   //                                           READ IN FILES & HISTOGRAMS
   // ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ 
@@ -162,7 +192,8 @@ int main () {
     //  APPLY PRIOR WEIGHTING
     if ( PRIOR==true ) {
       for (int a=0; a<nEAbins; ++a) {
-	ReweightPrior( hPart[a], priorFileName, detSuffix[f] );
+	// ReweightPrior( hPart[a], priorFileName, detSuffix[f] );
+	FunkyReweightPrior( hPart[a], priorFileName, detSuffix[f] );
       }
     }
     
