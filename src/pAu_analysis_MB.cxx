@@ -147,7 +147,7 @@ int main ( int argc, const char** argv ) {
     // evCuts->SetMaxEventEtCut( eventEtCut );
     // evCuts->SetVertexZDiffCut( vertexZDiffCut );
     // TStarJetPicoTrackCuts* trackCuts = reader.GetTrackCuts();
-    // trackCuts->SetDCACut( DCACut );
+    trackCuts->SetDCACut( DCACut );
     // trackCuts->SetMinNFitPointsCut( minFitPoints );
     // trackCuts->SetFitOverMaxPointsCut( minFitFrac );
     // trackCuts->SetMaxPtCut ( trackPtCut );
@@ -158,7 +158,7 @@ int main ( int argc, const char** argv ) {
     for ( int i=0; i<npt; ++i ) {                                         //  FILL EVENT DATA
 
       DCA = event->GetPrimaryTrack(i)->GetDCA();
-      if ( DCA > dcaCut ) { nPrimary -= 1;   continue; }                   // track DCA cut
+      if ( DCA > DCACut ) { nPrimary -= 1;   continue; }                   // track DCA cut
       trEta = (double) event->GetPrimaryTrack(i)->GetEta();
       if ( abs(trEta) > etaCut ) { nPrimary -= 1;   continue; }            // track eta cut
 
