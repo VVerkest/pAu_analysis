@@ -58,11 +58,15 @@ void UEpTspectraRatio(){
   int jeval, ueeval, pval, eaval;
   TString name, saveName, title, avg, sigma, drawString;
 
-  TString directory = "plots/compare/";
+  // TString directory = "plots/compare/";
+  // TString directory = "SYSTEMATICS/plots/";
+  TString directory = "SYSTEMATICS/plots/JEScorrection_neg_";
 
-  // TFile* file1 = new TFile("out/JEScorrection.root", "READ");
-  TFile* file1 = new TFile("out/noCorrection_halfGeVbins_new.root", "READ");
-  TFile* file2 = new TFile("out/noCorrection_halfGeVbins_prelimTrackEffic.root", "READ");
+  TFile* file1 = new TFile("out/JEScorrection.root", "READ");
+  // TFile *file2 = new TFile("SYSTEMATICS/out/JEScorrection_det_TU.root","READ");
+  TFile *file2 = new TFile("SYSTEMATICS/out/JEScorrection_neg.root","READ");
+  // TFile* file2 = new TFile("out/noCorrection.root", "READ");
+  // TFile* file2 = new TFile("out/noCorrection_halfGeVbins_prelimTrackEffic.root", "READ");
 
   TH1D *hPt[nPtBins][nEtaBins][nEAbins];
   TH1D *hPt2[nPtBins][nEtaBins][nEAbins];
@@ -93,8 +97,8 @@ void UEpTspectraRatio(){
     }
   }
 
-  // double canFrac[4] = { 0.0, 0.33333, 0.66667, 1.0 };
-  double canFrac[4] = { 1.0, 0.66667, 0.33333, 0.0 };
+  double canFrac[4] = { 0.0, 0.33333, 0.66667, 1.0 };
+  // double canFrac[4] = { 1.0, 0.66667, 0.33333, 0.0 };
 
   TCanvas * can = new TCanvas( "can" , "" ,1400 ,1000 );
   TPad *pad[nPtBins][nEtaBins];
@@ -108,7 +112,8 @@ void UEpTspectraRatio(){
   }
 
   // TH2D *hScale = new TH2D("hScale","", 15,0.2,15., 5, 0.0, 2. );
-  TH2D *hScale = new TH2D("hScale","", 15,0.2,15., 5, 0.8, 1.2 );
+  // TH2D *hScale = new TH2D("hScale","", 15,0.2,15., 5, 0.5, 1.5 );
+  TH2D *hScale = new TH2D("hScale","", 15,0.2,15., 5, 0.99, 1.01 );
   hScale->SetStats(0);
   
   for (int p=0; p<nPtBins; ++p) {  // pT along horizontal
@@ -121,7 +126,8 @@ void UEpTspectraRatio(){
     }
   }
 
-  can->SaveAs("plots/compare/UEpTspectraRatios.pdf","PDF");
+  name = directory + "UEpTspectraRatios.pdf";
+  can->SaveAs(name,"PDF");
 
   
 }

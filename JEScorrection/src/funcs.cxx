@@ -606,10 +606,12 @@ namespace Analysis {
       name = dir_name + h_ChgUE2D_corr[i]->GetName() + ".pdf";
       can->SaveAs(name, "PDF");
 
-      std::cout<<h_ChgUE2D_corr[i]->GetName()<<std::endl;
-      std::cout<<h_ChgUE2D_corr[i]->Integral()/AREA<<std::endl<<std::endl;
-      std::cout<<h_ChgUE2D[i]->GetName()<<std::endl;
-      std::cout<<h_ChgUE2D[i]->Integral()/AREA<<std::endl;
+      // std::cout<<h_ChgUE2D_corr[i]->GetName()<<std::endl;
+      // // std::cout<<h_ChgUE2D_corr[i]->Integral()/AREA<<std::endl;
+      // std::cout<<h_ChgUE2D_corr[i]->GetMean(1)<<std::endl;
+      // std::cout<<h_ChgUE2D[i]->GetName()<<std::endl;
+      // // std::cout<<h_ChgUE2D[i]->Integral()/AREA<<std::endl<<std::endl;
+      // std::cout<<h_ChgUE2D[i]->GetMean()<<std::endl<<std::endl;
 
     }
     can->Destructor();
