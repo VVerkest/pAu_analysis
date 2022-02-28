@@ -147,7 +147,7 @@ int main ( int argc, const char** argv ) {
     // evCuts->SetMaxEventEtCut( eventEtCut );
     // evCuts->SetVertexZDiffCut( vertexZDiffCut );
     // TStarJetPicoTrackCuts* trackCuts = reader.GetTrackCuts();
-    trackCuts->SetDCACut( DCACut );
+    // trackCuts->SetDCACut( DCACut );
     // trackCuts->SetMinNFitPointsCut( minFitPoints );
     // trackCuts->SetFitOverMaxPointsCut( minFitFrac );
     // trackCuts->SetMaxPtCut ( trackPtCut );
