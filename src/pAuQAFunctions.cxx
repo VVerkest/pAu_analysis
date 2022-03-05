@@ -161,7 +161,11 @@ namespace pAuQA {
   }
 
 
-  void InitReader( TStarJetPicoReader & reader, TChain* chain, std::string badTowerOption, int nEvents ) {
+  void InitReader( 
+          TStarJetPicoReader & reader, 
+          TChain* chain, 
+          std::string badTowerOption, 
+          int nEvents ) {
     
     // set the chain
     reader.SetInputChain( chain );

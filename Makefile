@@ -5,9 +5,9 @@ INCFLAGS      = -I$(shell root-config --incdir) $(shell fastjet-config --cxxflag
 ifeq ($(os),Linux)
 CXXFLAGS      = -std=c++17
 else
-CXXFLAGS      = -O -std=c++11 -fPIC -pipe -Wall -Wno-deprecated-writable-strings -Wno-unused-variable -Wno-unused-private-field -Wno-gnu-static-float-init
+CXXFLAGS      = -O -std=c++11 -fPIC -pipe -Wall -Wno-deprecated-writable-strings -Wno-unused-variable -Wno-unused-private-field -Wno-gnu-static-float-init -Wno-deprecated
 ## for debugging:
-# CXXFLAGS      = -g -O0 -fPIC -pipe -Wall -Wno-deprecated-writable-strings -Wno-unused-variable -Wno-unused-private-field -Wno-gnu-static-float-init
+# CXXFLAGS      = -g -O0 -fPIC -pipe -Wall -Wno-deprecated-writable-strings -Wno-unused-variable -Wno-unused-private-field -Wno-gnu-static-float-init -Wno-deprecated-declarations
 endif
 
 ifeq ($(os),Linux)
@@ -59,12 +59,14 @@ $(BDIR)/%  : $(ODIR)/%.o
 ###############################################################################
 ############################# Main Targets ####################################
 ###############################################################################
+current : $(BDIR)/tower_count
 all : $(BDIR)/pAu_QA $(BDIR)/pAu_analysis_MB $(BDIR)/pAu_analysis_HT $(BDIR)/pAuHTjetUE # $(BDIR)/pAu_HT_dijets $(BDIR)/pAu_HT_jetTree $(BDIR)/pAu_HT_jetPlot $(BDIR)/find_bad_towers $(BDIR)/find_bad_trigger_towers $(BDIR)/pAuHTjetUE $(BDIR)/pAuHTjetUE_prelim $(BDIR)/pAuHTdijetUE $(BDIR)/EAdistribution $(BDIR)/pAu_HT_jet_trigger $(BDIR)/CompareTrees $(BDIR)/differentialUEplots
 
 $(ODIR)/pAuQAFunctions.o : $(SDIR)/pAuQAFunctions.cxx $(SDIR)/pAuQAFunctions.hh
 $(ODIR)/pAu_QA.o : $(SDIR)/pAu_QA.cxx $(SDIR)/pAuQAFunctions.hh
 $(ODIR)/pAuFunctions.o : $(SDIR)/pAuFunctions.cxx $(SDIR)/pAuFunctions.hh
 $(ODIR)/pAu_analysis_MB.o : $(SDIR)/pAu_analysis_MB.cxx
+$(ODIR)/tower_count.o : $(SDIR)/tower_count.cxx
 $(ODIR)/pAu_analysis_HT.o : $(SDIR)/pAu_analysis_HT.cxx
 $(ODIR)/pAu_HT_jets.o : $(SDIR)/pAu_HT_jets.cxx $(SDIR)/pAu_HT_jetParameters.hh $(SDIR)/bemc_helper.h
 $(ODIR)/pAu_HT_jet_trigger.o : $(SDIR)/pAu_HT_jet_trigger.cxx $(SDIR)/pAu_HT_jetParameters.hh
@@ -83,10 +85,10 @@ $(ODIR)/find_bad_trigger_towers.o : $(SDIR)/find_bad_trigger_towers.cxx
 #data analysis
 $(BDIR)/pAu_QA :	$(ODIR)/pAu_QA.o	$(ODIR)/pAuQAFunctions.o
 $(BDIR)/pAu_analysis_MB :	$(ODIR)/pAu_analysis_MB.o	$(ODIR)/pAuFunctions.o
+$(BDIR)/tower_count :	$(ODIR)/tower_count.o	$(ODIR)/pAuFunctions.o
 $(BDIR)/pAu_analysis_HT :	$(ODIR)/pAu_analysis_HT.o	$(ODIR)/pAuFunctions.o
 $(BDIR)/pAu_HT_jets :	$(ODIR)/pAu_HT_jets.o	$(ODIR)/pAuFunctions.o
 $(BDIR)/pAu_HT_jet_trigger :	$(ODIR)/pAu_HT_jet_trigger.o	$(ODIR)/pAuFunctions.o
-$(BDIR)/pAuHTjetUE :	$(ODIR)/pAuHTjetUE.o	$(ODIR)/pAuFunctions.o
 $(BDIR)/differentialUEplots :	$(ODIR)/differentialUEplots.o
 $(BDIR)/pAuHTjetUE_prelim :	$(ODIR)/pAuHTjetUE_prelim.o	$(ODIR)/pAuFunctions.o
 $(BDIR)/pAuHTdijetUE :	$(ODIR)/pAuHTdijetUE.o	$(ODIR)/pAuFunctions.o
