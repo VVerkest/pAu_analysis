@@ -255,8 +255,8 @@ namespace pAuAnalysis {
       fastjet::PseudoJet current = fastjet::PseudoJet( *sv );
 
       double absDeltaPhi = fabs( current.delta_phi_to( trigJet ) );
-      if ( absDeltaPhi < 1.0  ||  absDeltaPhi > 2.14159265 ) { continue; }       //  1 < delta phi < ( pi - 1 )
-      
+      // if ( absDeltaPhi < 1.0  ||  absDeltaPhi > 2.14159265 ) { continue; }       //  1 < delta phi < ( pi - 1 )
+      if ( absDeltaPhi < (fastjet::pi/3.)  ||  absDeltaPhi > (2.*fastjet::pi/3.) ) { continue; }       //  pi/3 < delta phi < 2pi/3
       if ( std::abs(current.eta()) > etaCut )      { continue; }  // removes particles with |eta|>1
       if ( current.pt() < partMinPt )      { continue; }  // removes particles with pt<0.2GeV
 
@@ -275,8 +275,9 @@ namespace pAuAnalysis {
       if ( sv->GetCharge() == 0 ) { continue; }
 
       double absDeltaPhi = fabs( current.delta_phi_to( trigJet ) );
-      if ( absDeltaPhi < 1.0  ||  absDeltaPhi > 2.14159265 ) { continue; }       //  1 < delta phi < ( pi - 1 )
-      
+      // if ( absDeltaPhi < 1.0  ||  absDeltaPhi > 2.14159265 ) { continue; }       //  1 < delta phi < ( pi - 1 )
+      if ( absDeltaPhi < (fastjet::pi/3.)  ||  absDeltaPhi > (2.*fastjet::pi/3.) ) { continue; }       //  pi/3 < delta phi < 2pi/3
+
       if ( std::abs(current.eta()) > etaCut )      { continue; }  // removes particles with |eta|>1
       if ( current.pt() < partMinPt )      { continue; }  // removes particles with pt<0.2GeV
 
@@ -318,7 +319,8 @@ namespace pAuAnalysis {
       if ( sv->GetCharge() == 0 ) { continue; }
 
       double absDeltaPhi = fabs( current.delta_phi_to( trigJet ) );
-      if ( absDeltaPhi < 1.0  ||  absDeltaPhi > 2.14159265 ) { continue; }       //  1 < delta phi < ( pi - 1 )
+      // if ( absDeltaPhi < 1.0  ||  absDeltaPhi > 2.14159265 ) { continue; }       //  1 < delta phi < ( pi - 1 )
+      if ( absDeltaPhi < (fastjet::pi/3.)  ||  absDeltaPhi > (2.*fastjet::pi/3.) ) { continue; }       //  pi/3 < delta phi < 2pi/3
       
       if ( std::abs(current.eta()) > etaCut )      { continue; }  // removes particles with |eta|>1
       if ( current.pt() < partMinPt )      { continue; }  // removes particles with pt<0.2GeV
@@ -363,7 +365,8 @@ namespace pAuAnalysis {
       if ( sv->GetCharge() != 0 ) { continue; }
 
       double absDeltaPhi = fabs( current.delta_phi_to( trigJet ) );
-      if ( absDeltaPhi < 1.0  ||  absDeltaPhi > 2.14159265 ) { continue; }       //  1 < delta phi < ( pi - 1 )
+      // if ( absDeltaPhi < 1.0  ||  absDeltaPhi > 2.14159265 ) { continue; }       //  1 < delta phi < ( pi - 1 )
+      if ( absDeltaPhi < (fastjet::pi/3.)  ||  absDeltaPhi > (2.*fastjet::pi/3.) ) { continue; }       //  pi/3 < delta phi < 2pi/3
       
       if ( std::abs(current.eta()) > etaCut )      { continue; }  // removes particles with |eta|>1
       if ( current.pt() < partMinPt )      { continue; }  // removes particles with pt<0.2GeV

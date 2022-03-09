@@ -5,7 +5,11 @@ void makePtDiffPlot(){
   TH1::SetDefaultSumw2();  TH2::SetDefaultSumw2();  TH3::SetDefaultSumw2();
 
   const double pi = 3.14159265;
-  const double AREA = 4*(pi - 2);   // (  2 in eta  ) X (  2*( pi-1 - 1 ) in phi  )
+  const double AREA = 4.*(pi/3.);
+
+  const double eastArea = 2.*(0.7)*(pi/3.);   // (  0.7 in eta  ) X (  2pi/3 in phi  )
+  const double midArea = 2.*(0.6)*(pi/3.);   // (  0.6 in eta  ) X (  2pi/3 in phi  )
+  const double westArea = 2.*(0.7)*(pi/3.);   // (  0.7 in eta  ) X (  2pi/3 in phi  )
 
   const int nPtBins = 3;
   const double ptLo[nPtBins] = { 10.0, 15.0, 20.0 };
@@ -32,9 +36,6 @@ void makePtDiffPlot(){
 
   TString emw[nEtaBins] = { "east", "mid", "west" };
 
-  const double eastArea = 2*(0.7)*(pi - 2);   // (  0.7 in eta  ) X (  2*( pi-1 - 1 ) in phi  )
-  const double midArea = 2*(0.6)*(pi - 2);   // (  0.6 in eta  ) X (  2*( pi-1 - 1 ) in phi  )
-  const double westArea = 2*(0.7)*(pi - 2);   // (  0.7 in eta  ) X (  2*( pi-1 - 1 ) in phi  )
   double area[nEtaBins] = { eastArea, midArea, westArea };
     
   int jeval, ueeval, pval, eaval;

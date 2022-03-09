@@ -69,7 +69,8 @@ namespace pAuAnalysis {
   const double jetMinPt = 2.0;      //  Jet Pt >= 2.0 GeV
   const double qpi = 3.141592653589793238462643383279502884197/4;
 
-  const double AREA = 4*(fastjet::pi - 2);   // (  2 in eta  ) X (  2*( pi-1 - 1 ) in phi  )
+  // const double AREA = 4*(fastjet::pi - 2);   // (  2 in eta  ) X (  2*( pi-1 - 1 ) in phi  )
+  const double AREA = 4.*(fastjet::pi/3.);
 
   void ApplyTrackingEfficiency( std::vector<fastjet::PseudoJet> chgPart, std::string efficiencyFile );  //BAD!!
   
