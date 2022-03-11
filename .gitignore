@@ -2,6 +2,7 @@
 
 # that weird crap emacs generates
 *~
+eventStructuredAu
 
 # TAR files
 *.tar.gz

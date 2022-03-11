@@ -34,7 +34,7 @@ int main ( int argc, const char** argv ) {
     // read in a vector of good run list
     vector<int> good_runs;
     ifstream ifile;
-    ifile.open("lists/good_run_id.list");
+    ifile.open("lists/grace_runid.list");
     string line;
     // skip the first line which is a comment line
     getline(ifile,line);
@@ -79,11 +79,13 @@ int main ( int argc, const char** argv ) {
         event = Reader.GetEvent();
         header = event->GetHeader();
 
-        if (!(header->HasTriggerId(500001) || header->HasTriggerId(500004))) {continue;} 
+        /* if (!header->HasTriggerId(500904)) {continue;} */ 
+        if (!header->HasTriggerId(500205) && !header->HasTriggerId(500215)) {continue;} 
 
         double Vz    { header->GetPrimaryVertexZ() };
         double vzVpd { header->GetvpdVz() };
         int    runid { header->GetRunId() };
+        if (TMath::Abs(Vz)>10) continue;
 
 
         bool is_good_run { binary_search(good_runs.begin(), good_runs.end(), runid) };
