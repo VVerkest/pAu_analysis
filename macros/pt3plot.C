@@ -6,7 +6,7 @@ void pt3plot(){
   TH1::SetDefaultSumw2();  TH2::SetDefaultSumw2();  TH3::SetDefaultSumw2();
 
   const double pi = 3.14159265;
-  const double AREA = 4*(pi - 2);   // (  2 in eta  ) X (  2*( pi-1 - 1 ) in phi  )
+  const double AREA = 4.*(pi/3.);
 
   TString name, title;
   

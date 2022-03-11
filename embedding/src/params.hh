@@ -88,11 +88,11 @@ namespace Analysis {
   const TString ptBinString[nPtBins] = { "10<p_{T}^{lead}<15", "15<p_{T}^{lead}<20",  "20<p_{T}^{lead}<30" };
   const int ptMarker[nPtBins] = { 20, 34, 33 };
 
-  const double AREA = 4*(1.14159265);
-  const double eastArea = 2*(0.7)*(fastjet::pi - 2);   // (  0.7 in eta  ) X (  2*( pi-1 - 1 ) in phi  )
-  const double midArea = 2*(0.6)*(fastjet::pi - 2);   // (  0.6 in eta  ) X (  2*( pi-1 - 1 ) in phi  )
-  const double westArea = 2*(0.7)*(fastjet::pi - 2);   // (  0.7 in eta  ) X (  2*( pi-1 - 1 ) in phi  )
+  const double AREA = 4.*(pi/3.);
 
+  const double eastArea = 2.*(0.7)*(pi/3.);   // (  0.7 in eta  ) X (  2pi/3 in phi  )
+  const double midArea = 2.*(0.6)*(pi/3.);   // (  0.6 in eta  ) X (  2pi/3 in phi  )
+  const double westArea = 2.*(0.7)*(pi/3.);   // (  0.7 in eta  ) X (  2pi/3 in phi  )
   
   const int marker[55] = { 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29 };
   

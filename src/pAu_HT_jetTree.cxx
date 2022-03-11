@@ -103,7 +103,7 @@ int main ( int argc, const char** argv ) {
     GatherParticles( container, rawParticles);     //  GATHERS ALL PARTICLES WITH    pT>=2.0GeV    and    |eta|<1.0
     ClusterSequence jetCluster( rawParticles, jet_def );           //  CLUSTER ALL JETS
     vector<PseudoJet> rawJets = sorted_by_pt( etaPtSelector( jetCluster.inclusive_jets() ) );     // EXTRACT SELECTED JETS
-    double AREA = 4*(pi - 2);   // (  2 in eta  ) X (  2*( pi-1 - 1 ) in phi  )
+    const double AREA = 4.*(pi/3.);
 
     nJets=0;
 

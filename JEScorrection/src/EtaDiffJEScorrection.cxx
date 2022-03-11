@@ -16,7 +16,7 @@ int main () {
   c0->SetLogy();
 
   const double pi = 3.14159265;
-  const double AREA = 4*(pi - 2);   // (  2 in eta  ) X (  2*( pi-1 - 1 ) in phi  )
+  const double AREA = 4.*(pi/3.);
 
   const int nPtBins = 3;
   const double ptLo[nPtBins] = { 10.0, 15.0, 20.0 };

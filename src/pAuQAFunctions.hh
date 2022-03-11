@@ -51,7 +51,7 @@ namespace pAuQA {
   const int MinNFitPointsCut = 20;
   
   const double VertexZCut = 30.0;
-  const double VertexZDiffCut = 3.0;
+  const double VertexZDiffCut = 6.0;
   const double MaxEventPtCut = 30.0;
   const double MaxEventEtCut = 30.0;
   const double MinEventEtCut = 0.2;
@@ -62,15 +62,14 @@ namespace pAuQA {
   
   const double R = 0.4;
   const double vzCut = 30.0;   // |Vz|<=30 cm
-  const double dcaCut = 3.0;   // DCA<=3.0 cm
   const double etaCut = 1.0;       // |eta|<=1
   const double partMinPt = 0.2;      //  particle Pt >= 0.2 GeV
   const double jetMinPt = 2.0;      //  Jet Pt >= 2.0 GeV
   const double leadJetMinPt = 10.0;
   const double qpi = 3.141592653589793238462643383279502884197/4;
 
-  const double AREA = 4*(fastjet::pi - 2);   // (  2 in eta  ) X (  2*( pi-1 - 1 ) in phi  )
-  
+  const double AREA = 4.*(fastjet::pi/3.);
+ 
   void BackGroundEstimationAndPlots( std::vector<fastjet::PseudoJet> chgPart, std::vector<fastjet::PseudoJet> neuPart, fastjet::PseudoJet leadJet,
 				     TH3D *PartPtDEtaDPhi, TH3D *PartPtEtaPhi, TH3D *BG, double &chgSum, double &neuSum );
 
