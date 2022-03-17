@@ -1,0 +1,11 @@
+{
+    "src/*.hh"  : {
+        "type" : "header",
+        "alternate" : "src/{}.cxx"
+    },
+    "src/*.cxx" : {
+        "type" : "implementation",
+        "alternate" : "src/{}.hh"
+       }
+}
+

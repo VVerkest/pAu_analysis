@@ -3,10 +3,52 @@
 
 #include "pAuFunctions.hh"
 #include "pAu_HT_jetParameters.hh"
+#include <iostream>
+#include <fstream>
+#include <string>
+#include <algorithm>
+
+using std::vector;
+using std::cout;
+using std::endl;
+using std::istringstream;
+using std::ifstream;
+using std::string;
+using std::remove;
+using std::replace;
+using std::setw;
 
 namespace pAuAnalysis {
 
-  void ApplyTrackingEfficiency( std::vector<fastjet::PseudoJet> chgPart, std::string efficiencyFile ) {  // BAD!! DO NOT USE!!
+    IntListSet::IntListSet(const char* in_file_name, bool echo) {
+        ifstream ifile;
+        ifile.open(in_file_name);
+        string line;
+        while (getline(ifile,line)) {
+            // replace all commas with spaces
+            replace_if(line.begin(), line.end(), [](const char _){return _==',';},' ');
+            istringstream iline { line.c_str() };
+            int i_val;
+            while (iline >> i_val) data.push_back(i_val);
+        } 
+        sort(data.begin(), data.end());  
+
+        if (echo) {
+            int i=0;
+            cout << " Echoing integers read from file " << in_file_name << endl;
+            cout << " Entry   Value " << endl;
+            for (auto v : data) {
+                cout << " " << setw(5) << i++ << setw(1)<<" "<<setw(7) << v << endl;
+            }
+            cout << setw(0);
+        }
+    };
+
+    bool IntListSet::has(int ival) { return binary_search(data.begin(), data.end(), ival); };
+
+
+  void ApplyTrackingEfficiency( std::vector<fastjet::PseudoJet> chgPart,
+          std::string efficiencyFile ) {  // BAD!! DO NOT USE!!
 
     int ptBin, etaBin;
     const int nBins = 10;
@@ -25,7 +67,8 @@ namespace pAuAnalysis {
       hEffic[j] = (TH1D*)ef->Get( name );
     }
     
-    std::vector<fastjet::PseudoJet> uncorrPart = chgPart;  // move uncorrected UE particles to new PJ vector
+    // move uncorrected UE particles to new PJ vector
+    std::vector<fastjet::PseudoJet> uncorrPart = chgPart;  
     chgPart.clear();
     
     for (int i=0; i<uncorrPart.size(); ++i) {
@@ -42,8 +85,12 @@ namespace pAuAnalysis {
 	for ( int j=0; j<nBins; ++j ) {     // find efficiency histogram corresponding to track eta
 	  if ( (eta>=etaLo[j]) && (eta<=etaHi[j]) ) { etaBin = j; continue; }
 	}
-	if ( etaBin==999 ) { std::cerr<<"error finding charged track eta bin; eta = "<<eta<<std::endl; continue; }
-	for ( int j=0; j<72; ++j ) { ptBin = hEffic[etaBin]->FindBin( pt ); }    // find histogram bin corresponding to track pt
+	if ( etaBin==999 ) { 
+        std::cerr<<"error finding charged track eta bin; eta = "<<eta<<std::endl; 
+        continue; 
+    }
+   // find histogram bin corresponding to track pt
+	for ( int j=0; j<72; ++j ) { ptBin = hEffic[etaBin]->FindBin( pt ); } 
 
 	effic = hEffic[etaBin]->GetBinContent( ptBin );
 	corrPt = pt/effic;
@@ -60,8 +107,10 @@ namespace pAuAnalysis {
   }
   
   
-  void BackGroundEstimationAndPlots( std::vector<fastjet::PseudoJet> chgPart, std::vector<fastjet::PseudoJet> neuPart, fastjet::PseudoJet leadJet,
-				     TH3D *PartPtDEtaDPhi, TH3D *PartPtEtaPhi, TH3D *UE, double &chgSum, double &neuSum ) {
+  void BackGroundEstimationAndPlots( std::vector<fastjet::PseudoJet> chgPart,
+          std::vector<fastjet::PseudoJet> neuPart, fastjet::PseudoJet leadJet,
+          TH3D *PartPtDEtaDPhi, TH3D *PartPtEtaPhi, TH3D *UE, double &chgSum,
+          double &neuSum ) {
 
     chgSum = 0;
     neuSum = 0;
@@ -153,7 +202,10 @@ namespace pAuAnalysis {
   // }
 
 
-  void CalculateRhoByChargeAndEta( std::vector<fastjet::PseudoJet> chgPart, std::vector<fastjet::PseudoJet> neuPart, double &chgEast_Sum, double &chgMid_Sum, double &chgWest_Sum, double &neuEast_Sum, double &neuMid_Sum, double &neuWest_Sum ) {
+  void CalculateRhoByChargeAndEta( std::vector<fastjet::PseudoJet> chgPart,
+          std::vector<fastjet::PseudoJet> neuPart, double &chgEast_Sum, double
+          &chgMid_Sum, double &chgWest_Sum, double &neuEast_Sum, double
+          &neuMid_Sum, double &neuWest_Sum ) {
 
     double etaLoEast = -1.0;
     double etaLoMid = -0.3;
@@ -192,7 +244,6 @@ namespace pAuAnalysis {
 
   
   int CountTowers( TList *selectedtowers ) {
-
     TStarJetPicoTower *tow;
     int n_towers = 0;
     for (int i=0; i<selectedtowers->GetEntries(); ++i) {
@@ -219,7 +270,10 @@ namespace pAuAnalysis {
   }
 
 
-  std::vector<fastjet::PseudoJet> GatherNeutral ( TStarJetVectorContainer<TStarJetVector> * container , std::vector<fastjet::PseudoJet> & rawParticles ){
+  std::vector<fastjet::PseudoJet> GatherNeutral (
+          TStarJetVectorContainer<TStarJetVector> * container ,
+          std::vector<fastjet::PseudoJet> & rawParticles )
+  {
     for ( int i=0; i < container->GetEntries() ; ++i ) {
       TStarJetVector* sv = container->Get(i);
       if ( sv->GetCharge() == 0 ) {
@@ -235,7 +289,10 @@ namespace pAuAnalysis {
   }
 
   
-  std::vector<fastjet::PseudoJet> GatherParticles ( TStarJetVectorContainer<TStarJetVector> * container , std::vector<fastjet::PseudoJet> & rawParticles ){
+  std::vector<fastjet::PseudoJet> GatherParticles (
+          TStarJetVectorContainer<TStarJetVector> * container ,
+          std::vector<fastjet::PseudoJet> & rawParticles )
+  {
     for ( int i=0; i < container->GetEntries() ; ++i ) {
       TStarJetVector* sv = container->Get(i);
       fastjet::PseudoJet current = fastjet::PseudoJet( *sv );
@@ -249,7 +306,10 @@ namespace pAuAnalysis {
   }
 
   
-  std::vector<fastjet::PseudoJet> GatherBackground ( fastjet::PseudoJet trigJet, TStarJetVectorContainer<TStarJetVector> * container , std::vector<fastjet::PseudoJet> & ueParticles ){
+  std::vector<fastjet::PseudoJet> GatherBackground ( fastjet::PseudoJet
+          trigJet, TStarJetVectorContainer<TStarJetVector> * container ,
+          std::vector<fastjet::PseudoJet> & ueParticles )
+  {
     for ( int i=0; i < container->GetEntries() ; ++i ) {
       TStarJetVector* sv = container->Get(i);
       fastjet::PseudoJet current = fastjet::PseudoJet( *sv );
@@ -267,8 +327,10 @@ namespace pAuAnalysis {
     return ueParticles;
   }
 
-  
-  std::vector<fastjet::PseudoJet> GatherChargedUE ( fastjet::PseudoJet trigJet, TStarJetVectorContainer<TStarJetVector> * container , std::vector<fastjet::PseudoJet> & chgParticles ){
+  std::vector<fastjet::PseudoJet> GatherChargedUE ( fastjet::PseudoJet trigJet,
+          TStarJetVectorContainer<TStarJetVector> * container ,
+          std::vector<fastjet::PseudoJet> & chgParticles )
+  {
     for ( int i=0; i < container->GetEntries() ; ++i ) {
       TStarJetVector* sv = container->Get(i);
       fastjet::PseudoJet current = fastjet::PseudoJet( *sv );
@@ -289,8 +351,11 @@ namespace pAuAnalysis {
   }
 
 
-  std::vector<fastjet::PseudoJet> GatherChargedUEwithEfficiency ( fastjet::PseudoJet trigJet, TStarJetVectorContainer<TStarJetVector> * container , std::vector<fastjet::PseudoJet> & chgParticles,  std::string efficiencyFile ){
-
+  std::vector<fastjet::PseudoJet> GatherChargedUEwithEfficiency (
+          fastjet::PseudoJet trigJet, TStarJetVectorContainer<TStarJetVector> *
+          container , std::vector<fastjet::PseudoJet> & chgParticles,
+          std::string efficiencyFile )
+  {
     int ptBin, etaBin;
     const int nBins = 10;
     double pt, eta, effic;
@@ -358,7 +423,10 @@ namespace pAuAnalysis {
   }
 
   
-  std::vector<fastjet::PseudoJet> GatherNeutralUE ( fastjet::PseudoJet trigJet, TStarJetVectorContainer<TStarJetVector> * container , std::vector<fastjet::PseudoJet> & neuParticles ){
+  std::vector<fastjet::PseudoJet> GatherNeutralUE ( fastjet::PseudoJet trigJet,
+          TStarJetVectorContainer<TStarJetVector> * container ,
+          std::vector<fastjet::PseudoJet> & neuParticles )
+  {
     for ( int i=0; i < container->GetEntries() ; ++i ) {
       TStarJetVector* sv = container->Get(i);
       fastjet::PseudoJet current = fastjet::PseudoJet( *sv );
@@ -379,12 +447,19 @@ namespace pAuAnalysis {
   }
 
 
-  void GetHeaderInfo( TStarJetPicoEventHeader* Header, int &Nglobal, int &Nvertices, int &ref_mult, int &Nprimary, double &BBC_CoincidenceRate,
-		      double &vpdVz, double &BBC_EastRate, double &BBC_WestRate, double &BBC_AdcSumEast ) {
-    Nglobal = Header->GetNGlobalTracks();						Nvertices = Header->GetNumberOfVertices();
-    ref_mult = Header->GetReferenceMultiplicity();					Nprimary =  Header->GetNOfPrimaryTracks();
-    BBC_CoincidenceRate = Header->GetBbcCoincidenceRate();		vpdVz = Header->GetVpdVz();
-    BBC_EastRate = Header->GetBbcEastRate();					BBC_WestRate = Header->GetBbcWestRate();
+  void GetHeaderInfo( TStarJetPicoEventHeader* Header, int &Nglobal, int
+          &Nvertices, int &ref_mult, int &Nprimary, double
+          &BBC_CoincidenceRate, double &vpdVz, double &BBC_EastRate, double
+          &BBC_WestRate, double &BBC_AdcSumEast ) 
+  {
+    Nglobal = Header->GetNGlobalTracks();
+    Nvertices = Header->GetNumberOfVertices();
+    ref_mult = Header->GetReferenceMultiplicity();
+    Nprimary =  Header->GetNOfPrimaryTracks();
+    BBC_CoincidenceRate = Header->GetBbcCoincidenceRate();
+    vpdVz = Header->GetVpdVz();
+    BBC_EastRate = Header->GetBbcEastRate();
+    BBC_WestRate = Header->GetBbcWestRate();
     BBC_AdcSumEast = Header->GetBbcAdcSumEast();
   }
 
@@ -514,18 +589,18 @@ namespace pAuAnalysis {
 	  trigTowEt = 0;
 	  
 	  for ( int j=0; j<Event->GetTowers()->GetEntries(); ++j ) {  // USE GetTowers TO FIND TOWER INFO ASSOCIATED WITH TRIGGER!
-	    if ( Event->GetTower(j)->GetId() == trigTowId && Event->GetTower(j)->GetEt()>=5.40  && Event->GetTower(j)->GetEt()<30.00 ) {
+        if ( Event->GetTower(j)->GetId() == trigTowId 
+          && Event->GetTower(j)->GetEt()>=5.40  
+          && Event->GetTower(j)->GetEt()<30.00 ) {
 	      // FIND TOWER ASSOCIATED WITH TRIGGER AND ENSURE TRIG TOWER HAS 5.40 <= Et <= 30
-	      if ( trigTow==0 ) {
-		trigTowEt = Event->GetTower(j)->GetEt();  // once FIRST trig tower is found, assign it's Et to "trigTowEt"
-	      }
-	      else {                         // FOR ALL SUBSEQUENT TOWERS, if its Et is greater than "trigTowEt", set "trigTowEt" to
-		if ( Event->GetTower(j)->GetEt() > trigTowEt ) {
-		  //std::cerr<<
-		  trigTowEt = Event->GetTower(j)->GetEt();
-		  trigTow+=1;                               // (add to counter)
-		}  // this tower's Et
-	      }
+            if ( trigTow==0 ) {
+                trigTowEt = Event->GetTower(j)->GetEt();  // once FIRST trig tower is found, assign it's Et to "trigTowEt"
+                // FOR ALL SUBSEQUENT TOWERS, if its Et is greater than "trigTowEt", set "trigTowEt" to
+            } else if ( Event->GetTower(j)->GetEt() > trigTowEt ) {
+                //std::cerr<<
+                trigTowEt = Event->GetTower(j)->GetEt();
+                trigTow+=1;                               // (add to counter)
+            }  // this tower's Et
 	    }
 	  }
 	  
@@ -551,7 +626,43 @@ namespace pAuAnalysis {
 
   bool UseTriggerTower( int TriggerTowerId ) {
     
-    int badTows[454] = { 31, 34, 59, 95, 96, 106, 113, 120, 134, 139, 157, 160, 175, 214, 224, 257, 266, 267, 275, 280, 282, 286, 287, 308, 360, 368, 385, 389, 395, 405, 410, 426, 433, 474, 479, 483, 484, 504, 509, 533, 541, 555, 561, 562, 563, 564, 585, 603, 615, 616, 627, 633, 638, 649, 650, 653, 657, 671, 673, 674, 680, 681, 693, 721, 722, 725, 740, 750, 753, 754, 755, 756, 758, 768, 773, 774, 775, 776, 779, 784, 790, 793, 794, 795, 796, 799, 801, 813, 814, 815, 816, 817, 822, 832, 835, 837, 840, 844, 846, 857, 860, 875, 880, 882, 893, 897, 899, 903, 916, 936, 939, 941, 946, 953, 954, 956, 986, 989, 993, 1005, 1012, 1020, 1023, 1026, 1027, 1028, 1045, 1046, 1048, 1057, 1063, 1080, 1081, 1085, 1100, 1104, 1120, 1125, 1128, 1130, 1132, 1142, 1154, 1158, 1159, 1160, 1171, 1180, 1183, 1184, 1187, 1189, 1190, 1197, 1200, 1202, 1204, 1207, 1214, 1217, 1219, 1220, 1221, 1224, 1232, 1233, 1237, 1238, 1244, 1256, 1257, 1263, 1280, 1283, 1294, 1301, 1306, 1312, 1313, 1318, 1329, 1341, 1348, 1353, 1354, 1369, 1375, 1378, 1388, 1400, 1401, 1405, 1407, 1409, 1434, 1439, 1440, 1448, 1475, 1486, 1537, 1563, 1564, 1567, 1574, 1575, 1588, 1592, 1597, 1599, 1602, 1612, 1654, 1668, 1679, 1705, 1709, 1720, 1728, 1753, 1762, 1765, 1766, 1773, 1776, 1789, 1807, 1823, 1840, 1856, 1866, 1877, 1878, 1879, 1880, 1921, 1945, 1952, 1976, 1983, 1984, 2027, 2032, 2043, 2051, 2066, 2073, 2077, 2092, 2093, 2097, 2104, 2107, 2111, 2141, 2160, 2162, 2168, 2175, 2176, 2177, 2190, 2193, 2194, 2195, 2196, 2197, 2213, 2214, 2215, 2216, 2217, 2223, 2233, 2234, 2235, 2236, 2253, 2254, 2255, 2256, 2299, 2300, 2303, 2305, 2313, 2340, 2390, 2391, 2392, 2414, 2415, 2417, 2439, 2459, 2476, 2493, 2520, 2569, 2580, 2589, 2590, 2633, 2697, 2737, 2749, 2822, 2834, 2863, 2865, 2874, 2929, 2953, 2954, 2955, 2961, 2969, 2973, 2974, 2975, 2976, 2981, 2993, 2994, 2995, 3005, 3020, 3063, 3070, 3071, 3146, 3160, 3167, 3186, 3233, 3234, 3235, 3236, 3253, 3254, 3255, 3256, 3263, 3273, 3274, 3275, 3276, 3293, 3294, 3295, 3296, 3299, 3300, 3337, 3354, 3355, 3356, 3360, 3362, 3385, 3407, 3436, 3451, 3473, 3481, 3492, 3493, 3494, 3495, 3498, 3504, 3513, 3515, 3544, 3584, 3588, 3611, 3666, 3668, 3670, 3678, 3679, 3682, 3690, 3692, 3702, 3718, 3720, 3725, 3737, 3738, 3739, 3741, 3769, 3777, 3822, 3831, 3834, 3838, 3840, 3859, 3861, 3984, 4006, 4013, 4017, 4018, 4019, 4047, 4053, 4057, 4079, 4099, 4104, 4130, 4169, 4177, 4217, 4223, 4302, 4331, 4350, 4355, 4357, 4405, 4440, 4458, 4460, 4469, 4480, 4495, 4496, 4500, 4518, 4534, 4563, 4595, 4659, 4677, 4678, 4712, 4742, 4743, 4744, 4762, 4763, 4764, 4766, 4768, 4778, 4781, 4782, 4783, 4784 };
+    int badTows[454] = { 31, 34, 59, 95, 96, 106, 113, 120, 134, 139, 157, 160,
+        175, 214, 224, 257, 266, 267, 275, 280, 282, 286, 287, 308, 360, 368,
+        385, 389, 395, 405, 410, 426, 433, 474, 479, 483, 484, 504, 509, 533,
+        541, 555, 561, 562, 563, 564, 585, 603, 615, 616, 627, 633, 638, 649,
+        650, 653, 657, 671, 673, 674, 680, 681, 693, 721, 722, 725, 740, 750,
+        753, 754, 755, 756, 758, 768, 773, 774, 775, 776, 779, 784, 790, 793,
+        794, 795, 796, 799, 801, 813, 814, 815, 816, 817, 822, 832, 835, 837,
+        840, 844, 846, 857, 860, 875, 880, 882, 893, 897, 899, 903, 916, 936,
+        939, 941, 946, 953, 954, 956, 986, 989, 993, 1005, 1012, 1020, 1023,
+        1026, 1027, 1028, 1045, 1046, 1048, 1057, 1063, 1080, 1081, 1085, 1100,
+        1104, 1120, 1125, 1128, 1130, 1132, 1142, 1154, 1158, 1159, 1160, 1171,
+        1180, 1183, 1184, 1187, 1189, 1190, 1197, 1200, 1202, 1204, 1207, 1214,
+        1217, 1219, 1220, 1221, 1224, 1232, 1233, 1237, 1238, 1244, 1256, 1257,
+        1263, 1280, 1283, 1294, 1301, 1306, 1312, 1313, 1318, 1329, 1341, 1348,
+        1353, 1354, 1369, 1375, 1378, 1388, 1400, 1401, 1405, 1407, 1409, 1434,
+        1439, 1440, 1448, 1475, 1486, 1537, 1563, 1564, 1567, 1574, 1575, 1588,
+        1592, 1597, 1599, 1602, 1612, 1654, 1668, 1679, 1705, 1709, 1720, 1728,
+        1753, 1762, 1765, 1766, 1773, 1776, 1789, 1807, 1823, 1840, 1856, 1866,
+        1877, 1878, 1879, 1880, 1921, 1945, 1952, 1976, 1983, 1984, 2027, 2032,
+        2043, 2051, 2066, 2073, 2077, 2092, 2093, 2097, 2104, 2107, 2111, 2141,
+        2160, 2162, 2168, 2175, 2176, 2177, 2190, 2193, 2194, 2195, 2196, 2197,
+        2213, 2214, 2215, 2216, 2217, 2223, 2233, 2234, 2235, 2236, 2253, 2254,
+        2255, 2256, 2299, 2300, 2303, 2305, 2313, 2340, 2390, 2391, 2392, 2414,
+        2415, 2417, 2439, 2459, 2476, 2493, 2520, 2569, 2580, 2589, 2590, 2633,
+        2697, 2737, 2749, 2822, 2834, 2863, 2865, 2874, 2929, 2953, 2954, 2955,
+        2961, 2969, 2973, 2974, 2975, 2976, 2981, 2993, 2994, 2995, 3005, 3020,
+        3063, 3070, 3071, 3146, 3160, 3167, 3186, 3233, 3234, 3235, 3236, 3253,
+        3254, 3255, 3256, 3263, 3273, 3274, 3275, 3276, 3293, 3294, 3295, 3296,
+        3299, 3300, 3337, 3354, 3355, 3356, 3360, 3362, 3385, 3407, 3436, 3451,
+        3473, 3481, 3492, 3493, 3494, 3495, 3498, 3504, 3513, 3515, 3544, 3584,
+        3588, 3611, 3666, 3668, 3670, 3678, 3679, 3682, 3690, 3692, 3702, 3718,
+        3720, 3725, 3737, 3738, 3739, 3741, 3769, 3777, 3822, 3831, 3834, 3838,
+        3840, 3859, 3861, 3984, 4006, 4013, 4017, 4018, 4019, 4047, 4053, 4057,
+        4079, 4099, 4104, 4130, 4169, 4177, 4217, 4223, 4302, 4331, 4350, 4355,
+        4357, 4405, 4440, 4458, 4460, 4469, 4480, 4495, 4496, 4500, 4518, 4534,
+        4563, 4595, 4659, 4677, 4678, 4712, 4742, 4743, 4744, 4762, 4763, 4764,
+        4766, 4768, 4778, 4781, 4782, 4783, 4784 };
     
     for( int i=0; i<454; ++i ) {
       if( badTows[i]==TriggerTowerId ) { return false; }

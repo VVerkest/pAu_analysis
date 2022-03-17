@@ -41,6 +41,7 @@
 #include <sstream>
 #include <iomanip>
 #include <cmath>
+#include <vector>
 
 #include "bemc_helper.h"
 
@@ -48,6 +49,17 @@
 #define pAuFunctions_hh
 
 namespace pAuAnalysis {
+    struct IntListSet {
+        // + Itialized with a text file containing integers
+        // + Efficienctly checks if it contains a given integer
+        // + May be used with bad towers
+        // + Will skip all values after a non-integer word (including int ending in
+        //   a comma) in a line.
+        std::vector<int> data;
+        IntListSet(const char* in_file_name, bool echo=false);
+        bool has(int); // check is has a given entry
+        bool operator()(int i_int) { return has(i_int); }; // same as has
+    };
 
   const int RefMultCut = 0;
   const int MinNFitPointsCut = 20;
@@ -72,41 +84,70 @@ namespace pAuAnalysis {
   // const double AREA = 4*(fastjet::pi - 2);   // (  2 in eta  ) X (  2*( pi-1 - 1 ) in phi  )
   const double AREA = 4.*(fastjet::pi/3.);
 
-  void ApplyTrackingEfficiency( std::vector<fastjet::PseudoJet> chgPart, std::string efficiencyFile );  //BAD!!
+  void ApplyTrackingEfficiency( std::vector<fastjet::PseudoJet> chgPart,
+          std::string efficiencyFile );  //BAD!!
   
-  void BackGroundEstimationAndPlots( std::vector<fastjet::PseudoJet> chgPart, std::vector<fastjet::PseudoJet> neuPart, fastjet::PseudoJet leadJet,
+  void BackGroundEstimationAndPlots( std::vector<fastjet::PseudoJet> chgPart,
+          std::vector<fastjet::PseudoJet> neuPart, fastjet::PseudoJet leadJet,
 				     TH3D *PartPtDEtaDPhi, TH3D *PartPtEtaPhi, TH3D *UE, double &chgSum, double &neuSum );
 
-  void CalculateUEsubtractedChargedRho( std::vector<fastjet::PseudoJet> chgPart, double &chgEast_Sum, double &chgMid_Sum, double &chgWest_Sum );
+  void CalculateUEsubtractedChargedRho( std::vector<fastjet::PseudoJet>
+          chgPart, double &chgEast_Sum, double &chgMid_Sum, double &chgWest_Sum
+          );
   
-  void CalculateRhoByChargeAndEta( std::vector<fastjet::PseudoJet> chgPart, std::vector<fastjet::PseudoJet> neuPart, double &chgEast_Sum, double &chgMid_Sum, double &chgWest_Sum, double &neuEast_Sum, double &neuMid_Sum, double &neuWest_Sum );
+  void CalculateRhoByChargeAndEta( std::vector<fastjet::PseudoJet> chgPart,
+          std::vector<fastjet::PseudoJet> neuPart, double &chgEast_Sum, double
+          &chgMid_Sum, double &chgWest_Sum, double &neuEast_Sum, double
+          &neuMid_Sum, double &neuWest_Sum );
   
   int CountTowers( TList *selectedtowers );
 
-  std::vector<fastjet::PseudoJet> GatherBackground ( fastjet::PseudoJet trigJet, TStarJetVectorContainer<TStarJetVector> * container , std::vector<fastjet::PseudoJet> & ueParticles );
+  std::vector<fastjet::PseudoJet> GatherBackground ( fastjet::PseudoJet
+          trigJet, TStarJetVectorContainer<TStarJetVector> * container ,
+          std::vector<fastjet::PseudoJet> & ueParticles );
 
-  std::vector<fastjet::PseudoJet> GatherCharged ( TStarJetVectorContainer<TStarJetVector> * container , std::vector<fastjet::PseudoJet> & rawParticles );
+  std::vector<fastjet::PseudoJet> GatherCharged (
+          TStarJetVectorContainer<TStarJetVector> * container ,
+          std::vector<fastjet::PseudoJet> & rawParticles );
 
-  std::vector<fastjet::PseudoJet> GatherChargedUEwithEfficiency ( fastjet::PseudoJet trigJet, TStarJetVectorContainer<TStarJetVector> * container , std::vector<fastjet::PseudoJet> & chgParticles,  std::string efficiencyFile );
+  std::vector<fastjet::PseudoJet> GatherChargedUEwithEfficiency (
+          fastjet::PseudoJet trigJet, TStarJetVectorContainer<TStarJetVector> *
+          container , std::vector<fastjet::PseudoJet> & chgParticles,
+          std::string efficiencyFile );
   
-  std::vector<fastjet::PseudoJet> GatherNeutral ( TStarJetVectorContainer<TStarJetVector> * container , std::vector<fastjet::PseudoJet> & rawParticles );
+  std::vector<fastjet::PseudoJet> GatherNeutral (
+          TStarJetVectorContainer<TStarJetVector> * container ,
+          std::vector<fastjet::PseudoJet> & rawParticles );
     
-  std::vector<fastjet::PseudoJet> GatherParticles ( TStarJetVectorContainer<TStarJetVector> * container , std::vector<fastjet::PseudoJet> & rawParticles );
+  std::vector<fastjet::PseudoJet> GatherParticles (
+          TStarJetVectorContainer<TStarJetVector> * container ,
+          std::vector<fastjet::PseudoJet> & rawParticles );
 
-  std::vector<fastjet::PseudoJet> GatherChargedUE (  fastjet::PseudoJet trigJet, TStarJetVectorContainer<TStarJetVector> * container , std::vector<fastjet::PseudoJet> & chgParticles );
+  std::vector<fastjet::PseudoJet> GatherChargedUE (  fastjet::PseudoJet
+          trigJet, TStarJetVectorContainer<TStarJetVector> * container ,
+          std::vector<fastjet::PseudoJet> & chgParticles );
 
-  std::vector<fastjet::PseudoJet> GatherNeutralUE (  fastjet::PseudoJet trigJet, TStarJetVectorContainer<TStarJetVector> * container , std::vector<fastjet::PseudoJet> & newParticles );
+  std::vector<fastjet::PseudoJet> GatherNeutralUE (  
+          fastjet::PseudoJet trigJet, 
+          TStarJetVectorContainer<TStarJetVector> * container, 
+          std::vector<fastjet::PseudoJet>& newParticles 
+  );
 
-  void GetHeaderInfo( TStarJetPicoEventHeader* Header, int &Nglobal, int &Nvertices, int &ref_mult, int &Nprimary, double &BBC_CoincidenceRate,
-		      double &vpdVz, double &BBC_EastRate, double &BBC_WestRate, double &BBC_AdcSumEast );
+  void GetHeaderInfo( TStarJetPicoEventHeader* Header, int &Nglobal, int
+          &Nvertices, int &ref_mult, int &Nprimary, double
+          &BBC_CoincidenceRate, double &vpdVz, double &BBC_EastRate, double
+          &BBC_WestRate, double &BBC_AdcSumEast );
 
   void InitReader( TStarJetPicoReader & reader, TChain* chain, int nEvents );
 
-  double UEsubtraction( fastjet::PseudoJet leadjet, std::string UEcorrFile, double BBCEsum );
+  double UEsubtraction( fastjet::PseudoJet leadjet, std::string UEcorrFile,
+          double BBCEsum );
   
-  bool UseHTevent( TStarJetPicoEventHeader* Header, TStarJetPicoEvent* Event, double vz_cut, double vz );
+  bool UseHTevent( TStarJetPicoEventHeader* Header, TStarJetPicoEvent* Event,
+          double vz_cut, double vz );
 
-  bool UseMBevent( TStarJetPicoEventHeader* Header, TStarJetPicoEvent* Event, double vz_cut, double vz );
+  bool UseMBevent( TStarJetPicoEventHeader* Header, TStarJetPicoEvent* Event,
+          double vz_cut, double vz );
 
   bool UseTriggerTower( int TriggerTowerId );
 

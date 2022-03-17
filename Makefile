@@ -60,6 +60,7 @@ $(BDIR)/%  : $(ODIR)/%.o
 ############################# Main Targets ####################################
 ###############################################################################
 current : $(BDIR)/adc_count
+test : $(BDIR)/small_test
 all : $(BDIR)/pAu_QA $(BDIR)/pAu_analysis_MB $(BDIR)/pAu_analysis_HT $(BDIR)/pAuHTjetUE # $(BDIR)/pAu_HT_dijets $(BDIR)/pAu_HT_jetTree $(BDIR)/pAu_HT_jetPlot $(BDIR)/find_bad_towers $(BDIR)/find_bad_trigger_towers $(BDIR)/pAuHTjetUE $(BDIR)/pAuHTjetUE_prelim $(BDIR)/pAuHTdijetUE $(BDIR)/EAdistribution $(BDIR)/pAu_HT_jet_trigger $(BDIR)/CompareTrees $(BDIR)/differentialUEplots
 
 $(ODIR)/pAuQAFunctions.o : $(SDIR)/pAuQAFunctions.cxx $(SDIR)/pAuQAFunctions.hh
@@ -69,6 +70,7 @@ $(ODIR)/pAu_analysis_MB.o : $(SDIR)/pAu_analysis_MB.cxx
 $(ODIR)/tower_count.o : $(SDIR)/tower_count.cxx
 $(ODIR)/trigger_count.o : $(SDIR)/trigger_count.cxx
 $(ODIR)/adc_count.o : $(SDIR)/adc_count.cxx
+$(ODIR)/small_test.o : $(SDIR)/small_test.cxx  $(SDIR)/pAuQAFunctions.hh
 $(ODIR)/pAu_analysis_HT.o : $(SDIR)/pAu_analysis_HT.cxx
 $(ODIR)/pAu_HT_jets.o : $(SDIR)/pAu_HT_jets.cxx $(SDIR)/pAu_HT_jetParameters.hh $(SDIR)/bemc_helper.h
 $(ODIR)/pAu_HT_jet_trigger.o : $(SDIR)/pAu_HT_jet_trigger.cxx $(SDIR)/pAu_HT_jetParameters.hh
@@ -90,6 +92,7 @@ $(BDIR)/pAu_analysis_MB :	$(ODIR)/pAu_analysis_MB.o	$(ODIR)/pAuFunctions.o
 $(BDIR)/tower_count :	$(ODIR)/tower_count.o	$(ODIR)/pAuFunctions.o
 $(BDIR)/trigger_count :	$(ODIR)/trigger_count.o	$(ODIR)/pAuFunctions.o
 $(BDIR)/adc_count :	$(ODIR)/adc_count.o	$(ODIR)/pAuFunctions.o
+$(BDIR)/small_test :	$(ODIR)/small_test.o	$(ODIR)/pAuFunctions.o
 $(BDIR)/pAu_analysis_HT :	$(ODIR)/pAu_analysis_HT.o	$(ODIR)/pAuFunctions.o
 $(BDIR)/pAu_HT_jets :	$(ODIR)/pAu_HT_jets.o	$(ODIR)/pAuFunctions.o
 $(BDIR)/pAu_HT_jet_trigger :	$(ODIR)/pAu_HT_jet_trigger.o	$(ODIR)/pAuFunctions.o
