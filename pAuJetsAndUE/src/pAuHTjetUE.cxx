@@ -50,8 +50,8 @@ int main ( int argc, const char** argv ) {         // funcions and cuts specifie
   }
   else { cerr<< "incorrect number of command line arguments"; return 5000; }
   
-    const int NspJetDims = 5; // leadPt;leadEta;leadPhi;leadNcons;iBBCEsum
-    const int NspJetBins[NspJetDims] = { 50, 20, 30, 30, 10 };
+    const int NspJetDims = 5; // leadPt;leadEta;leadPhi;leadNcons;iBBCEsum;zdcx
+    const int NspJetBins[NspJetDims] = { 50, 20, 30, 30, 10, 20 };
 //    spJetBins
     
     const double bin_leadPt[NspJetBins[0]+1] = {4., 5., 6., 7., 8., 9., 10., 11., 12., 13., 14., 15., 16., 17., 18., 19., 20., 21., 22., 23., 24., 25., 26., 27., 28., 29., 30., 31., 32., 33., 34., 35., 36., 37., 38., 39., 40., 41., 42., 43., 44., 45., 46., 47., 48., 49., 50., 51., 52., 53., 54.};
@@ -59,14 +59,16 @@ int main ( int argc, const char** argv ) {         // funcions and cuts specifie
     const double bin_leadPhi[NspJetBins[2]+1] = {-3.14159, -2.93215, -2.72271, -2.51327, -2.30383, -2.09439, -1.88495, -1.67551, -1.46608, -1.25664, -1.0472, -0.837757, -0.628318, -0.418879, -0.209439, 0., 0.209439, 0.418879, 0.628318, 0.837757, 1.0472, 1.25664, 1.46608, 1.67551, 1.88495, 2.09439, 2.30383, 2.51327, 2.72271, 2.93215, 3.14159};
     const double bin_leadNcons[NspJetBins[3]+1] = {0., 1., 2., 3., 4., 5., 6., 7., 8., 9., 10., 11., 12., 13., 14., 15., 16., 17., 18., 19., 20., 21., 22., 23., 24., 25., 26., 27., 28., 29., 30.};
     const double bin_iBBCEsum[NspJetBins[4]+1] = {0., 3559.12, 6735.12, 10126.1, 13752.1, 17669.1, 21948.1, 26718.1, 32283.1, 39473.1, 64000.};
-        
+    const double bin_ZDCx[NspJetBins[5]+1] = {0., 1000., 2000., 3000., 4000., 5000., 6000., 7000., 8000., 9000., 10000., 11000., 12000., 13000., 14000., 15000., 16000., 17000., 18000., 19000., 20000.};
+    //  ZdcCoincidenceRate
     
-    THnSparseD *spJet = new THnSparseD("spJet","Leading Jet;leadPt;leadEta;leadPhi;leadNcons;iBBCEsum",NspJetDims,NspJetBins,NULL,NULL);
+    THnSparseD *spJet = new THnSparseD("spJet","Leading Jet;leadPt;leadEta;leadPhi;leadNcons;iBBCEsum;zdcx;",NspJetDims,NspJetBins,NULL,NULL);
     spJet->SetBinEdges( 0, bin_leadPt );
     spJet->SetBinEdges( 1, bin_leadEta );
     spJet->SetBinEdges( 2, bin_leadPhi );
     spJet->SetBinEdges( 3, bin_leadNcons );
     spJet->SetBinEdges( 4, bin_iBBCEsum );
+    spJet->SetBinEdges( 5, bin_ZDCx );
 
     const int NspUEdims = 6;
     const int NspUEbins[NspUEdims] = { 50, 15, 20, 30, 20, 10 };
@@ -75,7 +77,7 @@ int main ( int argc, const char** argv ) {         // funcions and cuts specifie
     const double bin_UEeta[NspUEbins[2]+1] = {-1., -0.9, -0.8, -0.7, -0.6, -0.5, -0.4, -0.3, -0.2, -0.1, 0., 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.};
     const double bin_UEphi[NspUEbins[3]+1] = {-3.14159, -2.93215, -2.72271, -2.51327, -2.30383, -2.09439, -1.88495, -1.67551, -1.46608, -1.25664, -1.0472, -0.837757, -0.628318, -0.418879, -0.209439, 0., 0.209439, 0.418879, 0.628318, 0.837757, 1.0472, 1.25664, 1.46608, 1.67551, 1.88495, 2.09439, 2.30383, 2.51327, 2.72271, 2.93215, 3.14159};
     
-    THnSparseD *spUE = new THnSparseD("spUE","Underlying Event;leadPt;UEpt;UEeta;UEphi;leadEta;iBBCEsum",NspUEdims,NspUEbins,NULL,NULL);
+    THnSparseD *spUE = new THnSparseD("spUE","Underlying Event;leadPt;UEpt;UEeta;UEphi;leadEta;iBBCEsum;",NspUEdims,NspUEbins,NULL,NULL);
     spUE->SetBinEdges( 0, bin_leadPt );
     spUE->SetBinEdges( 1, bin_UEpt );
     spUE->SetBinEdges( 2, bin_UEeta );
@@ -106,8 +108,8 @@ int main ( int argc, const char** argv ) {         // funcions and cuts specifie
 
   TChain* Chain = new TChain( "JetTree" );
   Chain->Add( inFile.c_str() );
-//  TStarJetPicoReader Reader;
-//  InitReader( Reader, Chain, number_of_events );
+  TStarJetPicoReader Reader;
+  InitReader( Reader, Chain, number_of_events );
 //  double deltaPhi, deltaR, trigTowEta, trigTowPhi;
   //  double chgEastSum, chgMidSum, chgWestSum, neuEastSum, neuMidSum, neuWestSum;
   //  int pval, jeval;
