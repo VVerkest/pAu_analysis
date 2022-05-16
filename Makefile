@@ -93,6 +93,7 @@ $(BDIR)/adc_count :	$(ODIR)/adc_count.o	$(ODIR)/pAuFunctions.o
 $(BDIR)/pAu_analysis_HT :	$(ODIR)/pAu_analysis_HT.o	$(ODIR)/pAuFunctions.o
 $(BDIR)/pAu_HT_jets :	$(ODIR)/pAu_HT_jets.o	$(ODIR)/pAuFunctions.o
 $(BDIR)/pAu_HT_jet_trigger :	$(ODIR)/pAu_HT_jet_trigger.o	$(ODIR)/pAuFunctions.o
+$(BDIR)/pAuHTjetUE : $(ODIR)/pAuHTjetUE.o $(ODIR)/pAuFunctions.o
 $(BDIR)/differentialUEplots :	$(ODIR)/differentialUEplots.o
 $(BDIR)/pAuHTjetUE_prelim :	$(ODIR)/pAuHTjetUE_prelim.o	$(ODIR)/pAuFunctions.o
 $(BDIR)/pAuHTdijetUE :	$(ODIR)/pAuHTdijetUE.o	$(ODIR)/pAuFunctions.o
