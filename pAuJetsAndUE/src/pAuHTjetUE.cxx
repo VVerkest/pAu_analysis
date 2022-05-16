@@ -23,8 +23,8 @@ int main ( int argc, const char** argv ) {         // funcions and cuts specifie
  [0]: inFile                -> "production_pAu200_2015/HT/pAu_2015_200_HT*.root"
  [1]: outFile               -> "out/UE/pAuHTjetUE.root"
  [2]: number_of_events      -> -1 for all events
- [3]: UE_subtraction        -> boolean option for subtracting <rho>A from the jet
- [4]: require_dijet         -> boolean option for requiring a dijet
+ [3]: UE_subtraction        -> boolean option for subtracting <rho>A from the jet (to-do)
+ [4]: require_dijet         -> boolean option for requiring a dijet (to-do)
  [5]: trigger_selection     -> TO DO!
  */
     
@@ -44,20 +44,20 @@ int main ( int argc, const char** argv ) {         // funcions and cuts specifie
   else if ( argc==1 || (argc==2&&arguments[0]=="default") ) {
       inFile = "production_pAu200_2015/HT/pAu_2015_200_HT*.root";
       outFile = "out/UE/pAuHTjetUE.root";
-      number_of_events = -1;
+      number_of_events = 2000;
       UE_subtraction =  false;
       require_dijet = false;
   }
   else { cerr<< "incorrect number of command line arguments"; return 5000; }
   
-    const int NspJetDims = 5; // leadPt;leadEta;leadPhi;leadNcons;iBBCEsum;zdcx
-    const int NspJetBins[NspJetDims] = { 50, 20, 30, 30, 10, 20 };
+    const int NspJetDims = 6; // leadPt;leadEta;leadPhi;leadNcons;iBBCEsum;zdcx
+    const int NspJetBins[NspJetDims] = { 50, 20, 30, 25, 10, 20 };
 //    spJetBins
     
     const double bin_leadPt[NspJetBins[0]+1] = {4., 5., 6., 7., 8., 9., 10., 11., 12., 13., 14., 15., 16., 17., 18., 19., 20., 21., 22., 23., 24., 25., 26., 27., 28., 29., 30., 31., 32., 33., 34., 35., 36., 37., 38., 39., 40., 41., 42., 43., 44., 45., 46., 47., 48., 49., 50., 51., 52., 53., 54.};
     const double bin_leadEta[NspJetBins[1]+1] = {-1., -0.9, -0.8, -0.7, -0.6, -0.5, -0.4, -0.3, -0.2, -0.1, 0., 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.};
-    const double bin_leadPhi[NspJetBins[2]+1] = {-3.14159, -2.93215, -2.72271, -2.51327, -2.30383, -2.09439, -1.88495, -1.67551, -1.46608, -1.25664, -1.0472, -0.837757, -0.628318, -0.418879, -0.209439, 0., 0.209439, 0.418879, 0.628318, 0.837757, 1.0472, 1.25664, 1.46608, 1.67551, 1.88495, 2.09439, 2.30383, 2.51327, 2.72271, 2.93215, 3.14159};
-    const double bin_leadNcons[NspJetBins[3]+1] = {0., 1., 2., 3., 4., 5., 6., 7., 8., 9., 10., 11., 12., 13., 14., 15., 16., 17., 18., 19., 20., 21., 22., 23., 24., 25., 26., 27., 28., 29., 30.};
+    const double bin_leadPhi[NspJetBins[2]+1] = {0., 0.209439, 0.418879, 0.628318, 0.837757, 1.0472, 1.25664, 1.46608, 1.67551, 1.88495, 2.09439, 2.30383, 2.51327, 2.72271, 2.93215, 3.14159, 3.35103, 3.56047, 3.76991, 3.97935, 4.18879, 4.39823, 4.60767, 4.8171, 5.02654, 5.23598, 5.44542, 5.65486, 5.8643, 6.07374, 6.28318};
+    const double bin_leadNcons[NspJetBins[3]+1] = {0., 4., 8., 12., 16., 20., 24., 28., 32., 36., 40., 44., 48., 52., 56., 60., 64., 68., 72., 76., 80., 84., 88., 92., 96., 100.};
     const double bin_iBBCEsum[NspJetBins[4]+1] = {0., 3559.12, 6735.12, 10126.1, 13752.1, 17669.1, 21948.1, 26718.1, 32283.1, 39473.1, 64000.};
     const double bin_ZDCx[NspJetBins[5]+1] = {0., 1000., 2000., 3000., 4000., 5000., 6000., 7000., 8000., 9000., 10000., 11000., 12000., 13000., 14000., 15000., 16000., 17000., 18000., 19000., 20000.};
     //  ZdcCoincidenceRate
@@ -75,7 +75,7 @@ int main ( int argc, const char** argv ) {         // funcions and cuts specifie
     
     const double bin_UEpt[NspUEbins[1]+1] = { 0.20, 0.25, 0.30, 0.35, 0.40, 0.50, 0.60, 0.70, 0.80, 1.0, 1.5, 2.0, 3.0, 5.0, 10.0, 15.0 };
     const double bin_UEeta[NspUEbins[2]+1] = {-1., -0.9, -0.8, -0.7, -0.6, -0.5, -0.4, -0.3, -0.2, -0.1, 0., 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.};
-    const double bin_UEphi[NspUEbins[3]+1] = {-3.14159, -2.93215, -2.72271, -2.51327, -2.30383, -2.09439, -1.88495, -1.67551, -1.46608, -1.25664, -1.0472, -0.837757, -0.628318, -0.418879, -0.209439, 0., 0.209439, 0.418879, 0.628318, 0.837757, 1.0472, 1.25664, 1.46608, 1.67551, 1.88495, 2.09439, 2.30383, 2.51327, 2.72271, 2.93215, 3.14159};
+    const double bin_UEphi[NspUEbins[3]+1] = {0., 0.209439, 0.418879, 0.628318, 0.837757, 1.0472, 1.25664, 1.46608, 1.67551, 1.88495, 2.09439, 2.30383, 2.51327, 2.72271, 2.93215, 3.14159, 3.35103, 3.56047, 3.76991, 3.97935, 4.18879, 4.39823, 4.60767, 4.8171, 5.02654, 5.23598, 5.44542, 5.65486, 5.8643, 6.07374, 6.28318};
     
     THnSparseD *spUE = new THnSparseD("spUE","Underlying Event;leadPt;UEpt;UEeta;UEphi;leadEta;iBBCEsum;",NspUEdims,NspUEbins,NULL,NULL);
     spUE->SetBinEdges( 0, bin_leadPt );
@@ -86,21 +86,12 @@ int main ( int argc, const char** argv ) {         // funcions and cuts specifie
     spUE->SetBinEdges( 5, bin_iBBCEsum );
 
     
-  //  Tree variables
-//  int RunID, EventID, nTowers, nPrimary, nGlobal, nVertices, refMult, gRefMult, nUEpart_chg, nUEpart_neu, nJetsAbove5, nHTtrig;
-//  double Vz, vpdVz, BbcAdcSumEast, leadPt, leadPtCorrected, leadEta, leadPhi, chgEastRho, chgMidRho, chgWestRho, chgEastRho_te,
-//    chgMidRho_te, chgWestRho_te, neuEastRho, neuMidRho, neuWestRho, leadArea, dPhiTrigLead, dRTrigLead, trigPhi;
-
-
   
   JetDefinition jet_def(antikt_algorithm, R);     //  JET DEFINITION
   Selector jetEtaSelector = SelectorAbsEtaMax( 1.0-R );
   Selector leadPtMinSelector = SelectorPtMin(leadJetMinPt);
   Selector leadJetSelector = jetEtaSelector;// && leadPtMinSelector;
   Selector ptMaxSelector = SelectorPtMax( 30.0 );
-
-  PseudoJet leadJet, trigTowerPJ, towPJ;
-  vector<PseudoJet> rawParticles, rawJets, allJets, chgParticles, neuParticles, UEparticles;
 
   TStarJetPicoEventHeader* header;
   TStarJetPicoEvent* event;
@@ -110,16 +101,24 @@ int main ( int argc, const char** argv ) {         // funcions and cuts specifie
   Chain->Add( inFile.c_str() );
   TStarJetPicoReader Reader;
   InitReader( Reader, Chain, number_of_events );
-//  double deltaPhi, deltaR, trigTowEta, trigTowPhi;
-  //  double chgEastSum, chgMidSum, chgWestSum, neuEastSum, neuMidSum, neuWestSum;
-  //  int pval, jeval;
+
 
 //  string efficFile = "src/trackeffic.root";
 //  string UEcorrFile = "src/UEsubtractionPlots.root";
 
+    //  Tree variables
+    int RunID, EventID, nTowers, nPrimary, nGlobal, nVertices, refMult, gRefMult, nUEpart_chg, nUEpart_neu, nJetsAbove5, nHTtrig;
+    double Vz, vpdVz, BbcAdcSumEast, leadPt, leadPtCorrected, leadEta, leadPhi, chgEastRho, chgMidRho, chgWestRho, chgEastRho_te,
+      chgMidRho_te, chgWestRho_te, neuEastRho, neuMidRho, neuWestRho, leadArea, dPhiTrigLead, dRTrigLead, trigPhi, zdcx, nCons;
+    double deltaPhi, deltaR, trigTowEta, trigTowPhi;
+    double chgEastSum, chgMidSum, chgWestSum, neuEastSum, neuMidSum, neuWestSum;
+    int pval, jeval;
+    
+    PseudoJet leadJet, trigTowerPJ, towPJ;
+    vector<PseudoJet> rawParticles, rawJets, allJets, chgParticles, neuParticles, UEparticles, cons;
+
     
     
-    /*
   // ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~  BEGIN EVENT LOOP!  ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~
   while ( Reader.NextEvent() ) {
     Reader.PrintStatus(10);
@@ -138,8 +137,8 @@ int main ( int argc, const char** argv ) {         // funcions and cuts specifie
     // //  HIGH EVENT ACTIVITY
     // if ( header->GetBbcAdcSumEast() < 26718.1 ) { continue; }  // LO: 3559.12-10126.1;  HI: 26718.1+// 
 
-    //  LOW EVENT ACTIVITY
-    if ( header->GetBbcAdcSumEast() > 10126.1 ) { continue; }  // LO: 3559.12-10126.1;  HI: 26718.1+
+    // //  LOW EVENT ACTIVITY
+    // if ( header->GetBbcAdcSumEast() > 10126.1 ) { continue; }  // LO: 3559.12-10126.1;  HI: 26718.1+
     
     TList *SelectedTowers = Reader.GetListOfSelectedTowers();
     nTowers = CountTowers( SelectedTowers );
@@ -193,23 +192,24 @@ int main ( int argc, const char** argv ) {         // funcions and cuts specifie
 	  Selector allJetSelector = SelectorPtMin(2.0) && ptMaxSelector && jetEtaSelector;
 	  allJets = sorted_by_pt( allJetSelector( jetCluster.inclusive_jets() ) );     // EXTRACT ALL JETS IN >=5 GeV
 	  
-	  nJetsAbove5 = allJets.size();
-
-	  vpdVz = header->GetvpdVz();
-	  RunID = header->GetRunId();
-	  EventID = Reader.GetNOfCurrentEvent();
-	  nPrimary = header->GetNOfPrimaryTracks();
-	  nGlobal = header->GetNGlobalTracks();
-	  nVertices = header->GetNumberOfVertices();
-	  refMult = header->GetReferenceMultiplicity();
-	  gRefMult = header->GetGReferenceMultiplicity();
+//	  nJetsAbove5 = allJets.size();
+//
+//	  vpdVz = header->GetvpdVz();
+//	  RunID = header->GetRunId();
+//	  EventID = Reader.GetNOfCurrentEvent();
+//	  nPrimary = header->GetNOfPrimaryTracks();
+//	  nGlobal = header->GetNGlobalTracks();
+//	  nVertices = header->GetNumberOfVertices();
+//	  refMult = header->GetReferenceMultiplicity();
+//	  gRefMult = header->GetGReferenceMultiplicity();
 	  BbcAdcSumEast = header->GetBbcAdcSumEast();
 	  leadPt = leadJet.pt();
-	  leadPtCorrected = UEsubtraction( leadJet, UEcorrFile, BbcAdcSumEast );
+//	  leadPtCorrected = UEsubtraction( leadJet, UEcorrFile, BbcAdcSumEast );
 	  leadEta = leadJet.eta();
 	  leadPhi = leadJet.phi();
-	  leadArea = leadJet.area();
-
+//	  leadArea = leadJet.area();
+        zdcx = header->GetZdcCoincidenceRate();
+        
 	  //  UNDERLYING EVENT ESTIMATION
 	  // GatherChargedUEwithEfficiency( leadJet, container, chgParticles, efficFile );
 	  GatherChargedUE( leadJet, container, chgParticles );
@@ -233,37 +233,49 @@ int main ( int argc, const char** argv ) {         // funcions and cuts specifie
 	    if ( leadEta >= etaLo[e]  &&  leadEta <= etaHi[e] ) { jeval = e; }
 	  }
 	  
-	  if ( jeval==99 ) { cerr<<"UNABLE TO FIND PT OR ETA RANGE FOR LEAD JET"<<endl<<leadPt<<endl<<endl; }
+	  if ( jeval==99 ) { cerr<<"UNABLE TO FIND PT OR ETA RANGE FOR LEAD JET"<<endl/*<<leadPt<<endl<<endl*/; }
 
 	  
 	  if (jeval==99) {continue;}
 	  
+        cons = leadJet.constituents();
+        nCons = cons.size();
+//        cout<<"..."<<nCons<<"..."<<endl;
+        // spJet: leadPt;leadEta;leadPhi;leadNcons;iBBCEsum;zdcx
+        double jetFill[NspJetDims+1] = {  leadPt, leadEta, leadPhi, nCons, BbcAdcSumEast, zdcx };
+        spJet->Fill( jetFill );
+
+        
 	  for (int i=0; i<chgParticles.size(); ++i) {
-	    hChgUE[jeval]->Fill( leadPt, chgParticles[i].pt(), chgParticles[i].eta() );
-	    hLeadPtVsUEpT->Fill( leadPt, chgParticles[i].pt());
+          
+          // spUE: leadPt;UEpt;UEeta;UEphi;leadEta;iBBCEsum
+          double UEfill[NspUEdims+1] = {  leadPt, chgParticles[i].pt(), chgParticles[i].eta(), chgParticles[i].phi(), leadEta, BbcAdcSumEast };
+          spUE->Fill( UEfill );
+          
+//	    hChgUE[jeval]->Fill( leadPt, chgParticles[i].pt(), chgParticles[i].eta() );
+//	    hLeadPtVsUEpT->Fill( leadPt, chgParticles[i].pt());
 	    // hChgUE[jeval]->Fill( leadPtCorrected, chgParticles[i].pt(), chgParticles[i].eta() );
 	    // hLeadPtVsUEpT->Fill( leadPtCorrected, chgParticles[i].pt());
 	  }
 	  // hLeadPt[jeval]->Fill( leadPtCorrected );
 	  // hLead->Fill( leadPtCorrected );
-	  hLeadPt[jeval]->Fill( leadPt );
-	  hLead->Fill( leadPt );
+//	  hLeadPt[jeval]->Fill( leadPt );
+//	  hLead->Fill( leadPt );
 
 	  chgParticles.clear(); // clear vector!
 
-	  CalculateUEsubtractedChargedRho(chgParticles,chgEastSum,chgMidSum,chgWestSum);
-	  chgEastRho_te = chgEastSum/eastArea;
-	  chgMidRho_te = chgMidSum/midArea;
-	  chgWestRho_te = chgWestSum/westArea;
+//	  CalculateUEsubtractedChargedRho(chgParticles,chgEastSum,chgMidSum,chgWestSum);
+//	  chgEastRho_te = chgEastSum/eastArea;
+//	  chgMidRho_te = chgMidSum/midArea;
+//	  chgWestRho_te = chgWestSum/westArea;
 
 	  
-	  HTjetTree->Fill();
-	}
+//	  HTjetTree->Fill();
+        }
       }
     }
   }  // ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~  END EVENT LOOP!  ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~
-    
-    */
+
     
     
 
