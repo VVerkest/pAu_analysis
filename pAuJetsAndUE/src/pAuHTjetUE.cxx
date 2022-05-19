@@ -25,6 +25,7 @@ int main ( int argc, const char** argv ) {         // funcions and cuts specifie
  [2]: number_of_events      -> -1 for all events
  [3]: UE_subtraction        -> boolean option for subtracting <rho>A from the jet (to-do)
  [4]: require_dijet         -> boolean option for requiring a dijet (to-do)
+ ...
  [5]: trigger_selection     -> TO DO!
  */
     
@@ -41,6 +42,13 @@ int main ( int argc, const char** argv ) {         // funcions and cuts specifie
       else if (arguments[4]=="false"||arguments[4]=="0") { require_dijet = false; }
       else { cerr<<"5th argument must be 'true', 'false', 1, or 0"<<endl; return 9999; }
   }
+  else if ( argc ==  4 ) {
+      inFile = arguments[0];
+      outFile = arguments[1];
+      number_of_events = atoi(arguments[2].c_str());
+      UE_subtraction = false;
+      require_dijet = false;
+    }
   else if ( argc==1 || (argc==2&&arguments[0]=="default") ) {
       inFile = "production_pAu200_2015/HT/pAu_2015_200_HT*.root";
       outFile = "out/UE/pAuHTjetUE.root";
@@ -51,11 +59,12 @@ int main ( int argc, const char** argv ) {         // funcions and cuts specifie
   else { cerr<< "incorrect number of command line arguments"; return 5000; }
   
     const int NspJetDims = 6; // leadPt;leadEta;leadPhi;leadNcons;iBBCEsum;zdcx
-    const int NspJetBins[NspJetDims] = { 50, 20, 30, 25, 10, 20 };
+    const int NspJetBins[NspJetDims] = { 50, 3, 30, 25, 10, 20 };
 //    spJetBins
     
     const double bin_leadPt[NspJetBins[0]+1] = {4., 5., 6., 7., 8., 9., 10., 11., 12., 13., 14., 15., 16., 17., 18., 19., 20., 21., 22., 23., 24., 25., 26., 27., 28., 29., 30., 31., 32., 33., 34., 35., 36., 37., 38., 39., 40., 41., 42., 43., 44., 45., 46., 47., 48., 49., 50., 51., 52., 53., 54.};
-    const double bin_leadEta[NspJetBins[1]+1] = {-1., -0.9, -0.8, -0.7, -0.6, -0.5, -0.4, -0.3, -0.2, -0.1, 0., 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.};
+    const double bin_leadEta[NspJetBins[1]+1] = {-1., -0.3, 0.3, 1.};
+    //{-1., -0.9, -0.8, -0.7, -0.6, -0.5, -0.4, -0.3, -0.2, -0.1, 0., 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.};
     const double bin_leadPhi[NspJetBins[2]+1] = {0., 0.209439, 0.418879, 0.628318, 0.837757, 1.0472, 1.25664, 1.46608, 1.67551, 1.88495, 2.09439, 2.30383, 2.51327, 2.72271, 2.93215, 3.14159, 3.35103, 3.56047, 3.76991, 3.97935, 4.18879, 4.39823, 4.60767, 4.8171, 5.02654, 5.23598, 5.44542, 5.65486, 5.8643, 6.07374, 6.28318};
     const double bin_leadNcons[NspJetBins[3]+1] = {0., 4., 8., 12., 16., 20., 24., 28., 32., 36., 40., 44., 48., 52., 56., 60., 64., 68., 72., 76., 80., 84., 88., 92., 96., 100.};
     const double bin_iBBCEsum[NspJetBins[4]+1] = {0., 3559.12, 6735.12, 10126.1, 13752.1, 17669.1, 21948.1, 26718.1, 32283.1, 39473.1, 64000.};
