@@ -138,7 +138,7 @@ namespace pAuAnalysis {
           &BBC_CoincidenceRate, double &vpdVz, double &BBC_EastRate, double
           &BBC_WestRate, double &BBC_AdcSumEast );
 
-  void InitReader( TStarJetPicoReader & reader, TChain* chain, int nEvents );
+  void InitReader( TStarJetPicoReader & reader, TChain* chain, int nEvents, double dca_cut=1. );
 
   double UEsubtraction( fastjet::PseudoJet leadjet, std::string UEcorrFile,
           double BBCEsum );
@@ -150,6 +150,8 @@ namespace pAuAnalysis {
           double vz_cut, double vz );
 
   bool UseTriggerTower( int TriggerTowerId );
+
+  bool is_trans(double phi0, double phi1);
 
 }
 

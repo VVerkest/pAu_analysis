@@ -1,120 +1,58 @@
-os = $(shell uname -s)
 
-INCFLAGS      = -I$(shell root-config --incdir) $(shell fastjet-config --cxxflags) -I$(STARPICOPATH) -I$(FJCONTRIB)/RecursiveTools -I/opt/local/include
+BASEDIR=/tier2/home/groups/rhi/STAR/software
+FASTJETDIR=${BASEDIR}/fastjet-install
+_FJCONTRIB=${FASTJETDIR}/include/fastjet/contrib:${FJCONTRIB}
+STARPICOPATH=${BASEDIR}/eventStructuredAu
 
-ifeq ($(os),Linux)
-CXXFLAGS      = -std=c++17
-else
-CXXFLAGS      = -O -std=c++11 -fPIC -pipe -Wall -Wno-deprecated-writable-strings -Wno-unused-variable -Wno-unused-private-field -Wno-gnu-static-float-init -Wno-deprecated
-## for debugging:
-# CXXFLAGS      = -g -O0 -fPIC -pipe -Wall -Wno-deprecated-writable-strings -Wno-unused-variable -Wno-unused-private-field -Wno-gnu-static-float-init -Wno-deprecated-declarations
-endif
+AN_setter=${AN_COMMON}/AN-common-config
+io_setter=${IO_LIB}/iolib-config
 
-ifeq ($(os),Linux)
-LDFLAGS       = -g
-LDFLAGSS      = -g --shared
-else
-LDFLAGS       = -O -Xlinker -bind_at_load -flat_namespace
-LDFLAGSS      = -flat_namespace -undefined suppress
-LDFLAGSSS     = -bundle
-endif
+ccflg=`${FASTJET3}/fastjet-config --cxxflags` `root-config --cflags` `${io_setter} -I` `${AN_setter} -I`  -I${ROOUNFOLD}/src \
+	  -I$(STARPICOPATH) -I$(_FJCONTRIB)/RecursiveTools
 
-ifeq ($(os),Linux)
-CXX          = g++
-else
-CXX          = clang
-endif
+LIB_FASTJET=`${FASTJET3}/fastjet-config --cxxflags --libs`
+LIB_ROOT=`root-config --cflags --glibs`
+LIB_TRI= ${LIB_ROOT} ${LIB_FASTJET} `${io_setter} -L` `${AN_setter} -L` -L${ROOUNFOLD} -lRooUnfold -L$(FASTJETDIR)/lib -L${STARPICOPATH} -L$(_FJCONTRIB) -lTStarJetPico
 
+# compilation option
+CC=g++
+CFLAGS=-std=c++11 -O3 -Wno-deprecated
+CFLAGS_CHECK=-std=c++11 -O0 -Wno-deprecated -g
 
-ROOTLIBS      = $(shell root-config --libs)
-FJLIBS        = $(shell fastjet-config --plugins=yes --libs)
-LIBPATH       = -L$(FASTJETDIR)/lib -L$(STARPICOPATH) $(shell root-config --libs) -L$(FJCONTRIB)
-LIBS          =  $(ROOTLIBS) $(FJLIBS) -I$(FJCONTRIB) -lfastjet -lfastjettools -lTStarJetPico
+bin/runQA: obj/runQA.o obj/pAuFunctions.o
+	${CC} ${CFLAGS} -o $@ $^ ${LIB_TRI} 
 
-# for cleanup
-SDIR          = src
-ODIR          = src/obj
-BDIR          = bin
+bin/track_check: obj/track_check.o obj/pAuFunctions.o
+	${CC} ${CFLAGS} -o $@ $^ ${LIB_TRI} 
 
+bin/trig_check: obj/trig_check.o obj/pAuFunctions.o
+	${CC} ${CFLAGS} -o $@ $^ ${LIB_TRI} 
 
-###############################################################################
-################### Remake when these headers are touched #####################
-###############################################################################
+bin/bbc_check_v2: obj/bbc_check_v2.o obj/pAuFunctions.o
+	${CC} ${CFLAGS} -o $@ $^ ${LIB_TRI} 
+
+check:
+	echo beans
+	echo -L${STARPICOPATH}
+	echo ${LIB_TRI}
+	
 
 
-###############################################################################
-# standard rules
-$(ODIR)/%.o : $(SDIR)/%.cxx $(INCS)
-	@echo
-	@echo COMPILING
-	$(CXX) $(CXXFLAGS) $(INCFLAGS) -c $< -o $@
 
-$(BDIR)/%  : $(ODIR)/%.o
-	@echo
-	@echo LINKING
-	$(CXX) $(LDFLAGS) $^ -o $@ $(LIBPATH) $(LIBS)
+clean:
+	rm obj/* bin/*
 
-###############################################################################
+obj/runQA.o: src/runQA.cxx src/pAu_params.h
+	${CC} ${CFLAGS} ${ccflg} -c $< -o $@
 
-###############################################################################
-############################# Main Targets ####################################
-###############################################################################
-current : $(BDIR)/adc_count
-test : $(BDIR)/small_test
-all : $(BDIR)/pAu_QA $(BDIR)/pAu_analysis_MB $(BDIR)/pAu_analysis_HT $(BDIR)/pAuHTjetUE # $(BDIR)/pAu_HT_dijets $(BDIR)/pAu_HT_jetTree $(BDIR)/pAu_HT_jetPlot $(BDIR)/find_bad_towers $(BDIR)/find_bad_trigger_towers $(BDIR)/pAuHTjetUE $(BDIR)/pAuHTjetUE_prelim $(BDIR)/pAuHTdijetUE $(BDIR)/EAdistribution $(BDIR)/pAu_HT_jet_trigger $(BDIR)/CompareTrees $(BDIR)/differentialUEplots
+obj/track_check.o: src/track_check.cxx src/pAu_params.h
+	${CC} ${CFLAGS} ${ccflg} -c $< -o $@
 
-$(ODIR)/pAuQAFunctions.o : $(SDIR)/pAuQAFunctions.cxx $(SDIR)/pAuQAFunctions.hh
-$(ODIR)/pAu_QA.o : $(SDIR)/pAu_QA.cxx $(SDIR)/pAuQAFunctions.hh
-$(ODIR)/pAuFunctions.o : $(SDIR)/pAuFunctions.cxx $(SDIR)/pAuFunctions.hh
-$(ODIR)/pAu_analysis_MB.o : $(SDIR)/pAu_analysis_MB.cxx
-$(ODIR)/tower_count.o : $(SDIR)/tower_count.cxx
-$(ODIR)/trigger_count.o : $(SDIR)/trigger_count.cxx
-$(ODIR)/adc_count.o : $(SDIR)/adc_count.cxx
-$(ODIR)/small_test.o : $(SDIR)/small_test.cxx  $(SDIR)/pAuQAFunctions.hh
-$(ODIR)/pAu_analysis_HT.o : $(SDIR)/pAu_analysis_HT.cxx
-$(ODIR)/pAu_HT_jets.o : $(SDIR)/pAu_HT_jets.cxx $(SDIR)/pAu_HT_jetParameters.hh $(SDIR)/bemc_helper.h
-$(ODIR)/pAu_HT_jet_trigger.o : $(SDIR)/pAu_HT_jet_trigger.cxx $(SDIR)/pAu_HT_jetParameters.hh
-$(ODIR)/pAuHTjetUE.o : $(SDIR)/pAuHTjetUE.cxx $(SDIR)/pAu_HT_jetParameters.hh
-$(ODIR)/differentialUEplots.o : $(SDIR)/differentialUEplots.cxx $(SDIR)/differentialUEplots.hh $(SDIR)/pAu_HT_jetParameters.hh
-$(ODIR)/pAuHTjetUE_prelim.o : $(SDIR)/pAuHTjetUE_prelim.cxx $(SDIR)/pAu_HT_jetParameters.hh
-$(ODIR)/pAuHTdijetUE.o : $(SDIR)/pAuHTdijetUE.cxx $(SDIR)/pAu_HT_jetParameters.hh
-$(ODIR)/EAdistribution.o : $(SDIR)/EAdistribution.cxx $(SDIR)/pAu_HT_jetParameters.hh
-$(ODIR)/pAu_HT_dijets.o : $(SDIR)/pAu_HT_dijets.cxx
-$(ODIR)/pAu_HT_jetTree.o : $(SDIR)/pAu_HT_jetTree.cxx
-$(ODIR)/pAu_HT_jetPlot.o : $(SDIR)/pAu_HT_jetPlot.cxx
-$(ODIR)/find_bad_towers.o : $(SDIR)/find_bad_towers.cxx
-$(ODIR)/CompareTrees.o : $(SDIR)/CompareTrees.cxx
-$(ODIR)/find_bad_trigger_towers.o : $(SDIR)/find_bad_trigger_towers.cxx
+obj/trig_check.o: src/trig_check.cxx src/pAu_params.h
+	${CC} ${CFLAGS} ${ccflg} -c $< -o $@
 
-#data analysis
-$(BDIR)/pAu_QA :	$(ODIR)/pAu_QA.o	$(ODIR)/pAuQAFunctions.o
-$(BDIR)/pAu_analysis_MB :	$(ODIR)/pAu_analysis_MB.o	$(ODIR)/pAuFunctions.o
-$(BDIR)/tower_count :	$(ODIR)/tower_count.o	$(ODIR)/pAuFunctions.o
-$(BDIR)/trigger_count :	$(ODIR)/trigger_count.o	$(ODIR)/pAuFunctions.o
-$(BDIR)/adc_count :	$(ODIR)/adc_count.o	$(ODIR)/pAuFunctions.o
-$(BDIR)/small_test :	$(ODIR)/small_test.o	$(ODIR)/pAuFunctions.o
-$(BDIR)/pAu_analysis_HT :	$(ODIR)/pAu_analysis_HT.o	$(ODIR)/pAuFunctions.o
-$(BDIR)/pAu_HT_jets :	$(ODIR)/pAu_HT_jets.o	$(ODIR)/pAuFunctions.o
-$(BDIR)/pAu_HT_jet_trigger :	$(ODIR)/pAu_HT_jet_trigger.o	$(ODIR)/pAuFunctions.o
-$(BDIR)/differentialUEplots :	$(ODIR)/differentialUEplots.o
-$(BDIR)/pAuHTjetUE_prelim :	$(ODIR)/pAuHTjetUE_prelim.o	$(ODIR)/pAuFunctions.o
-$(BDIR)/pAuHTdijetUE :	$(ODIR)/pAuHTdijetUE.o	$(ODIR)/pAuFunctions.o
-$(BDIR)/EAdistribution :	$(ODIR)/EAdistribution.o	$(ODIR)/pAuFunctions.o
-$(BDIR)/pAu_HT_dijets :	$(ODIR)/pAu_HT_dijets.o	$(ODIR)/pAuFunctions.o
-$(BDIR)/pAu_HT_jetTree :	$(ODIR)/pAu_HT_jetTree.o	$(ODIR)/pAuFunctions.o
-$(BDIR)/pAu_HT_jetPlot :	$(ODIR)/pAu_HT_jetPlot.o
-$(BDIR)/find_bad_towers :	$(ODIR)/find_bad_towers.o
-$(BDIR)/CompareTrees :	$(ODIR)/CompareTrees.o
-$(BDIR)/find_bad_trigger_towers :	$(ODIR)/find_bad_trigger_towers.o
+obj/bbc_check_v2.o: src/bbc_check_v2.cxx src/pAu_params.h
+	${CC} ${CFLAGS} ${ccflg} -c $< -o $@
 
-
-###############################################################################
-##################################### MISC ####################################
-###############################################################################
-
-clean :
-	@echo
-	@echo CLEANING
-	rm -vf $(ODIR)/*.o
-	rm -vf $(BDIR)/*
-	rm -vf lib/*
+obj/pAuFunctions.o: src/pAuFunctions.cxx src/pAuFunctions.hh
+	${CC} ${CFLAGS} ${ccflg} -c $< -o $@

@@ -464,13 +464,13 @@ namespace pAuAnalysis {
   }
 
 
-  void InitReader( TStarJetPicoReader & reader, TChain* chain, int nEvents ) {
+  void InitReader( TStarJetPicoReader & reader, TChain* chain, int nEvents, double dca_cut ) {
     
     // set the chain
     reader.SetInputChain( chain );
     // apply hadronic correction - subtract 100% of charged track energy from towers
     // reader.SetApplyFractionHadronicCorrection( false );
-    reader.SetFractionHadronicCorrection( 0.9999 );
+    reader.SetFractionHadronicCorrection( 0.99999 );
     reader.SetRejectTowerElectrons( kFALSE );
     
     // Event and track selection
@@ -486,7 +486,7 @@ namespace pAuAnalysis {
     
     // Tracks cuts
     TStarJetPicoTrackCuts* trackCuts = reader.GetTrackCuts();
-    trackCuts->SetDCACut( DCACut );
+    trackCuts->SetDCACut( dca_cut );
     trackCuts->SetMinNFitPointsCut( MinNFitPointsCut );
     trackCuts->SetFitOverMaxPointsCut( FitOverMaxPointsCut );
     trackCuts->SetMaxPtCut ( MaxPtCut );
@@ -670,5 +670,12 @@ namespace pAuAnalysis {
     return true;
   }
 
+  bool is_trans (double phi0, double phi1) {
+      double delta = TMath::Abs(phi1-phi0);
+      while (delta > 2*M_PI) delta -= 2*M_PI;
+      if (delta > M_PI) delta = 2*M_PI - delta;
+      return (delta > M_PI/3. && delta < M_PI*2./3.);
+  }
   
 }
+
