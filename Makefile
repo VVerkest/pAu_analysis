@@ -19,8 +19,15 @@ CC=g++
 CFLAGS=-std=c++11 -O3 -Wno-deprecated
 CFLAGS_CHECK=-std=c++11 -O0 -Wno-deprecated -g
 
+bin/towercheck_event_sparse: obj/towercheck_event_sparse.o obj/pAuFunctions.o
+	${CC} ${CFLAGS} -o $@ $^ ${LIB_TRI} 
+
+bin/event_sparse: obj/event_sparse.o obj/pAuFunctions.o
+	${CC} ${CFLAGS} -o $@ $^ ${LIB_TRI} 
+
 bin/runQA: obj/runQA.o obj/pAuFunctions.o
 	${CC} ${CFLAGS} -o $@ $^ ${LIB_TRI} 
+
 
 bin/track_check: obj/track_check.o obj/pAuFunctions.o
 	${CC} ${CFLAGS} -o $@ $^ ${LIB_TRI} 
@@ -46,6 +53,12 @@ obj/runQA.o: src/runQA.cxx src/pAu_params.h
 	${CC} ${CFLAGS} ${ccflg} -c $< -o $@
 
 obj/track_check.o: src/track_check.cxx src/pAu_params.h
+	${CC} ${CFLAGS} ${ccflg} -c $< -o $@
+
+obj/event_sparse.o: src/event_sparse.cxx src/pAu_params.h
+	${CC} ${CFLAGS} ${ccflg} -c $< -o $@
+
+obj/towercheck_event_sparse.o: src/towercheck_event_sparse.cc src/pAu_params.h
 	${CC} ${CFLAGS} ${ccflg} -c $< -o $@
 
 obj/trig_check.o: src/trig_check.cxx src/pAu_params.h

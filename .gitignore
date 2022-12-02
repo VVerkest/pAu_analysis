@@ -25,6 +25,11 @@ log
 .DS_Store*
 ._*
 
+# some links
+_.cxx
+_.cc
+_x.cc
+
 # other possible output
 *png
 *pdf
@@ -41,6 +46,7 @@ bin
 bin/*
 src/obj
 src/obj/*
+out-slurm/
 
 # dylibraries
 *.so
