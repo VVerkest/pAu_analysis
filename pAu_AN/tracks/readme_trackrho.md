@@ -46,11 +46,7 @@ user runs:               comments(//), inputs(<-), output (->)
 // run locally
 //------------
 
-`plot_zdcx_data_emb.cc`  <- `../loc_lib/loc_libs.h`
-                         -> `pdf/$0.pdf`
-                         // result : our jet embedded is limiting the analysis to zdcx<=20kHz
-                   
-`run_make_sparse.cc`     // generate the `make_sparse.root` file
+`run_make_sparse.cc`     // generate the `make_sparse.root` file  +::+
                          <- `../loc_lib/loc_libs.h`
                          <- `hadd_piKp_track_emb.root` // From RCAS
                          <- `recon_pt_bound/{bin_fits.root,  myDiscreteLinFnc.cc, myDiscreteLinFnc.h, sp_trackmatch.cc}` // matches outliers
@@ -59,22 +55,28 @@ user runs:               comments(//), inputs(<-), output (->)
                          -> `make_sparse.root`
                          // skipped: 26525 vs 1998900  rat: 0.0132698 --> dropped 1.3% of events as outliers
 
-`make_weights.cc`        // generate the proper weights for dAu and pp for the priors, using the `make_sparse.root`
+`make_weights.cc`        // generate the proper weights for dAu and pp for the priors, using the `make_sparse.root` +::+
                          <- `../loc_lib/loc_libs.h`
                          <- `make_sparse.root` (generated above)
                          <- `TF1_Tsallis.C`
                          <- `Tsallis_params.txt`
                          -> `$0.root`
 
-`run_make_sparse_dAu.cc` // generate the `make_sparse_dAu.root` file
+`run_make_sparse_dAu.cc` // generate the `make_sparse_dAu.root` file                   +::+
                          <- (all the same inputs as `run_make_sparse.cc` above)
                          <- `make_weights.root`
                          -> `make_sparse_dAu.root`
 
-`run_make_sparse_pp.cc` // generate the `make_sparse_pp.root` file
+`run_make_sparse_pp.cc` // generate the `make_sparse_pp.root` file                     +::+
                          <- (all the same inputs as `run_make_sparse.cc` above)
                          <- `make_weights.root`
                          -> `make_sparse_pp.root`
+
+`plot_zdcx_data_emb.cc`  <- `../loc_lib/loc_libs.h`                                    +::+
+                         <- `make_sparse_dAu.root`
+                         -> `pdf/$0.pdf`
+                         // result : our jet embedded is limiting the analysis to zdcx<=20kHz
+                   
 
 // using embedding prior as efficiency spectra, calculate total tracking efficiency, with error, w.r.t. ZDCx bins
 
@@ -82,26 +84,26 @@ user runs:               comments(//), inputs(<-), output (->)
 //  (1) w.r.t. ZDCx in bins of EA
 //      -> result shows approximate linear dependence, and parameters `m` and `b` are not well determined w.r.t. EA
 
-`./plot_eff10plusall_dAu.cc`         <- `{../loc_lib/loc_libs.h, make_sparse_dAu.root}`
+`./plot_eff10plusall_dAu.cc`         <- `{../loc_lib/loc_libs.h, make_sparse_dAu.root}`    +::+
                                      -> `pdf/plot_eff10plusall_dAu.pdf`
                                      // shows that efficiency is not significantly dependent on EA, so use one common efficiency for all EA bins
 
-`./plot_eff10plusall_dAu_eta.cc`     <- `{../loc_lib/loc_libs.h, make_sparse_dAu.root}`
+`./plot_eff10plusall_dAu_eta.cc`     <- `{../loc_lib/loc_libs.h, make_sparse_dAu.root}`    +::+
                                      -> `pdf/plot_eff10plusall_dAu_eta.pdf` 
                                      // shows that efficiency is eta dependent and should be used as such
 
-`./plot_eff_unf_1D_vs_2D.cc`         <- `{../loc_lib/loc_libs.h, make_sparse_dAu.root, hadd_sparse_wsu.root}`
+`./plot_eff_unf_1D_vs_2D.cc`         <- `{../loc_lib/loc_libs.h, make_sparse_dAu.root, hadd_sparse_wsu.root}`   +::+
                                      -> `pdf/plot_eff_unf_1D_vs_2D.cc` 
                                      // 2D unfolding of data results are within about 0.5% of the 1D unfolding
                                      // therefore wish to use 1D unfolding
 
-`./plot_eff_emb_data.cc`             <- `{../loc_lib/loc_libs.h, make_sparse_dAu.root, hadd_sparse_wsu.root}` +::+
+`./plot_eff_emb_data.cc`             <- `{../loc_lib/loc_libs.h, make_sparse_dAu.root, hadd_sparse_wsu.root}`    +::+
                                      -> `pdf/$0.pdf`
                                      // shows that efficiency is only embedded on the embedding, not on the pT distributino of the data itself
                                      // (for data at DCA<1)
 
 // show equivalency of PU at 1cm and 3cm in unfolding
-`./plot_eff_emb_vs_data_1and3cm.cc`  <- `{../loc_lib/loc_libs.h, make_sparse_dAu.root, hadd_sparse_wsu.root}` +::+
+`./plot_eff_emb_vs_data_1and3cm.cc`  <- `{../loc_lib/loc_libs.h, make_sparse_dAu.root, hadd_sparse_wsu.root}`   +::+
                                      -> `pdf/plot_eff_emb_vs_data_1and3cm.pdf`
                                      // compares the efficiency correction applied to tracks DCA 0-1 cm vs DCA 1-3 cm
                                      // the tracks at 1-3 cm are much more contaminated by PU, but have within 3% the same
@@ -111,11 +113,11 @@ user runs:               comments(//), inputs(<-), output (->)
                                      // tracks.
 
 // compare pp vs dAu values -> unfold priors and find efficiency at ZDCx bins with both pp and dAu
-`./plot_eff_unf1D_pp_vs_dAu.cc`      <- `{../loc_lib/loc_libs.h, make_sparse_dAu.root, hadd_sparse_wsu.root}` +::+
+`./plot_eff_unf1D_pp_vs_dAu.cc`      <- `{../loc_lib/loc_libs.h, make_sparse_dAu.root, hadd_sparse_wsu.root}`  +::+ 
                                      -> `./plot_pp_vs_dAu_ZDCx_Eff.cc` : The result is that the pp weightings are about 0.75% when used in the weighting.
 
 // Gives PU functions.
-`./plot_PU_dAu.cc`                   <- `{../loc_lib/loc_libs.h, make_sparse_dAu.root, hadd_sparse_wsu.root}` +::+
+`./plot_PU_dAu.cc`                   <- `{../loc_lib/loc_libs.h, make_sparse_dAu.root, hadd_sparse_wsu.root}`  +::+
                                      -> `pdf/plot_PU_dAu.pdf`
                                      -> `plot_PU_dAu.root` (data points for PU pileup fit)
 
@@ -124,15 +126,17 @@ user runs:               comments(//), inputs(<-), output (->)
                                      // Same information as `plot_PU_dAu.pdf` but alternate presentation
 
 
-`calc_NchMB_perEA_{pp,dAu}.cc`       <- `{../loc_lib/loc_libs.h, make_sparse_{pp,dAu}.root, hadd_sparse_wsu.root}` :++:
+`calc_NchMB_perEA_{pp,dAu}.cc`       <- `{../loc_lib/loc_libs.h, make_sparse_{pp,dAu}.root, hadd_sparse_wsu.root}` +::+
                                      -> `calc_NchMB_perEA_{pp,dAu}.root`
 
-`plot_NchMB_fin.cc`                  <- `{../loc_lib/loc_libs.h, make_sparse_{pp,dAu}.root, hadd_sparse_wsu.root, calc_NchMB_perEA_{pp,dAu}.root}`
+`plot_NchMB_fin.cc`                  <- `{../loc_lib/loc_libs.h, make_sparse_{pp,dAu}.root, hadd_sparse_wsu.root, calc_NchMB_perEA_{pp,dAu}.root}` +::+
                                      -> `pdf/$0.root`  // figure of the final values
                                      -> `$0.root` the final values and systemmatic errors
 
-`calc_NchHT_perEA_{pp,dAu}.cc` {2,3,4} <- `{../loc_lib/loc_libs.h, make_sparse_{pp,dAu}.root, hadd_sparse_wsu.root}`
-                                     -> `$0_{4,8,12}.root`
+
+`calc_NchHT_perEA_{pp,dAu}.cc` {2,3,4} <- `{../loc_lib/loc_libs.h, make_sparse_{pp,dAu}.root, hadd_sparse_wsu.root}` +::+
+                                     -> `$0_{4,8,12}.root`h
+                                     // run with `calc_NchHT_perEA_ppdAu234.sh` 
                                      // the command line input parameter is the trigEt bin, with bin 2\in[4,8]GeV, 3\in[8,12]GeV, 4\in[12,30]GeV
 
 `plot_NchHT_fin.cc` {2,3,4}          <- `{../loc_lib/loc_libs.h, make_sparse_{pp,dAu}.root, hadd_sparse_wsu_HT.root, calc_NchMB_perEA_{pp,dAu}_{2,3,4}.root}`
@@ -247,7 +251,7 @@ user runs:               comments(//), inputs(<-), output (->)
                                      // tracks.
 
 // compare pp vs dAu values -> unfold priors and find efficiency at ZDCx bins with both pp and dAu
-`./plot_eff_unf1D_pp_vs_dAu.cc`      <- `{../loc_lib/loc_libs.h, make_sparse_dAu.root, hadd_sparse_wsu.root}` +::+
+`./plot_eff_unf1D_pp_vs_dAu.cc`      <- `{../loc_lib/loc_libs.h, make_sparse_dAu.root, hadd_sparse_wsu.root}` 
                                      -> `./plot_pp_vs_dAu_ZDCx_Eff.cc` : The result is that the pp weightings are about 0.75% when used in the weighting.
 
 // Gives PU functions.

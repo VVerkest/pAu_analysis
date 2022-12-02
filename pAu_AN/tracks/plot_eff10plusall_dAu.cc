@@ -70,7 +70,7 @@ root -l <<EOF
         eff_arr[i]->Draw(i==0?"PE":"PE same");
         noiDrawTLatex(Form("Fit EA bin %i-%i: Eff = %6.3f^{#pm%6.4f} + %13.9g^{#pm%10.9g} * zdcX", i0, i1,
                 pvals[i][0], evals[i][0], pvals[i][1], evals[i][1]), 5000., 0.05+(0.05*i), 
-                {{"TextColor",colors[i],"LineStyle",2,"TextSize",12}});
+                {{"TextColorAlpha",colors[i],1.,"LineStyle",2,"TextSize",12}});
         hg_m.SetBinContent(i+1, pvals[i][1]);
         hg_m.SetBinError  (i+1, evals[i][1]);
 

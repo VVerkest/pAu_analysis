@@ -1,9 +1,8 @@
 root -l <<EOF
-    .x tu_loadlibs.C
-    .L loc_lib.h
+    .L ../loc_lib/loc_libs.h
 
 
-    tuGetter got{};
+    noiGetter got{};
     auto tracks  = (THnSparseD*) got("hadd_sparse_wsu_HT.root", "sp_tracks");
     auto events  = (THnSparseD*) got("hadd_sparse_wsu_HT.root", "sp_events");
     auto zdcxsum = (THnSparseD*) got("hadd_sparse_wsu_HT.root", "sp_zdcx");
@@ -26,8 +25,8 @@ root -l <<EOF
     /* tuBinVec bin_zdcx_d3 {{ 4000., 4000., 6, 28000. }}; */
     array<double,4> arr_eta  {{ -1., -0.3, 0.3, 1. }};
     
-    TFile f_save {Form("%s_%i.root",tuStripExtension("$0").c_str(),iEtGeV),"recreate"};
-    tuMsgTree msg_tree{false};
+    TFile f_save {Form("%s_%i.root",noiStripExtension("$0").c_str(),iEtGeV),"recreate"};
+    noiMsgTree msg_tree{false};
     msg_tree.slurp_file("$0");
     msg_tree.write();
 
@@ -51,8 +50,8 @@ root -l <<EOF
         arr_sumzdcx [i] = sparse_integral(zdcxsum).first;
     }
 
-    for (int izdcx=0;izdcx<8;++izdcx) {
-        set_range(_zdcx, _0_zdcx_3kHz[izdcx], _1_zdcx_3kHz[izdcx], {tracks, reco, truth});
+    for (int izdcx=0;izdcx<5;++izdcx) {
+        set_range(_zdcx, _i0_zdcx[izdcx], _i1_zdcx[izdcx], {tracks, reco, truth});
 
         for (int ieta=0; ieta<3; ++ieta) {
             set_range(_eta, ieta+1, ieta+1, {tracks, reco, truth});
@@ -67,7 +66,7 @@ root -l <<EOF
             for (int iEA=0;iEA<10;++iEA) {
                 set_range(_bbc, iEA+1, iEA+1, {tracks});
                 auto h_raw = (TH1D*) tracks->Projection(_pt);
-                auto h_cor = (TH1D*) tuDivide(h_raw, h_eff);
+                auto h_cor = (TH1D*) noiDivide(h_raw, h_eff);
 
                 arrpt_raw[iEA]->Add(h_raw);
                 arrpt_cor[iEA]->Add(h_cor);
